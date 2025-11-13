@@ -208,7 +208,7 @@ export function useDashboardData(
         if (!prev.data?.plan) {
           return prev;
         }
-        const updatedTasks = prev.data.plan.tasks.map((task) =>
+        const updatedTasks = prev.data.plan.tasks.map((task: any) =>
           task.id === taskId ? { ...task, status: 'completed' } : task
         );
         return {
