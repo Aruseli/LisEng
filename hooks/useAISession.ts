@@ -1,0 +1,160 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useClient } from 'hasyx';
+
+import {
+  createAISession,
+  updateAISession,
+} from '@/lib/hasura-queries';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+interface UseAISessionOptions {
+  userId?: string | null;
+  type: 'speaking' | 'writing' | 'ai_practice';
+  topic?: string;
+  level?: string;
+  initialMessages?: Message[];
+  suggestedPrompt?: string | null;
+}
+
+export function useAISession({
+  userId,
+  type,
+  topic,
+  level = 'A2',
+  initialMessages = [],
+  suggestedPrompt,
+}: UseAISessionOptions) {
+  const client = useClient();
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialMessages.length) {
+      setMessages(initialMessages);
+    }
+  }, [initialMessages]);
+
+  const ensureSession = useCallback(async () => {
+    if (!client || !userId) return null;
+    if (sessionId) return sessionId;
+
+    const result = await createAISession(client, userId, type, topic);
+    if (result?.id) {
+      setSessionId(result.id);
+      return result.id;
+    }
+    return null;
+  }, [client, userId, type, topic, sessionId]);
+
+  const sendMessage = useCallback(async (content: string) => {
+    if (!content.trim()) return;
+    if (!userId) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const nextMessages = [...messages, userMessage];
+    setMessages(nextMessages);
+    setIsLoading(true);
+
+    try {
+      await ensureSession();
+
+      const endpoint =
+        type === 'speaking' || type === 'ai_practice'
+          ? '/api/ai/speaking'
+          : '/api/ai/check-writing';
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic,
+          level,
+          conversationHistory: nextMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+          text: type === 'writing' ? content : undefined,
+        }),
+      });
+
+      const responseJson = await response.json();
+
+      const aiText =
+        type === 'writing'
+          ? responseJson?.correctedText || responseJson?.message
+          : responseJson?.message;
+
+      const aiMessage: Message = {
+        role: 'assistant',
+        content: aiText || 'Я пока не знаю, что ответить. Попробуй сформулировать иначе!',
+        timestamp: new Date().toISOString(),
+      };
+
+      const updated = [...nextMessages, aiMessage];
+      setMessages(updated);
+
+      if (sessionId) {
+        await updateAISession(client, sessionId, {
+          conversation: updated,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [type, topic, level, messages, ensureSession, client, sessionId, userId]);
+
+  const startSession = useCallback(async () => {
+    await ensureSession();
+  }, [ensureSession]);
+
+  const endSession = useCallback(
+    async (feedback?: any) => {
+      if (!sessionId || !client || messages.length === 0) return;
+
+      const durationMinutes = Math.max(
+        1,
+        Math.round(
+          (new Date().getTime() - new Date(messages[0].timestamp).getTime()) / 60000
+        )
+      );
+
+      await updateAISession(client, sessionId, {
+        conversation: messages,
+        feedback,
+        duration_minutes: durationMinutes,
+      });
+    },
+    [client, sessionId, messages]
+  );
+
+  const resetSession = useCallback(() => {
+    setSessionId(null);
+    setMessages([]);
+  }, []);
+
+  return {
+    messages,
+    isLoading,
+    startSession,
+    sendMessage,
+    endSession,
+    resetSession,
+    suggestedPrompt,
+    hasSession: Boolean(sessionId),
+  };
+}
