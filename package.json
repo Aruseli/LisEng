@@ -3,7 +3,8 @@
     "@anthropic-ai/sdk": "^0.68.0",
     "hasyx": "^0.2.0-alpha.69",
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "ws": "^8.18.3"
   },
   "scripts": {
     "ws": "npx --yes next-ws-cli@latest patch -y",

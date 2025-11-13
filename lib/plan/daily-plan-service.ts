@@ -19,13 +19,17 @@ import { ClaudeService } from '@/lib/ai/claude-service';
 
 type DailyTaskRecord = Awaited<ReturnType<typeof getDailyTasks>> extends (infer T)[]
   ? T
-  : never;
+  : Awaited<ReturnType<typeof getDailyTasks>>;
 
 type WeeklyStructureRecord = Awaited<ReturnType<typeof getWeeklyStructureForStage>> extends (infer T)[]
   ? T
-  : never;
+  : Awaited<ReturnType<typeof getWeeklyStructureForStage>>;
 
 type StageProgressRecord = Awaited<ReturnType<typeof getActiveStageProgress>>;
+
+type AchievementRecord = Awaited<ReturnType<typeof getAchievements>> extends (infer A)[]
+  ? A
+  : Awaited<ReturnType<typeof getAchievements>>;
 
 interface GenerateDailyPlanOptions {
   userId: string;
@@ -156,7 +160,7 @@ export class DailyPlanService {
       summary: aiSummary.summary,
       motivation: aiSummary.motivation,
       focus: aiSummary.focus,
-      review_reminders: aiSummary.reviewReminders,
+      review_reminders: aiSummary.reviewReminders ?? [],
       requirement_checks: requirementChecks.map((check) => ({
         id: check.requirement.id,
         type: check.requirement.requirement_type,
@@ -208,7 +212,7 @@ export class DailyPlanService {
       summary: aiSummary.summary,
       focus: aiSummary.focus,
       motivation: aiSummary.motivation,
-      reviewReminders: aiSummary.reviewReminders,
+      reviewReminders: aiSummary.reviewReminders ?? [],
       requirementChecks,
       readiness,
       completionPercentage,
@@ -361,7 +365,7 @@ export class DailyPlanService {
     };
 
     await Promise.all(
-      params.weeklyStructure.map((slot) =>
+      (params.weeklyStructure as WeeklyStructureRecord[]).map((slot) =>
         upsertDailyTaskFromStructure(this.hasyx, {
           userId: params.userId,
           stageId: params.stageId,
@@ -396,7 +400,7 @@ export class DailyPlanService {
     targetDate: string;
     forceAi: boolean;
   }): Promise<DailyPlanAiSummary> {
-    const taskPayload = params.tasks.map((task) => ({
+    const taskPayload = (params.tasks as DailyTaskRecord[]).map((task) => ({
       id: task.id,
       type: task.type,
       title: task.title,
@@ -420,7 +424,7 @@ export class DailyPlanService {
           }
         : null;
 
-    const achievementsPayload = (params.achievements ?? []).map((achievement) => ({
+    const achievementsPayload = ((params.achievements ?? []) as AchievementRecord[]).map((achievement) => ({
       type: achievement.type,
       title: achievement.title,
       unlocked_at: achievement.unlocked_at,
@@ -531,7 +535,7 @@ export class DailyPlanService {
 
   private extractPlanMetadata(tasks: DailyTaskRecord[]) {
     for (const task of tasks) {
-      const payload = task?.type_specific_payload as
+      const payload = (task as any)?.type_specific_payload as
         | {
             summary?: string;
             motivation?: string;
