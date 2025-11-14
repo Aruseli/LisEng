@@ -30,6 +30,7 @@ export type Scalars = {
   date: { input: any; output: any };
   jsonb: { input: any; output: any };
   numeric: { input: number; output: number };
+  time: { input: any; output: any };
   timestamp: { input: any; output: any };
   timestamptz: { input: number; output: number };
   uuid: { input: string; output: string };
@@ -823,6 +824,8 @@ export type Achievements = {
   title: Scalars["String"]["output"];
   type: Scalars["String"]["output"];
   unlocked_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -831,6 +834,17 @@ export type Achievements_Aggregate = {
   __typename?: "achievements_aggregate";
   aggregate?: Maybe<Achievements_Aggregate_Fields>;
   nodes: Array<Achievements>;
+};
+
+export type Achievements_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Achievements_Aggregate_Bool_Exp_Count>;
+};
+
+export type Achievements_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Achievements_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Achievements_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "achievements" */
@@ -847,6 +861,20 @@ export type Achievements_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "achievements" */
+export type Achievements_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Achievements_Max_Order_By>;
+  min?: InputMaybe<Achievements_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "achievements" */
+export type Achievements_Arr_Rel_Insert_Input = {
+  data: Array<Achievements_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Achievements_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "achievements". All fields are combined with a logical 'AND'. */
 export type Achievements_Bool_Exp = {
   _and?: InputMaybe<Array<Achievements_Bool_Exp>>;
@@ -858,6 +886,7 @@ export type Achievements_Bool_Exp = {
   title?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<String_Comparison_Exp>;
   unlocked_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -875,6 +904,7 @@ export type Achievements_Insert_Input = {
   title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
   unlocked_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -890,6 +920,17 @@ export type Achievements_Max_Fields = {
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "achievements" */
+export type Achievements_Max_Order_By = {
+  description?: InputMaybe<Order_By>;
+  icon?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  unlocked_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Achievements_Min_Fields = {
   __typename?: "achievements_min_fields";
@@ -900,6 +941,17 @@ export type Achievements_Min_Fields = {
   type?: Maybe<Scalars["String"]["output"]>;
   unlocked_at?: Maybe<Scalars["timestamp"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "achievements" */
+export type Achievements_Min_Order_By = {
+  description?: InputMaybe<Order_By>;
+  icon?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  unlocked_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "achievements" */
@@ -926,6 +978,7 @@ export type Achievements_Order_By = {
   title?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
   unlocked_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -1019,6 +1072,8 @@ export type Ai_Sessions = {
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
   topic?: Maybe<Scalars["String"]["output"]>;
   type: Scalars["String"]["output"];
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -1037,6 +1092,17 @@ export type Ai_Sessions_Aggregate = {
   __typename?: "ai_sessions_aggregate";
   aggregate?: Maybe<Ai_Sessions_Aggregate_Fields>;
   nodes: Array<Ai_Sessions>;
+};
+
+export type Ai_Sessions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Ai_Sessions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Ai_Sessions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Ai_Sessions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Ai_Sessions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "ai_sessions" */
@@ -1061,16 +1127,43 @@ export type Ai_Sessions_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "ai_sessions" */
+export type Ai_Sessions_Aggregate_Order_By = {
+  avg?: InputMaybe<Ai_Sessions_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Ai_Sessions_Max_Order_By>;
+  min?: InputMaybe<Ai_Sessions_Min_Order_By>;
+  stddev?: InputMaybe<Ai_Sessions_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Ai_Sessions_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Ai_Sessions_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Ai_Sessions_Sum_Order_By>;
+  var_pop?: InputMaybe<Ai_Sessions_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Ai_Sessions_Var_Samp_Order_By>;
+  variance?: InputMaybe<Ai_Sessions_Variance_Order_By>;
+};
+
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Ai_Sessions_Append_Input = {
   conversation?: InputMaybe<Scalars["jsonb"]["input"]>;
   feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
 };
 
+/** input type for inserting array relation for remote table "ai_sessions" */
+export type Ai_Sessions_Arr_Rel_Insert_Input = {
+  data: Array<Ai_Sessions_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Ai_Sessions_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Ai_Sessions_Avg_Fields = {
   __typename?: "ai_sessions_avg_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "ai_sessions" */
+export type Ai_Sessions_Avg_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "ai_sessions". All fields are combined with a logical 'AND'. */
@@ -1087,6 +1180,7 @@ export type Ai_Sessions_Bool_Exp = {
   started_at?: InputMaybe<Timestamp_Comparison_Exp>;
   topic?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<String_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -1130,6 +1224,7 @@ export type Ai_Sessions_Insert_Input = {
   started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   topic?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -1146,6 +1241,18 @@ export type Ai_Sessions_Max_Fields = {
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "ai_sessions" */
+export type Ai_Sessions_Max_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+  ended_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  session_date?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  topic?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Ai_Sessions_Min_Fields = {
   __typename?: "ai_sessions_min_fields";
@@ -1157,6 +1264,18 @@ export type Ai_Sessions_Min_Fields = {
   topic?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "ai_sessions" */
+export type Ai_Sessions_Min_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+  ended_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  session_date?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  topic?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "ai_sessions" */
@@ -1186,6 +1305,7 @@ export type Ai_Sessions_Order_By = {
   started_at?: InputMaybe<Order_By>;
   topic?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -1244,16 +1364,31 @@ export type Ai_Sessions_Stddev_Fields = {
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "ai_sessions" */
+export type Ai_Sessions_Stddev_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Ai_Sessions_Stddev_Pop_Fields = {
   __typename?: "ai_sessions_stddev_pop_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "ai_sessions" */
+export type Ai_Sessions_Stddev_Pop_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Ai_Sessions_Stddev_Samp_Fields = {
   __typename?: "ai_sessions_stddev_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "ai_sessions" */
+export type Ai_Sessions_Stddev_Samp_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "ai_sessions" */
@@ -1282,6 +1417,11 @@ export type Ai_Sessions_Stream_Cursor_Value_Input = {
 export type Ai_Sessions_Sum_Fields = {
   __typename?: "ai_sessions_sum_fields";
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "ai_sessions" */
+export type Ai_Sessions_Sum_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "ai_sessions" */
@@ -1333,16 +1473,31 @@ export type Ai_Sessions_Var_Pop_Fields = {
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "ai_sessions" */
+export type Ai_Sessions_Var_Pop_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Ai_Sessions_Var_Samp_Fields = {
   __typename?: "ai_sessions_var_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "ai_sessions" */
+export type Ai_Sessions_Var_Samp_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Ai_Sessions_Variance_Fields = {
   __typename?: "ai_sessions_variance_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "ai_sessions" */
+export type Ai_Sessions_Variance_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "auth_jwt" */
@@ -1964,6 +2119,7 @@ export enum Cursor_Ordering {
 /** columns and relationships of "daily_tasks" */
 export type Daily_Tasks = {
   __typename?: "daily_tasks";
+  ai_context?: Maybe<Scalars["jsonb"]["output"]>;
   ai_enabled?: Maybe<Scalars["Boolean"]["output"]>;
   completed_at?: Maybe<Scalars["timestamp"]["output"]>;
   created_at?: Maybe<Scalars["timestamp"]["output"]>;
@@ -1972,10 +2128,26 @@ export type Daily_Tasks = {
   id: Scalars["uuid"]["output"];
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
+  /** An object relationship */
+  study_stage?: Maybe<Study_Stages>;
+  suggested_prompt?: Maybe<Scalars["String"]["output"]>;
   task_date: Scalars["date"]["output"];
   title: Scalars["String"]["output"];
   type: Scalars["String"]["output"];
+  type_specific_payload?: Maybe<Scalars["jsonb"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** columns and relationships of "daily_tasks" */
+export type Daily_TasksAi_ContextArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "daily_tasks" */
+export type Daily_TasksType_Specific_PayloadArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregated selection of "daily_tasks" */
@@ -1983,6 +2155,33 @@ export type Daily_Tasks_Aggregate = {
   __typename?: "daily_tasks_aggregate";
   aggregate?: Maybe<Daily_Tasks_Aggregate_Fields>;
   nodes: Array<Daily_Tasks>;
+};
+
+export type Daily_Tasks_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Daily_Tasks_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Daily_Tasks_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Daily_Tasks_Aggregate_Bool_Exp_Count>;
+};
+
+export type Daily_Tasks_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Daily_Tasks_Select_Column_Daily_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Daily_Tasks_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Daily_Tasks_Select_Column_Daily_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Daily_Tasks_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Daily_Tasks_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "daily_tasks" */
@@ -2007,10 +2206,43 @@ export type Daily_Tasks_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "daily_tasks" */
+export type Daily_Tasks_Aggregate_Order_By = {
+  avg?: InputMaybe<Daily_Tasks_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Daily_Tasks_Max_Order_By>;
+  min?: InputMaybe<Daily_Tasks_Min_Order_By>;
+  stddev?: InputMaybe<Daily_Tasks_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Daily_Tasks_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Daily_Tasks_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Daily_Tasks_Sum_Order_By>;
+  var_pop?: InputMaybe<Daily_Tasks_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Daily_Tasks_Var_Samp_Order_By>;
+  variance?: InputMaybe<Daily_Tasks_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Daily_Tasks_Append_Input = {
+  ai_context?: InputMaybe<Scalars["jsonb"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** input type for inserting array relation for remote table "daily_tasks" */
+export type Daily_Tasks_Arr_Rel_Insert_Input = {
+  data: Array<Daily_Tasks_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Daily_Tasks_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Daily_Tasks_Avg_Fields = {
   __typename?: "daily_tasks_avg_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "daily_tasks" */
+export type Daily_Tasks_Avg_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "daily_tasks". All fields are combined with a logical 'AND'. */
@@ -2018,6 +2250,7 @@ export type Daily_Tasks_Bool_Exp = {
   _and?: InputMaybe<Array<Daily_Tasks_Bool_Exp>>;
   _not?: InputMaybe<Daily_Tasks_Bool_Exp>;
   _or?: InputMaybe<Array<Daily_Tasks_Bool_Exp>>;
+  ai_context?: InputMaybe<Jsonb_Comparison_Exp>;
   ai_enabled?: InputMaybe<Boolean_Comparison_Exp>;
   completed_at?: InputMaybe<Timestamp_Comparison_Exp>;
   created_at?: InputMaybe<Timestamp_Comparison_Exp>;
@@ -2026,9 +2259,13 @@ export type Daily_Tasks_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
+  study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
+  suggested_prompt?: InputMaybe<String_Comparison_Exp>;
   task_date?: InputMaybe<Date_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<String_Comparison_Exp>;
+  type_specific_payload?: InputMaybe<Jsonb_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -2040,6 +2277,24 @@ export enum Daily_Tasks_Constraint {
   DailyTasksUserIdTaskDateTypeKey = "daily_tasks_user_id_task_date_type_key",
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Daily_Tasks_Delete_At_Path_Input = {
+  ai_context?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  type_specific_payload?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Daily_Tasks_Delete_Elem_Input = {
+  ai_context?: InputMaybe<Scalars["Int"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Daily_Tasks_Delete_Key_Input = {
+  ai_context?: InputMaybe<Scalars["String"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 /** input type for incrementing numeric columns in table "daily_tasks" */
 export type Daily_Tasks_Inc_Input = {
   duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2047,6 +2302,7 @@ export type Daily_Tasks_Inc_Input = {
 
 /** input type for inserting data into table "daily_tasks" */
 export type Daily_Tasks_Insert_Input = {
+  ai_context?: InputMaybe<Scalars["jsonb"]["input"]>;
   ai_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -2055,9 +2311,13 @@ export type Daily_Tasks_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
+  study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
+  suggested_prompt?: InputMaybe<Scalars["String"]["input"]>;
   task_date?: InputMaybe<Scalars["date"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -2071,10 +2331,27 @@ export type Daily_Tasks_Max_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
+  suggested_prompt?: Maybe<Scalars["String"]["output"]>;
   task_date?: Maybe<Scalars["date"]["output"]>;
   title?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "daily_tasks" */
+export type Daily_Tasks_Max_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  suggested_prompt?: InputMaybe<Order_By>;
+  task_date?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -2087,10 +2364,27 @@ export type Daily_Tasks_Min_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
+  suggested_prompt?: Maybe<Scalars["String"]["output"]>;
   task_date?: Maybe<Scalars["date"]["output"]>;
   title?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "daily_tasks" */
+export type Daily_Tasks_Min_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  suggested_prompt?: InputMaybe<Order_By>;
+  task_date?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "daily_tasks" */
@@ -2111,6 +2405,7 @@ export type Daily_Tasks_On_Conflict = {
 
 /** Ordering options when selecting data from "daily_tasks". */
 export type Daily_Tasks_Order_By = {
+  ai_context?: InputMaybe<Order_By>;
   ai_enabled?: InputMaybe<Order_By>;
   completed_at?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -2119,9 +2414,13 @@ export type Daily_Tasks_Order_By = {
   id?: InputMaybe<Order_By>;
   stage_id?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
+  study_stage?: InputMaybe<Study_Stages_Order_By>;
+  suggested_prompt?: InputMaybe<Order_By>;
   task_date?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
+  type_specific_payload?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -2130,8 +2429,16 @@ export type Daily_Tasks_Pk_Columns_Input = {
   id: Scalars["uuid"]["input"];
 };
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Daily_Tasks_Prepend_Input = {
+  ai_context?: InputMaybe<Scalars["jsonb"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
 /** select columns of table "daily_tasks" */
 export enum Daily_Tasks_Select_Column {
+  /** column name */
+  AiContext = "ai_context",
   /** column name */
   AiEnabled = "ai_enabled",
   /** column name */
@@ -2149,17 +2456,34 @@ export enum Daily_Tasks_Select_Column {
   /** column name */
   Status = "status",
   /** column name */
+  SuggestedPrompt = "suggested_prompt",
+  /** column name */
   TaskDate = "task_date",
   /** column name */
   Title = "title",
   /** column name */
   Type = "type",
   /** column name */
+  TypeSpecificPayload = "type_specific_payload",
+  /** column name */
   UserId = "user_id",
+}
+
+/** select "daily_tasks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "daily_tasks" */
+export enum Daily_Tasks_Select_Column_Daily_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  AiEnabled = "ai_enabled",
+}
+
+/** select "daily_tasks_aggregate_bool_exp_bool_or_arguments_columns" columns of table "daily_tasks" */
+export enum Daily_Tasks_Select_Column_Daily_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  AiEnabled = "ai_enabled",
 }
 
 /** input type for updating data in table "daily_tasks" */
 export type Daily_Tasks_Set_Input = {
+  ai_context?: InputMaybe<Scalars["jsonb"]["input"]>;
   ai_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -2168,9 +2492,11 @@ export type Daily_Tasks_Set_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
+  suggested_prompt?: InputMaybe<Scalars["String"]["input"]>;
   task_date?: InputMaybe<Scalars["date"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["jsonb"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -2180,16 +2506,31 @@ export type Daily_Tasks_Stddev_Fields = {
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "daily_tasks" */
+export type Daily_Tasks_Stddev_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Daily_Tasks_Stddev_Pop_Fields = {
   __typename?: "daily_tasks_stddev_pop_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "daily_tasks" */
+export type Daily_Tasks_Stddev_Pop_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Daily_Tasks_Stddev_Samp_Fields = {
   __typename?: "daily_tasks_stddev_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "daily_tasks" */
+export type Daily_Tasks_Stddev_Samp_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "daily_tasks" */
@@ -2202,6 +2543,7 @@ export type Daily_Tasks_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Daily_Tasks_Stream_Cursor_Value_Input = {
+  ai_context?: InputMaybe<Scalars["jsonb"]["input"]>;
   ai_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -2210,9 +2552,11 @@ export type Daily_Tasks_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
+  suggested_prompt?: InputMaybe<Scalars["String"]["input"]>;
   task_date?: InputMaybe<Scalars["date"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
+  type_specific_payload?: InputMaybe<Scalars["jsonb"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -2222,8 +2566,15 @@ export type Daily_Tasks_Sum_Fields = {
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
 };
 
+/** order by sum() on columns of table "daily_tasks" */
+export type Daily_Tasks_Sum_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** update columns of table "daily_tasks" */
 export enum Daily_Tasks_Update_Column {
+  /** column name */
+  AiContext = "ai_context",
   /** column name */
   AiEnabled = "ai_enabled",
   /** column name */
@@ -2241,18 +2592,32 @@ export enum Daily_Tasks_Update_Column {
   /** column name */
   Status = "status",
   /** column name */
+  SuggestedPrompt = "suggested_prompt",
+  /** column name */
   TaskDate = "task_date",
   /** column name */
   Title = "title",
   /** column name */
   Type = "type",
   /** column name */
+  TypeSpecificPayload = "type_specific_payload",
+  /** column name */
   UserId = "user_id",
 }
 
 export type Daily_Tasks_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Daily_Tasks_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Daily_Tasks_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Daily_Tasks_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Daily_Tasks_Delete_Key_Input>;
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<Daily_Tasks_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Daily_Tasks_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Daily_Tasks_Set_Input>;
   /** filter the rows which have to be updated */
@@ -2265,16 +2630,31 @@ export type Daily_Tasks_Var_Pop_Fields = {
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "daily_tasks" */
+export type Daily_Tasks_Var_Pop_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Daily_Tasks_Var_Samp_Fields = {
   __typename?: "daily_tasks_var_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "daily_tasks" */
+export type Daily_Tasks_Var_Samp_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Daily_Tasks_Variance_Fields = {
   __typename?: "daily_tasks_variance_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "daily_tasks" */
+export type Daily_Tasks_Variance_Order_By = {
+  duration_minutes?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'. */
@@ -2580,6 +2960,8 @@ export type Error_Log = {
   review_count?: Maybe<Scalars["Int"]["output"]>;
   reviewed?: Maybe<Scalars["Boolean"]["output"]>;
   subcategory?: Maybe<Scalars["String"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -2588,6 +2970,33 @@ export type Error_Log_Aggregate = {
   __typename?: "error_log_aggregate";
   aggregate?: Maybe<Error_Log_Aggregate_Fields>;
   nodes: Array<Error_Log>;
+};
+
+export type Error_Log_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Error_Log_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Error_Log_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Error_Log_Aggregate_Bool_Exp_Count>;
+};
+
+export type Error_Log_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Error_Log_Select_Column_Error_Log_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Error_Log_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Error_Log_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Error_Log_Select_Column_Error_Log_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Error_Log_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Error_Log_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Error_Log_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Error_Log_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "error_log" */
@@ -2612,10 +3021,37 @@ export type Error_Log_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "error_log" */
+export type Error_Log_Aggregate_Order_By = {
+  avg?: InputMaybe<Error_Log_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Error_Log_Max_Order_By>;
+  min?: InputMaybe<Error_Log_Min_Order_By>;
+  stddev?: InputMaybe<Error_Log_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Error_Log_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Error_Log_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Error_Log_Sum_Order_By>;
+  var_pop?: InputMaybe<Error_Log_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Error_Log_Var_Samp_Order_By>;
+  variance?: InputMaybe<Error_Log_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "error_log" */
+export type Error_Log_Arr_Rel_Insert_Input = {
+  data: Array<Error_Log_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Error_Log_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Error_Log_Avg_Fields = {
   __typename?: "error_log_avg_fields";
   review_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "error_log" */
+export type Error_Log_Avg_Order_By = {
+  review_count?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "error_log". All fields are combined with a logical 'AND'. */
@@ -2634,6 +3070,7 @@ export type Error_Log_Bool_Exp = {
   review_count?: InputMaybe<Int_Comparison_Exp>;
   reviewed?: InputMaybe<Boolean_Comparison_Exp>;
   subcategory?: InputMaybe<String_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -2661,6 +3098,7 @@ export type Error_Log_Insert_Input = {
   review_count?: InputMaybe<Scalars["Int"]["input"]>;
   reviewed?: InputMaybe<Scalars["Boolean"]["input"]>;
   subcategory?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -2680,6 +3118,21 @@ export type Error_Log_Max_Fields = {
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "error_log" */
+export type Error_Log_Max_Order_By = {
+  category?: InputMaybe<Order_By>;
+  correction?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  date?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  mistake?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  notes?: InputMaybe<Order_By>;
+  review_count?: InputMaybe<Order_By>;
+  subcategory?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Error_Log_Min_Fields = {
   __typename?: "error_log_min_fields";
@@ -2694,6 +3147,21 @@ export type Error_Log_Min_Fields = {
   review_count?: Maybe<Scalars["Int"]["output"]>;
   subcategory?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "error_log" */
+export type Error_Log_Min_Order_By = {
+  category?: InputMaybe<Order_By>;
+  correction?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  date?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  mistake?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  notes?: InputMaybe<Order_By>;
+  review_count?: InputMaybe<Order_By>;
+  subcategory?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "error_log" */
@@ -2725,6 +3193,7 @@ export type Error_Log_Order_By = {
   review_count?: InputMaybe<Order_By>;
   reviewed?: InputMaybe<Order_By>;
   subcategory?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -2761,6 +3230,18 @@ export enum Error_Log_Select_Column {
   UserId = "user_id",
 }
 
+/** select "error_log_aggregate_bool_exp_bool_and_arguments_columns" columns of table "error_log" */
+export enum Error_Log_Select_Column_Error_Log_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Reviewed = "reviewed",
+}
+
+/** select "error_log_aggregate_bool_exp_bool_or_arguments_columns" columns of table "error_log" */
+export enum Error_Log_Select_Column_Error_Log_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Reviewed = "reviewed",
+}
+
 /** input type for updating data in table "error_log" */
 export type Error_Log_Set_Input = {
   category?: InputMaybe<Scalars["String"]["input"]>;
@@ -2783,16 +3264,31 @@ export type Error_Log_Stddev_Fields = {
   review_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "error_log" */
+export type Error_Log_Stddev_Order_By = {
+  review_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Error_Log_Stddev_Pop_Fields = {
   __typename?: "error_log_stddev_pop_fields";
   review_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "error_log" */
+export type Error_Log_Stddev_Pop_Order_By = {
+  review_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Error_Log_Stddev_Samp_Fields = {
   __typename?: "error_log_stddev_samp_fields";
   review_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "error_log" */
+export type Error_Log_Stddev_Samp_Order_By = {
+  review_count?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "error_log" */
@@ -2823,6 +3319,11 @@ export type Error_Log_Stream_Cursor_Value_Input = {
 export type Error_Log_Sum_Fields = {
   __typename?: "error_log_sum_fields";
   review_count?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "error_log" */
+export type Error_Log_Sum_Order_By = {
+  review_count?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "error_log" */
@@ -2868,16 +3369,31 @@ export type Error_Log_Var_Pop_Fields = {
   review_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "error_log" */
+export type Error_Log_Var_Pop_Order_By = {
+  review_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Error_Log_Var_Samp_Fields = {
   __typename?: "error_log_var_samp_fields";
   review_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "error_log" */
+export type Error_Log_Var_Samp_Order_By = {
+  review_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Error_Log_Variance_Fields = {
   __typename?: "error_log_variance_fields";
   review_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "error_log" */
+export type Error_Log_Variance_Order_By = {
+  review_count?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "storage.files" */
@@ -6336,14 +6852,24 @@ export type Mutation_RootUpdate_Buckets_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Daily_TasksArgs = {
+  _append?: InputMaybe<Daily_Tasks_Append_Input>;
+  _delete_at_path?: InputMaybe<Daily_Tasks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Daily_Tasks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Daily_Tasks_Delete_Key_Input>;
   _inc?: InputMaybe<Daily_Tasks_Inc_Input>;
+  _prepend?: InputMaybe<Daily_Tasks_Prepend_Input>;
   _set?: InputMaybe<Daily_Tasks_Set_Input>;
   where: Daily_Tasks_Bool_Exp;
 };
 
 /** mutation root */
 export type Mutation_RootUpdate_Daily_Tasks_By_PkArgs = {
+  _append?: InputMaybe<Daily_Tasks_Append_Input>;
+  _delete_at_path?: InputMaybe<Daily_Tasks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Daily_Tasks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Daily_Tasks_Delete_Key_Input>;
   _inc?: InputMaybe<Daily_Tasks_Inc_Input>;
+  _prepend?: InputMaybe<Daily_Tasks_Prepend_Input>;
   _set?: InputMaybe<Daily_Tasks_Set_Input>;
   pk_columns: Daily_Tasks_Pk_Columns_Input;
 };
@@ -13052,6 +13578,8 @@ export type Progress_Metrics = {
   id: Scalars["uuid"]["output"];
   study_minutes?: Maybe<Scalars["Int"]["output"]>;
   tasks_completed?: Maybe<Scalars["Int"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -13061,6 +13589,17 @@ export type Progress_Metrics_Aggregate = {
   __typename?: "progress_metrics_aggregate";
   aggregate?: Maybe<Progress_Metrics_Aggregate_Fields>;
   nodes: Array<Progress_Metrics>;
+};
+
+export type Progress_Metrics_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Progress_Metrics_Aggregate_Bool_Exp_Count>;
+};
+
+export type Progress_Metrics_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Progress_Metrics_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Progress_Metrics_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "progress_metrics" */
@@ -13085,6 +13624,28 @@ export type Progress_Metrics_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "progress_metrics" */
+export type Progress_Metrics_Aggregate_Order_By = {
+  avg?: InputMaybe<Progress_Metrics_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Progress_Metrics_Max_Order_By>;
+  min?: InputMaybe<Progress_Metrics_Min_Order_By>;
+  stddev?: InputMaybe<Progress_Metrics_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Progress_Metrics_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Progress_Metrics_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Progress_Metrics_Sum_Order_By>;
+  var_pop?: InputMaybe<Progress_Metrics_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Progress_Metrics_Var_Samp_Order_By>;
+  variance?: InputMaybe<Progress_Metrics_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "progress_metrics" */
+export type Progress_Metrics_Arr_Rel_Insert_Input = {
+  data: Array<Progress_Metrics_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Progress_Metrics_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Progress_Metrics_Avg_Fields = {
   __typename?: "progress_metrics_avg_fields";
@@ -13096,6 +13657,18 @@ export type Progress_Metrics_Avg_Fields = {
   study_minutes?: Maybe<Scalars["Float"]["output"]>;
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "progress_metrics" */
+export type Progress_Metrics_Avg_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "progress_metrics". All fields are combined with a logical 'AND'. */
@@ -13113,6 +13686,7 @@ export type Progress_Metrics_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   study_minutes?: InputMaybe<Int_Comparison_Exp>;
   tasks_completed?: InputMaybe<Int_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
   words_learned?: InputMaybe<Int_Comparison_Exp>;
 };
@@ -13149,6 +13723,7 @@ export type Progress_Metrics_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   study_minutes?: InputMaybe<Scalars["Int"]["input"]>;
   tasks_completed?: InputMaybe<Scalars["Int"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
   words_learned?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -13170,6 +13745,22 @@ export type Progress_Metrics_Max_Fields = {
   words_learned?: Maybe<Scalars["Int"]["output"]>;
 };
 
+/** order by max() on columns of table "progress_metrics" */
+export type Progress_Metrics_Max_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  date?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Progress_Metrics_Min_Fields = {
   __typename?: "progress_metrics_min_fields";
@@ -13185,6 +13776,22 @@ export type Progress_Metrics_Min_Fields = {
   tasks_completed?: Maybe<Scalars["Int"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by min() on columns of table "progress_metrics" */
+export type Progress_Metrics_Min_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  date?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "progress_metrics" */
@@ -13215,6 +13822,7 @@ export type Progress_Metrics_Order_By = {
   id?: InputMaybe<Order_By>;
   study_minutes?: InputMaybe<Order_By>;
   tasks_completed?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
   words_learned?: InputMaybe<Order_By>;
 };
@@ -13281,6 +13889,18 @@ export type Progress_Metrics_Stddev_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "progress_metrics" */
+export type Progress_Metrics_Stddev_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Progress_Metrics_Stddev_Pop_Fields = {
   __typename?: "progress_metrics_stddev_pop_fields";
@@ -13294,6 +13914,18 @@ export type Progress_Metrics_Stddev_Pop_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "progress_metrics" */
+export type Progress_Metrics_Stddev_Pop_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Progress_Metrics_Stddev_Samp_Fields = {
   __typename?: "progress_metrics_stddev_samp_fields";
@@ -13305,6 +13937,18 @@ export type Progress_Metrics_Stddev_Samp_Fields = {
   study_minutes?: Maybe<Scalars["Float"]["output"]>;
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "progress_metrics" */
+export type Progress_Metrics_Stddev_Samp_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "progress_metrics" */
@@ -13342,6 +13986,18 @@ export type Progress_Metrics_Sum_Fields = {
   study_minutes?: Maybe<Scalars["Int"]["output"]>;
   tasks_completed?: Maybe<Scalars["Int"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "progress_metrics" */
+export type Progress_Metrics_Sum_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "progress_metrics" */
@@ -13394,6 +14050,18 @@ export type Progress_Metrics_Var_Pop_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "progress_metrics" */
+export type Progress_Metrics_Var_Pop_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Progress_Metrics_Var_Samp_Fields = {
   __typename?: "progress_metrics_var_samp_fields";
@@ -13405,6 +14073,18 @@ export type Progress_Metrics_Var_Samp_Fields = {
   study_minutes?: Maybe<Scalars["Float"]["output"]>;
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "progress_metrics" */
+export type Progress_Metrics_Var_Samp_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
@@ -13420,6 +14100,18 @@ export type Progress_Metrics_Variance_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by variance() on columns of table "progress_metrics" */
+export type Progress_Metrics_Variance_Order_By = {
+  accuracy_grammar?: InputMaybe<Order_By>;
+  accuracy_listening?: InputMaybe<Order_By>;
+  accuracy_reading?: InputMaybe<Order_By>;
+  accuracy_vocabulary?: InputMaybe<Order_By>;
+  accuracy_writing?: InputMaybe<Order_By>;
+  study_minutes?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 export type Query_Root = {
   __typename?: "query_root";
   /** An array relationship */
@@ -13428,15 +14120,15 @@ export type Query_Root = {
   accounts_aggregate: Accounts_Aggregate;
   /** fetch data from the table: "accounts" using primary key columns */
   accounts_by_pk?: Maybe<Accounts>;
-  /** fetch data from the table: "achievements" */
+  /** An array relationship */
   achievements: Array<Achievements>;
-  /** fetch aggregated fields from the table: "achievements" */
+  /** An aggregate relationship */
   achievements_aggregate: Achievements_Aggregate;
   /** fetch data from the table: "achievements" using primary key columns */
   achievements_by_pk?: Maybe<Achievements>;
-  /** fetch data from the table: "ai_sessions" */
+  /** An array relationship */
   ai_sessions: Array<Ai_Sessions>;
-  /** fetch aggregated fields from the table: "ai_sessions" */
+  /** An aggregate relationship */
   ai_sessions_aggregate: Ai_Sessions_Aggregate;
   /** fetch data from the table: "ai_sessions" using primary key columns */
   ai_sessions_by_pk?: Maybe<Ai_Sessions>;
@@ -13452,9 +14144,9 @@ export type Query_Root = {
   buckets: Array<Buckets>;
   /** fetch aggregated fields from the table: "storage.buckets" */
   bucketsAggregate: Buckets_Aggregate;
-  /** fetch data from the table: "daily_tasks" */
+  /** An array relationship */
   daily_tasks: Array<Daily_Tasks>;
-  /** fetch aggregated fields from the table: "daily_tasks" */
+  /** An aggregate relationship */
   daily_tasks_aggregate: Daily_Tasks_Aggregate;
   /** fetch data from the table: "daily_tasks" using primary key columns */
   daily_tasks_by_pk?: Maybe<Daily_Tasks>;
@@ -13554,9 +14246,9 @@ export type Query_Root = {
   payments_user_payment_provider_mappings_aggregate: Payments_User_Payment_Provider_Mappings_Aggregate;
   /** fetch data from the table: "payments.user_payment_provider_mappings" using primary key columns */
   payments_user_payment_provider_mappings_by_pk?: Maybe<Payments_User_Payment_Provider_Mappings>;
-  /** fetch data from the table: "progress_metrics" */
+  /** An array relationship */
   progress_metrics: Array<Progress_Metrics>;
-  /** fetch aggregated fields from the table: "progress_metrics" */
+  /** An aggregate relationship */
   progress_metrics_aggregate: Progress_Metrics_Aggregate;
   /** fetch data from the table: "progress_metrics" using primary key columns */
   progress_metrics_by_pk?: Maybe<Progress_Metrics>;
@@ -13572,15 +14264,15 @@ export type Query_Root = {
   stage_progress_aggregate: Stage_Progress_Aggregate;
   /** fetch data from the table: "stage_progress" using primary key columns */
   stage_progress_by_pk?: Maybe<Stage_Progress>;
-  /** fetch data from the table: "stage_requirements" */
+  /** An array relationship */
   stage_requirements: Array<Stage_Requirements>;
-  /** fetch aggregated fields from the table: "stage_requirements" */
+  /** An aggregate relationship */
   stage_requirements_aggregate: Stage_Requirements_Aggregate;
   /** fetch data from the table: "stage_requirements" using primary key columns */
   stage_requirements_by_pk?: Maybe<Stage_Requirements>;
-  /** fetch data from the table: "stage_tests" */
+  /** An array relationship */
   stage_tests: Array<Stage_Tests>;
-  /** fetch aggregated fields from the table: "stage_tests" */
+  /** An aggregate relationship */
   stage_tests_aggregate: Stage_Tests_Aggregate;
   /** fetch data from the table: "stage_tests" using primary key columns */
   stage_tests_by_pk?: Maybe<Stage_Tests>;
@@ -13614,9 +14306,9 @@ export type Query_Root = {
   viruses: Array<Virus>;
   /** fetch aggregated fields from the table: "storage.virus" */
   virusesAggregate: Virus_Aggregate;
-  /** fetch data from the table: "vocabulary_cards" */
+  /** An array relationship */
   vocabulary_cards: Array<Vocabulary_Cards>;
-  /** fetch aggregated fields from the table: "vocabulary_cards" */
+  /** An aggregate relationship */
   vocabulary_cards_aggregate: Vocabulary_Cards_Aggregate;
   /** fetch data from the table: "vocabulary_cards" using primary key columns */
   vocabulary_cards_by_pk?: Maybe<Vocabulary_Cards>;
@@ -14323,7 +15015,11 @@ export type Review_History = {
   id: Scalars["uuid"]["output"];
   response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
   reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An object relationship */
+  vocabulary_card?: Maybe<Vocabulary_Cards>;
   was_correct: Scalars["Boolean"]["output"];
 };
 
@@ -14332,6 +15028,33 @@ export type Review_History_Aggregate = {
   __typename?: "review_history_aggregate";
   aggregate?: Maybe<Review_History_Aggregate_Fields>;
   nodes: Array<Review_History>;
+};
+
+export type Review_History_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Review_History_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Review_History_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Review_History_Aggregate_Bool_Exp_Count>;
+};
+
+export type Review_History_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Review_History_Select_Column_Review_History_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Review_History_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Review_History_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Review_History_Select_Column_Review_History_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Review_History_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Review_History_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Review_History_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Review_History_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "review_history" */
@@ -14356,10 +15079,37 @@ export type Review_History_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "review_history" */
+export type Review_History_Aggregate_Order_By = {
+  avg?: InputMaybe<Review_History_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Review_History_Max_Order_By>;
+  min?: InputMaybe<Review_History_Min_Order_By>;
+  stddev?: InputMaybe<Review_History_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Review_History_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Review_History_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Review_History_Sum_Order_By>;
+  var_pop?: InputMaybe<Review_History_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Review_History_Var_Samp_Order_By>;
+  variance?: InputMaybe<Review_History_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "review_history" */
+export type Review_History_Arr_Rel_Insert_Input = {
+  data: Array<Review_History_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Review_History_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Review_History_Avg_Fields = {
   __typename?: "review_history_avg_fields";
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "review_history" */
+export type Review_History_Avg_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "review_history". All fields are combined with a logical 'AND'. */
@@ -14371,7 +15121,9 @@ export type Review_History_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   response_time_seconds?: InputMaybe<Int_Comparison_Exp>;
   reviewed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
   was_correct?: InputMaybe<Boolean_Comparison_Exp>;
 };
 
@@ -14392,7 +15144,9 @@ export type Review_History_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   response_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
   reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Obj_Rel_Insert_Input>;
   was_correct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
@@ -14406,6 +15160,15 @@ export type Review_History_Max_Fields = {
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "review_history" */
+export type Review_History_Max_Order_By = {
+  card_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  response_time_seconds?: InputMaybe<Order_By>;
+  reviewed_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Review_History_Min_Fields = {
   __typename?: "review_history_min_fields";
@@ -14414,6 +15177,15 @@ export type Review_History_Min_Fields = {
   response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
   reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "review_history" */
+export type Review_History_Min_Order_By = {
+  card_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  response_time_seconds?: InputMaybe<Order_By>;
+  reviewed_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "review_history" */
@@ -14438,7 +15210,9 @@ export type Review_History_Order_By = {
   id?: InputMaybe<Order_By>;
   response_time_seconds?: InputMaybe<Order_By>;
   reviewed_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Order_By>;
   was_correct?: InputMaybe<Order_By>;
 };
 
@@ -14463,6 +15237,18 @@ export enum Review_History_Select_Column {
   WasCorrect = "was_correct",
 }
 
+/** select "review_history_aggregate_bool_exp_bool_and_arguments_columns" columns of table "review_history" */
+export enum Review_History_Select_Column_Review_History_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
+/** select "review_history_aggregate_bool_exp_bool_or_arguments_columns" columns of table "review_history" */
+export enum Review_History_Select_Column_Review_History_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
 /** input type for updating data in table "review_history" */
 export type Review_History_Set_Input = {
   card_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -14479,16 +15265,31 @@ export type Review_History_Stddev_Fields = {
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "review_history" */
+export type Review_History_Stddev_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Review_History_Stddev_Pop_Fields = {
   __typename?: "review_history_stddev_pop_fields";
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "review_history" */
+export type Review_History_Stddev_Pop_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Review_History_Stddev_Samp_Fields = {
   __typename?: "review_history_stddev_samp_fields";
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "review_history" */
+export type Review_History_Stddev_Samp_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "review_history" */
@@ -14513,6 +15314,11 @@ export type Review_History_Stream_Cursor_Value_Input = {
 export type Review_History_Sum_Fields = {
   __typename?: "review_history_sum_fields";
   response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "review_history" */
+export type Review_History_Sum_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "review_history" */
@@ -14546,16 +15352,31 @@ export type Review_History_Var_Pop_Fields = {
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "review_history" */
+export type Review_History_Var_Pop_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Review_History_Var_Samp_Fields = {
   __typename?: "review_history_var_samp_fields";
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "review_history" */
+export type Review_History_Var_Samp_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Review_History_Variance_Fields = {
   __typename?: "review_history_variance_fields";
   response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "review_history" */
+export type Review_History_Variance_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "stage_progress" */
@@ -14569,9 +15390,13 @@ export type Stage_Progress = {
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   started_at?: Maybe<Scalars["date"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
+  /** An object relationship */
+  study_stage?: Maybe<Study_Stages>;
   tasks_completed?: Maybe<Scalars["Int"]["output"]>;
   tasks_total?: Maybe<Scalars["Int"]["output"]>;
   updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -14581,6 +15406,17 @@ export type Stage_Progress_Aggregate = {
   __typename?: "stage_progress_aggregate";
   aggregate?: Maybe<Stage_Progress_Aggregate_Fields>;
   nodes: Array<Stage_Progress>;
+};
+
+export type Stage_Progress_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Stage_Progress_Aggregate_Bool_Exp_Count>;
+};
+
+export type Stage_Progress_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Stage_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Stage_Progress_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "stage_progress" */
@@ -14605,6 +15441,28 @@ export type Stage_Progress_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "stage_progress" */
+export type Stage_Progress_Aggregate_Order_By = {
+  avg?: InputMaybe<Stage_Progress_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Stage_Progress_Max_Order_By>;
+  min?: InputMaybe<Stage_Progress_Min_Order_By>;
+  stddev?: InputMaybe<Stage_Progress_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Stage_Progress_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Stage_Progress_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Stage_Progress_Sum_Order_By>;
+  var_pop?: InputMaybe<Stage_Progress_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Stage_Progress_Var_Samp_Order_By>;
+  variance?: InputMaybe<Stage_Progress_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "stage_progress" */
+export type Stage_Progress_Arr_Rel_Insert_Input = {
+  data: Array<Stage_Progress_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Stage_Progress_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Stage_Progress_Avg_Fields = {
   __typename?: "stage_progress_avg_fields";
@@ -14613,6 +15471,15 @@ export type Stage_Progress_Avg_Fields = {
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   tasks_total?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "stage_progress" */
+export type Stage_Progress_Avg_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "stage_progress". All fields are combined with a logical 'AND'. */
@@ -14628,9 +15495,11 @@ export type Stage_Progress_Bool_Exp = {
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
   started_at?: InputMaybe<Date_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
+  study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
   tasks_completed?: InputMaybe<Int_Comparison_Exp>;
   tasks_total?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
   words_learned?: InputMaybe<Int_Comparison_Exp>;
 };
@@ -14662,9 +15531,11 @@ export type Stage_Progress_Insert_Input = {
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   started_at?: InputMaybe<Scalars["date"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
+  study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
   tasks_completed?: InputMaybe<Scalars["Int"]["input"]>;
   tasks_total?: InputMaybe<Scalars["Int"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
   words_learned?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -14687,6 +15558,23 @@ export type Stage_Progress_Max_Fields = {
   words_learned?: Maybe<Scalars["Int"]["output"]>;
 };
 
+/** order by max() on columns of table "stage_progress" */
+export type Stage_Progress_Max_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Stage_Progress_Min_Fields = {
   __typename?: "stage_progress_min_fields";
@@ -14703,6 +15591,23 @@ export type Stage_Progress_Min_Fields = {
   updated_at?: Maybe<Scalars["timestamp"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by min() on columns of table "stage_progress" */
+export type Stage_Progress_Min_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "stage_progress" */
@@ -14731,9 +15636,11 @@ export type Stage_Progress_Order_By = {
   stage_id?: InputMaybe<Order_By>;
   started_at?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
+  study_stage?: InputMaybe<Study_Stages_Order_By>;
   tasks_completed?: InputMaybe<Order_By>;
   tasks_total?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
   words_learned?: InputMaybe<Order_By>;
 };
@@ -14800,6 +15707,15 @@ export type Stage_Progress_Stddev_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "stage_progress" */
+export type Stage_Progress_Stddev_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Stage_Progress_Stddev_Pop_Fields = {
   __typename?: "stage_progress_stddev_pop_fields";
@@ -14810,6 +15726,15 @@ export type Stage_Progress_Stddev_Pop_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "stage_progress" */
+export type Stage_Progress_Stddev_Pop_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Stage_Progress_Stddev_Samp_Fields = {
   __typename?: "stage_progress_stddev_samp_fields";
@@ -14818,6 +15743,15 @@ export type Stage_Progress_Stddev_Samp_Fields = {
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   tasks_total?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "stage_progress" */
+export type Stage_Progress_Stddev_Samp_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "stage_progress" */
@@ -14853,6 +15787,15 @@ export type Stage_Progress_Sum_Fields = {
   tasks_completed?: Maybe<Scalars["Int"]["output"]>;
   tasks_total?: Maybe<Scalars["Int"]["output"]>;
   words_learned?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "stage_progress" */
+export type Stage_Progress_Sum_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "stage_progress" */
@@ -14904,6 +15847,15 @@ export type Stage_Progress_Var_Pop_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "stage_progress" */
+export type Stage_Progress_Var_Pop_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Stage_Progress_Var_Samp_Fields = {
   __typename?: "stage_progress_var_samp_fields";
@@ -14914,6 +15866,15 @@ export type Stage_Progress_Var_Samp_Fields = {
   words_learned?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "stage_progress" */
+export type Stage_Progress_Var_Samp_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Stage_Progress_Variance_Fields = {
   __typename?: "stage_progress_variance_fields";
@@ -14922,6 +15883,15 @@ export type Stage_Progress_Variance_Fields = {
   tasks_completed?: Maybe<Scalars["Float"]["output"]>;
   tasks_total?: Maybe<Scalars["Float"]["output"]>;
   words_learned?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "stage_progress" */
+export type Stage_Progress_Variance_Order_By = {
+  average_accuracy?: InputMaybe<Order_By>;
+  errors_pending?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
+  words_learned?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "stage_requirements" */
@@ -14935,6 +15905,8 @@ export type Stage_Requirements = {
   requirement_type: Scalars["String"]["output"];
   requirement_value?: Maybe<Scalars["Int"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An object relationship */
+  study_stage?: Maybe<Study_Stages>;
 };
 
 /** aggregated selection of "stage_requirements" */
@@ -14942,6 +15914,17 @@ export type Stage_Requirements_Aggregate = {
   __typename?: "stage_requirements_aggregate";
   aggregate?: Maybe<Stage_Requirements_Aggregate_Fields>;
   nodes: Array<Stage_Requirements>;
+};
+
+export type Stage_Requirements_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Stage_Requirements_Aggregate_Bool_Exp_Count>;
+};
+
+export type Stage_Requirements_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Stage_Requirements_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Stage_Requirements_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "stage_requirements" */
@@ -14966,12 +15949,41 @@ export type Stage_Requirements_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "stage_requirements" */
+export type Stage_Requirements_Aggregate_Order_By = {
+  avg?: InputMaybe<Stage_Requirements_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Stage_Requirements_Max_Order_By>;
+  min?: InputMaybe<Stage_Requirements_Min_Order_By>;
+  stddev?: InputMaybe<Stage_Requirements_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Stage_Requirements_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Stage_Requirements_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Stage_Requirements_Sum_Order_By>;
+  var_pop?: InputMaybe<Stage_Requirements_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Stage_Requirements_Var_Samp_Order_By>;
+  variance?: InputMaybe<Stage_Requirements_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "stage_requirements" */
+export type Stage_Requirements_Arr_Rel_Insert_Input = {
+  data: Array<Stage_Requirements_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Stage_Requirements_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Stage_Requirements_Avg_Fields = {
   __typename?: "stage_requirements_avg_fields";
   order_index?: Maybe<Scalars["Float"]["output"]>;
   requirement_threshold?: Maybe<Scalars["Float"]["output"]>;
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "stage_requirements" */
+export type Stage_Requirements_Avg_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "stage_requirements". All fields are combined with a logical 'AND'. */
@@ -14987,6 +15999,7 @@ export type Stage_Requirements_Bool_Exp = {
   requirement_type?: InputMaybe<String_Comparison_Exp>;
   requirement_value?: InputMaybe<Int_Comparison_Exp>;
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
+  study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "stage_requirements" */
@@ -15012,6 +16025,7 @@ export type Stage_Requirements_Insert_Input = {
   requirement_type?: InputMaybe<Scalars["String"]["input"]>;
   requirement_value?: InputMaybe<Scalars["Int"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -15027,6 +16041,18 @@ export type Stage_Requirements_Max_Fields = {
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "stage_requirements" */
+export type Stage_Requirements_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_type?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Stage_Requirements_Min_Fields = {
   __typename?: "stage_requirements_min_fields";
@@ -15038,6 +16064,18 @@ export type Stage_Requirements_Min_Fields = {
   requirement_type?: Maybe<Scalars["String"]["output"]>;
   requirement_value?: Maybe<Scalars["Int"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "stage_requirements" */
+export type Stage_Requirements_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_type?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "stage_requirements" */
@@ -15066,6 +16104,7 @@ export type Stage_Requirements_Order_By = {
   requirement_type?: InputMaybe<Order_By>;
   requirement_value?: InputMaybe<Order_By>;
   stage_id?: InputMaybe<Order_By>;
+  study_stage?: InputMaybe<Study_Stages_Order_By>;
 };
 
 /** primary key columns input for table: stage_requirements */
@@ -15113,6 +16152,13 @@ export type Stage_Requirements_Stddev_Fields = {
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "stage_requirements" */
+export type Stage_Requirements_Stddev_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Stage_Requirements_Stddev_Pop_Fields = {
   __typename?: "stage_requirements_stddev_pop_fields";
@@ -15121,12 +16167,26 @@ export type Stage_Requirements_Stddev_Pop_Fields = {
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "stage_requirements" */
+export type Stage_Requirements_Stddev_Pop_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Stage_Requirements_Stddev_Samp_Fields = {
   __typename?: "stage_requirements_stddev_samp_fields";
   order_index?: Maybe<Scalars["Float"]["output"]>;
   requirement_threshold?: Maybe<Scalars["Float"]["output"]>;
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "stage_requirements" */
+export type Stage_Requirements_Stddev_Samp_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "stage_requirements" */
@@ -15155,6 +16215,13 @@ export type Stage_Requirements_Sum_Fields = {
   order_index?: Maybe<Scalars["Int"]["output"]>;
   requirement_threshold?: Maybe<Scalars["numeric"]["output"]>;
   requirement_value?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "stage_requirements" */
+export type Stage_Requirements_Sum_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "stage_requirements" */
@@ -15194,6 +16261,13 @@ export type Stage_Requirements_Var_Pop_Fields = {
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "stage_requirements" */
+export type Stage_Requirements_Var_Pop_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Stage_Requirements_Var_Samp_Fields = {
   __typename?: "stage_requirements_var_samp_fields";
@@ -15202,12 +16276,26 @@ export type Stage_Requirements_Var_Samp_Fields = {
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "stage_requirements" */
+export type Stage_Requirements_Var_Samp_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Stage_Requirements_Variance_Fields = {
   __typename?: "stage_requirements_variance_fields";
   order_index?: Maybe<Scalars["Float"]["output"]>;
   requirement_threshold?: Maybe<Scalars["Float"]["output"]>;
   requirement_value?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "stage_requirements" */
+export type Stage_Requirements_Variance_Order_By = {
+  order_index?: InputMaybe<Order_By>;
+  requirement_threshold?: InputMaybe<Order_By>;
+  requirement_value?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "stage_tests" */
@@ -15222,7 +16310,11 @@ export type Stage_Tests = {
   score?: Maybe<Scalars["numeric"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  study_stage?: Maybe<Study_Stages>;
   test_type: Scalars["String"]["output"];
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_answers?: Maybe<Scalars["jsonb"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
@@ -15249,6 +16341,33 @@ export type Stage_Tests_Aggregate = {
   nodes: Array<Stage_Tests>;
 };
 
+export type Stage_Tests_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Stage_Tests_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Stage_Tests_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Stage_Tests_Aggregate_Bool_Exp_Count>;
+};
+
+export type Stage_Tests_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Stage_Tests_Select_Column_Stage_Tests_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Stage_Tests_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Stage_Tests_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Stage_Tests_Select_Column_Stage_Tests_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Stage_Tests_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Stage_Tests_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Stage_Tests_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Stage_Tests_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "stage_tests" */
 export type Stage_Tests_Aggregate_Fields = {
   __typename?: "stage_tests_aggregate_fields";
@@ -15271,6 +16390,21 @@ export type Stage_Tests_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "stage_tests" */
+export type Stage_Tests_Aggregate_Order_By = {
+  avg?: InputMaybe<Stage_Tests_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Stage_Tests_Max_Order_By>;
+  min?: InputMaybe<Stage_Tests_Min_Order_By>;
+  stddev?: InputMaybe<Stage_Tests_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Stage_Tests_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Stage_Tests_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Stage_Tests_Sum_Order_By>;
+  var_pop?: InputMaybe<Stage_Tests_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Stage_Tests_Var_Samp_Order_By>;
+  variance?: InputMaybe<Stage_Tests_Variance_Order_By>;
+};
+
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Stage_Tests_Append_Input = {
   feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
@@ -15278,10 +16412,22 @@ export type Stage_Tests_Append_Input = {
   user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
 };
 
+/** input type for inserting array relation for remote table "stage_tests" */
+export type Stage_Tests_Arr_Rel_Insert_Input = {
+  data: Array<Stage_Tests_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Stage_Tests_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Stage_Tests_Avg_Fields = {
   __typename?: "stage_tests_avg_fields";
   score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "stage_tests" */
+export type Stage_Tests_Avg_Order_By = {
+  score?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "stage_tests". All fields are combined with a logical 'AND'. */
@@ -15298,7 +16444,9 @@ export type Stage_Tests_Bool_Exp = {
   score?: InputMaybe<Numeric_Comparison_Exp>;
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
   started_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
   test_type?: InputMaybe<String_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_answers?: InputMaybe<Jsonb_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -15346,7 +16494,9 @@ export type Stage_Tests_Insert_Input = {
   score?: InputMaybe<Scalars["numeric"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
   test_type?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
@@ -15364,6 +16514,18 @@ export type Stage_Tests_Max_Fields = {
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "stage_tests" */
+export type Stage_Tests_Max_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  score?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  test_type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Stage_Tests_Min_Fields = {
   __typename?: "stage_tests_min_fields";
@@ -15375,6 +16537,18 @@ export type Stage_Tests_Min_Fields = {
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
   test_type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "stage_tests" */
+export type Stage_Tests_Min_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  score?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  test_type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "stage_tests" */
@@ -15404,7 +16578,9 @@ export type Stage_Tests_Order_By = {
   score?: InputMaybe<Order_By>;
   stage_id?: InputMaybe<Order_By>;
   started_at?: InputMaybe<Order_By>;
+  study_stage?: InputMaybe<Study_Stages_Order_By>;
   test_type?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_answers?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -15449,6 +16625,18 @@ export enum Stage_Tests_Select_Column {
   UserId = "user_id",
 }
 
+/** select "stage_tests_aggregate_bool_exp_bool_and_arguments_columns" columns of table "stage_tests" */
+export enum Stage_Tests_Select_Column_Stage_Tests_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Passed = "passed",
+}
+
+/** select "stage_tests_aggregate_bool_exp_bool_or_arguments_columns" columns of table "stage_tests" */
+export enum Stage_Tests_Select_Column_Stage_Tests_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Passed = "passed",
+}
+
 /** input type for updating data in table "stage_tests" */
 export type Stage_Tests_Set_Input = {
   completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -15471,16 +16659,31 @@ export type Stage_Tests_Stddev_Fields = {
   score?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "stage_tests" */
+export type Stage_Tests_Stddev_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Stage_Tests_Stddev_Pop_Fields = {
   __typename?: "stage_tests_stddev_pop_fields";
   score?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "stage_tests" */
+export type Stage_Tests_Stddev_Pop_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Stage_Tests_Stddev_Samp_Fields = {
   __typename?: "stage_tests_stddev_samp_fields";
   score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "stage_tests" */
+export type Stage_Tests_Stddev_Samp_Order_By = {
+  score?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "stage_tests" */
@@ -15511,6 +16714,11 @@ export type Stage_Tests_Stream_Cursor_Value_Input = {
 export type Stage_Tests_Sum_Fields = {
   __typename?: "stage_tests_sum_fields";
   score?: Maybe<Scalars["numeric"]["output"]>;
+};
+
+/** order by sum() on columns of table "stage_tests" */
+export type Stage_Tests_Sum_Order_By = {
+  score?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "stage_tests" */
@@ -15566,16 +16774,31 @@ export type Stage_Tests_Var_Pop_Fields = {
   score?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "stage_tests" */
+export type Stage_Tests_Var_Pop_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Stage_Tests_Var_Samp_Fields = {
   __typename?: "stage_tests_var_samp_fields";
   score?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "stage_tests" */
+export type Stage_Tests_Var_Samp_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Stage_Tests_Variance_Fields = {
   __typename?: "stage_tests_variance_fields";
   score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "stage_tests" */
+export type Stage_Tests_Variance_Order_By = {
+  score?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "streaks" */
@@ -15587,6 +16810,8 @@ export type Streaks = {
   last_activity_date?: Maybe<Scalars["date"]["output"]>;
   longest_streak?: Maybe<Scalars["Int"]["output"]>;
   updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -15637,6 +16862,7 @@ export type Streaks_Bool_Exp = {
   last_activity_date?: InputMaybe<Date_Comparison_Exp>;
   longest_streak?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -15662,6 +16888,7 @@ export type Streaks_Insert_Input = {
   last_activity_date?: InputMaybe<Scalars["date"]["input"]>;
   longest_streak?: InputMaybe<Scalars["Int"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -15698,6 +16925,13 @@ export type Streaks_Mutation_Response = {
   returning: Array<Streaks>;
 };
 
+/** input type for inserting object relation for remote table "streaks" */
+export type Streaks_Obj_Rel_Insert_Input = {
+  data: Streaks_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Streaks_On_Conflict>;
+};
+
 /** on_conflict condition type for table "streaks" */
 export type Streaks_On_Conflict = {
   constraint: Streaks_Constraint;
@@ -15713,6 +16947,7 @@ export type Streaks_Order_By = {
   last_activity_date?: InputMaybe<Order_By>;
   longest_streak?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -15849,6 +17084,10 @@ export type Streaks_Variance_Fields = {
 export type Study_Stages = {
   __typename?: "study_stages";
   created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An array relationship */
+  daily_tasks: Array<Daily_Tasks>;
+  /** An aggregate relationship */
+  daily_tasks_aggregate: Daily_Tasks_Aggregate;
   description?: Maybe<Scalars["String"]["output"]>;
   end_month: Scalars["Int"]["output"];
   focus?: Maybe<Scalars["String"]["output"]>;
@@ -15857,7 +17096,113 @@ export type Study_Stages = {
   level_to: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
   order_index: Scalars["Int"]["output"];
+  /** An array relationship */
+  stage_progresses: Array<Stage_Progress>;
+  /** An aggregate relationship */
+  stage_progresses_aggregate: Stage_Progress_Aggregate;
+  /** An array relationship */
+  stage_requirements: Array<Stage_Requirements>;
+  /** An aggregate relationship */
+  stage_requirements_aggregate: Stage_Requirements_Aggregate;
+  /** An array relationship */
+  stage_tests: Array<Stage_Tests>;
+  /** An aggregate relationship */
+  stage_tests_aggregate: Stage_Tests_Aggregate;
   start_month: Scalars["Int"]["output"];
+  /** An array relationship */
+  weekly_structures: Array<Weekly_Structure>;
+  /** An aggregate relationship */
+  weekly_structures_aggregate: Weekly_Structure_Aggregate;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesDaily_TasksArgs = {
+  distinct_on?: InputMaybe<Array<Daily_Tasks_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Daily_Tasks_Order_By>>;
+  where?: InputMaybe<Daily_Tasks_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesDaily_Tasks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Daily_Tasks_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Daily_Tasks_Order_By>>;
+  where?: InputMaybe<Daily_Tasks_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Progress_Order_By>>;
+  where?: InputMaybe<Stage_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Progress_Order_By>>;
+  where?: InputMaybe<Stage_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_RequirementsArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Requirements_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Requirements_Order_By>>;
+  where?: InputMaybe<Stage_Requirements_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_Requirements_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Requirements_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Requirements_Order_By>>;
+  where?: InputMaybe<Stage_Requirements_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_TestsArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Tests_Order_By>>;
+  where?: InputMaybe<Stage_Tests_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesStage_Tests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Tests_Order_By>>;
+  where?: InputMaybe<Stage_Tests_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesWeekly_StructuresArgs = {
+  distinct_on?: InputMaybe<Array<Weekly_Structure_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Weekly_Structure_Order_By>>;
+  where?: InputMaybe<Weekly_Structure_Bool_Exp>;
+};
+
+/** columns and relationships of "study_stages" */
+export type Study_StagesWeekly_Structures_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Weekly_Structure_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Weekly_Structure_Order_By>>;
+  where?: InputMaybe<Weekly_Structure_Bool_Exp>;
 };
 
 /** aggregated selection of "study_stages" */
@@ -15903,6 +17248,8 @@ export type Study_Stages_Bool_Exp = {
   _not?: InputMaybe<Study_Stages_Bool_Exp>;
   _or?: InputMaybe<Array<Study_Stages_Bool_Exp>>;
   created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  daily_tasks?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  daily_tasks_aggregate?: InputMaybe<Daily_Tasks_Aggregate_Bool_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   end_month?: InputMaybe<Int_Comparison_Exp>;
   focus?: InputMaybe<String_Comparison_Exp>;
@@ -15911,7 +17258,15 @@ export type Study_Stages_Bool_Exp = {
   level_to?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   order_index?: InputMaybe<Int_Comparison_Exp>;
+  stage_progresses?: InputMaybe<Stage_Progress_Bool_Exp>;
+  stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Bool_Exp>;
+  stage_requirements?: InputMaybe<Stage_Requirements_Bool_Exp>;
+  stage_requirements_aggregate?: InputMaybe<Stage_Requirements_Aggregate_Bool_Exp>;
+  stage_tests?: InputMaybe<Stage_Tests_Bool_Exp>;
+  stage_tests_aggregate?: InputMaybe<Stage_Tests_Aggregate_Bool_Exp>;
   start_month?: InputMaybe<Int_Comparison_Exp>;
+  weekly_structures?: InputMaybe<Weekly_Structure_Bool_Exp>;
+  weekly_structures_aggregate?: InputMaybe<Weekly_Structure_Aggregate_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "study_stages" */
@@ -15930,6 +17285,7 @@ export type Study_Stages_Inc_Input = {
 /** input type for inserting data into table "study_stages" */
 export type Study_Stages_Insert_Input = {
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  daily_tasks?: InputMaybe<Daily_Tasks_Arr_Rel_Insert_Input>;
   description?: InputMaybe<Scalars["String"]["input"]>;
   end_month?: InputMaybe<Scalars["Int"]["input"]>;
   focus?: InputMaybe<Scalars["String"]["input"]>;
@@ -15938,7 +17294,11 @@ export type Study_Stages_Insert_Input = {
   level_to?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   order_index?: InputMaybe<Scalars["Int"]["input"]>;
+  stage_progresses?: InputMaybe<Stage_Progress_Arr_Rel_Insert_Input>;
+  stage_requirements?: InputMaybe<Stage_Requirements_Arr_Rel_Insert_Input>;
+  stage_tests?: InputMaybe<Stage_Tests_Arr_Rel_Insert_Input>;
   start_month?: InputMaybe<Scalars["Int"]["input"]>;
+  weekly_structures?: InputMaybe<Weekly_Structure_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -15980,6 +17340,13 @@ export type Study_Stages_Mutation_Response = {
   returning: Array<Study_Stages>;
 };
 
+/** input type for inserting object relation for remote table "study_stages" */
+export type Study_Stages_Obj_Rel_Insert_Input = {
+  data: Study_Stages_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Study_Stages_On_Conflict>;
+};
+
 /** on_conflict condition type for table "study_stages" */
 export type Study_Stages_On_Conflict = {
   constraint: Study_Stages_Constraint;
@@ -15990,6 +17357,7 @@ export type Study_Stages_On_Conflict = {
 /** Ordering options when selecting data from "study_stages". */
 export type Study_Stages_Order_By = {
   created_at?: InputMaybe<Order_By>;
+  daily_tasks_aggregate?: InputMaybe<Daily_Tasks_Aggregate_Order_By>;
   description?: InputMaybe<Order_By>;
   end_month?: InputMaybe<Order_By>;
   focus?: InputMaybe<Order_By>;
@@ -15998,7 +17366,11 @@ export type Study_Stages_Order_By = {
   level_to?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   order_index?: InputMaybe<Order_By>;
+  stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Order_By>;
+  stage_requirements_aggregate?: InputMaybe<Stage_Requirements_Aggregate_Order_By>;
+  stage_tests_aggregate?: InputMaybe<Stage_Tests_Aggregate_Order_By>;
   start_month?: InputMaybe<Order_By>;
+  weekly_structures_aggregate?: InputMaybe<Weekly_Structure_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: study_stages */
@@ -16165,17 +17537,17 @@ export type Subscription_Root = {
   accounts_by_pk?: Maybe<Accounts>;
   /** fetch data from the table in a streaming manner: "accounts" */
   accounts_stream: Array<Accounts>;
-  /** fetch data from the table: "achievements" */
+  /** An array relationship */
   achievements: Array<Achievements>;
-  /** fetch aggregated fields from the table: "achievements" */
+  /** An aggregate relationship */
   achievements_aggregate: Achievements_Aggregate;
   /** fetch data from the table: "achievements" using primary key columns */
   achievements_by_pk?: Maybe<Achievements>;
   /** fetch data from the table in a streaming manner: "achievements" */
   achievements_stream: Array<Achievements>;
-  /** fetch data from the table: "ai_sessions" */
+  /** An array relationship */
   ai_sessions: Array<Ai_Sessions>;
-  /** fetch aggregated fields from the table: "ai_sessions" */
+  /** An aggregate relationship */
   ai_sessions_aggregate: Ai_Sessions_Aggregate;
   /** fetch data from the table: "ai_sessions" using primary key columns */
   ai_sessions_by_pk?: Maybe<Ai_Sessions>;
@@ -16197,9 +17569,9 @@ export type Subscription_Root = {
   bucketsAggregate: Buckets_Aggregate;
   /** fetch data from the table in a streaming manner: "storage.buckets" */
   buckets_stream: Array<Buckets>;
-  /** fetch data from the table: "daily_tasks" */
+  /** An array relationship */
   daily_tasks: Array<Daily_Tasks>;
-  /** fetch aggregated fields from the table: "daily_tasks" */
+  /** An aggregate relationship */
   daily_tasks_aggregate: Daily_Tasks_Aggregate;
   /** fetch data from the table: "daily_tasks" using primary key columns */
   daily_tasks_by_pk?: Maybe<Daily_Tasks>;
@@ -16333,9 +17705,9 @@ export type Subscription_Root = {
   payments_user_payment_provider_mappings_by_pk?: Maybe<Payments_User_Payment_Provider_Mappings>;
   /** fetch data from the table in a streaming manner: "payments.user_payment_provider_mappings" */
   payments_user_payment_provider_mappings_stream: Array<Payments_User_Payment_Provider_Mappings>;
-  /** fetch data from the table: "progress_metrics" */
+  /** An array relationship */
   progress_metrics: Array<Progress_Metrics>;
-  /** fetch aggregated fields from the table: "progress_metrics" */
+  /** An aggregate relationship */
   progress_metrics_aggregate: Progress_Metrics_Aggregate;
   /** fetch data from the table: "progress_metrics" using primary key columns */
   progress_metrics_by_pk?: Maybe<Progress_Metrics>;
@@ -16357,17 +17729,17 @@ export type Subscription_Root = {
   stage_progress_by_pk?: Maybe<Stage_Progress>;
   /** fetch data from the table in a streaming manner: "stage_progress" */
   stage_progress_stream: Array<Stage_Progress>;
-  /** fetch data from the table: "stage_requirements" */
+  /** An array relationship */
   stage_requirements: Array<Stage_Requirements>;
-  /** fetch aggregated fields from the table: "stage_requirements" */
+  /** An aggregate relationship */
   stage_requirements_aggregate: Stage_Requirements_Aggregate;
   /** fetch data from the table: "stage_requirements" using primary key columns */
   stage_requirements_by_pk?: Maybe<Stage_Requirements>;
   /** fetch data from the table in a streaming manner: "stage_requirements" */
   stage_requirements_stream: Array<Stage_Requirements>;
-  /** fetch data from the table: "stage_tests" */
+  /** An array relationship */
   stage_tests: Array<Stage_Tests>;
-  /** fetch aggregated fields from the table: "stage_tests" */
+  /** An aggregate relationship */
   stage_tests_aggregate: Stage_Tests_Aggregate;
   /** fetch data from the table: "stage_tests" using primary key columns */
   stage_tests_by_pk?: Maybe<Stage_Tests>;
@@ -16413,9 +17785,9 @@ export type Subscription_Root = {
   viruses: Array<Virus>;
   /** fetch aggregated fields from the table: "storage.virus" */
   virusesAggregate: Virus_Aggregate;
-  /** fetch data from the table: "vocabulary_cards" */
+  /** An array relationship */
   vocabulary_cards: Array<Vocabulary_Cards>;
-  /** fetch aggregated fields from the table: "vocabulary_cards" */
+  /** An aggregate relationship */
   vocabulary_cards_aggregate: Vocabulary_Cards_Aggregate;
   /** fetch data from the table: "vocabulary_cards" using primary key columns */
   vocabulary_cards_by_pk?: Maybe<Vocabulary_Cards>;
@@ -17328,6 +18700,19 @@ export type Subscription_RootWeekly_Structure_StreamArgs = {
   where?: InputMaybe<Weekly_Structure_Bool_Exp>;
 };
 
+/** Boolean expression to compare columns of type "time". All fields are combined with logical 'AND'. */
+export type Time_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars["time"]["input"]>;
+  _gt?: InputMaybe<Scalars["time"]["input"]>;
+  _gte?: InputMaybe<Scalars["time"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["time"]["input"]>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["time"]["input"]>;
+  _lte?: InputMaybe<Scalars["time"]["input"]>;
+  _neq?: InputMaybe<Scalars["time"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["time"]["input"]>>;
+};
+
 /** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
 export type Timestamp_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -17361,11 +18746,30 @@ export type Users = {
   accounts: Array<Accounts>;
   /** An aggregate relationship */
   accounts_aggregate: Accounts_Aggregate;
+  /** An array relationship */
+  achievements: Array<Achievements>;
+  /** An aggregate relationship */
+  achievements_aggregate: Achievements_Aggregate;
+  /** An array relationship */
+  ai_sessions: Array<Ai_Sessions>;
+  /** An aggregate relationship */
+  ai_sessions_aggregate: Ai_Sessions_Aggregate;
   created_at: Scalars["bigint"]["output"];
+  current_level?: Maybe<Scalars["String"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Int"]["output"]>;
+  /** An array relationship */
+  daily_tasks: Array<Daily_Tasks>;
+  /** An aggregate relationship */
+  daily_tasks_aggregate: Daily_Tasks_Aggregate;
   /** User email address */
   email?: Maybe<Scalars["String"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["bigint"]["output"]>;
+  /** An array relationship */
+  error_logs: Array<Error_Log>;
+  /** An aggregate relationship */
+  error_logs_aggregate: Error_Log_Aggregate;
+  exam_date?: Maybe<Scalars["date"]["output"]>;
   /** Hasura role for permissions */
   hasura_role?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["uuid"]["output"];
@@ -17396,18 +18800,45 @@ export type Users = {
   /** An aggregate relationship */
   plans_aggregate: Payments_Plans_Aggregate;
   /** An array relationship */
+  progress_metrics: Array<Progress_Metrics>;
+  /** An aggregate relationship */
+  progress_metrics_aggregate: Progress_Metrics_Aggregate;
+  /** An array relationship */
   providers: Array<Payments_Providers>;
   /** An aggregate relationship */
   providers_aggregate: Payments_Providers_Aggregate;
+  reminder_enabled?: Maybe<Scalars["Boolean"]["output"]>;
+  /** An array relationship */
+  review_histories: Array<Review_History>;
+  /** An aggregate relationship */
+  review_histories_aggregate: Review_History_Aggregate;
+  /** An array relationship */
+  stage_progresses: Array<Stage_Progress>;
+  /** An aggregate relationship */
+  stage_progresses_aggregate: Stage_Progress_Aggregate;
+  /** An array relationship */
+  stage_tests: Array<Stage_Tests>;
+  /** An aggregate relationship */
+  stage_tests_aggregate: Stage_Tests_Aggregate;
+  start_date?: Maybe<Scalars["date"]["output"]>;
+  /** An object relationship */
+  streak?: Maybe<Streaks>;
+  study_place?: Maybe<Scalars["String"]["output"]>;
+  study_time?: Maybe<Scalars["time"]["output"]>;
   /** An array relationship */
   subscriptions: Array<Payments_Subscriptions>;
   /** An aggregate relationship */
   subscriptions_aggregate: Payments_Subscriptions_Aggregate;
+  target_level?: Maybe<Scalars["String"]["output"]>;
   updated_at: Scalars["bigint"]["output"];
   /** An array relationship */
   user_payment_provider_mappings: Array<Payments_User_Payment_Provider_Mappings>;
   /** An aggregate relationship */
   user_payment_provider_mappings_aggregate: Payments_User_Payment_Provider_Mappings_Aggregate;
+  /** An array relationship */
+  vocabulary_cards: Array<Vocabulary_Cards>;
+  /** An aggregate relationship */
+  vocabulary_cards_aggregate: Vocabulary_Cards_Aggregate;
 };
 
 /** columns and relationships of "users" */
@@ -17426,6 +18857,78 @@ export type UsersAccounts_AggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Accounts_Order_By>>;
   where?: InputMaybe<Accounts_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersAchievementsArgs = {
+  distinct_on?: InputMaybe<Array<Achievements_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Achievements_Order_By>>;
+  where?: InputMaybe<Achievements_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersAchievements_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Achievements_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Achievements_Order_By>>;
+  where?: InputMaybe<Achievements_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersAi_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Ai_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Ai_Sessions_Order_By>>;
+  where?: InputMaybe<Ai_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersAi_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ai_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Ai_Sessions_Order_By>>;
+  where?: InputMaybe<Ai_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersDaily_TasksArgs = {
+  distinct_on?: InputMaybe<Array<Daily_Tasks_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Daily_Tasks_Order_By>>;
+  where?: InputMaybe<Daily_Tasks_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersDaily_Tasks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Daily_Tasks_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Daily_Tasks_Order_By>>;
+  where?: InputMaybe<Daily_Tasks_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersError_LogsArgs = {
+  distinct_on?: InputMaybe<Array<Error_Log_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Error_Log_Order_By>>;
+  where?: InputMaybe<Error_Log_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersError_Logs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Error_Log_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Error_Log_Order_By>>;
+  where?: InputMaybe<Error_Log_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -17519,6 +19022,24 @@ export type UsersPlans_AggregateArgs = {
 };
 
 /** columns and relationships of "users" */
+export type UsersProgress_MetricsArgs = {
+  distinct_on?: InputMaybe<Array<Progress_Metrics_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Progress_Metrics_Order_By>>;
+  where?: InputMaybe<Progress_Metrics_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersProgress_Metrics_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Progress_Metrics_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Progress_Metrics_Order_By>>;
+  where?: InputMaybe<Progress_Metrics_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
 export type UsersProvidersArgs = {
   distinct_on?: InputMaybe<Array<Payments_Providers_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -17534,6 +19055,60 @@ export type UsersProviders_AggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Payments_Providers_Order_By>>;
   where?: InputMaybe<Payments_Providers_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersReview_HistoriesArgs = {
+  distinct_on?: InputMaybe<Array<Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Review_History_Order_By>>;
+  where?: InputMaybe<Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersReview_Histories_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Review_History_Order_By>>;
+  where?: InputMaybe<Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersStage_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Progress_Order_By>>;
+  where?: InputMaybe<Stage_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersStage_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Progress_Order_By>>;
+  where?: InputMaybe<Stage_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersStage_TestsArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Tests_Order_By>>;
+  where?: InputMaybe<Stage_Tests_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersStage_Tests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stage_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Stage_Tests_Order_By>>;
+  where?: InputMaybe<Stage_Tests_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -17580,6 +19155,24 @@ export type UsersUser_Payment_Provider_Mappings_AggregateArgs = {
   where?: InputMaybe<Payments_User_Payment_Provider_Mappings_Bool_Exp>;
 };
 
+/** columns and relationships of "users" */
+export type UsersVocabulary_CardsArgs = {
+  distinct_on?: InputMaybe<Array<Vocabulary_Cards_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Vocabulary_Cards_Order_By>>;
+  where?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVocabulary_Cards_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Vocabulary_Cards_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Vocabulary_Cards_Order_By>>;
+  where?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
+};
+
 /** aggregated selection of "users" */
 export type Users_Aggregate = {
   __typename?: "users_aggregate";
@@ -17613,6 +19206,7 @@ export type Users_Aggregate_FieldsCountArgs = {
 export type Users_Avg_Fields = {
   __typename?: "users_avg_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17625,9 +19219,20 @@ export type Users_Bool_Exp = {
   _or?: InputMaybe<Array<Users_Bool_Exp>>;
   accounts?: InputMaybe<Accounts_Bool_Exp>;
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
+  achievements?: InputMaybe<Achievements_Bool_Exp>;
+  achievements_aggregate?: InputMaybe<Achievements_Aggregate_Bool_Exp>;
+  ai_sessions?: InputMaybe<Ai_Sessions_Bool_Exp>;
+  ai_sessions_aggregate?: InputMaybe<Ai_Sessions_Aggregate_Bool_Exp>;
   created_at?: InputMaybe<Bigint_Comparison_Exp>;
+  current_level?: InputMaybe<String_Comparison_Exp>;
+  daily_goal_minutes?: InputMaybe<Int_Comparison_Exp>;
+  daily_tasks?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  daily_tasks_aggregate?: InputMaybe<Daily_Tasks_Aggregate_Bool_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   email_verified?: InputMaybe<Bigint_Comparison_Exp>;
+  error_logs?: InputMaybe<Error_Log_Bool_Exp>;
+  error_logs_aggregate?: InputMaybe<Error_Log_Aggregate_Bool_Exp>;
+  exam_date?: InputMaybe<Date_Comparison_Exp>;
   hasura_role?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
@@ -17643,13 +19248,29 @@ export type Users_Bool_Exp = {
   operations_aggregate?: InputMaybe<Payments_Operations_Aggregate_Bool_Exp>;
   plans?: InputMaybe<Payments_Plans_Bool_Exp>;
   plans_aggregate?: InputMaybe<Payments_Plans_Aggregate_Bool_Exp>;
+  progress_metrics?: InputMaybe<Progress_Metrics_Bool_Exp>;
+  progress_metrics_aggregate?: InputMaybe<Progress_Metrics_Aggregate_Bool_Exp>;
   providers?: InputMaybe<Payments_Providers_Bool_Exp>;
   providers_aggregate?: InputMaybe<Payments_Providers_Aggregate_Bool_Exp>;
+  reminder_enabled?: InputMaybe<Boolean_Comparison_Exp>;
+  review_histories?: InputMaybe<Review_History_Bool_Exp>;
+  review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Bool_Exp>;
+  stage_progresses?: InputMaybe<Stage_Progress_Bool_Exp>;
+  stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Bool_Exp>;
+  stage_tests?: InputMaybe<Stage_Tests_Bool_Exp>;
+  stage_tests_aggregate?: InputMaybe<Stage_Tests_Aggregate_Bool_Exp>;
+  start_date?: InputMaybe<Date_Comparison_Exp>;
+  streak?: InputMaybe<Streaks_Bool_Exp>;
+  study_place?: InputMaybe<String_Comparison_Exp>;
+  study_time?: InputMaybe<Time_Comparison_Exp>;
   subscriptions?: InputMaybe<Payments_Subscriptions_Bool_Exp>;
   subscriptions_aggregate?: InputMaybe<Payments_Subscriptions_Aggregate_Bool_Exp>;
+  target_level?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Bigint_Comparison_Exp>;
   user_payment_provider_mappings?: InputMaybe<Payments_User_Payment_Provider_Mappings_Bool_Exp>;
   user_payment_provider_mappings_aggregate?: InputMaybe<Payments_User_Payment_Provider_Mappings_Aggregate_Bool_Exp>;
+  vocabulary_cards?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
+  vocabulary_cards_aggregate?: InputMaybe<Vocabulary_Cards_Aggregate_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "users" */
@@ -17663,6 +19284,7 @@ export enum Users_Constraint {
 /** input type for incrementing numeric columns in table "users" */
 export type Users_Inc_Input = {
   created_at?: InputMaybe<Scalars["bigint"]["input"]>;
+  daily_goal_minutes?: InputMaybe<Scalars["Int"]["input"]>;
   /** Email verification timestamp */
   email_verified?: InputMaybe<Scalars["bigint"]["input"]>;
   updated_at?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -17671,11 +19293,18 @@ export type Users_Inc_Input = {
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   accounts?: InputMaybe<Accounts_Arr_Rel_Insert_Input>;
+  achievements?: InputMaybe<Achievements_Arr_Rel_Insert_Input>;
+  ai_sessions?: InputMaybe<Ai_Sessions_Arr_Rel_Insert_Input>;
   created_at?: InputMaybe<Scalars["bigint"]["input"]>;
+  current_level?: InputMaybe<Scalars["String"]["input"]>;
+  daily_goal_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  daily_tasks?: InputMaybe<Daily_Tasks_Arr_Rel_Insert_Input>;
   /** User email address */
   email?: InputMaybe<Scalars["String"]["input"]>;
   /** Email verification timestamp */
   email_verified?: InputMaybe<Scalars["bigint"]["input"]>;
+  error_logs?: InputMaybe<Error_Log_Arr_Rel_Insert_Input>;
+  exam_date?: InputMaybe<Scalars["date"]["input"]>;
   /** Hasura role for permissions */
   hasura_role?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -17690,20 +19319,34 @@ export type Users_Insert_Input = {
   notification_permissions?: InputMaybe<Notification_Permissions_Arr_Rel_Insert_Input>;
   operations?: InputMaybe<Payments_Operations_Arr_Rel_Insert_Input>;
   plans?: InputMaybe<Payments_Plans_Arr_Rel_Insert_Input>;
+  progress_metrics?: InputMaybe<Progress_Metrics_Arr_Rel_Insert_Input>;
   providers?: InputMaybe<Payments_Providers_Arr_Rel_Insert_Input>;
+  reminder_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  review_histories?: InputMaybe<Review_History_Arr_Rel_Insert_Input>;
+  stage_progresses?: InputMaybe<Stage_Progress_Arr_Rel_Insert_Input>;
+  stage_tests?: InputMaybe<Stage_Tests_Arr_Rel_Insert_Input>;
+  start_date?: InputMaybe<Scalars["date"]["input"]>;
+  streak?: InputMaybe<Streaks_Obj_Rel_Insert_Input>;
+  study_place?: InputMaybe<Scalars["String"]["input"]>;
+  study_time?: InputMaybe<Scalars["time"]["input"]>;
   subscriptions?: InputMaybe<Payments_Subscriptions_Arr_Rel_Insert_Input>;
+  target_level?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["bigint"]["input"]>;
   user_payment_provider_mappings?: InputMaybe<Payments_User_Payment_Provider_Mappings_Arr_Rel_Insert_Input>;
+  vocabulary_cards?: InputMaybe<Vocabulary_Cards_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
 export type Users_Max_Fields = {
   __typename?: "users_max_fields";
   created_at?: Maybe<Scalars["bigint"]["output"]>;
+  current_level?: Maybe<Scalars["String"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Int"]["output"]>;
   /** User email address */
   email?: Maybe<Scalars["String"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["bigint"]["output"]>;
+  exam_date?: Maybe<Scalars["date"]["output"]>;
   /** Hasura role for permissions */
   hasura_role?: Maybe<Scalars["String"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -17711,6 +19354,9 @@ export type Users_Max_Fields = {
   image?: Maybe<Scalars["String"]["output"]>;
   /** User display name */
   name?: Maybe<Scalars["String"]["output"]>;
+  start_date?: Maybe<Scalars["date"]["output"]>;
+  study_place?: Maybe<Scalars["String"]["output"]>;
+  target_level?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["bigint"]["output"]>;
 };
 
@@ -17718,10 +19364,13 @@ export type Users_Max_Fields = {
 export type Users_Min_Fields = {
   __typename?: "users_min_fields";
   created_at?: Maybe<Scalars["bigint"]["output"]>;
+  current_level?: Maybe<Scalars["String"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Int"]["output"]>;
   /** User email address */
   email?: Maybe<Scalars["String"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["bigint"]["output"]>;
+  exam_date?: Maybe<Scalars["date"]["output"]>;
   /** Hasura role for permissions */
   hasura_role?: Maybe<Scalars["String"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -17729,6 +19378,9 @@ export type Users_Min_Fields = {
   image?: Maybe<Scalars["String"]["output"]>;
   /** User display name */
   name?: Maybe<Scalars["String"]["output"]>;
+  start_date?: Maybe<Scalars["date"]["output"]>;
+  study_place?: Maybe<Scalars["String"]["output"]>;
+  target_level?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["bigint"]["output"]>;
 };
 
@@ -17758,9 +19410,16 @@ export type Users_On_Conflict = {
 /** Ordering options when selecting data from "users". */
 export type Users_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
+  achievements_aggregate?: InputMaybe<Achievements_Aggregate_Order_By>;
+  ai_sessions_aggregate?: InputMaybe<Ai_Sessions_Aggregate_Order_By>;
   created_at?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  daily_goal_minutes?: InputMaybe<Order_By>;
+  daily_tasks_aggregate?: InputMaybe<Daily_Tasks_Aggregate_Order_By>;
   email?: InputMaybe<Order_By>;
   email_verified?: InputMaybe<Order_By>;
+  error_logs_aggregate?: InputMaybe<Error_Log_Aggregate_Order_By>;
+  exam_date?: InputMaybe<Order_By>;
   hasura_role?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
@@ -17771,10 +19430,21 @@ export type Users_Order_By = {
   notification_permissions_aggregate?: InputMaybe<Notification_Permissions_Aggregate_Order_By>;
   operations_aggregate?: InputMaybe<Payments_Operations_Aggregate_Order_By>;
   plans_aggregate?: InputMaybe<Payments_Plans_Aggregate_Order_By>;
+  progress_metrics_aggregate?: InputMaybe<Progress_Metrics_Aggregate_Order_By>;
   providers_aggregate?: InputMaybe<Payments_Providers_Aggregate_Order_By>;
+  reminder_enabled?: InputMaybe<Order_By>;
+  review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Order_By>;
+  stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Order_By>;
+  stage_tests_aggregate?: InputMaybe<Stage_Tests_Aggregate_Order_By>;
+  start_date?: InputMaybe<Order_By>;
+  streak?: InputMaybe<Streaks_Order_By>;
+  study_place?: InputMaybe<Order_By>;
+  study_time?: InputMaybe<Order_By>;
   subscriptions_aggregate?: InputMaybe<Payments_Subscriptions_Aggregate_Order_By>;
+  target_level?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_payment_provider_mappings_aggregate?: InputMaybe<Payments_User_Payment_Provider_Mappings_Aggregate_Order_By>;
+  vocabulary_cards_aggregate?: InputMaybe<Vocabulary_Cards_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: users */
@@ -17787,9 +19457,15 @@ export enum Users_Select_Column {
   /** column name */
   CreatedAt = "created_at",
   /** column name */
+  CurrentLevel = "current_level",
+  /** column name */
+  DailyGoalMinutes = "daily_goal_minutes",
+  /** column name */
   Email = "email",
   /** column name */
   EmailVerified = "email_verified",
+  /** column name */
+  ExamDate = "exam_date",
   /** column name */
   HasuraRole = "hasura_role",
   /** column name */
@@ -17801,16 +19477,29 @@ export enum Users_Select_Column {
   /** column name */
   Name = "name",
   /** column name */
+  ReminderEnabled = "reminder_enabled",
+  /** column name */
+  StartDate = "start_date",
+  /** column name */
+  StudyPlace = "study_place",
+  /** column name */
+  StudyTime = "study_time",
+  /** column name */
+  TargetLevel = "target_level",
+  /** column name */
   UpdatedAt = "updated_at",
 }
 
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
   created_at?: InputMaybe<Scalars["bigint"]["input"]>;
+  current_level?: InputMaybe<Scalars["String"]["input"]>;
+  daily_goal_minutes?: InputMaybe<Scalars["Int"]["input"]>;
   /** User email address */
   email?: InputMaybe<Scalars["String"]["input"]>;
   /** Email verification timestamp */
   email_verified?: InputMaybe<Scalars["bigint"]["input"]>;
+  exam_date?: InputMaybe<Scalars["date"]["input"]>;
   /** Hasura role for permissions */
   hasura_role?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -17820,6 +19509,11 @@ export type Users_Set_Input = {
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** User display name */
   name?: InputMaybe<Scalars["String"]["input"]>;
+  reminder_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  start_date?: InputMaybe<Scalars["date"]["input"]>;
+  study_place?: InputMaybe<Scalars["String"]["input"]>;
+  study_time?: InputMaybe<Scalars["time"]["input"]>;
+  target_level?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -17827,6 +19521,7 @@ export type Users_Set_Input = {
 export type Users_Stddev_Fields = {
   __typename?: "users_stddev_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17836,6 +19531,7 @@ export type Users_Stddev_Fields = {
 export type Users_Stddev_Pop_Fields = {
   __typename?: "users_stddev_pop_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17845,6 +19541,7 @@ export type Users_Stddev_Pop_Fields = {
 export type Users_Stddev_Samp_Fields = {
   __typename?: "users_stddev_samp_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17861,10 +19558,13 @@ export type Users_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Users_Stream_Cursor_Value_Input = {
   created_at?: InputMaybe<Scalars["bigint"]["input"]>;
+  current_level?: InputMaybe<Scalars["String"]["input"]>;
+  daily_goal_minutes?: InputMaybe<Scalars["Int"]["input"]>;
   /** User email address */
   email?: InputMaybe<Scalars["String"]["input"]>;
   /** Email verification timestamp */
   email_verified?: InputMaybe<Scalars["bigint"]["input"]>;
+  exam_date?: InputMaybe<Scalars["date"]["input"]>;
   /** Hasura role for permissions */
   hasura_role?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -17874,6 +19574,11 @@ export type Users_Stream_Cursor_Value_Input = {
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** User display name */
   name?: InputMaybe<Scalars["String"]["input"]>;
+  reminder_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  start_date?: InputMaybe<Scalars["date"]["input"]>;
+  study_place?: InputMaybe<Scalars["String"]["input"]>;
+  study_time?: InputMaybe<Scalars["time"]["input"]>;
+  target_level?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -17881,6 +19586,7 @@ export type Users_Stream_Cursor_Value_Input = {
 export type Users_Sum_Fields = {
   __typename?: "users_sum_fields";
   created_at?: Maybe<Scalars["bigint"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Int"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["bigint"]["output"]>;
   updated_at?: Maybe<Scalars["bigint"]["output"]>;
@@ -17891,9 +19597,15 @@ export enum Users_Update_Column {
   /** column name */
   CreatedAt = "created_at",
   /** column name */
+  CurrentLevel = "current_level",
+  /** column name */
+  DailyGoalMinutes = "daily_goal_minutes",
+  /** column name */
   Email = "email",
   /** column name */
   EmailVerified = "email_verified",
+  /** column name */
+  ExamDate = "exam_date",
   /** column name */
   HasuraRole = "hasura_role",
   /** column name */
@@ -17904,6 +19616,16 @@ export enum Users_Update_Column {
   IsAdmin = "is_admin",
   /** column name */
   Name = "name",
+  /** column name */
+  ReminderEnabled = "reminder_enabled",
+  /** column name */
+  StartDate = "start_date",
+  /** column name */
+  StudyPlace = "study_place",
+  /** column name */
+  StudyTime = "study_time",
+  /** column name */
+  TargetLevel = "target_level",
   /** column name */
   UpdatedAt = "updated_at",
 }
@@ -17921,6 +19643,7 @@ export type Users_Updates = {
 export type Users_Var_Pop_Fields = {
   __typename?: "users_var_pop_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17930,6 +19653,7 @@ export type Users_Var_Pop_Fields = {
 export type Users_Var_Samp_Fields = {
   __typename?: "users_var_samp_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -17939,6 +19663,7 @@ export type Users_Var_Samp_Fields = {
 export type Users_Variance_Fields = {
   __typename?: "users_variance_fields";
   created_at?: Maybe<Scalars["Float"]["output"]>;
+  daily_goal_minutes?: Maybe<Scalars["Float"]["output"]>;
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
@@ -18591,10 +20316,34 @@ export type Vocabulary_Cards = {
   last_reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
   next_review_date: Scalars["date"]["output"];
   part_of_speech?: Maybe<Scalars["String"]["output"]>;
+  /** An array relationship */
+  review_histories: Array<Review_History>;
+  /** An aggregate relationship */
+  review_histories_aggregate: Review_History_Aggregate;
   topic?: Maybe<Scalars["String"]["output"]>;
   translation: Scalars["String"]["output"];
+  /** An object relationship */
+  user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   word: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "vocabulary_cards" */
+export type Vocabulary_CardsReview_HistoriesArgs = {
+  distinct_on?: InputMaybe<Array<Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Review_History_Order_By>>;
+  where?: InputMaybe<Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "vocabulary_cards" */
+export type Vocabulary_CardsReview_Histories_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Review_History_Order_By>>;
+  where?: InputMaybe<Review_History_Bool_Exp>;
 };
 
 /** aggregated selection of "vocabulary_cards" */
@@ -18602,6 +20351,17 @@ export type Vocabulary_Cards_Aggregate = {
   __typename?: "vocabulary_cards_aggregate";
   aggregate?: Maybe<Vocabulary_Cards_Aggregate_Fields>;
   nodes: Array<Vocabulary_Cards>;
+};
+
+export type Vocabulary_Cards_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Vocabulary_Cards_Aggregate_Bool_Exp_Count>;
+};
+
+export type Vocabulary_Cards_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Vocabulary_Cards_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "vocabulary_cards" */
@@ -18626,11 +20386,39 @@ export type Vocabulary_Cards_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "vocabulary_cards" */
+export type Vocabulary_Cards_Aggregate_Order_By = {
+  avg?: InputMaybe<Vocabulary_Cards_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Vocabulary_Cards_Max_Order_By>;
+  min?: InputMaybe<Vocabulary_Cards_Min_Order_By>;
+  stddev?: InputMaybe<Vocabulary_Cards_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Vocabulary_Cards_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Vocabulary_Cards_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Vocabulary_Cards_Sum_Order_By>;
+  var_pop?: InputMaybe<Vocabulary_Cards_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Vocabulary_Cards_Var_Samp_Order_By>;
+  variance?: InputMaybe<Vocabulary_Cards_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "vocabulary_cards" */
+export type Vocabulary_Cards_Arr_Rel_Insert_Input = {
+  data: Array<Vocabulary_Cards_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Vocabulary_Cards_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Vocabulary_Cards_Avg_Fields = {
   __typename?: "vocabulary_cards_avg_fields";
   correct_count?: Maybe<Scalars["Float"]["output"]>;
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Avg_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "vocabulary_cards". All fields are combined with a logical 'AND'. */
@@ -18648,8 +20436,11 @@ export type Vocabulary_Cards_Bool_Exp = {
   last_reviewed_at?: InputMaybe<Timestamp_Comparison_Exp>;
   next_review_date?: InputMaybe<Date_Comparison_Exp>;
   part_of_speech?: InputMaybe<String_Comparison_Exp>;
+  review_histories?: InputMaybe<Review_History_Bool_Exp>;
+  review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Bool_Exp>;
   topic?: InputMaybe<String_Comparison_Exp>;
   translation?: InputMaybe<String_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
   word?: InputMaybe<String_Comparison_Exp>;
 };
@@ -18678,8 +20469,10 @@ export type Vocabulary_Cards_Insert_Input = {
   last_reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   next_review_date?: InputMaybe<Scalars["date"]["input"]>;
   part_of_speech?: InputMaybe<Scalars["String"]["input"]>;
+  review_histories?: InputMaybe<Review_History_Arr_Rel_Insert_Input>;
   topic?: InputMaybe<Scalars["String"]["input"]>;
   translation?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
   word?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -18703,6 +20496,24 @@ export type Vocabulary_Cards_Max_Fields = {
   word?: Maybe<Scalars["String"]["output"]>;
 };
 
+/** order by max() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Max_Order_By = {
+  added_date?: InputMaybe<Order_By>;
+  correct_count?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  difficulty?: InputMaybe<Order_By>;
+  example_sentence?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  last_reviewed_at?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  part_of_speech?: InputMaybe<Order_By>;
+  topic?: InputMaybe<Order_By>;
+  translation?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  word?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Vocabulary_Cards_Min_Fields = {
   __typename?: "vocabulary_cards_min_fields";
@@ -18722,6 +20533,24 @@ export type Vocabulary_Cards_Min_Fields = {
   word?: Maybe<Scalars["String"]["output"]>;
 };
 
+/** order by min() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Min_Order_By = {
+  added_date?: InputMaybe<Order_By>;
+  correct_count?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  difficulty?: InputMaybe<Order_By>;
+  example_sentence?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  last_reviewed_at?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  part_of_speech?: InputMaybe<Order_By>;
+  topic?: InputMaybe<Order_By>;
+  translation?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  word?: InputMaybe<Order_By>;
+};
+
 /** response of any mutation on the table "vocabulary_cards" */
 export type Vocabulary_Cards_Mutation_Response = {
   __typename?: "vocabulary_cards_mutation_response";
@@ -18729,6 +20558,13 @@ export type Vocabulary_Cards_Mutation_Response = {
   affected_rows: Scalars["Int"]["output"];
   /** data from the rows affected by the mutation */
   returning: Array<Vocabulary_Cards>;
+};
+
+/** input type for inserting object relation for remote table "vocabulary_cards" */
+export type Vocabulary_Cards_Obj_Rel_Insert_Input = {
+  data: Vocabulary_Cards_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Vocabulary_Cards_On_Conflict>;
 };
 
 /** on_conflict condition type for table "vocabulary_cards" */
@@ -18750,8 +20586,10 @@ export type Vocabulary_Cards_Order_By = {
   last_reviewed_at?: InputMaybe<Order_By>;
   next_review_date?: InputMaybe<Order_By>;
   part_of_speech?: InputMaybe<Order_By>;
+  review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Order_By>;
   topic?: InputMaybe<Order_By>;
   translation?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
   word?: InputMaybe<Order_By>;
 };
@@ -18818,6 +20656,12 @@ export type Vocabulary_Cards_Stddev_Fields = {
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Stddev_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Vocabulary_Cards_Stddev_Pop_Fields = {
   __typename?: "vocabulary_cards_stddev_pop_fields";
@@ -18825,11 +20669,23 @@ export type Vocabulary_Cards_Stddev_Pop_Fields = {
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Stddev_Pop_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Vocabulary_Cards_Stddev_Samp_Fields = {
   __typename?: "vocabulary_cards_stddev_samp_fields";
   correct_count?: Maybe<Scalars["Float"]["output"]>;
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Stddev_Samp_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "vocabulary_cards" */
@@ -18863,6 +20719,12 @@ export type Vocabulary_Cards_Sum_Fields = {
   __typename?: "vocabulary_cards_sum_fields";
   correct_count?: Maybe<Scalars["Int"]["output"]>;
   incorrect_count?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Sum_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "vocabulary_cards" */
@@ -18913,6 +20775,12 @@ export type Vocabulary_Cards_Var_Pop_Fields = {
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Var_Pop_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Vocabulary_Cards_Var_Samp_Fields = {
   __typename?: "vocabulary_cards_var_samp_fields";
@@ -18920,11 +20788,23 @@ export type Vocabulary_Cards_Var_Samp_Fields = {
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Var_Samp_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Vocabulary_Cards_Variance_Fields = {
   __typename?: "vocabulary_cards_variance_fields";
   correct_count?: Maybe<Scalars["Float"]["output"]>;
   incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "vocabulary_cards" */
+export type Vocabulary_Cards_Variance_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "weekly_structure" */
@@ -18938,6 +20818,8 @@ export type Weekly_Structure = {
   id: Scalars["uuid"]["output"];
   order_index: Scalars["Int"]["output"];
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An object relationship */
+  study_stage?: Maybe<Study_Stages>;
 };
 
 /** aggregated selection of "weekly_structure" */
@@ -18945,6 +20827,17 @@ export type Weekly_Structure_Aggregate = {
   __typename?: "weekly_structure_aggregate";
   aggregate?: Maybe<Weekly_Structure_Aggregate_Fields>;
   nodes: Array<Weekly_Structure>;
+};
+
+export type Weekly_Structure_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Weekly_Structure_Aggregate_Bool_Exp_Count>;
+};
+
+export type Weekly_Structure_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Weekly_Structure_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Weekly_Structure_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "weekly_structure" */
@@ -18969,12 +20862,41 @@ export type Weekly_Structure_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
+/** order by aggregate values of table "weekly_structure" */
+export type Weekly_Structure_Aggregate_Order_By = {
+  avg?: InputMaybe<Weekly_Structure_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Weekly_Structure_Max_Order_By>;
+  min?: InputMaybe<Weekly_Structure_Min_Order_By>;
+  stddev?: InputMaybe<Weekly_Structure_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Weekly_Structure_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Weekly_Structure_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Weekly_Structure_Sum_Order_By>;
+  var_pop?: InputMaybe<Weekly_Structure_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Weekly_Structure_Var_Samp_Order_By>;
+  variance?: InputMaybe<Weekly_Structure_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "weekly_structure" */
+export type Weekly_Structure_Arr_Rel_Insert_Input = {
+  data: Array<Weekly_Structure_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Weekly_Structure_On_Conflict>;
+};
+
 /** aggregate avg on columns */
 export type Weekly_Structure_Avg_Fields = {
   __typename?: "weekly_structure_avg_fields";
   day_of_week?: Maybe<Scalars["Float"]["output"]>;
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
   order_index?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "weekly_structure" */
+export type Weekly_Structure_Avg_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "weekly_structure". All fields are combined with a logical 'AND'. */
@@ -18990,6 +20912,7 @@ export type Weekly_Structure_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   order_index?: InputMaybe<Int_Comparison_Exp>;
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
+  study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "weekly_structure" */
@@ -19015,6 +20938,7 @@ export type Weekly_Structure_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   order_index?: InputMaybe<Scalars["Int"]["input"]>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -19030,6 +20954,18 @@ export type Weekly_Structure_Max_Fields = {
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
+/** order by max() on columns of table "weekly_structure" */
+export type Weekly_Structure_Max_Order_By = {
+  activity_type?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  day_of_week?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Weekly_Structure_Min_Fields = {
   __typename?: "weekly_structure_min_fields";
@@ -19041,6 +20977,18 @@ export type Weekly_Structure_Min_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   order_index?: Maybe<Scalars["Int"]["output"]>;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "weekly_structure" */
+export type Weekly_Structure_Min_Order_By = {
+  activity_type?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  day_of_week?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+  stage_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "weekly_structure" */
@@ -19069,6 +21017,7 @@ export type Weekly_Structure_Order_By = {
   id?: InputMaybe<Order_By>;
   order_index?: InputMaybe<Order_By>;
   stage_id?: InputMaybe<Order_By>;
+  study_stage?: InputMaybe<Study_Stages_Order_By>;
 };
 
 /** primary key columns input for table: weekly_structure */
@@ -19116,6 +21065,13 @@ export type Weekly_Structure_Stddev_Fields = {
   order_index?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev() on columns of table "weekly_structure" */
+export type Weekly_Structure_Stddev_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_pop on columns */
 export type Weekly_Structure_Stddev_Pop_Fields = {
   __typename?: "weekly_structure_stddev_pop_fields";
@@ -19124,12 +21080,26 @@ export type Weekly_Structure_Stddev_Pop_Fields = {
   order_index?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by stddev_pop() on columns of table "weekly_structure" */
+export type Weekly_Structure_Stddev_Pop_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+};
+
 /** aggregate stddev_samp on columns */
 export type Weekly_Structure_Stddev_Samp_Fields = {
   __typename?: "weekly_structure_stddev_samp_fields";
   day_of_week?: Maybe<Scalars["Float"]["output"]>;
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
   order_index?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "weekly_structure" */
+export type Weekly_Structure_Stddev_Samp_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "weekly_structure" */
@@ -19158,6 +21128,13 @@ export type Weekly_Structure_Sum_Fields = {
   day_of_week?: Maybe<Scalars["Int"]["output"]>;
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
   order_index?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "weekly_structure" */
+export type Weekly_Structure_Sum_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "weekly_structure" */
@@ -19197,6 +21174,13 @@ export type Weekly_Structure_Var_Pop_Fields = {
   order_index?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_pop() on columns of table "weekly_structure" */
+export type Weekly_Structure_Var_Pop_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+};
+
 /** aggregate var_samp on columns */
 export type Weekly_Structure_Var_Samp_Fields = {
   __typename?: "weekly_structure_var_samp_fields";
@@ -19205,10 +21189,24 @@ export type Weekly_Structure_Var_Samp_Fields = {
   order_index?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** order by var_samp() on columns of table "weekly_structure" */
+export type Weekly_Structure_Var_Samp_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
+};
+
 /** aggregate variance on columns */
 export type Weekly_Structure_Variance_Fields = {
   __typename?: "weekly_structure_variance_fields";
   day_of_week?: Maybe<Scalars["Float"]["output"]>;
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
   order_index?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "weekly_structure" */
+export type Weekly_Structure_Variance_Order_By = {
+  day_of_week?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  order_index?: InputMaybe<Order_By>;
 };

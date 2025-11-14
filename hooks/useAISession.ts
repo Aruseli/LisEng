@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useClient } from 'hasyx';
 
 import {
@@ -80,8 +80,8 @@ export function useAISession({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          topic,
-          level,
+          topic: topic || 'Практика',
+          level: level || 'A2',
           conversationHistory: nextMessages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -89,6 +89,11 @@ export function useAISession({
           text: type === 'writing' ? content : undefined,
         }),
       });
+
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}));
+        throw new Error(errorBody.error || `Ошибка сервера: ${response.status}`);
+      }
 
       const responseJson = await response.json();
 
@@ -111,8 +116,14 @@ export function useAISession({
           conversation: updated,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to send message:', error);
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: `Произошла ошибка: ${error?.message || 'Не удалось отправить сообщение'}. Попробуй ещё раз.`,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }

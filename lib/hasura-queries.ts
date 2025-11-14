@@ -17,7 +17,6 @@ export async function createAISession(
   return await hasyx.insert({
     table: 'ai_sessions',
     object: {
-      user_id: userId,
       type,
       topic,
       conversation: [],

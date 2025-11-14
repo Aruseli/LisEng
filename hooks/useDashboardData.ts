@@ -172,6 +172,8 @@ export function useDashboardData(
     async (params?: { forceAi?: boolean }) => {
       if (!userId) return;
 
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
       try {
         const response = await fetch('/api/plan/generate', {
           method: 'POST',
@@ -193,6 +195,7 @@ export function useDashboardData(
       } catch (error: any) {
         setState((prev) => ({
           ...prev,
+          isLoading: false,
           error: error?.message ?? 'Ошибка при генерации плана',
         }));
       }

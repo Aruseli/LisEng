@@ -153,17 +153,36 @@ export function DashboardTab({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => onCompleteTask(task.id)}
-                    disabled={isCompleted}
-                    className={`ml-4 rounded-full px-4 py-2 text-sm font-medium transition ${
-                      isCompleted
-                        ? 'cursor-default bg-green-100 text-green-600'
-                        : 'bg-blue-600 text-white hover:bg-blue-500'
-                    }`}
-                  >
-                    {isCompleted ? 'Выполнено' : 'Готово'}
-                  </button>
+                  <div className="ml-4 flex gap-2">
+                    {!isCompleted && (
+                      <button
+                        onClick={() => {
+                          // Для AI заданий открываем AI практику
+                          if (task.ai_enabled) {
+                            onStartAITask();
+                          } else {
+                            // Для других заданий можно добавить логику открытия задания
+                            // Пока просто отмечаем как выполненное
+                            onCompleteTask(task.id);
+                          }
+                        }}
+                        className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+                      >
+                        {task.ai_enabled ? 'Начать' : 'Выполнить'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => onCompleteTask(task.id)}
+                      disabled={isCompleted}
+                      className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                        isCompleted
+                          ? 'cursor-default bg-green-100 text-green-600'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {isCompleted ? '✓ Выполнено' : 'Отметить'}
+                    </button>
+                  </div>
                 </li>
               );
             })}

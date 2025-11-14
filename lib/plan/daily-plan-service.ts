@@ -103,22 +103,48 @@ export class DailyPlanService {
       ? achievementsRaw.slice(0, 5)
       : [];
 
-    const stageId = stageProgress?.stage_id ?? stageProgress?.stage?.id ?? null;
-    const weeklyStructure = stageId
-      ? await getWeeklyStructureForStage(this.hasyx, stageId, this.getIsoDayOfWeek(targetDate))
-      : [];
-
-    if (stageProgress?.id && weeklyStructure.length) {
-      const tasksTotal = Math.max(stageProgress.tasks_total ?? 0, weeklyStructure.length);
-      if (tasksTotal !== stageProgress.tasks_total) {
-        await updateStageProgressStats(this.hasyx, stageProgress.id, {
-          tasksTotal,
-        });
-        stageProgress.tasks_total = tasksTotal;
-      }
+    // Если у пользователя нет активного этапа, создаем его на основе уровня
+    let activeStageProgress = stageProgress;
+    if (!activeStageProgress && user) {
+      // Используем fallback для null/undefined уровня
+      const userLevel = user.current_level || 'A2';
+      activeStageProgress = await this.ensureInitialStageProgress(userId, userLevel);
     }
 
-    if (weeklyStructure.length) {
+    const stageId = activeStageProgress?.stage_id ?? activeStageProgress?.stage?.id ?? null;
+    const dayOfWeek = this.getIsoDayOfWeek(targetDate);
+    
+    let weeklyStructure = stageId
+      ? await getWeeklyStructureForStage(this.hasyx, stageId, dayOfWeek)
+      : [];
+
+    // Если нет структуры для текущего дня, пробуем получить любую структуру для этапа
+    if (stageId && weeklyStructure.length === 0) {
+      weeklyStructure = await getWeeklyStructureForStage(this.hasyx, stageId);
+      console.log(`[DailyPlanService] No structure for day ${dayOfWeek}, using any structure for stage ${stageId}`);
+    }
+
+    // Если все еще нет структуры, создаем базовые задания
+    if (weeklyStructure.length === 0 && stageId) {
+      console.log(`[DailyPlanService] No weekly structure found, creating default tasks for stage ${stageId}`);
+      await this.createDefaultTasks({
+        userId,
+        stageId,
+        targetDate,
+        userLevel: user?.current_level || 'A2',
+        regenerate: options.regenerate ?? false,
+      });
+    } else if (weeklyStructure.length > 0) {
+      if (activeStageProgress?.id) {
+        const tasksTotal = Math.max(activeStageProgress.tasks_total ?? 0, weeklyStructure.length);
+        if (tasksTotal !== activeStageProgress.tasks_total) {
+          await updateStageProgressStats(this.hasyx, activeStageProgress.id, {
+            tasksTotal,
+          });
+          activeStageProgress.tasks_total = tasksTotal;
+        }
+      }
+
       await this.ensureTasksFromStructure({
         userId,
         stageId,
@@ -135,7 +161,7 @@ export class DailyPlanService {
     const latestMetrics = await getLatestProgressMetric(this.hasyx, userId);
 
     const requirementChecks = await this.calculateRequirementChecks(
-      stageProgress,
+      activeStageProgress,
       weeklyStructure,
       latestMetrics
     );
@@ -145,7 +171,7 @@ export class DailyPlanService {
 
     const aiSummary = await this.buildAiSummary({
       user,
-      stageProgress,
+      stageProgress: activeStageProgress,
       tasks: dailyTasks,
       requirementChecks,
       vocabularyDue: Array.isArray(vocabularyDue) ? vocabularyDue.length : 0,
@@ -196,19 +222,17 @@ export class DailyPlanService {
         }
 
         await updateDailyTaskMetadata(this.hasyx, task.id, dataToUpdate);
-
-        if (aiTask) {
-          task.ai_context = dataToUpdate.aiContext;
-          task.suggested_prompt = aiTask.prompt;
-        }
-        task.type_specific_payload = dataToUpdate.typeSpecificPayload;
       })
     );
 
+    // Перезагружаем задания после обновления метаданных, чтобы получить актуальные данные
+    const updatedTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
+    const updatedTasks = Array.isArray(updatedTasksRaw) ? updatedTasksRaw : [];
+
     return {
       date: targetDate,
-      stage: stageProgress?.stage ?? null,
-      tasks: dailyTasks,
+      stage: activeStageProgress?.stage ?? null,
+      tasks: updatedTasks.length > 0 ? updatedTasks : dailyTasks,
       summary: aiSummary.summary,
       focus: aiSummary.focus,
       motivation: aiSummary.motivation,
@@ -558,6 +582,136 @@ export class DailyPlanService {
     }
 
     return null;
+  }
+
+  /**
+   * Создать начальный этап для пользователя на основе его уровня
+   */
+  private async ensureInitialStageProgress(
+    userId: string,
+    currentLevel: string
+  ): Promise<StageProgressRecord | null> {
+    try {
+      // Найти первый этап, который подходит для уровня пользователя
+      let stages = await this.hasyx.select({
+        table: 'study_stages',
+        where: {
+          level_from: { _eq: currentLevel },
+        },
+        order_by: [{ order_index: 'asc' }],
+        limit: 1,
+        returning: ['id', 'name', 'level_from', 'level_to', 'focus'],
+      });
+
+      let stage = Array.isArray(stages) ? stages[0] : stages;
+      
+      // Если не нашли этап для текущего уровня, ищем первый этап (fallback)
+      if (!stage) {
+        console.warn(`[DailyPlanService] No stage found for level ${currentLevel}, trying first stage`);
+        stages = await this.hasyx.select({
+          table: 'study_stages',
+          order_by: [{ order_index: 'asc' }],
+          limit: 1,
+          returning: ['id', 'name', 'level_from', 'level_to', 'focus'],
+        });
+        stage = Array.isArray(stages) ? stages[0] : stages;
+      }
+
+      if (!stage) {
+        console.error(`[DailyPlanService] No stages found in database`);
+        return null;
+      }
+
+      // Создать stage_progress для этого этапа
+      const progress = await this.hasyx.insert({
+        table: 'stage_progress',
+        object: {
+          user_id: userId,
+          stage_id: stage.id,
+          status: 'in_progress',
+          tasks_completed: 0,
+          tasks_total: 0,
+          words_learned: 0,
+          errors_pending: 0,
+        },
+        returning: [
+          'id',
+          'stage_id',
+          'started_at',
+          'tasks_completed',
+          'tasks_total',
+          'words_learned',
+          'errors_pending',
+          'average_accuracy',
+          'status',
+        ],
+      });
+
+      const progressData = Array.isArray(progress) ? progress[0] : progress;
+      return {
+        ...progressData,
+        stage,
+      } as StageProgressRecord;
+    } catch (error) {
+      console.error('[DailyPlanService] Failed to create initial stage progress:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Создать базовые задания, если нет weekly_structure
+   */
+  private async createDefaultTasks(params: {
+    userId: string;
+    stageId: string | null;
+    targetDate: string;
+    userLevel: string;
+    regenerate: boolean;
+  }) {
+    const defaultTasks = [
+      {
+        type: 'grammar',
+        title: 'Грамматическое задание',
+        description: 'Практика грамматики уровня ' + params.userLevel,
+        duration: 15,
+        aiEnabled: false,
+      },
+      {
+        type: 'vocabulary',
+        title: 'Повтор словаря',
+        description: 'Повторение изученных слов',
+        duration: 10,
+        aiEnabled: false,
+      },
+      {
+        type: 'reading',
+        title: 'Чтение текста',
+        description: 'Чтение адаптированного текста',
+        duration: 20,
+        aiEnabled: false,
+      },
+    ];
+
+    await Promise.all(
+      defaultTasks.map((task) =>
+        upsertDailyTaskFromStructure(this.hasyx, {
+          userId: params.userId,
+          stageId: params.stageId,
+          taskDate: params.targetDate,
+          type: task.type,
+          title: task.title,
+          description: task.description,
+          duration: task.duration,
+          aiEnabled: task.aiEnabled,
+          aiContext: params.regenerate ? null : undefined,
+          suggestedPrompt: params.regenerate ? null : undefined,
+          typeSpecificPayload: {
+            source: 'default',
+            regenerate: params.regenerate,
+          },
+        })
+      )
+    );
   }
 }
 

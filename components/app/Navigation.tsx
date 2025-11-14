@@ -42,7 +42,7 @@ export function Navigation({ activeTab, onTabChange, onRefresh, isLoading }: Nav
           disabled={isLoading}
           className="inline-flex items-center rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? 'Обновляем...' : 'Сгенерировать заново'}
+          {isLoading ? 'Обновляем...' : 'Задачи на сегодня'}
         </button>
       </div>
     </nav>

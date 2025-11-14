@@ -9,22 +9,16 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps --only=production && \
-    npm cache clean --force
+RUN npm ci --legacy-peer-deps --only=production
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-
-# Copy package files first for better layer caching
-COPY package.json package-lock.json* ./
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
 # Install all dependencies (including devDependencies) for build
-RUN npm ci --legacy-peer-deps && \
-    npm cache clean --force
-
-# Copy source code (this layer will be rebuilt only when source changes)
-COPY . .
+RUN npm ci --legacy-peer-deps
 
 # Declare build arguments for NEXT_PUBLIC_ environment variables
 ARG NEXT_PUBLIC_HASURA_GRAPHQL_URL
@@ -66,11 +60,6 @@ ENV NEXTAUTH_URL="http://localhost:3000"
 ENV NODE_ENV=production
 
 RUN npm run build
-
-# Compress static assets with Brotli for better performance
-# RUN apk add --no-cache brotli
-# RUN find /app/.next/static -type f \( -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" -o -name "*.xml" \) -print0 | xargs -0 -n1 -P4 brotli -Z || true
-# RUN find /app/public -type f \( -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" -o -name "*.xml" -o -name "*.html" \) -print0 | xargs -0 -n1 -P4 brotli -Z || true
 
 # Production image, copy all the files and run next
 FROM base AS runner
