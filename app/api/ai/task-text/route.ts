@@ -1,30 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import getAI, { generateJSON } from '@/lib/ai/llm';
 
-import { ClaudeService } from '@/lib/ai/claude-service';
+const schema = z.object({
+  type: z.string().optional(),
+  level: z.string().optional(),
+  topic: z.string().optional(),
+  context: z.string().optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { type, level, topic, context } = body as {
-      type?: 'speaking' | 'writing' | 'reading' | 'listening';
-      level?: string;
-      topic?: string;
-      context?: string;
-    };
-
-    if (!type || !level || !topic) {
-      return NextResponse.json(
-        { error: 'type, level and topic are required' },
-        { status: 400 }
-      );
-    }
-
-    const result = await ClaudeService.generateTaskPrompt({
-      type,
-      level,
-      topic,
-      context,
-    });
+    const { task_type, level, topic, context } = await request.json();
+    const result = await generateJSON<any>(`
+      Generate a task prompt for the following request:
+      Task Type: ${task_type}
+      Level: ${level}
+      Topic: ${topic}
+      Context: ${JSON.stringify(context)}
+      Return a JSON object with the task details.
+    `);
 
     return NextResponse.json(result);
   } catch (error: any) {

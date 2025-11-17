@@ -1,22 +1,18 @@
-import { ClaudeService } from "@/lib/ai/claude-service";
+import { generateJSON } from "@/lib/ai/llm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const { grammarTopic, level, count } = await req.json();
-
-    const exercises = await ClaudeService.generateGrammarDrill(
-      grammarTopic,
-      level,
-      count
-    );
-
-    return NextResponse.json({ exercises });
-  } catch (error) {
-    console.error('AI Grammar Drill Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate grammar drill' },
-      { status: 500 }
-    );
-  }
+    try {
+        const { topic, level } = await req.json();
+        const exercises = await generateJSON<any>(`
+            Generate grammar drill exercises for the following request:
+            Topic: ${topic}
+            Level: ${level}
+            Return a JSON object with an "exercises" array.
+        `);
+        return NextResponse.json({ exercises });
+    } catch (error) {
+        console.error("Error in grammar-drill API:", error);
+        return NextResponse.json({ error: "Failed to generate grammar drill" }, { status: 500 });
+    }
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from "./Buttons/Button";
+
 interface RitualScreenProps {
   onComplete: () => void;
 }
@@ -15,12 +17,12 @@ export function RitualScreen({ onComplete }: RitualScreenProps) {
           Подготовь тетрадь, ручку и сделай глубокий вдох. Вспомни, чему ты научилась вчера, и
           выбери одно маленькое улучшение, которое сделаешь сегодня.
         </p>
-        <button
+        <Button
           onClick={onComplete}
-          className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-white font-medium transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+          variant='default'
         >
           Ритуал завершён — поехали!
-        </button>
+        </Button>
       </div>
     </div>
   );

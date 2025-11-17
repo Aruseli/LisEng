@@ -9,6 +9,10 @@
         "schema": "public",
         "table": "achievements"
       },
+      "active_recall_sessions": {
+        "schema": "public",
+        "table": "active_recall_sessions"
+      },
       "ai_sessions": {
         "schema": "public",
         "table": "ai_sessions"
@@ -48,6 +52,18 @@
       "invites": {
         "schema": "public",
         "table": "invites"
+      },
+      "kumon_progress": {
+        "schema": "public",
+        "table": "kumon_progress"
+      },
+      "lesson_snapshots": {
+        "schema": "lesson",
+        "table": "snapshots"
+      },
+      "lesson_vocabulary_extractions": {
+        "schema": "public",
+        "table": "lesson_vocabulary_extractions"
       },
       "logs_diffs": {
         "schema": "public",
@@ -96,6 +112,14 @@
       "review_history": {
         "schema": "public",
         "table": "review_history"
+      },
+      "shu_ha_ri_progress": {
+        "schema": "shu_ha_ri",
+        "table": "progress"
+      },
+      "shu_ha_ri_tests": {
+        "schema": "shu_ha_ri",
+        "table": "tests"
       },
       "stage_progress": {
         "schema": "stage",
@@ -727,6 +751,77 @@
               ],
               "returnType": {
                 "name": "achievements",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[active_recall_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[active_recall_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[active_recall_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[active_recall_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
                 "kind": "OBJECT"
               }
             },
@@ -1437,6 +1532,219 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[kumon_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[kumon_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[kumon_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[kumon_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_snapshots_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_snapshots_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_snapshots_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_snapshots_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_vocabulary_extractions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_vocabulary_extractions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_vocabulary_extractions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_vocabulary_extractions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
                 "kind": "OBJECT"
               }
             },
@@ -2289,6 +2597,148 @@
               ],
               "returnType": {
                 "name": "review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_tests_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_tests_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_tests_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_tests_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
                 "kind": "OBJECT"
               }
             },
@@ -3163,6 +3613,32 @@
               }
             },
             {
+              "name": "delete_active_recall_sessions",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_active_recall_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "delete_ai_sessions",
               "args": [
                 {
@@ -3341,6 +3817,84 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_kumon_progress",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_kumon_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_lesson_snapshots",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_lesson_snapshots_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_lesson_vocabulary_extractions",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_lesson_vocabulary_extractions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
                 "kind": "OBJECT"
               }
             },
@@ -3653,6 +4207,58 @@
               ],
               "returnType": {
                 "name": "review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_shu_ha_ri_progress",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_shu_ha_ri_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_shu_ha_ri_tests",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_shu_ha_ri_tests_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
                 "kind": "OBJECT"
               }
             },
@@ -4095,6 +4701,40 @@
               }
             },
             {
+              "name": "insert_active_recall_sessions",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[active_recall_sessions_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "active_recall_sessions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_active_recall_sessions_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "active_recall_sessions_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "active_recall_sessions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "insert_ai_sessions",
               "args": [
                 {
@@ -4329,6 +4969,108 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_kumon_progress",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[kumon_progress_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "kumon_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_kumon_progress_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "kumon_progress_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "kumon_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_lesson_snapshots",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[lesson_snapshots_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "lesson_snapshots_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_lesson_snapshots_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "lesson_snapshots_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "lesson_snapshots_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_lesson_vocabulary_extractions",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[lesson_vocabulary_extractions_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "lesson_vocabulary_extractions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_lesson_vocabulary_extractions_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "lesson_vocabulary_extractions_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "lesson_vocabulary_extractions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
                 "kind": "OBJECT"
               }
             },
@@ -4737,6 +5479,74 @@
               ],
               "returnType": {
                 "name": "review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_shu_ha_ri_progress",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[shu_ha_ri_progress_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "shu_ha_ri_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_shu_ha_ri_progress_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "shu_ha_ri_progress_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "shu_ha_ri_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_shu_ha_ri_tests",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[shu_ha_ri_tests_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "shu_ha_ri_tests_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_shu_ha_ri_tests_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "shu_ha_ri_tests_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "shu_ha_ri_tests_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
                 "kind": "OBJECT"
               }
             },
@@ -5387,6 +6197,61 @@
               }
             },
             {
+              "name": "update_active_recall_sessions",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "active_recall_sessions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "active_recall_sessions_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_active_recall_sessions_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "active_recall_sessions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "active_recall_sessions_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "active_recall_sessions_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_active_recall_sessions_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[active_recall_sessions_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "update_ai_sessions",
               "args": [
                 {
@@ -6001,6 +6866,211 @@
               ],
               "returnType": {
                 "name": "invites_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_kumon_progress",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "kumon_progress_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "kumon_progress_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_kumon_progress_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "kumon_progress_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "kumon_progress_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "kumon_progress_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_kumon_progress_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[kumon_progress_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_snapshots",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "lesson_snapshots_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "lesson_snapshots_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "lesson_snapshots_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "lesson_snapshots_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "lesson_snapshots_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "lesson_snapshots_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "lesson_snapshots_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_snapshots_by_pk",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "lesson_snapshots_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "lesson_snapshots_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "lesson_snapshots_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "lesson_snapshots_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "lesson_snapshots_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "lesson_snapshots_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "lesson_snapshots_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "lesson_snapshots_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_snapshots_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[lesson_snapshots_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_vocabulary_extractions",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "lesson_vocabulary_extractions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "lesson_vocabulary_extractions_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_vocabulary_extractions_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "lesson_vocabulary_extractions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "lesson_vocabulary_extractions_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "lesson_vocabulary_extractions_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_lesson_vocabulary_extractions_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[lesson_vocabulary_extractions_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_mutation_response",
                 "kind": "OBJECT"
               }
             },
@@ -7025,6 +8095,196 @@
               }
             },
             {
+              "name": "update_shu_ha_ri_progress",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "shu_ha_ri_progress_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "shu_ha_ri_progress_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "shu_ha_ri_progress_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "shu_ha_ri_progress_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "shu_ha_ri_progress_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "shu_ha_ri_progress_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "shu_ha_ri_progress_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_shu_ha_ri_progress_by_pk",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "shu_ha_ri_progress_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "shu_ha_ri_progress_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "shu_ha_ri_progress_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "shu_ha_ri_progress_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "shu_ha_ri_progress_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "shu_ha_ri_progress_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "shu_ha_ri_progress_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "shu_ha_ri_progress_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_shu_ha_ri_progress_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[shu_ha_ri_progress_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_shu_ha_ri_tests",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "shu_ha_ri_tests_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "shu_ha_ri_tests_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "shu_ha_ri_tests_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "shu_ha_ri_tests_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "shu_ha_ri_tests_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "shu_ha_ri_tests_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "shu_ha_ri_tests_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_shu_ha_ri_tests_by_pk",
+              "args": [
+                {
+                  "name": "_append",
+                  "gqlType": "shu_ha_ri_tests_append_input"
+                },
+                {
+                  "name": "_delete_at_path",
+                  "gqlType": "shu_ha_ri_tests_delete_at_path_input"
+                },
+                {
+                  "name": "_delete_elem",
+                  "gqlType": "shu_ha_ri_tests_delete_elem_input"
+                },
+                {
+                  "name": "_delete_key",
+                  "gqlType": "shu_ha_ri_tests_delete_key_input"
+                },
+                {
+                  "name": "_inc",
+                  "gqlType": "shu_ha_ri_tests_inc_input"
+                },
+                {
+                  "name": "_prepend",
+                  "gqlType": "shu_ha_ri_tests_prepend_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "shu_ha_ri_tests_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "shu_ha_ri_tests_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_shu_ha_ri_tests_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[shu_ha_ri_tests_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "update_stage_progress",
               "args": [
                 {
@@ -7757,6 +9017,98 @@
               ],
               "returnType": {
                 "name": "achievements",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[active_recall_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[active_recall_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[active_recall_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[active_recall_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "active_recall_sessions_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[active_recall_sessions_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "active_recall_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "active_recall_sessions",
                 "kind": "OBJECT"
               }
             },
@@ -8677,6 +10029,282 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[kumon_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[kumon_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[kumon_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[kumon_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "kumon_progress_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[kumon_progress_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "kumon_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_snapshots_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_snapshots_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_snapshots_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_snapshots_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[lesson_snapshots_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_snapshots_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_vocabulary_extractions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_vocabulary_extractions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[lesson_vocabulary_extractions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[lesson_vocabulary_extractions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[lesson_vocabulary_extractions_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "lesson_vocabulary_extractions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
                 "kind": "OBJECT"
               }
             },
@@ -9781,6 +11409,190 @@
               ],
               "returnType": {
                 "name": "review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progress_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[shu_ha_ri_progress_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_tests_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_tests_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[shu_ha_ri_tests_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[shu_ha_ri_tests_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[shu_ha_ri_tests_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "shu_ha_ri_tests_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
                 "kind": "OBJECT"
               }
             },
@@ -11039,6 +12851,248 @@
           "kind": "INPUT_OBJECT",
           "fields": []
         },
+        "active_recall_sessions": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "context_prompt",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "correct_response",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ease_factor",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "hint_used",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "interval_days",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_snapshot",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshot_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "next_review_date",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "date",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "quality",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_attempts",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_item_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_item_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_success",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_time_seconds",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "recall_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "repetitions",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "updated_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user_response",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "active_recall_sessions_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "active_recall_sessions_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "active_recall_sessions_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "active_recall_sessions_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "active_recall_sessions_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
         "ai_sessions": {
           "kind": "OBJECT",
           "fields": [
@@ -11088,6 +13142,33 @@
               }
             },
             {
+              "name": "kumon_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "section_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
               "name": "session_date",
               "isList": false,
               "args": [],
@@ -11097,11 +13178,38 @@
               }
             },
             {
+              "name": "session_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
               "name": "started_at",
               "isList": false,
               "args": [],
               "returnType": {
                 "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "tasks_completed",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "tasks_total",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
                 "kind": "SCALAR"
               }
             },
@@ -11478,6 +13586,15 @@
               "returnType": {
                 "name": "uuid",
                 "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
               }
             },
             {
@@ -12439,6 +14556,669 @@
           "fields": []
         },
         "invites_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "kumon_progress": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "accuracy_rate",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ai_session",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "ai_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "completion_time_avg",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "consecutive_correct",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "current_level",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "last_practiced_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "last_practiced_snapshot_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_snapshot",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "session_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "skill_category",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "skill_subcategory",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "status",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "target_level",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "updated_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "kumon_progress_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "kumon_progress_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "kumon_progress_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "kumon_progress_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "kumon_progress_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_snapshots": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "active_recall_sessions",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "ai_session",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "ai_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "content_snapshot",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "daily_task",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "daily_tasks",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "duration_seconds",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "is_improvement",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "kaizen_metrics",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "kumon_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_date",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_snapshot",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_vocabulary_extractions",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "mastery_level",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "methodology_tags",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "parent_snapshot_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "performance_score",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "problem_areas",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "session_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "task_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "version",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "lesson_snapshots_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "lesson_snapshots_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_snapshots_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_snapshots_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_snapshots_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_vocabulary_extractions": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "active_recall_context",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "context_paragraph",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "context_position",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "context_sentence",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "extracted_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "frequency_in_lesson",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "lesson_snapshot",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshot_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "suggested_hint",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user_action",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user_confidence",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "vocabulary_card",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "vocabulary_cards",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "vocabulary_card_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "word",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "word_form",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "lesson_vocabulary_extractions_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "lesson_vocabulary_extractions_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_vocabulary_extractions_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_vocabulary_extractions_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "lesson_vocabulary_extractions_pk_columns_input": {
           "kind": "INPUT_OBJECT",
           "fields": []
         },
@@ -14464,6 +17244,400 @@
           "kind": "INPUT_OBJECT",
           "fields": []
         },
+        "shu_ha_ri_progress": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "ai_analysis",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ha_creative_applications",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ha_started_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ha_test_passed",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ha_understanding_score",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ri_achieved_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ri_fluency_score",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ri_natural_usage_count",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ri_test_passed",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "shu_accuracy",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "shu_completed_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "shu_mastery_count",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "shu_test_passed",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "skill_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "skill_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "stage",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "updated_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "shu_ha_ri_progress_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "shu_ha_ri_progress_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_progress_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_progress_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_progress_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_tests": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "completed_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "feedback",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "passed",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "questions",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "score",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "skills_progress",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "started_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "test_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_answers",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "jsonb",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "week_start_date",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "date",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "shu_ha_ri_tests_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "shu_ha_ri_tests_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_tests_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_tests_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "shu_ha_ri_tests_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
         "stage_progress": {
           "kind": "OBJECT",
           "fields": [
@@ -15255,6 +18429,15 @@
               }
             },
             {
+              "name": "active_recall_sessions",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "active_recall_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "ai_sessions",
               "isList": true,
               "args": [],
@@ -15372,6 +18555,24 @@
               }
             },
             {
+              "name": "kumon_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "kumon_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "lesson_snapshots",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_snapshots",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "methods",
               "isList": true,
               "args": [],
@@ -15458,6 +18659,24 @@
               "args": [],
               "returnType": {
                 "name": "review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "shu_ha_ri_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "shu_ha_ri_tests",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "shu_ha_ri_tests",
                 "kind": "OBJECT"
               }
             },
@@ -15945,6 +19164,15 @@
               }
             },
             {
+              "name": "lesson_vocabulary_extractions",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "lesson_vocabulary_extractions",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "next_review_date",
               "isList": false,
               "args": [],
@@ -16184,7 +19412,7 @@
         }
       }
     },
-    "timestamp": 1763075424383,
+    "timestamp": 1763232028542,
     "version": "3.0.0"
   }
 }

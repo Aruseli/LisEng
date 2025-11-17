@@ -1,5 +1,8 @@
 'use client';
 
+import { Sparkles } from "lucide-react";
+import { Button } from "../Buttons/Button";
+
 interface RequirementCheckView {
   requirement: {
     id: string;
@@ -112,12 +115,13 @@ export function DashboardTab({
       <section className="rounded-3xl bg-white p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-base font-semibold text-gray-900">Задания на сегодня</h3>
-          <button
+          <Button
             onClick={onStartAITask}
-            className="inline-flex items-center rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+            variant="default"
+            leftIcon={<Sparkles className="size-5" strokeWidth={1} />}
           >
             AI коуч
-          </button>
+          </Button>
         </div>
 
         {loading ? (
@@ -171,17 +175,17 @@ export function DashboardTab({
                         {task.ai_enabled ? 'Начать' : 'Выполнить'}
                       </button>
                     )}
-                    <button
-                      onClick={() => onCompleteTask(task.id)}
-                      disabled={isCompleted}
+                  <button
+                    onClick={() => onCompleteTask(task.id)}
+                    disabled={isCompleted}
                       className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                        isCompleted
-                          ? 'cursor-default bg-green-100 text-green-600'
+                      isCompleted
+                        ? 'cursor-default bg-green-100 text-green-600'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
+                    }`}
+                  >
                       {isCompleted ? '✓ Выполнено' : 'Отметить'}
-                    </button>
+                  </button>
                   </div>
                 </li>
               );

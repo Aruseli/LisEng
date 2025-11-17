@@ -120,6 +120,47 @@ export const options = {
     // Only brain_string can reference other options as item_id
     brain_string: z.string().describe('Result of brain_formula or brain_ask computation').meta({ multiple: true, BrainComponent: 'BrainStringComponent' }),
   }),
+  // Options for lesson_snapshots table (item_id = lesson_snapshots.id)
+  lesson_snapshots: z.object({
+    preferred_difficulty: z.enum(['easy', 'medium', 'hard']).optional().describe('Предпочтительный уровень сложности для слепка'),
+    focus_areas: z.array(z.string()).optional().describe('Области фокуса: grammar, vocabulary, reading и т.д.'),
+    kumon_enabled: z.boolean().optional().describe('Включено ли отслеживание прогресса Кумон для этого слепка'),
+    active_recall_enabled: z.boolean().optional().describe('Включено ли Active Recall для этого слепка'),
+    kaizen_tracking: z.boolean().optional().describe('Включено ли отслеживание метрик Кайдзен'),
+  }),
+  // Options for ai_sessions table (item_id = ai_sessions.id)
+  ai_sessions: z.object({
+    auto_snapshot: z.boolean().optional().describe('Автоматически создавать слепки после завершения сессии'),
+    session_goal: z.string().optional().describe('Цель сессии обучения'),
+    time_limit_minutes: z.number().optional().describe('Лимит времени на сессию в минутах'),
+  }),
+  // Options for kumon_progress table (item_id = kumon_progress.id)
+  kumon_progress: z.object({
+    mastery_threshold: z.number().optional().describe('Количество правильных ответов подряд для повышения уровня (по умолчанию 3)'),
+    difficulty_increase: z.number().optional().describe('Процент увеличения сложности при переходе на следующий уровень (по умолчанию 15%)'),
+  }),
+  // Options for active_recall_sessions table (item_id = active_recall_sessions.id)
+  active_recall_sessions: z.object({
+    sm2_initial_ease: z.number().optional().describe('Начальный фактор легкости для SM-2 алгоритма (по умолчанию 2.5)'),
+    sm2_min_interval: z.number().optional().describe('Минимальный интервал повторения в днях (по умолчанию 1)'),
+    sm2_max_interval: z.number().optional().describe('Максимальный интервал повторения в днях (по умолчанию 365)'),
+  }),
+  // Options for shu_ha_ri_progress table (item_id = shu_ha_ri_progress.id)
+  shu_ha_ri_progress: z.object({
+    shu_threshold: z.number().optional().describe('Порог готовности для перехода Shu → Ha (по умолчанию 0.8)'),
+    ha_threshold: z.number().optional().describe('Порог готовности для перехода Ha → Ri (по умолчанию 0.75)'),
+    ai_analysis_enabled: z.boolean().optional().describe('Включен ли AI анализ для определения готовности к переходу'),
+  }),
+  // Options for shu_ha_ri_tests table (item_id = shu_ha_ri_tests.id)
+  shu_ha_ri_tests: z.object({
+    passing_score: z.number().optional().describe('Проходной балл для теста (по умолчанию 80)'),
+    auto_generate: z.boolean().optional().describe('Автоматически генерировать тест в конце недели'),
+  }),
+  // Options for lesson_vocabulary_extractions table (item_id = lesson_vocabulary_extractions.id)
+  lesson_vocabulary_extractions: z.object({
+    auto_add_to_vocab: z.boolean().optional().describe('Автоматически добавлять извлеченные слова в vocabulary_cards'),
+    min_frequency: z.number().optional().describe('Минимальная частота встречи слова для добавления (по умолчанию 1)'),
+  }),
   // Global options (no item_id required): aliased to options.__empty
   "": z.object(_brainEnything),
   // Wildcard options for any target table: aliased to options.__any

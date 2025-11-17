@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'hasyx';
+import { useModalStore } from '@/store/modalStore';
+import { ModalContainer } from './app/Modal/Modal';
+import { LevelTestModal } from './app/LevelTestModal';
 
 import { OAuthButtons } from 'hasyx/components/auth/oauth-buttons';
 import { RitualScreen } from './app/RitualScreen';
@@ -104,9 +107,12 @@ export default function EnglishLearningApp() {
   }, [dashboard?.plan?.achievements]);
 
   const userName = dashboard?.user?.name ?? session?.user?.name ?? 'Ученик';
-  const currentLevel = dashboard?.user?.current_level ?? 'A2';
+  const currentLevel = dashboard?.user?.current_level ?? null;
   const targetLevel = dashboard?.user?.target_level ?? 'B2';
   const streak = dashboard?.plan?.streak?.current_streak ?? 0;
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+  const [levelTestShown, setLevelTestShown] = useState(false);
 
   const primaryAiTask = useMemo<PlanTask | null>(() => {
     return tasks.find((task) => task.ai_enabled) ?? null;
@@ -150,6 +156,42 @@ export default function EnglishLearningApp() {
     }
   }, [primaryAiTask, hasSession, startSession]);
 
+  // Показываем модальное окно теста, если уровень не определен
+  useEffect(() => {
+    // Не показываем модальное окно, если показывается RitualScreen
+    if (showRitual) return;
+
+    // Проверяем условия для показа модального окна
+    const shouldShowModal = 
+      userId &&
+      !levelTestShown &&
+      (currentLevel === null || currentLevel === undefined || currentLevel === '') &&
+      !isLoading;
+
+    if (shouldShowModal) {
+      console.log('[AppPage] Showing level test modal', { userId, currentLevel, isLoading });
+      setLevelTestShown(true);
+      const modalId = openModal({
+        component: (
+          <LevelTestModal
+            userId={userId}
+            onComplete={(level) => {
+              // Закрываем модальное окно
+              closeModal(modalId);
+              // Обновляем данные после сохранения уровня
+              void regeneratePlan();
+            }}
+            onSkip={() => {
+              // При пропуске тоже показываем модальное окно для ручного ввода
+              // (это уже обрабатывается внутри LevelTestModal)
+            }}
+          />
+        ),
+        closeOnOverlayClick: false,
+      });
+    }
+  }, [userId, currentLevel, isLoading, levelTestShown, showRitual, openModal, closeModal, regeneratePlan]);
+
   const handleCompleteTask = (taskId: string | number) => {
     completeTask(String(taskId));
   };
@@ -176,7 +218,7 @@ export default function EnglishLearningApp() {
           <div className="space-y-2 text-center">
             <h1 className="text-2xl font-semibold text-gray-900">Добро пожаловать!</h1>
             <p className="text-gray-600">
-              Пожалуйста, авторизуйтесь через Google, чтобы увидеть персональный план занятий.
+              Пожалуйста, авторизуйтесь, чтобы увидеть персональный план занятий.
             </p>
           </div>
           <OAuthButtons {...({ callbackUrl } as any)} />
@@ -191,12 +233,28 @@ export default function EnglishLearningApp() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ModalContainer />
       <Header userName={userName} streak={streak} />
       <Navigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onRefresh={() => {
           void regeneratePlan();
+        }}
+        onLevelTest={() => {
+          const modalId = openModal({
+            component: (
+              <LevelTestModal
+                userId={userId!}
+                onComplete={(level) => {
+                  closeModal(modalId);
+                  void regeneratePlan();
+                }}
+                onSkip={() => {}}
+              />
+            ),
+            closeOnOverlayClick: false,
+          });
         }}
         isLoading={isLoading}
       />
@@ -212,7 +270,7 @@ export default function EnglishLearningApp() {
           <DashboardTab
             loading={isLoading}
             userName={userName}
-            currentLevel={currentLevel}
+            currentLevel={currentLevel ?? 'A2'}
             targetLevel={targetLevel}
             todayMinutes={todayMinutes}
             goalMinutes={goalMinutes}

@@ -1060,6 +1060,658 @@ export type Achievements_Updates = {
   where: Achievements_Bool_Exp;
 };
 
+/** columns and relationships of "active_recall_sessions" */
+export type Active_Recall_Sessions = {
+  __typename?: "active_recall_sessions";
+  context_prompt?: Maybe<Scalars["String"]["output"]>;
+  correct_response?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  hint_used?: Maybe<Scalars["Boolean"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  /** An object relationship */
+  lesson_snapshot?: Maybe<Lesson_Snapshots>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  next_review_date?: Maybe<Scalars["date"]["output"]>;
+  quality?: Maybe<Scalars["Int"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Int"]["output"]>;
+  recall_item_id?: Maybe<Scalars["uuid"]["output"]>;
+  recall_item_type?: Maybe<Scalars["String"]["output"]>;
+  recall_success?: Maybe<Scalars["Boolean"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  recall_type: Scalars["String"]["output"];
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  user_response?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregated selection of "active_recall_sessions" */
+export type Active_Recall_Sessions_Aggregate = {
+  __typename?: "active_recall_sessions_aggregate";
+  aggregate?: Maybe<Active_Recall_Sessions_Aggregate_Fields>;
+  nodes: Array<Active_Recall_Sessions>;
+};
+
+export type Active_Recall_Sessions_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Active_Recall_Sessions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Active_Recall_Sessions_Select_Column_Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Active_Recall_Sessions_Select_Column_Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Active_Recall_Sessions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "active_recall_sessions" */
+export type Active_Recall_Sessions_Aggregate_Fields = {
+  __typename?: "active_recall_sessions_aggregate_fields";
+  avg?: Maybe<Active_Recall_Sessions_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Active_Recall_Sessions_Max_Fields>;
+  min?: Maybe<Active_Recall_Sessions_Min_Fields>;
+  stddev?: Maybe<Active_Recall_Sessions_Stddev_Fields>;
+  stddev_pop?: Maybe<Active_Recall_Sessions_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Active_Recall_Sessions_Stddev_Samp_Fields>;
+  sum?: Maybe<Active_Recall_Sessions_Sum_Fields>;
+  var_pop?: Maybe<Active_Recall_Sessions_Var_Pop_Fields>;
+  var_samp?: Maybe<Active_Recall_Sessions_Var_Samp_Fields>;
+  variance?: Maybe<Active_Recall_Sessions_Variance_Fields>;
+};
+
+/** aggregate fields of "active_recall_sessions" */
+export type Active_Recall_Sessions_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Aggregate_Order_By = {
+  avg?: InputMaybe<Active_Recall_Sessions_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Active_Recall_Sessions_Max_Order_By>;
+  min?: InputMaybe<Active_Recall_Sessions_Min_Order_By>;
+  stddev?: InputMaybe<Active_Recall_Sessions_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Active_Recall_Sessions_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Active_Recall_Sessions_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Active_Recall_Sessions_Sum_Order_By>;
+  var_pop?: InputMaybe<Active_Recall_Sessions_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Active_Recall_Sessions_Var_Samp_Order_By>;
+  variance?: InputMaybe<Active_Recall_Sessions_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "active_recall_sessions" */
+export type Active_Recall_Sessions_Arr_Rel_Insert_Input = {
+  data: Array<Active_Recall_Sessions_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Active_Recall_Sessions_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Active_Recall_Sessions_Avg_Fields = {
+  __typename?: "active_recall_sessions_avg_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Avg_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "active_recall_sessions". All fields are combined with a logical 'AND'. */
+export type Active_Recall_Sessions_Bool_Exp = {
+  _and?: InputMaybe<Array<Active_Recall_Sessions_Bool_Exp>>;
+  _not?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  _or?: InputMaybe<Array<Active_Recall_Sessions_Bool_Exp>>;
+  context_prompt?: InputMaybe<String_Comparison_Exp>;
+  correct_response?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  ease_factor?: InputMaybe<Numeric_Comparison_Exp>;
+  hint_used?: InputMaybe<Boolean_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  interval_days?: InputMaybe<Int_Comparison_Exp>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshot_id?: InputMaybe<Uuid_Comparison_Exp>;
+  next_review_date?: InputMaybe<Date_Comparison_Exp>;
+  quality?: InputMaybe<Int_Comparison_Exp>;
+  recall_attempts?: InputMaybe<Int_Comparison_Exp>;
+  recall_item_id?: InputMaybe<Uuid_Comparison_Exp>;
+  recall_item_type?: InputMaybe<String_Comparison_Exp>;
+  recall_success?: InputMaybe<Boolean_Comparison_Exp>;
+  recall_time_seconds?: InputMaybe<Int_Comparison_Exp>;
+  recall_type?: InputMaybe<String_Comparison_Exp>;
+  repetitions?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  user_response?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "active_recall_sessions" */
+export enum Active_Recall_Sessions_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ActiveRecallSessionsPkey = "active_recall_sessions_pkey",
+}
+
+/** input type for incrementing numeric columns in table "active_recall_sessions" */
+export type Active_Recall_Sessions_Inc_Input = {
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  quality?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_attempts?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "active_recall_sessions" */
+export type Active_Recall_Sessions_Insert_Input = {
+  context_prompt?: InputMaybe<Scalars["String"]["input"]>;
+  correct_response?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  hint_used?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Obj_Rel_Insert_Input>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  quality?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_attempts?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_item_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  recall_item_type?: InputMaybe<Scalars["String"]["input"]>;
+  recall_success?: InputMaybe<Scalars["Boolean"]["input"]>;
+  recall_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_type?: InputMaybe<Scalars["String"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user_response?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Active_Recall_Sessions_Max_Fields = {
+  __typename?: "active_recall_sessions_max_fields";
+  context_prompt?: Maybe<Scalars["String"]["output"]>;
+  correct_response?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  next_review_date?: Maybe<Scalars["date"]["output"]>;
+  quality?: Maybe<Scalars["Int"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Int"]["output"]>;
+  recall_item_id?: Maybe<Scalars["uuid"]["output"]>;
+  recall_item_type?: Maybe<Scalars["String"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  recall_type?: Maybe<Scalars["String"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  user_response?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by max() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Max_Order_By = {
+  context_prompt?: InputMaybe<Order_By>;
+  correct_response?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_item_id?: InputMaybe<Order_By>;
+  recall_item_type?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  recall_type?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  user_response?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Active_Recall_Sessions_Min_Fields = {
+  __typename?: "active_recall_sessions_min_fields";
+  context_prompt?: Maybe<Scalars["String"]["output"]>;
+  correct_response?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  next_review_date?: Maybe<Scalars["date"]["output"]>;
+  quality?: Maybe<Scalars["Int"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Int"]["output"]>;
+  recall_item_id?: Maybe<Scalars["uuid"]["output"]>;
+  recall_item_type?: Maybe<Scalars["String"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  recall_type?: Maybe<Scalars["String"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  user_response?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by min() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Min_Order_By = {
+  context_prompt?: InputMaybe<Order_By>;
+  correct_response?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_item_id?: InputMaybe<Order_By>;
+  recall_item_type?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  recall_type?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  user_response?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "active_recall_sessions" */
+export type Active_Recall_Sessions_Mutation_Response = {
+  __typename?: "active_recall_sessions_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Active_Recall_Sessions>;
+};
+
+/** on_conflict condition type for table "active_recall_sessions" */
+export type Active_Recall_Sessions_On_Conflict = {
+  constraint: Active_Recall_Sessions_Constraint;
+  update_columns?: Array<Active_Recall_Sessions_Update_Column>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "active_recall_sessions". */
+export type Active_Recall_Sessions_Order_By = {
+  context_prompt?: InputMaybe<Order_By>;
+  correct_response?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  hint_used?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_item_id?: InputMaybe<Order_By>;
+  recall_item_type?: InputMaybe<Order_By>;
+  recall_success?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  recall_type?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  user_response?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: active_recall_sessions */
+export type Active_Recall_Sessions_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "active_recall_sessions" */
+export enum Active_Recall_Sessions_Select_Column {
+  /** column name */
+  ContextPrompt = "context_prompt",
+  /** column name */
+  CorrectResponse = "correct_response",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EaseFactor = "ease_factor",
+  /** column name */
+  HintUsed = "hint_used",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IntervalDays = "interval_days",
+  /** column name */
+  LessonSnapshotId = "lesson_snapshot_id",
+  /** column name */
+  NextReviewDate = "next_review_date",
+  /** column name */
+  Quality = "quality",
+  /** column name */
+  RecallAttempts = "recall_attempts",
+  /** column name */
+  RecallItemId = "recall_item_id",
+  /** column name */
+  RecallItemType = "recall_item_type",
+  /** column name */
+  RecallSuccess = "recall_success",
+  /** column name */
+  RecallTimeSeconds = "recall_time_seconds",
+  /** column name */
+  RecallType = "recall_type",
+  /** column name */
+  Repetitions = "repetitions",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  UserResponse = "user_response",
+}
+
+/** select "active_recall_sessions_aggregate_bool_exp_bool_and_arguments_columns" columns of table "active_recall_sessions" */
+export enum Active_Recall_Sessions_Select_Column_Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  HintUsed = "hint_used",
+  /** column name */
+  RecallSuccess = "recall_success",
+}
+
+/** select "active_recall_sessions_aggregate_bool_exp_bool_or_arguments_columns" columns of table "active_recall_sessions" */
+export enum Active_Recall_Sessions_Select_Column_Active_Recall_Sessions_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  HintUsed = "hint_used",
+  /** column name */
+  RecallSuccess = "recall_success",
+}
+
+/** input type for updating data in table "active_recall_sessions" */
+export type Active_Recall_Sessions_Set_Input = {
+  context_prompt?: InputMaybe<Scalars["String"]["input"]>;
+  correct_response?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  hint_used?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  quality?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_attempts?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_item_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  recall_item_type?: InputMaybe<Scalars["String"]["input"]>;
+  recall_success?: InputMaybe<Scalars["Boolean"]["input"]>;
+  recall_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_type?: InputMaybe<Scalars["String"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user_response?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Active_Recall_Sessions_Stddev_Fields = {
+  __typename?: "active_recall_sessions_stddev_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Stddev_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Active_Recall_Sessions_Stddev_Pop_Fields = {
+  __typename?: "active_recall_sessions_stddev_pop_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Stddev_Pop_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Active_Recall_Sessions_Stddev_Samp_Fields = {
+  __typename?: "active_recall_sessions_stddev_samp_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Stddev_Samp_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "active_recall_sessions" */
+export type Active_Recall_Sessions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Active_Recall_Sessions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Active_Recall_Sessions_Stream_Cursor_Value_Input = {
+  context_prompt?: InputMaybe<Scalars["String"]["input"]>;
+  correct_response?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  hint_used?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  quality?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_attempts?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_item_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  recall_item_type?: InputMaybe<Scalars["String"]["input"]>;
+  recall_success?: InputMaybe<Scalars["Boolean"]["input"]>;
+  recall_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  recall_type?: InputMaybe<Scalars["String"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user_response?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Active_Recall_Sessions_Sum_Fields = {
+  __typename?: "active_recall_sessions_sum_fields";
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  quality?: Maybe<Scalars["Int"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Int"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Sum_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "active_recall_sessions" */
+export enum Active_Recall_Sessions_Update_Column {
+  /** column name */
+  ContextPrompt = "context_prompt",
+  /** column name */
+  CorrectResponse = "correct_response",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EaseFactor = "ease_factor",
+  /** column name */
+  HintUsed = "hint_used",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IntervalDays = "interval_days",
+  /** column name */
+  LessonSnapshotId = "lesson_snapshot_id",
+  /** column name */
+  NextReviewDate = "next_review_date",
+  /** column name */
+  Quality = "quality",
+  /** column name */
+  RecallAttempts = "recall_attempts",
+  /** column name */
+  RecallItemId = "recall_item_id",
+  /** column name */
+  RecallItemType = "recall_item_type",
+  /** column name */
+  RecallSuccess = "recall_success",
+  /** column name */
+  RecallTimeSeconds = "recall_time_seconds",
+  /** column name */
+  RecallType = "recall_type",
+  /** column name */
+  Repetitions = "repetitions",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  UserResponse = "user_response",
+}
+
+export type Active_Recall_Sessions_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Active_Recall_Sessions_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Active_Recall_Sessions_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Active_Recall_Sessions_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Active_Recall_Sessions_Var_Pop_Fields = {
+  __typename?: "active_recall_sessions_var_pop_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Var_Pop_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Active_Recall_Sessions_Var_Samp_Fields = {
+  __typename?: "active_recall_sessions_var_samp_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Var_Samp_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Active_Recall_Sessions_Variance_Fields = {
+  __typename?: "active_recall_sessions_variance_fields";
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  quality?: Maybe<Scalars["Float"]["output"]>;
+  recall_attempts?: Maybe<Scalars["Float"]["output"]>;
+  recall_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "active_recall_sessions" */
+export type Active_Recall_Sessions_Variance_Order_By = {
+  ease_factor?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  quality?: InputMaybe<Order_By>;
+  recall_attempts?: InputMaybe<Order_By>;
+  recall_time_seconds?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
 /** columns and relationships of "ai_sessions" */
 export type Ai_Sessions = {
   __typename?: "ai_sessions";
@@ -1068,8 +1720,20 @@ export type Ai_Sessions = {
   ended_at?: Maybe<Scalars["timestamp"]["output"]>;
   feedback?: Maybe<Scalars["jsonb"]["output"]>;
   id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  kumon_progresses: Array<Kumon_Progress>;
+  /** An aggregate relationship */
+  kumon_progresses_aggregate: Kumon_Progress_Aggregate;
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
+  section_type?: Maybe<Scalars["String"]["output"]>;
   session_date?: Maybe<Scalars["date"]["output"]>;
+  session_type?: Maybe<Scalars["String"]["output"]>;
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  tasks_completed?: Maybe<Array<Scalars["uuid"]["output"]>>;
+  tasks_total?: Maybe<Scalars["Int"]["output"]>;
   topic?: Maybe<Scalars["String"]["output"]>;
   type: Scalars["String"]["output"];
   /** An object relationship */
@@ -1085,6 +1749,42 @@ export type Ai_SessionsConversationArgs = {
 /** columns and relationships of "ai_sessions" */
 export type Ai_SessionsFeedbackArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "ai_sessions" */
+export type Ai_SessionsKumon_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "ai_sessions" */
+export type Ai_SessionsKumon_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "ai_sessions" */
+export type Ai_SessionsLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** columns and relationships of "ai_sessions" */
+export type Ai_SessionsLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
 };
 
 /** aggregated selection of "ai_sessions" */
@@ -1159,11 +1859,13 @@ export type Ai_Sessions_Arr_Rel_Insert_Input = {
 export type Ai_Sessions_Avg_Fields = {
   __typename?: "ai_sessions_avg_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by avg() on columns of table "ai_sessions" */
 export type Ai_Sessions_Avg_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "ai_sessions". All fields are combined with a logical 'AND'. */
@@ -1176,8 +1878,16 @@ export type Ai_Sessions_Bool_Exp = {
   ended_at?: InputMaybe<Timestamp_Comparison_Exp>;
   feedback?: InputMaybe<Jsonb_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Bool_Exp>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Bool_Exp>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp>;
+  section_type?: InputMaybe<String_Comparison_Exp>;
   session_date?: InputMaybe<Date_Comparison_Exp>;
+  session_type?: InputMaybe<String_Comparison_Exp>;
   started_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  tasks_completed?: InputMaybe<Uuid_Array_Comparison_Exp>;
+  tasks_total?: InputMaybe<Int_Comparison_Exp>;
   topic?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<String_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
@@ -1211,6 +1921,7 @@ export type Ai_Sessions_Delete_Key_Input = {
 /** input type for incrementing numeric columns in table "ai_sessions" */
 export type Ai_Sessions_Inc_Input = {
   duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  tasks_total?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** input type for inserting data into table "ai_sessions" */
@@ -1220,8 +1931,14 @@ export type Ai_Sessions_Insert_Input = {
   ended_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Arr_Rel_Insert_Input>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Arr_Rel_Insert_Input>;
+  section_type?: InputMaybe<Scalars["String"]["input"]>;
   session_date?: InputMaybe<Scalars["date"]["input"]>;
+  session_type?: InputMaybe<Scalars["String"]["input"]>;
   started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  tasks_completed?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  tasks_total?: InputMaybe<Scalars["Int"]["input"]>;
   topic?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
@@ -1234,8 +1951,12 @@ export type Ai_Sessions_Max_Fields = {
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
   ended_at?: Maybe<Scalars["timestamp"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
+  section_type?: Maybe<Scalars["String"]["output"]>;
   session_date?: Maybe<Scalars["date"]["output"]>;
+  session_type?: Maybe<Scalars["String"]["output"]>;
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  tasks_completed?: Maybe<Array<Scalars["uuid"]["output"]>>;
+  tasks_total?: Maybe<Scalars["Int"]["output"]>;
   topic?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -1246,8 +1967,12 @@ export type Ai_Sessions_Max_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
   ended_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  section_type?: InputMaybe<Order_By>;
   session_date?: InputMaybe<Order_By>;
+  session_type?: InputMaybe<Order_By>;
   started_at?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
   topic?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -1259,8 +1984,12 @@ export type Ai_Sessions_Min_Fields = {
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
   ended_at?: Maybe<Scalars["timestamp"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
+  section_type?: Maybe<Scalars["String"]["output"]>;
   session_date?: Maybe<Scalars["date"]["output"]>;
+  session_type?: Maybe<Scalars["String"]["output"]>;
   started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  tasks_completed?: Maybe<Array<Scalars["uuid"]["output"]>>;
+  tasks_total?: Maybe<Scalars["Int"]["output"]>;
   topic?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -1271,8 +2000,12 @@ export type Ai_Sessions_Min_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
   ended_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  section_type?: InputMaybe<Order_By>;
   session_date?: InputMaybe<Order_By>;
+  session_type?: InputMaybe<Order_By>;
   started_at?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
   topic?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -1285,6 +2018,13 @@ export type Ai_Sessions_Mutation_Response = {
   affected_rows: Scalars["Int"]["output"];
   /** data from the rows affected by the mutation */
   returning: Array<Ai_Sessions>;
+};
+
+/** input type for inserting object relation for remote table "ai_sessions" */
+export type Ai_Sessions_Obj_Rel_Insert_Input = {
+  data: Ai_Sessions_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Ai_Sessions_On_Conflict>;
 };
 
 /** on_conflict condition type for table "ai_sessions" */
@@ -1301,8 +2041,14 @@ export type Ai_Sessions_Order_By = {
   ended_at?: InputMaybe<Order_By>;
   feedback?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Order_By>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Order_By>;
+  section_type?: InputMaybe<Order_By>;
   session_date?: InputMaybe<Order_By>;
+  session_type?: InputMaybe<Order_By>;
   started_at?: InputMaybe<Order_By>;
+  tasks_completed?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
   topic?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
@@ -1333,9 +2079,17 @@ export enum Ai_Sessions_Select_Column {
   /** column name */
   Id = "id",
   /** column name */
+  SectionType = "section_type",
+  /** column name */
   SessionDate = "session_date",
   /** column name */
+  SessionType = "session_type",
+  /** column name */
   StartedAt = "started_at",
+  /** column name */
+  TasksCompleted = "tasks_completed",
+  /** column name */
+  TasksTotal = "tasks_total",
   /** column name */
   Topic = "topic",
   /** column name */
@@ -1351,8 +2105,12 @@ export type Ai_Sessions_Set_Input = {
   ended_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
+  section_type?: InputMaybe<Scalars["String"]["input"]>;
   session_date?: InputMaybe<Scalars["date"]["input"]>;
+  session_type?: InputMaybe<Scalars["String"]["input"]>;
   started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  tasks_completed?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  tasks_total?: InputMaybe<Scalars["Int"]["input"]>;
   topic?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -1362,33 +2120,39 @@ export type Ai_Sessions_Set_Input = {
 export type Ai_Sessions_Stddev_Fields = {
   __typename?: "ai_sessions_stddev_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddev() on columns of table "ai_sessions" */
 export type Ai_Sessions_Stddev_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Ai_Sessions_Stddev_Pop_Fields = {
   __typename?: "ai_sessions_stddev_pop_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddev_pop() on columns of table "ai_sessions" */
 export type Ai_Sessions_Stddev_Pop_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Ai_Sessions_Stddev_Samp_Fields = {
   __typename?: "ai_sessions_stddev_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddev_samp() on columns of table "ai_sessions" */
 export type Ai_Sessions_Stddev_Samp_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "ai_sessions" */
@@ -1406,8 +2170,12 @@ export type Ai_Sessions_Stream_Cursor_Value_Input = {
   ended_at?: InputMaybe<Scalars["timestamp"]["input"]>;
   feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
+  section_type?: InputMaybe<Scalars["String"]["input"]>;
   session_date?: InputMaybe<Scalars["date"]["input"]>;
+  session_type?: InputMaybe<Scalars["String"]["input"]>;
   started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  tasks_completed?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  tasks_total?: InputMaybe<Scalars["Int"]["input"]>;
   topic?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -1417,11 +2185,13 @@ export type Ai_Sessions_Stream_Cursor_Value_Input = {
 export type Ai_Sessions_Sum_Fields = {
   __typename?: "ai_sessions_sum_fields";
   duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+  tasks_total?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /** order by sum() on columns of table "ai_sessions" */
 export type Ai_Sessions_Sum_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "ai_sessions" */
@@ -1437,9 +2207,17 @@ export enum Ai_Sessions_Update_Column {
   /** column name */
   Id = "id",
   /** column name */
+  SectionType = "section_type",
+  /** column name */
   SessionDate = "session_date",
   /** column name */
+  SessionType = "session_type",
+  /** column name */
   StartedAt = "started_at",
+  /** column name */
+  TasksCompleted = "tasks_completed",
+  /** column name */
+  TasksTotal = "tasks_total",
   /** column name */
   Topic = "topic",
   /** column name */
@@ -1471,33 +2249,39 @@ export type Ai_Sessions_Updates = {
 export type Ai_Sessions_Var_Pop_Fields = {
   __typename?: "ai_sessions_var_pop_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by var_pop() on columns of table "ai_sessions" */
 export type Ai_Sessions_Var_Pop_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
 export type Ai_Sessions_Var_Samp_Fields = {
   __typename?: "ai_sessions_var_samp_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by var_samp() on columns of table "ai_sessions" */
 export type Ai_Sessions_Var_Samp_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
 export type Ai_Sessions_Variance_Fields = {
   __typename?: "ai_sessions_variance_fields";
   duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  tasks_total?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by variance() on columns of table "ai_sessions" */
 export type Ai_Sessions_Variance_Order_By = {
   duration_minutes?: InputMaybe<Order_By>;
+  tasks_total?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "auth_jwt" */
@@ -2126,6 +2910,10 @@ export type Daily_Tasks = {
   description?: Maybe<Scalars["String"]["output"]>;
   duration_minutes: Scalars["Int"]["output"];
   id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
   stage_id?: Maybe<Scalars["uuid"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
   /** An object relationship */
@@ -2143,6 +2931,24 @@ export type Daily_Tasks = {
 /** columns and relationships of "daily_tasks" */
 export type Daily_TasksAi_ContextArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "daily_tasks" */
+export type Daily_TasksLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** columns and relationships of "daily_tasks" */
+export type Daily_TasksLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
 };
 
 /** columns and relationships of "daily_tasks" */
@@ -2257,6 +3063,8 @@ export type Daily_Tasks_Bool_Exp = {
   description?: InputMaybe<String_Comparison_Exp>;
   duration_minutes?: InputMaybe<Int_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp>;
   stage_id?: InputMaybe<Uuid_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
   study_stage?: InputMaybe<Study_Stages_Bool_Exp>;
@@ -2309,6 +3117,7 @@ export type Daily_Tasks_Insert_Input = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Arr_Rel_Insert_Input>;
   stage_id?: InputMaybe<Scalars["uuid"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
   study_stage?: InputMaybe<Study_Stages_Obj_Rel_Insert_Input>;
@@ -2396,6 +3205,13 @@ export type Daily_Tasks_Mutation_Response = {
   returning: Array<Daily_Tasks>;
 };
 
+/** input type for inserting object relation for remote table "daily_tasks" */
+export type Daily_Tasks_Obj_Rel_Insert_Input = {
+  data: Daily_Tasks_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Daily_Tasks_On_Conflict>;
+};
+
 /** on_conflict condition type for table "daily_tasks" */
 export type Daily_Tasks_On_Conflict = {
   constraint: Daily_Tasks_Constraint;
@@ -2412,6 +3228,7 @@ export type Daily_Tasks_Order_By = {
   description?: InputMaybe<Order_By>;
   duration_minutes?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Order_By>;
   stage_id?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   study_stage?: InputMaybe<Study_Stages_Order_By>;
@@ -5115,6 +5932,1764 @@ export type Jsonb_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars["jsonb"]["input"]>>;
 };
 
+/** columns and relationships of "kumon_progress" */
+export type Kumon_Progress = {
+  __typename?: "kumon_progress";
+  accuracy_rate?: Maybe<Scalars["numeric"]["output"]>;
+  /** An object relationship */
+  ai_session?: Maybe<Ai_Sessions>;
+  completion_time_avg?: Maybe<Scalars["Int"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  current_level?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  last_practiced_at?: Maybe<Scalars["timestamp"]["output"]>;
+  last_practiced_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An object relationship */
+  lesson_snapshot?: Maybe<Lesson_Snapshots>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_category: Scalars["String"]["output"];
+  skill_subcategory?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  target_level?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** aggregated selection of "kumon_progress" */
+export type Kumon_Progress_Aggregate = {
+  __typename?: "kumon_progress_aggregate";
+  aggregate?: Maybe<Kumon_Progress_Aggregate_Fields>;
+  nodes: Array<Kumon_Progress>;
+};
+
+export type Kumon_Progress_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Kumon_Progress_Aggregate_Bool_Exp_Count>;
+};
+
+export type Kumon_Progress_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Kumon_Progress_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "kumon_progress" */
+export type Kumon_Progress_Aggregate_Fields = {
+  __typename?: "kumon_progress_aggregate_fields";
+  avg?: Maybe<Kumon_Progress_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Kumon_Progress_Max_Fields>;
+  min?: Maybe<Kumon_Progress_Min_Fields>;
+  stddev?: Maybe<Kumon_Progress_Stddev_Fields>;
+  stddev_pop?: Maybe<Kumon_Progress_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Kumon_Progress_Stddev_Samp_Fields>;
+  sum?: Maybe<Kumon_Progress_Sum_Fields>;
+  var_pop?: Maybe<Kumon_Progress_Var_Pop_Fields>;
+  var_samp?: Maybe<Kumon_Progress_Var_Samp_Fields>;
+  variance?: Maybe<Kumon_Progress_Variance_Fields>;
+};
+
+/** aggregate fields of "kumon_progress" */
+export type Kumon_Progress_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "kumon_progress" */
+export type Kumon_Progress_Aggregate_Order_By = {
+  avg?: InputMaybe<Kumon_Progress_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Kumon_Progress_Max_Order_By>;
+  min?: InputMaybe<Kumon_Progress_Min_Order_By>;
+  stddev?: InputMaybe<Kumon_Progress_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Kumon_Progress_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Kumon_Progress_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Kumon_Progress_Sum_Order_By>;
+  var_pop?: InputMaybe<Kumon_Progress_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Kumon_Progress_Var_Samp_Order_By>;
+  variance?: InputMaybe<Kumon_Progress_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "kumon_progress" */
+export type Kumon_Progress_Arr_Rel_Insert_Input = {
+  data: Array<Kumon_Progress_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Kumon_Progress_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Kumon_Progress_Avg_Fields = {
+  __typename?: "kumon_progress_avg_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "kumon_progress" */
+export type Kumon_Progress_Avg_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "kumon_progress". All fields are combined with a logical 'AND'. */
+export type Kumon_Progress_Bool_Exp = {
+  _and?: InputMaybe<Array<Kumon_Progress_Bool_Exp>>;
+  _not?: InputMaybe<Kumon_Progress_Bool_Exp>;
+  _or?: InputMaybe<Array<Kumon_Progress_Bool_Exp>>;
+  accuracy_rate?: InputMaybe<Numeric_Comparison_Exp>;
+  ai_session?: InputMaybe<Ai_Sessions_Bool_Exp>;
+  completion_time_avg?: InputMaybe<Int_Comparison_Exp>;
+  consecutive_correct?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  current_level?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  last_practiced_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  last_practiced_snapshot_id?: InputMaybe<Uuid_Comparison_Exp>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  session_id?: InputMaybe<Uuid_Comparison_Exp>;
+  skill_category?: InputMaybe<String_Comparison_Exp>;
+  skill_subcategory?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<String_Comparison_Exp>;
+  target_level?: InputMaybe<Int_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "kumon_progress" */
+export enum Kumon_Progress_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  KumonProgressPkey = "kumon_progress_pkey",
+  /** unique or primary key constraint on columns "user_id", "skill_subcategory", "skill_category" */
+  KumonProgressUserIdSkillCategorySkillSubcategoryKey = "kumon_progress_user_id_skill_category_skill_subcategory_key",
+}
+
+/** input type for incrementing numeric columns in table "kumon_progress" */
+export type Kumon_Progress_Inc_Input = {
+  accuracy_rate?: InputMaybe<Scalars["numeric"]["input"]>;
+  completion_time_avg?: InputMaybe<Scalars["Int"]["input"]>;
+  consecutive_correct?: InputMaybe<Scalars["Int"]["input"]>;
+  current_level?: InputMaybe<Scalars["Int"]["input"]>;
+  target_level?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "kumon_progress" */
+export type Kumon_Progress_Insert_Input = {
+  accuracy_rate?: InputMaybe<Scalars["numeric"]["input"]>;
+  ai_session?: InputMaybe<Ai_Sessions_Obj_Rel_Insert_Input>;
+  completion_time_avg?: InputMaybe<Scalars["Int"]["input"]>;
+  consecutive_correct?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  current_level?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  last_practiced_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  last_practiced_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Obj_Rel_Insert_Input>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_category?: InputMaybe<Scalars["String"]["input"]>;
+  skill_subcategory?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  target_level?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Kumon_Progress_Max_Fields = {
+  __typename?: "kumon_progress_max_fields";
+  accuracy_rate?: Maybe<Scalars["numeric"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Int"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  current_level?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  last_practiced_at?: Maybe<Scalars["timestamp"]["output"]>;
+  last_practiced_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_category?: Maybe<Scalars["String"]["output"]>;
+  skill_subcategory?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  target_level?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "kumon_progress" */
+export type Kumon_Progress_Max_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  last_practiced_at?: InputMaybe<Order_By>;
+  last_practiced_snapshot_id?: InputMaybe<Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  skill_category?: InputMaybe<Order_By>;
+  skill_subcategory?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Kumon_Progress_Min_Fields = {
+  __typename?: "kumon_progress_min_fields";
+  accuracy_rate?: Maybe<Scalars["numeric"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Int"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  current_level?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  last_practiced_at?: Maybe<Scalars["timestamp"]["output"]>;
+  last_practiced_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_category?: Maybe<Scalars["String"]["output"]>;
+  skill_subcategory?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  target_level?: Maybe<Scalars["Int"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "kumon_progress" */
+export type Kumon_Progress_Min_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  last_practiced_at?: InputMaybe<Order_By>;
+  last_practiced_snapshot_id?: InputMaybe<Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  skill_category?: InputMaybe<Order_By>;
+  skill_subcategory?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "kumon_progress" */
+export type Kumon_Progress_Mutation_Response = {
+  __typename?: "kumon_progress_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Kumon_Progress>;
+};
+
+/** on_conflict condition type for table "kumon_progress" */
+export type Kumon_Progress_On_Conflict = {
+  constraint: Kumon_Progress_Constraint;
+  update_columns?: Array<Kumon_Progress_Update_Column>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "kumon_progress". */
+export type Kumon_Progress_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  ai_session?: InputMaybe<Ai_Sessions_Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  last_practiced_at?: InputMaybe<Order_By>;
+  last_practiced_snapshot_id?: InputMaybe<Order_By>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  skill_category?: InputMaybe<Order_By>;
+  skill_subcategory?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: kumon_progress */
+export type Kumon_Progress_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "kumon_progress" */
+export enum Kumon_Progress_Select_Column {
+  /** column name */
+  AccuracyRate = "accuracy_rate",
+  /** column name */
+  CompletionTimeAvg = "completion_time_avg",
+  /** column name */
+  ConsecutiveCorrect = "consecutive_correct",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  CurrentLevel = "current_level",
+  /** column name */
+  Id = "id",
+  /** column name */
+  LastPracticedAt = "last_practiced_at",
+  /** column name */
+  LastPracticedSnapshotId = "last_practiced_snapshot_id",
+  /** column name */
+  SessionId = "session_id",
+  /** column name */
+  SkillCategory = "skill_category",
+  /** column name */
+  SkillSubcategory = "skill_subcategory",
+  /** column name */
+  Status = "status",
+  /** column name */
+  TargetLevel = "target_level",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+/** input type for updating data in table "kumon_progress" */
+export type Kumon_Progress_Set_Input = {
+  accuracy_rate?: InputMaybe<Scalars["numeric"]["input"]>;
+  completion_time_avg?: InputMaybe<Scalars["Int"]["input"]>;
+  consecutive_correct?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  current_level?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  last_practiced_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  last_practiced_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_category?: InputMaybe<Scalars["String"]["input"]>;
+  skill_subcategory?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  target_level?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Kumon_Progress_Stddev_Fields = {
+  __typename?: "kumon_progress_stddev_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "kumon_progress" */
+export type Kumon_Progress_Stddev_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Kumon_Progress_Stddev_Pop_Fields = {
+  __typename?: "kumon_progress_stddev_pop_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "kumon_progress" */
+export type Kumon_Progress_Stddev_Pop_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Kumon_Progress_Stddev_Samp_Fields = {
+  __typename?: "kumon_progress_stddev_samp_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "kumon_progress" */
+export type Kumon_Progress_Stddev_Samp_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "kumon_progress" */
+export type Kumon_Progress_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Kumon_Progress_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Kumon_Progress_Stream_Cursor_Value_Input = {
+  accuracy_rate?: InputMaybe<Scalars["numeric"]["input"]>;
+  completion_time_avg?: InputMaybe<Scalars["Int"]["input"]>;
+  consecutive_correct?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  current_level?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  last_practiced_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  last_practiced_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_category?: InputMaybe<Scalars["String"]["input"]>;
+  skill_subcategory?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  target_level?: InputMaybe<Scalars["Int"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Kumon_Progress_Sum_Fields = {
+  __typename?: "kumon_progress_sum_fields";
+  accuracy_rate?: Maybe<Scalars["numeric"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Int"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Int"]["output"]>;
+  current_level?: Maybe<Scalars["Int"]["output"]>;
+  target_level?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "kumon_progress" */
+export type Kumon_Progress_Sum_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "kumon_progress" */
+export enum Kumon_Progress_Update_Column {
+  /** column name */
+  AccuracyRate = "accuracy_rate",
+  /** column name */
+  CompletionTimeAvg = "completion_time_avg",
+  /** column name */
+  ConsecutiveCorrect = "consecutive_correct",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  CurrentLevel = "current_level",
+  /** column name */
+  Id = "id",
+  /** column name */
+  LastPracticedAt = "last_practiced_at",
+  /** column name */
+  LastPracticedSnapshotId = "last_practiced_snapshot_id",
+  /** column name */
+  SessionId = "session_id",
+  /** column name */
+  SkillCategory = "skill_category",
+  /** column name */
+  SkillSubcategory = "skill_subcategory",
+  /** column name */
+  Status = "status",
+  /** column name */
+  TargetLevel = "target_level",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+export type Kumon_Progress_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Kumon_Progress_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Kumon_Progress_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Kumon_Progress_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Kumon_Progress_Var_Pop_Fields = {
+  __typename?: "kumon_progress_var_pop_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "kumon_progress" */
+export type Kumon_Progress_Var_Pop_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Kumon_Progress_Var_Samp_Fields = {
+  __typename?: "kumon_progress_var_samp_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "kumon_progress" */
+export type Kumon_Progress_Var_Samp_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Kumon_Progress_Variance_Fields = {
+  __typename?: "kumon_progress_variance_fields";
+  accuracy_rate?: Maybe<Scalars["Float"]["output"]>;
+  completion_time_avg?: Maybe<Scalars["Float"]["output"]>;
+  consecutive_correct?: Maybe<Scalars["Float"]["output"]>;
+  current_level?: Maybe<Scalars["Float"]["output"]>;
+  target_level?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "kumon_progress" */
+export type Kumon_Progress_Variance_Order_By = {
+  accuracy_rate?: InputMaybe<Order_By>;
+  completion_time_avg?: InputMaybe<Order_By>;
+  consecutive_correct?: InputMaybe<Order_By>;
+  current_level?: InputMaybe<Order_By>;
+  target_level?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_Snapshots = {
+  __typename?: "lesson_snapshots";
+  /** An array relationship */
+  active_recall_sessions: Array<Active_Recall_Sessions>;
+  /** An aggregate relationship */
+  active_recall_sessions_aggregate: Active_Recall_Sessions_Aggregate;
+  /** An object relationship */
+  ai_session?: Maybe<Ai_Sessions>;
+  content_snapshot?: Maybe<Scalars["jsonb"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  daily_task?: Maybe<Daily_Tasks>;
+  duration_seconds?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  is_improvement?: Maybe<Scalars["Boolean"]["output"]>;
+  kaizen_metrics?: Maybe<Scalars["jsonb"]["output"]>;
+  /** An array relationship */
+  kumon_progresses: Array<Kumon_Progress>;
+  /** An aggregate relationship */
+  kumon_progresses_aggregate: Kumon_Progress_Aggregate;
+  lesson_date?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  lesson_snapshot?: Maybe<Lesson_Snapshots>;
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
+  lesson_type: Scalars["String"]["output"];
+  /** An array relationship */
+  lesson_vocabulary_extractions: Array<Lesson_Vocabulary_Extractions>;
+  /** An aggregate relationship */
+  lesson_vocabulary_extractions_aggregate: Lesson_Vocabulary_Extractions_Aggregate;
+  mastery_level?: Maybe<Scalars["String"]["output"]>;
+  methodology_tags?: Maybe<Scalars["jsonb"]["output"]>;
+  parent_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  performance_score?: Maybe<Scalars["numeric"]["output"]>;
+  problem_areas?: Maybe<Scalars["jsonb"]["output"]>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  task_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsActive_Recall_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsActive_Recall_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsContent_SnapshotArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsKaizen_MetricsArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsKumon_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsKumon_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsLesson_Vocabulary_ExtractionsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsLesson_Vocabulary_Extractions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsMethodology_TagsArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "lesson_snapshots" */
+export type Lesson_SnapshotsProblem_AreasArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregated selection of "lesson_snapshots" */
+export type Lesson_Snapshots_Aggregate = {
+  __typename?: "lesson_snapshots_aggregate";
+  aggregate?: Maybe<Lesson_Snapshots_Aggregate_Fields>;
+  nodes: Array<Lesson_Snapshots>;
+};
+
+export type Lesson_Snapshots_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp_Count>;
+};
+
+export type Lesson_Snapshots_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Lesson_Snapshots_Select_Column_Lesson_Snapshots_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Lesson_Snapshots_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Lesson_Snapshots_Select_Column_Lesson_Snapshots_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Lesson_Snapshots_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "lesson_snapshots" */
+export type Lesson_Snapshots_Aggregate_Fields = {
+  __typename?: "lesson_snapshots_aggregate_fields";
+  avg?: Maybe<Lesson_Snapshots_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Lesson_Snapshots_Max_Fields>;
+  min?: Maybe<Lesson_Snapshots_Min_Fields>;
+  stddev?: Maybe<Lesson_Snapshots_Stddev_Fields>;
+  stddev_pop?: Maybe<Lesson_Snapshots_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Lesson_Snapshots_Stddev_Samp_Fields>;
+  sum?: Maybe<Lesson_Snapshots_Sum_Fields>;
+  var_pop?: Maybe<Lesson_Snapshots_Var_Pop_Fields>;
+  var_samp?: Maybe<Lesson_Snapshots_Var_Samp_Fields>;
+  variance?: Maybe<Lesson_Snapshots_Variance_Fields>;
+};
+
+/** aggregate fields of "lesson_snapshots" */
+export type Lesson_Snapshots_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "lesson_snapshots" */
+export type Lesson_Snapshots_Aggregate_Order_By = {
+  avg?: InputMaybe<Lesson_Snapshots_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Lesson_Snapshots_Max_Order_By>;
+  min?: InputMaybe<Lesson_Snapshots_Min_Order_By>;
+  stddev?: InputMaybe<Lesson_Snapshots_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Lesson_Snapshots_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Lesson_Snapshots_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Lesson_Snapshots_Sum_Order_By>;
+  var_pop?: InputMaybe<Lesson_Snapshots_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Lesson_Snapshots_Var_Samp_Order_By>;
+  variance?: InputMaybe<Lesson_Snapshots_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Lesson_Snapshots_Append_Input = {
+  content_snapshot?: InputMaybe<Scalars["jsonb"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["jsonb"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["jsonb"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** input type for inserting array relation for remote table "lesson_snapshots" */
+export type Lesson_Snapshots_Arr_Rel_Insert_Input = {
+  data: Array<Lesson_Snapshots_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Lesson_Snapshots_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Lesson_Snapshots_Avg_Fields = {
+  __typename?: "lesson_snapshots_avg_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Avg_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "lesson_snapshots". All fields are combined with a logical 'AND'. */
+export type Lesson_Snapshots_Bool_Exp = {
+  _and?: InputMaybe<Array<Lesson_Snapshots_Bool_Exp>>;
+  _not?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  _or?: InputMaybe<Array<Lesson_Snapshots_Bool_Exp>>;
+  active_recall_sessions?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  active_recall_sessions_aggregate?: InputMaybe<Active_Recall_Sessions_Aggregate_Bool_Exp>;
+  ai_session?: InputMaybe<Ai_Sessions_Bool_Exp>;
+  content_snapshot?: InputMaybe<Jsonb_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  daily_task?: InputMaybe<Daily_Tasks_Bool_Exp>;
+  duration_seconds?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  is_improvement?: InputMaybe<Boolean_Comparison_Exp>;
+  kaizen_metrics?: InputMaybe<Jsonb_Comparison_Exp>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Bool_Exp>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Bool_Exp>;
+  lesson_date?: InputMaybe<Timestamp_Comparison_Exp>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp>;
+  lesson_type?: InputMaybe<String_Comparison_Exp>;
+  lesson_vocabulary_extractions?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+  lesson_vocabulary_extractions_aggregate?: InputMaybe<Lesson_Vocabulary_Extractions_Aggregate_Bool_Exp>;
+  mastery_level?: InputMaybe<String_Comparison_Exp>;
+  methodology_tags?: InputMaybe<Jsonb_Comparison_Exp>;
+  parent_snapshot_id?: InputMaybe<Uuid_Comparison_Exp>;
+  performance_score?: InputMaybe<Numeric_Comparison_Exp>;
+  problem_areas?: InputMaybe<Jsonb_Comparison_Exp>;
+  session_id?: InputMaybe<Uuid_Comparison_Exp>;
+  task_id?: InputMaybe<Uuid_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  version?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "lesson_snapshots" */
+export enum Lesson_Snapshots_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  LessonSnapshotsPkey = "lesson_snapshots_pkey",
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Lesson_Snapshots_Delete_At_Path_Input = {
+  content_snapshot?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  kaizen_metrics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  methodology_tags?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  problem_areas?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Lesson_Snapshots_Delete_Elem_Input = {
+  content_snapshot?: InputMaybe<Scalars["Int"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["Int"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["Int"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Lesson_Snapshots_Delete_Key_Input = {
+  content_snapshot?: InputMaybe<Scalars["String"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["String"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["String"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** input type for incrementing numeric columns in table "lesson_snapshots" */
+export type Lesson_Snapshots_Inc_Input = {
+  duration_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  performance_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "lesson_snapshots" */
+export type Lesson_Snapshots_Insert_Input = {
+  active_recall_sessions?: InputMaybe<Active_Recall_Sessions_Arr_Rel_Insert_Input>;
+  ai_session?: InputMaybe<Ai_Sessions_Obj_Rel_Insert_Input>;
+  content_snapshot?: InputMaybe<Scalars["jsonb"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  daily_task?: InputMaybe<Daily_Tasks_Obj_Rel_Insert_Input>;
+  duration_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  is_improvement?: InputMaybe<Scalars["Boolean"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["jsonb"]["input"]>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Arr_Rel_Insert_Input>;
+  lesson_date?: InputMaybe<Scalars["timestamp"]["input"]>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Obj_Rel_Insert_Input>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Arr_Rel_Insert_Input>;
+  lesson_type?: InputMaybe<Scalars["String"]["input"]>;
+  lesson_vocabulary_extractions?: InputMaybe<Lesson_Vocabulary_Extractions_Arr_Rel_Insert_Input>;
+  mastery_level?: InputMaybe<Scalars["String"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["jsonb"]["input"]>;
+  parent_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  performance_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["jsonb"]["input"]>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  task_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Lesson_Snapshots_Max_Fields = {
+  __typename?: "lesson_snapshots_max_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  duration_seconds?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  lesson_date?: Maybe<Scalars["timestamp"]["output"]>;
+  lesson_type?: Maybe<Scalars["String"]["output"]>;
+  mastery_level?: Maybe<Scalars["String"]["output"]>;
+  parent_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  performance_score?: Maybe<Scalars["numeric"]["output"]>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  task_id?: Maybe<Scalars["uuid"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by max() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  duration_seconds?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  lesson_date?: InputMaybe<Order_By>;
+  lesson_type?: InputMaybe<Order_By>;
+  mastery_level?: InputMaybe<Order_By>;
+  parent_snapshot_id?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Lesson_Snapshots_Min_Fields = {
+  __typename?: "lesson_snapshots_min_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  duration_seconds?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  lesson_date?: Maybe<Scalars["timestamp"]["output"]>;
+  lesson_type?: Maybe<Scalars["String"]["output"]>;
+  mastery_level?: Maybe<Scalars["String"]["output"]>;
+  parent_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  performance_score?: Maybe<Scalars["numeric"]["output"]>;
+  session_id?: Maybe<Scalars["uuid"]["output"]>;
+  task_id?: Maybe<Scalars["uuid"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by min() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  duration_seconds?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  lesson_date?: InputMaybe<Order_By>;
+  lesson_type?: InputMaybe<Order_By>;
+  mastery_level?: InputMaybe<Order_By>;
+  parent_snapshot_id?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "lesson_snapshots" */
+export type Lesson_Snapshots_Mutation_Response = {
+  __typename?: "lesson_snapshots_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Lesson_Snapshots>;
+};
+
+/** input type for inserting object relation for remote table "lesson_snapshots" */
+export type Lesson_Snapshots_Obj_Rel_Insert_Input = {
+  data: Lesson_Snapshots_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Lesson_Snapshots_On_Conflict>;
+};
+
+/** on_conflict condition type for table "lesson_snapshots" */
+export type Lesson_Snapshots_On_Conflict = {
+  constraint: Lesson_Snapshots_Constraint;
+  update_columns?: Array<Lesson_Snapshots_Update_Column>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "lesson_snapshots". */
+export type Lesson_Snapshots_Order_By = {
+  active_recall_sessions_aggregate?: InputMaybe<Active_Recall_Sessions_Aggregate_Order_By>;
+  ai_session?: InputMaybe<Ai_Sessions_Order_By>;
+  content_snapshot?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  daily_task?: InputMaybe<Daily_Tasks_Order_By>;
+  duration_seconds?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  is_improvement?: InputMaybe<Order_By>;
+  kaizen_metrics?: InputMaybe<Order_By>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Order_By>;
+  lesson_date?: InputMaybe<Order_By>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Order_By>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Order_By>;
+  lesson_type?: InputMaybe<Order_By>;
+  lesson_vocabulary_extractions_aggregate?: InputMaybe<Lesson_Vocabulary_Extractions_Aggregate_Order_By>;
+  mastery_level?: InputMaybe<Order_By>;
+  methodology_tags?: InputMaybe<Order_By>;
+  parent_snapshot_id?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  problem_areas?: InputMaybe<Order_By>;
+  session_id?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: lesson_snapshots */
+export type Lesson_Snapshots_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Lesson_Snapshots_Prepend_Input = {
+  content_snapshot?: InputMaybe<Scalars["jsonb"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["jsonb"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["jsonb"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** select columns of table "lesson_snapshots" */
+export enum Lesson_Snapshots_Select_Column {
+  /** column name */
+  ContentSnapshot = "content_snapshot",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DurationSeconds = "duration_seconds",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IsImprovement = "is_improvement",
+  /** column name */
+  KaizenMetrics = "kaizen_metrics",
+  /** column name */
+  LessonDate = "lesson_date",
+  /** column name */
+  LessonType = "lesson_type",
+  /** column name */
+  MasteryLevel = "mastery_level",
+  /** column name */
+  MethodologyTags = "methodology_tags",
+  /** column name */
+  ParentSnapshotId = "parent_snapshot_id",
+  /** column name */
+  PerformanceScore = "performance_score",
+  /** column name */
+  ProblemAreas = "problem_areas",
+  /** column name */
+  SessionId = "session_id",
+  /** column name */
+  TaskId = "task_id",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Version = "version",
+}
+
+/** select "lesson_snapshots_aggregate_bool_exp_bool_and_arguments_columns" columns of table "lesson_snapshots" */
+export enum Lesson_Snapshots_Select_Column_Lesson_Snapshots_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsImprovement = "is_improvement",
+}
+
+/** select "lesson_snapshots_aggregate_bool_exp_bool_or_arguments_columns" columns of table "lesson_snapshots" */
+export enum Lesson_Snapshots_Select_Column_Lesson_Snapshots_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsImprovement = "is_improvement",
+}
+
+/** input type for updating data in table "lesson_snapshots" */
+export type Lesson_Snapshots_Set_Input = {
+  content_snapshot?: InputMaybe<Scalars["jsonb"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  duration_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  is_improvement?: InputMaybe<Scalars["Boolean"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["jsonb"]["input"]>;
+  lesson_date?: InputMaybe<Scalars["timestamp"]["input"]>;
+  lesson_type?: InputMaybe<Scalars["String"]["input"]>;
+  mastery_level?: InputMaybe<Scalars["String"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["jsonb"]["input"]>;
+  parent_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  performance_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["jsonb"]["input"]>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  task_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Lesson_Snapshots_Stddev_Fields = {
+  __typename?: "lesson_snapshots_stddev_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Stddev_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Lesson_Snapshots_Stddev_Pop_Fields = {
+  __typename?: "lesson_snapshots_stddev_pop_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Stddev_Pop_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Lesson_Snapshots_Stddev_Samp_Fields = {
+  __typename?: "lesson_snapshots_stddev_samp_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Stddev_Samp_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "lesson_snapshots" */
+export type Lesson_Snapshots_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Lesson_Snapshots_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Lesson_Snapshots_Stream_Cursor_Value_Input = {
+  content_snapshot?: InputMaybe<Scalars["jsonb"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  duration_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  is_improvement?: InputMaybe<Scalars["Boolean"]["input"]>;
+  kaizen_metrics?: InputMaybe<Scalars["jsonb"]["input"]>;
+  lesson_date?: InputMaybe<Scalars["timestamp"]["input"]>;
+  lesson_type?: InputMaybe<Scalars["String"]["input"]>;
+  mastery_level?: InputMaybe<Scalars["String"]["input"]>;
+  methodology_tags?: InputMaybe<Scalars["jsonb"]["input"]>;
+  parent_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  performance_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  problem_areas?: InputMaybe<Scalars["jsonb"]["input"]>;
+  session_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  task_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Lesson_Snapshots_Sum_Fields = {
+  __typename?: "lesson_snapshots_sum_fields";
+  duration_seconds?: Maybe<Scalars["Int"]["output"]>;
+  performance_score?: Maybe<Scalars["numeric"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Sum_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "lesson_snapshots" */
+export enum Lesson_Snapshots_Update_Column {
+  /** column name */
+  ContentSnapshot = "content_snapshot",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DurationSeconds = "duration_seconds",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IsImprovement = "is_improvement",
+  /** column name */
+  KaizenMetrics = "kaizen_metrics",
+  /** column name */
+  LessonDate = "lesson_date",
+  /** column name */
+  LessonType = "lesson_type",
+  /** column name */
+  MasteryLevel = "mastery_level",
+  /** column name */
+  MethodologyTags = "methodology_tags",
+  /** column name */
+  ParentSnapshotId = "parent_snapshot_id",
+  /** column name */
+  PerformanceScore = "performance_score",
+  /** column name */
+  ProblemAreas = "problem_areas",
+  /** column name */
+  SessionId = "session_id",
+  /** column name */
+  TaskId = "task_id",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  Version = "version",
+}
+
+export type Lesson_Snapshots_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Lesson_Snapshots_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Lesson_Snapshots_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Lesson_Snapshots_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Lesson_Snapshots_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Lesson_Snapshots_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Lesson_Snapshots_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Lesson_Snapshots_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Lesson_Snapshots_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Lesson_Snapshots_Var_Pop_Fields = {
+  __typename?: "lesson_snapshots_var_pop_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Var_Pop_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Lesson_Snapshots_Var_Samp_Fields = {
+  __typename?: "lesson_snapshots_var_samp_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Var_Samp_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Lesson_Snapshots_Variance_Fields = {
+  __typename?: "lesson_snapshots_variance_fields";
+  duration_seconds?: Maybe<Scalars["Float"]["output"]>;
+  performance_score?: Maybe<Scalars["Float"]["output"]>;
+  version?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "lesson_snapshots" */
+export type Lesson_Snapshots_Variance_Order_By = {
+  duration_seconds?: InputMaybe<Order_By>;
+  performance_score?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions = {
+  __typename?: "lesson_vocabulary_extractions";
+  active_recall_context?: Maybe<Scalars["String"]["output"]>;
+  context_paragraph?: Maybe<Scalars["String"]["output"]>;
+  context_position?: Maybe<Scalars["Int"]["output"]>;
+  context_sentence?: Maybe<Scalars["String"]["output"]>;
+  extracted_at?: Maybe<Scalars["timestamp"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  /** An object relationship */
+  lesson_snapshot?: Maybe<Lesson_Snapshots>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  suggested_hint?: Maybe<Scalars["String"]["output"]>;
+  user_action?: Maybe<Scalars["String"]["output"]>;
+  user_confidence?: Maybe<Scalars["String"]["output"]>;
+  /** An object relationship */
+  vocabulary_card?: Maybe<Vocabulary_Cards>;
+  vocabulary_card_id?: Maybe<Scalars["uuid"]["output"]>;
+  word: Scalars["String"]["output"];
+  word_form?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregated selection of "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Aggregate = {
+  __typename?: "lesson_vocabulary_extractions_aggregate";
+  aggregate?: Maybe<Lesson_Vocabulary_Extractions_Aggregate_Fields>;
+  nodes: Array<Lesson_Vocabulary_Extractions>;
+};
+
+export type Lesson_Vocabulary_Extractions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Lesson_Vocabulary_Extractions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Lesson_Vocabulary_Extractions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Aggregate_Fields = {
+  __typename?: "lesson_vocabulary_extractions_aggregate_fields";
+  avg?: Maybe<Lesson_Vocabulary_Extractions_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Lesson_Vocabulary_Extractions_Max_Fields>;
+  min?: Maybe<Lesson_Vocabulary_Extractions_Min_Fields>;
+  stddev?: Maybe<Lesson_Vocabulary_Extractions_Stddev_Fields>;
+  stddev_pop?: Maybe<Lesson_Vocabulary_Extractions_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Lesson_Vocabulary_Extractions_Stddev_Samp_Fields>;
+  sum?: Maybe<Lesson_Vocabulary_Extractions_Sum_Fields>;
+  var_pop?: Maybe<Lesson_Vocabulary_Extractions_Var_Pop_Fields>;
+  var_samp?: Maybe<Lesson_Vocabulary_Extractions_Var_Samp_Fields>;
+  variance?: Maybe<Lesson_Vocabulary_Extractions_Variance_Fields>;
+};
+
+/** aggregate fields of "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Aggregate_Order_By = {
+  avg?: InputMaybe<Lesson_Vocabulary_Extractions_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Lesson_Vocabulary_Extractions_Max_Order_By>;
+  min?: InputMaybe<Lesson_Vocabulary_Extractions_Min_Order_By>;
+  stddev?: InputMaybe<Lesson_Vocabulary_Extractions_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Lesson_Vocabulary_Extractions_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Lesson_Vocabulary_Extractions_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Lesson_Vocabulary_Extractions_Sum_Order_By>;
+  var_pop?: InputMaybe<Lesson_Vocabulary_Extractions_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Lesson_Vocabulary_Extractions_Var_Samp_Order_By>;
+  variance?: InputMaybe<Lesson_Vocabulary_Extractions_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Arr_Rel_Insert_Input = {
+  data: Array<Lesson_Vocabulary_Extractions_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Lesson_Vocabulary_Extractions_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Lesson_Vocabulary_Extractions_Avg_Fields = {
+  __typename?: "lesson_vocabulary_extractions_avg_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Avg_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "lesson_vocabulary_extractions". All fields are combined with a logical 'AND'. */
+export type Lesson_Vocabulary_Extractions_Bool_Exp = {
+  _and?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Bool_Exp>>;
+  _not?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+  _or?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Bool_Exp>>;
+  active_recall_context?: InputMaybe<String_Comparison_Exp>;
+  context_paragraph?: InputMaybe<String_Comparison_Exp>;
+  context_position?: InputMaybe<Int_Comparison_Exp>;
+  context_sentence?: InputMaybe<String_Comparison_Exp>;
+  extracted_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  frequency_in_lesson?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshot_id?: InputMaybe<Uuid_Comparison_Exp>;
+  suggested_hint?: InputMaybe<String_Comparison_Exp>;
+  user_action?: InputMaybe<String_Comparison_Exp>;
+  user_confidence?: InputMaybe<String_Comparison_Exp>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
+  vocabulary_card_id?: InputMaybe<Uuid_Comparison_Exp>;
+  word?: InputMaybe<String_Comparison_Exp>;
+  word_form?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "lesson_vocabulary_extractions" */
+export enum Lesson_Vocabulary_Extractions_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  LessonVocabularyExtractionsPkey = "lesson_vocabulary_extractions_pkey",
+}
+
+/** input type for incrementing numeric columns in table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Inc_Input = {
+  context_position?: InputMaybe<Scalars["Int"]["input"]>;
+  frequency_in_lesson?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Insert_Input = {
+  active_recall_context?: InputMaybe<Scalars["String"]["input"]>;
+  context_paragraph?: InputMaybe<Scalars["String"]["input"]>;
+  context_position?: InputMaybe<Scalars["Int"]["input"]>;
+  context_sentence?: InputMaybe<Scalars["String"]["input"]>;
+  extracted_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  frequency_in_lesson?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Obj_Rel_Insert_Input>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  suggested_hint?: InputMaybe<Scalars["String"]["input"]>;
+  user_action?: InputMaybe<Scalars["String"]["input"]>;
+  user_confidence?: InputMaybe<Scalars["String"]["input"]>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Obj_Rel_Insert_Input>;
+  vocabulary_card_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  word?: InputMaybe<Scalars["String"]["input"]>;
+  word_form?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Lesson_Vocabulary_Extractions_Max_Fields = {
+  __typename?: "lesson_vocabulary_extractions_max_fields";
+  active_recall_context?: Maybe<Scalars["String"]["output"]>;
+  context_paragraph?: Maybe<Scalars["String"]["output"]>;
+  context_position?: Maybe<Scalars["Int"]["output"]>;
+  context_sentence?: Maybe<Scalars["String"]["output"]>;
+  extracted_at?: Maybe<Scalars["timestamp"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  suggested_hint?: Maybe<Scalars["String"]["output"]>;
+  user_action?: Maybe<Scalars["String"]["output"]>;
+  user_confidence?: Maybe<Scalars["String"]["output"]>;
+  vocabulary_card_id?: Maybe<Scalars["uuid"]["output"]>;
+  word?: Maybe<Scalars["String"]["output"]>;
+  word_form?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by max() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Max_Order_By = {
+  active_recall_context?: InputMaybe<Order_By>;
+  context_paragraph?: InputMaybe<Order_By>;
+  context_position?: InputMaybe<Order_By>;
+  context_sentence?: InputMaybe<Order_By>;
+  extracted_at?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  suggested_hint?: InputMaybe<Order_By>;
+  user_action?: InputMaybe<Order_By>;
+  user_confidence?: InputMaybe<Order_By>;
+  vocabulary_card_id?: InputMaybe<Order_By>;
+  word?: InputMaybe<Order_By>;
+  word_form?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Lesson_Vocabulary_Extractions_Min_Fields = {
+  __typename?: "lesson_vocabulary_extractions_min_fields";
+  active_recall_context?: Maybe<Scalars["String"]["output"]>;
+  context_paragraph?: Maybe<Scalars["String"]["output"]>;
+  context_position?: Maybe<Scalars["Int"]["output"]>;
+  context_sentence?: Maybe<Scalars["String"]["output"]>;
+  extracted_at?: Maybe<Scalars["timestamp"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  lesson_snapshot_id?: Maybe<Scalars["uuid"]["output"]>;
+  suggested_hint?: Maybe<Scalars["String"]["output"]>;
+  user_action?: Maybe<Scalars["String"]["output"]>;
+  user_confidence?: Maybe<Scalars["String"]["output"]>;
+  vocabulary_card_id?: Maybe<Scalars["uuid"]["output"]>;
+  word?: Maybe<Scalars["String"]["output"]>;
+  word_form?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** order by min() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Min_Order_By = {
+  active_recall_context?: InputMaybe<Order_By>;
+  context_paragraph?: InputMaybe<Order_By>;
+  context_position?: InputMaybe<Order_By>;
+  context_sentence?: InputMaybe<Order_By>;
+  extracted_at?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  suggested_hint?: InputMaybe<Order_By>;
+  user_action?: InputMaybe<Order_By>;
+  user_confidence?: InputMaybe<Order_By>;
+  vocabulary_card_id?: InputMaybe<Order_By>;
+  word?: InputMaybe<Order_By>;
+  word_form?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Mutation_Response = {
+  __typename?: "lesson_vocabulary_extractions_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Lesson_Vocabulary_Extractions>;
+};
+
+/** on_conflict condition type for table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_On_Conflict = {
+  constraint: Lesson_Vocabulary_Extractions_Constraint;
+  update_columns?: Array<Lesson_Vocabulary_Extractions_Update_Column>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "lesson_vocabulary_extractions". */
+export type Lesson_Vocabulary_Extractions_Order_By = {
+  active_recall_context?: InputMaybe<Order_By>;
+  context_paragraph?: InputMaybe<Order_By>;
+  context_position?: InputMaybe<Order_By>;
+  context_sentence?: InputMaybe<Order_By>;
+  extracted_at?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  lesson_snapshot?: InputMaybe<Lesson_Snapshots_Order_By>;
+  lesson_snapshot_id?: InputMaybe<Order_By>;
+  suggested_hint?: InputMaybe<Order_By>;
+  user_action?: InputMaybe<Order_By>;
+  user_confidence?: InputMaybe<Order_By>;
+  vocabulary_card?: InputMaybe<Vocabulary_Cards_Order_By>;
+  vocabulary_card_id?: InputMaybe<Order_By>;
+  word?: InputMaybe<Order_By>;
+  word_form?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: lesson_vocabulary_extractions */
+export type Lesson_Vocabulary_Extractions_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "lesson_vocabulary_extractions" */
+export enum Lesson_Vocabulary_Extractions_Select_Column {
+  /** column name */
+  ActiveRecallContext = "active_recall_context",
+  /** column name */
+  ContextParagraph = "context_paragraph",
+  /** column name */
+  ContextPosition = "context_position",
+  /** column name */
+  ContextSentence = "context_sentence",
+  /** column name */
+  ExtractedAt = "extracted_at",
+  /** column name */
+  FrequencyInLesson = "frequency_in_lesson",
+  /** column name */
+  Id = "id",
+  /** column name */
+  LessonSnapshotId = "lesson_snapshot_id",
+  /** column name */
+  SuggestedHint = "suggested_hint",
+  /** column name */
+  UserAction = "user_action",
+  /** column name */
+  UserConfidence = "user_confidence",
+  /** column name */
+  VocabularyCardId = "vocabulary_card_id",
+  /** column name */
+  Word = "word",
+  /** column name */
+  WordForm = "word_form",
+}
+
+/** input type for updating data in table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Set_Input = {
+  active_recall_context?: InputMaybe<Scalars["String"]["input"]>;
+  context_paragraph?: InputMaybe<Scalars["String"]["input"]>;
+  context_position?: InputMaybe<Scalars["Int"]["input"]>;
+  context_sentence?: InputMaybe<Scalars["String"]["input"]>;
+  extracted_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  frequency_in_lesson?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  suggested_hint?: InputMaybe<Scalars["String"]["input"]>;
+  user_action?: InputMaybe<Scalars["String"]["input"]>;
+  user_confidence?: InputMaybe<Scalars["String"]["input"]>;
+  vocabulary_card_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  word?: InputMaybe<Scalars["String"]["input"]>;
+  word_form?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Lesson_Vocabulary_Extractions_Stddev_Fields = {
+  __typename?: "lesson_vocabulary_extractions_stddev_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Stddev_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Lesson_Vocabulary_Extractions_Stddev_Pop_Fields = {
+  __typename?: "lesson_vocabulary_extractions_stddev_pop_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Stddev_Pop_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Lesson_Vocabulary_Extractions_Stddev_Samp_Fields = {
+  __typename?: "lesson_vocabulary_extractions_stddev_samp_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Stddev_Samp_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Lesson_Vocabulary_Extractions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Lesson_Vocabulary_Extractions_Stream_Cursor_Value_Input = {
+  active_recall_context?: InputMaybe<Scalars["String"]["input"]>;
+  context_paragraph?: InputMaybe<Scalars["String"]["input"]>;
+  context_position?: InputMaybe<Scalars["Int"]["input"]>;
+  context_sentence?: InputMaybe<Scalars["String"]["input"]>;
+  extracted_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  frequency_in_lesson?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  lesson_snapshot_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  suggested_hint?: InputMaybe<Scalars["String"]["input"]>;
+  user_action?: InputMaybe<Scalars["String"]["input"]>;
+  user_confidence?: InputMaybe<Scalars["String"]["input"]>;
+  vocabulary_card_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  word?: InputMaybe<Scalars["String"]["input"]>;
+  word_form?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Lesson_Vocabulary_Extractions_Sum_Fields = {
+  __typename?: "lesson_vocabulary_extractions_sum_fields";
+  context_position?: Maybe<Scalars["Int"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Sum_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "lesson_vocabulary_extractions" */
+export enum Lesson_Vocabulary_Extractions_Update_Column {
+  /** column name */
+  ActiveRecallContext = "active_recall_context",
+  /** column name */
+  ContextParagraph = "context_paragraph",
+  /** column name */
+  ContextPosition = "context_position",
+  /** column name */
+  ContextSentence = "context_sentence",
+  /** column name */
+  ExtractedAt = "extracted_at",
+  /** column name */
+  FrequencyInLesson = "frequency_in_lesson",
+  /** column name */
+  Id = "id",
+  /** column name */
+  LessonSnapshotId = "lesson_snapshot_id",
+  /** column name */
+  SuggestedHint = "suggested_hint",
+  /** column name */
+  UserAction = "user_action",
+  /** column name */
+  UserConfidence = "user_confidence",
+  /** column name */
+  VocabularyCardId = "vocabulary_card_id",
+  /** column name */
+  Word = "word",
+  /** column name */
+  WordForm = "word_form",
+}
+
+export type Lesson_Vocabulary_Extractions_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Lesson_Vocabulary_Extractions_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Lesson_Vocabulary_Extractions_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Lesson_Vocabulary_Extractions_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Lesson_Vocabulary_Extractions_Var_Pop_Fields = {
+  __typename?: "lesson_vocabulary_extractions_var_pop_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Var_Pop_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Lesson_Vocabulary_Extractions_Var_Samp_Fields = {
+  __typename?: "lesson_vocabulary_extractions_var_samp_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Var_Samp_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Lesson_Vocabulary_Extractions_Variance_Fields = {
+  __typename?: "lesson_vocabulary_extractions_variance_fields";
+  context_position?: Maybe<Scalars["Float"]["output"]>;
+  frequency_in_lesson?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "lesson_vocabulary_extractions" */
+export type Lesson_Vocabulary_Extractions_Variance_Order_By = {
+  context_position?: InputMaybe<Order_By>;
+  frequency_in_lesson?: InputMaybe<Order_By>;
+};
+
 /** columns and relationships of "logs.diffs" */
 export type Logs_Diffs = {
   __typename?: "logs_diffs";
@@ -5449,6 +8024,10 @@ export type Mutation_Root = {
   delete_achievements?: Maybe<Achievements_Mutation_Response>;
   /** delete single row from the table: "achievements" */
   delete_achievements_by_pk?: Maybe<Achievements>;
+  /** delete data from the table: "active_recall_sessions" */
+  delete_active_recall_sessions?: Maybe<Active_Recall_Sessions_Mutation_Response>;
+  /** delete single row from the table: "active_recall_sessions" */
+  delete_active_recall_sessions_by_pk?: Maybe<Active_Recall_Sessions>;
   /** delete data from the table: "ai_sessions" */
   delete_ai_sessions?: Maybe<Ai_Sessions_Mutation_Response>;
   /** delete single row from the table: "ai_sessions" */
@@ -5477,6 +8056,18 @@ export type Mutation_Root = {
   delete_invites?: Maybe<Invites_Mutation_Response>;
   /** delete single row from the table: "invites" */
   delete_invites_by_pk?: Maybe<Invites>;
+  /** delete data from the table: "kumon_progress" */
+  delete_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
+  /** delete single row from the table: "kumon_progress" */
+  delete_kumon_progress_by_pk?: Maybe<Kumon_Progress>;
+  /** delete data from the table: "lesson_snapshots" */
+  delete_lesson_snapshots?: Maybe<Lesson_Snapshots_Mutation_Response>;
+  /** delete single row from the table: "lesson_snapshots" */
+  delete_lesson_snapshots_by_pk?: Maybe<Lesson_Snapshots>;
+  /** delete data from the table: "lesson_vocabulary_extractions" */
+  delete_lesson_vocabulary_extractions?: Maybe<Lesson_Vocabulary_Extractions_Mutation_Response>;
+  /** delete single row from the table: "lesson_vocabulary_extractions" */
+  delete_lesson_vocabulary_extractions_by_pk?: Maybe<Lesson_Vocabulary_Extractions>;
   /** delete data from the table: "logs.diffs" */
   delete_logs_diffs?: Maybe<Logs_Diffs_Mutation_Response>;
   /** delete single row from the table: "logs.diffs" */
@@ -5525,6 +8116,14 @@ export type Mutation_Root = {
   delete_review_history?: Maybe<Review_History_Mutation_Response>;
   /** delete single row from the table: "review_history" */
   delete_review_history_by_pk?: Maybe<Review_History>;
+  /** delete data from the table: "shu_ha_ri_progress" */
+  delete_shu_ha_ri_progress?: Maybe<Shu_Ha_Ri_Progress_Mutation_Response>;
+  /** delete single row from the table: "shu_ha_ri_progress" */
+  delete_shu_ha_ri_progress_by_pk?: Maybe<Shu_Ha_Ri_Progress>;
+  /** delete data from the table: "shu_ha_ri_tests" */
+  delete_shu_ha_ri_tests?: Maybe<Shu_Ha_Ri_Tests_Mutation_Response>;
+  /** delete single row from the table: "shu_ha_ri_tests" */
+  delete_shu_ha_ri_tests_by_pk?: Maybe<Shu_Ha_Ri_Tests>;
   /** delete data from the table: "stage_progress" */
   delete_stage_progress?: Maybe<Stage_Progress_Mutation_Response>;
   /** delete single row from the table: "stage_progress" */
@@ -5585,6 +8184,10 @@ export type Mutation_Root = {
   insert_achievements?: Maybe<Achievements_Mutation_Response>;
   /** insert a single row into the table: "achievements" */
   insert_achievements_one?: Maybe<Achievements>;
+  /** insert data into the table: "active_recall_sessions" */
+  insert_active_recall_sessions?: Maybe<Active_Recall_Sessions_Mutation_Response>;
+  /** insert a single row into the table: "active_recall_sessions" */
+  insert_active_recall_sessions_one?: Maybe<Active_Recall_Sessions>;
   /** insert data into the table: "ai_sessions" */
   insert_ai_sessions?: Maybe<Ai_Sessions_Mutation_Response>;
   /** insert a single row into the table: "ai_sessions" */
@@ -5613,6 +8216,18 @@ export type Mutation_Root = {
   insert_invites?: Maybe<Invites_Mutation_Response>;
   /** insert a single row into the table: "invites" */
   insert_invites_one?: Maybe<Invites>;
+  /** insert data into the table: "kumon_progress" */
+  insert_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
+  /** insert a single row into the table: "kumon_progress" */
+  insert_kumon_progress_one?: Maybe<Kumon_Progress>;
+  /** insert data into the table: "lesson_snapshots" */
+  insert_lesson_snapshots?: Maybe<Lesson_Snapshots_Mutation_Response>;
+  /** insert a single row into the table: "lesson_snapshots" */
+  insert_lesson_snapshots_one?: Maybe<Lesson_Snapshots>;
+  /** insert data into the table: "lesson_vocabulary_extractions" */
+  insert_lesson_vocabulary_extractions?: Maybe<Lesson_Vocabulary_Extractions_Mutation_Response>;
+  /** insert a single row into the table: "lesson_vocabulary_extractions" */
+  insert_lesson_vocabulary_extractions_one?: Maybe<Lesson_Vocabulary_Extractions>;
   /** insert data into the table: "logs.diffs" */
   insert_logs_diffs?: Maybe<Logs_Diffs_Mutation_Response>;
   /** insert a single row into the table: "logs.diffs" */
@@ -5661,6 +8276,14 @@ export type Mutation_Root = {
   insert_review_history?: Maybe<Review_History_Mutation_Response>;
   /** insert a single row into the table: "review_history" */
   insert_review_history_one?: Maybe<Review_History>;
+  /** insert data into the table: "shu_ha_ri_progress" */
+  insert_shu_ha_ri_progress?: Maybe<Shu_Ha_Ri_Progress_Mutation_Response>;
+  /** insert a single row into the table: "shu_ha_ri_progress" */
+  insert_shu_ha_ri_progress_one?: Maybe<Shu_Ha_Ri_Progress>;
+  /** insert data into the table: "shu_ha_ri_tests" */
+  insert_shu_ha_ri_tests?: Maybe<Shu_Ha_Ri_Tests_Mutation_Response>;
+  /** insert a single row into the table: "shu_ha_ri_tests" */
+  insert_shu_ha_ri_tests_one?: Maybe<Shu_Ha_Ri_Tests>;
   /** insert data into the table: "stage_progress" */
   insert_stage_progress?: Maybe<Stage_Progress_Mutation_Response>;
   /** insert a single row into the table: "stage_progress" */
@@ -5723,6 +8346,14 @@ export type Mutation_Root = {
   update_achievements_many?: Maybe<
     Array<Maybe<Achievements_Mutation_Response>>
   >;
+  /** update data of the table: "active_recall_sessions" */
+  update_active_recall_sessions?: Maybe<Active_Recall_Sessions_Mutation_Response>;
+  /** update single row of the table: "active_recall_sessions" */
+  update_active_recall_sessions_by_pk?: Maybe<Active_Recall_Sessions>;
+  /** update multiples rows of table: "active_recall_sessions" */
+  update_active_recall_sessions_many?: Maybe<
+    Array<Maybe<Active_Recall_Sessions_Mutation_Response>>
+  >;
   /** update data of the table: "ai_sessions" */
   update_ai_sessions?: Maybe<Ai_Sessions_Mutation_Response>;
   /** update single row of the table: "ai_sessions" */
@@ -5777,6 +8408,30 @@ export type Mutation_Root = {
   update_invites_by_pk?: Maybe<Invites>;
   /** update multiples rows of table: "invites" */
   update_invites_many?: Maybe<Array<Maybe<Invites_Mutation_Response>>>;
+  /** update data of the table: "kumon_progress" */
+  update_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
+  /** update single row of the table: "kumon_progress" */
+  update_kumon_progress_by_pk?: Maybe<Kumon_Progress>;
+  /** update multiples rows of table: "kumon_progress" */
+  update_kumon_progress_many?: Maybe<
+    Array<Maybe<Kumon_Progress_Mutation_Response>>
+  >;
+  /** update data of the table: "lesson_snapshots" */
+  update_lesson_snapshots?: Maybe<Lesson_Snapshots_Mutation_Response>;
+  /** update single row of the table: "lesson_snapshots" */
+  update_lesson_snapshots_by_pk?: Maybe<Lesson_Snapshots>;
+  /** update multiples rows of table: "lesson_snapshots" */
+  update_lesson_snapshots_many?: Maybe<
+    Array<Maybe<Lesson_Snapshots_Mutation_Response>>
+  >;
+  /** update data of the table: "lesson_vocabulary_extractions" */
+  update_lesson_vocabulary_extractions?: Maybe<Lesson_Vocabulary_Extractions_Mutation_Response>;
+  /** update single row of the table: "lesson_vocabulary_extractions" */
+  update_lesson_vocabulary_extractions_by_pk?: Maybe<Lesson_Vocabulary_Extractions>;
+  /** update multiples rows of table: "lesson_vocabulary_extractions" */
+  update_lesson_vocabulary_extractions_many?: Maybe<
+    Array<Maybe<Lesson_Vocabulary_Extractions_Mutation_Response>>
+  >;
   /** update data of the table: "logs.diffs" */
   update_logs_diffs?: Maybe<Logs_Diffs_Mutation_Response>;
   /** update single row of the table: "logs.diffs" */
@@ -5870,6 +8525,22 @@ export type Mutation_Root = {
   /** update multiples rows of table: "review_history" */
   update_review_history_many?: Maybe<
     Array<Maybe<Review_History_Mutation_Response>>
+  >;
+  /** update data of the table: "shu_ha_ri_progress" */
+  update_shu_ha_ri_progress?: Maybe<Shu_Ha_Ri_Progress_Mutation_Response>;
+  /** update single row of the table: "shu_ha_ri_progress" */
+  update_shu_ha_ri_progress_by_pk?: Maybe<Shu_Ha_Ri_Progress>;
+  /** update multiples rows of table: "shu_ha_ri_progress" */
+  update_shu_ha_ri_progress_many?: Maybe<
+    Array<Maybe<Shu_Ha_Ri_Progress_Mutation_Response>>
+  >;
+  /** update data of the table: "shu_ha_ri_tests" */
+  update_shu_ha_ri_tests?: Maybe<Shu_Ha_Ri_Tests_Mutation_Response>;
+  /** update single row of the table: "shu_ha_ri_tests" */
+  update_shu_ha_ri_tests_by_pk?: Maybe<Shu_Ha_Ri_Tests>;
+  /** update multiples rows of table: "shu_ha_ri_tests" */
+  update_shu_ha_ri_tests_many?: Maybe<
+    Array<Maybe<Shu_Ha_Ri_Tests_Mutation_Response>>
   >;
   /** update data of the table: "stage_progress" */
   update_stage_progress?: Maybe<Stage_Progress_Mutation_Response>;
@@ -6002,6 +8673,16 @@ export type Mutation_RootDelete_Achievements_By_PkArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDelete_Active_Recall_SessionsArgs = {
+  where: Active_Recall_Sessions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Active_Recall_Sessions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootDelete_Ai_SessionsArgs = {
   where: Ai_Sessions_Bool_Exp;
 };
@@ -6068,6 +8749,36 @@ export type Mutation_RootDelete_InvitesArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Invites_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Kumon_ProgressArgs = {
+  where: Kumon_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Kumon_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Lesson_SnapshotsArgs = {
+  where: Lesson_Snapshots_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Lesson_Snapshots_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Lesson_Vocabulary_ExtractionsArgs = {
+  where: Lesson_Vocabulary_Extractions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Lesson_Vocabulary_Extractions_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -6189,6 +8900,26 @@ export type Mutation_RootDelete_Review_HistoryArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Review_History_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Shu_Ha_Ri_ProgressArgs = {
+  where: Shu_Ha_Ri_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Shu_Ha_Ri_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Shu_Ha_Ri_TestsArgs = {
+  where: Shu_Ha_Ri_Tests_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Shu_Ha_Ri_Tests_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -6355,6 +9086,18 @@ export type Mutation_RootInsert_Achievements_OneArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootInsert_Active_Recall_SessionsArgs = {
+  objects: Array<Active_Recall_Sessions_Insert_Input>;
+  on_conflict?: InputMaybe<Active_Recall_Sessions_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Active_Recall_Sessions_OneArgs = {
+  object: Active_Recall_Sessions_Insert_Input;
+  on_conflict?: InputMaybe<Active_Recall_Sessions_On_Conflict>;
+};
+
+/** mutation root */
 export type Mutation_RootInsert_Ai_SessionsArgs = {
   objects: Array<Ai_Sessions_Insert_Input>;
   on_conflict?: InputMaybe<Ai_Sessions_On_Conflict>;
@@ -6436,6 +9179,42 @@ export type Mutation_RootInsert_InvitesArgs = {
 export type Mutation_RootInsert_Invites_OneArgs = {
   object: Invites_Insert_Input;
   on_conflict?: InputMaybe<Invites_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Kumon_ProgressArgs = {
+  objects: Array<Kumon_Progress_Insert_Input>;
+  on_conflict?: InputMaybe<Kumon_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Kumon_Progress_OneArgs = {
+  object: Kumon_Progress_Insert_Input;
+  on_conflict?: InputMaybe<Kumon_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Lesson_SnapshotsArgs = {
+  objects: Array<Lesson_Snapshots_Insert_Input>;
+  on_conflict?: InputMaybe<Lesson_Snapshots_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Lesson_Snapshots_OneArgs = {
+  object: Lesson_Snapshots_Insert_Input;
+  on_conflict?: InputMaybe<Lesson_Snapshots_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Lesson_Vocabulary_ExtractionsArgs = {
+  objects: Array<Lesson_Vocabulary_Extractions_Insert_Input>;
+  on_conflict?: InputMaybe<Lesson_Vocabulary_Extractions_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Lesson_Vocabulary_Extractions_OneArgs = {
+  object: Lesson_Vocabulary_Extractions_Insert_Input;
+  on_conflict?: InputMaybe<Lesson_Vocabulary_Extractions_On_Conflict>;
 };
 
 /** mutation root */
@@ -6581,6 +9360,30 @@ export type Mutation_RootInsert_Review_HistoryArgs = {
 export type Mutation_RootInsert_Review_History_OneArgs = {
   object: Review_History_Insert_Input;
   on_conflict?: InputMaybe<Review_History_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Shu_Ha_Ri_ProgressArgs = {
+  objects: Array<Shu_Ha_Ri_Progress_Insert_Input>;
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Shu_Ha_Ri_Progress_OneArgs = {
+  object: Shu_Ha_Ri_Progress_Insert_Input;
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Shu_Ha_Ri_TestsArgs = {
+  objects: Array<Shu_Ha_Ri_Tests_Insert_Input>;
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Tests_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Shu_Ha_Ri_Tests_OneArgs = {
+  object: Shu_Ha_Ri_Tests_Insert_Input;
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Tests_On_Conflict>;
 };
 
 /** mutation root */
@@ -6798,6 +9601,25 @@ export type Mutation_RootUpdate_Achievements_ManyArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdate_Active_Recall_SessionsArgs = {
+  _inc?: InputMaybe<Active_Recall_Sessions_Inc_Input>;
+  _set?: InputMaybe<Active_Recall_Sessions_Set_Input>;
+  where: Active_Recall_Sessions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Active_Recall_Sessions_By_PkArgs = {
+  _inc?: InputMaybe<Active_Recall_Sessions_Inc_Input>;
+  _set?: InputMaybe<Active_Recall_Sessions_Set_Input>;
+  pk_columns: Active_Recall_Sessions_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Active_Recall_Sessions_ManyArgs = {
+  updates: Array<Active_Recall_Sessions_Updates>;
+};
+
+/** mutation root */
 export type Mutation_RootUpdate_Ai_SessionsArgs = {
   _append?: InputMaybe<Ai_Sessions_Append_Input>;
   _delete_at_path?: InputMaybe<Ai_Sessions_Delete_At_Path_Input>;
@@ -6995,6 +9817,73 @@ export type Mutation_RootUpdate_Invites_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Invites_ManyArgs = {
   updates: Array<Invites_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Kumon_ProgressArgs = {
+  _inc?: InputMaybe<Kumon_Progress_Inc_Input>;
+  _set?: InputMaybe<Kumon_Progress_Set_Input>;
+  where: Kumon_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Kumon_Progress_By_PkArgs = {
+  _inc?: InputMaybe<Kumon_Progress_Inc_Input>;
+  _set?: InputMaybe<Kumon_Progress_Set_Input>;
+  pk_columns: Kumon_Progress_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Kumon_Progress_ManyArgs = {
+  updates: Array<Kumon_Progress_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_SnapshotsArgs = {
+  _append?: InputMaybe<Lesson_Snapshots_Append_Input>;
+  _delete_at_path?: InputMaybe<Lesson_Snapshots_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Lesson_Snapshots_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Lesson_Snapshots_Delete_Key_Input>;
+  _inc?: InputMaybe<Lesson_Snapshots_Inc_Input>;
+  _prepend?: InputMaybe<Lesson_Snapshots_Prepend_Input>;
+  _set?: InputMaybe<Lesson_Snapshots_Set_Input>;
+  where: Lesson_Snapshots_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_Snapshots_By_PkArgs = {
+  _append?: InputMaybe<Lesson_Snapshots_Append_Input>;
+  _delete_at_path?: InputMaybe<Lesson_Snapshots_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Lesson_Snapshots_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Lesson_Snapshots_Delete_Key_Input>;
+  _inc?: InputMaybe<Lesson_Snapshots_Inc_Input>;
+  _prepend?: InputMaybe<Lesson_Snapshots_Prepend_Input>;
+  _set?: InputMaybe<Lesson_Snapshots_Set_Input>;
+  pk_columns: Lesson_Snapshots_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_Snapshots_ManyArgs = {
+  updates: Array<Lesson_Snapshots_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_Vocabulary_ExtractionsArgs = {
+  _inc?: InputMaybe<Lesson_Vocabulary_Extractions_Inc_Input>;
+  _set?: InputMaybe<Lesson_Vocabulary_Extractions_Set_Input>;
+  where: Lesson_Vocabulary_Extractions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_Vocabulary_Extractions_By_PkArgs = {
+  _inc?: InputMaybe<Lesson_Vocabulary_Extractions_Inc_Input>;
+  _set?: InputMaybe<Lesson_Vocabulary_Extractions_Set_Input>;
+  pk_columns: Lesson_Vocabulary_Extractions_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Lesson_Vocabulary_Extractions_ManyArgs = {
+  updates: Array<Lesson_Vocabulary_Extractions_Updates>;
 };
 
 /** mutation root */
@@ -7315,6 +10204,64 @@ export type Mutation_RootUpdate_Review_History_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Review_History_ManyArgs = {
   updates: Array<Review_History_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_ProgressArgs = {
+  _append?: InputMaybe<Shu_Ha_Ri_Progress_Append_Input>;
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Progress_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Key_Input>;
+  _inc?: InputMaybe<Shu_Ha_Ri_Progress_Inc_Input>;
+  _prepend?: InputMaybe<Shu_Ha_Ri_Progress_Prepend_Input>;
+  _set?: InputMaybe<Shu_Ha_Ri_Progress_Set_Input>;
+  where: Shu_Ha_Ri_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_Progress_By_PkArgs = {
+  _append?: InputMaybe<Shu_Ha_Ri_Progress_Append_Input>;
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Progress_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Key_Input>;
+  _inc?: InputMaybe<Shu_Ha_Ri_Progress_Inc_Input>;
+  _prepend?: InputMaybe<Shu_Ha_Ri_Progress_Prepend_Input>;
+  _set?: InputMaybe<Shu_Ha_Ri_Progress_Set_Input>;
+  pk_columns: Shu_Ha_Ri_Progress_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_Progress_ManyArgs = {
+  updates: Array<Shu_Ha_Ri_Progress_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_TestsArgs = {
+  _append?: InputMaybe<Shu_Ha_Ri_Tests_Append_Input>;
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Tests_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Key_Input>;
+  _inc?: InputMaybe<Shu_Ha_Ri_Tests_Inc_Input>;
+  _prepend?: InputMaybe<Shu_Ha_Ri_Tests_Prepend_Input>;
+  _set?: InputMaybe<Shu_Ha_Ri_Tests_Set_Input>;
+  where: Shu_Ha_Ri_Tests_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_Tests_By_PkArgs = {
+  _append?: InputMaybe<Shu_Ha_Ri_Tests_Append_Input>;
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Tests_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Key_Input>;
+  _inc?: InputMaybe<Shu_Ha_Ri_Tests_Inc_Input>;
+  _prepend?: InputMaybe<Shu_Ha_Ri_Tests_Prepend_Input>;
+  _set?: InputMaybe<Shu_Ha_Ri_Tests_Set_Input>;
+  pk_columns: Shu_Ha_Ri_Tests_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Shu_Ha_Ri_Tests_ManyArgs = {
+  updates: Array<Shu_Ha_Ri_Tests_Updates>;
 };
 
 /** mutation root */
@@ -14127,6 +17074,12 @@ export type Query_Root = {
   /** fetch data from the table: "achievements" using primary key columns */
   achievements_by_pk?: Maybe<Achievements>;
   /** An array relationship */
+  active_recall_sessions: Array<Active_Recall_Sessions>;
+  /** An aggregate relationship */
+  active_recall_sessions_aggregate: Active_Recall_Sessions_Aggregate;
+  /** fetch data from the table: "active_recall_sessions" using primary key columns */
+  active_recall_sessions_by_pk?: Maybe<Active_Recall_Sessions>;
+  /** An array relationship */
   ai_sessions: Array<Ai_Sessions>;
   /** An aggregate relationship */
   ai_sessions_aggregate: Ai_Sessions_Aggregate;
@@ -14186,6 +17139,24 @@ export type Query_Root = {
   invites_aggregate: Invites_Aggregate;
   /** fetch data from the table: "invites" using primary key columns */
   invites_by_pk?: Maybe<Invites>;
+  /** fetch data from the table: "kumon_progress" */
+  kumon_progress: Array<Kumon_Progress>;
+  /** fetch aggregated fields from the table: "kumon_progress" */
+  kumon_progress_aggregate: Kumon_Progress_Aggregate;
+  /** fetch data from the table: "kumon_progress" using primary key columns */
+  kumon_progress_by_pk?: Maybe<Kumon_Progress>;
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
+  /** fetch data from the table: "lesson_snapshots" using primary key columns */
+  lesson_snapshots_by_pk?: Maybe<Lesson_Snapshots>;
+  /** An array relationship */
+  lesson_vocabulary_extractions: Array<Lesson_Vocabulary_Extractions>;
+  /** An aggregate relationship */
+  lesson_vocabulary_extractions_aggregate: Lesson_Vocabulary_Extractions_Aggregate;
+  /** fetch data from the table: "lesson_vocabulary_extractions" using primary key columns */
+  lesson_vocabulary_extractions_by_pk?: Maybe<Lesson_Vocabulary_Extractions>;
   /** fetch data from the table: "logs.diffs" */
   logs_diffs: Array<Logs_Diffs>;
   /** fetch aggregated fields from the table: "logs.diffs" */
@@ -14258,6 +17229,18 @@ export type Query_Root = {
   review_history_aggregate: Review_History_Aggregate;
   /** fetch data from the table: "review_history" using primary key columns */
   review_history_by_pk?: Maybe<Review_History>;
+  /** fetch data from the table: "shu_ha_ri_progress" */
+  shu_ha_ri_progress: Array<Shu_Ha_Ri_Progress>;
+  /** fetch aggregated fields from the table: "shu_ha_ri_progress" */
+  shu_ha_ri_progress_aggregate: Shu_Ha_Ri_Progress_Aggregate;
+  /** fetch data from the table: "shu_ha_ri_progress" using primary key columns */
+  shu_ha_ri_progress_by_pk?: Maybe<Shu_Ha_Ri_Progress>;
+  /** An array relationship */
+  shu_ha_ri_tests: Array<Shu_Ha_Ri_Tests>;
+  /** An aggregate relationship */
+  shu_ha_ri_tests_aggregate: Shu_Ha_Ri_Tests_Aggregate;
+  /** fetch data from the table: "shu_ha_ri_tests" using primary key columns */
+  shu_ha_ri_tests_by_pk?: Maybe<Shu_Ha_Ri_Tests>;
   /** fetch data from the table: "stage_progress" */
   stage_progress: Array<Stage_Progress>;
   /** fetch aggregated fields from the table: "stage_progress" */
@@ -14357,6 +17340,26 @@ export type Query_RootAchievements_AggregateArgs = {
 };
 
 export type Query_RootAchievements_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootActive_Recall_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+export type Query_RootActive_Recall_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+export type Query_RootActive_Recall_Sessions_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -14557,6 +17560,66 @@ export type Query_RootInvites_AggregateArgs = {
 };
 
 export type Query_RootInvites_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootKumon_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+export type Query_RootKumon_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+export type Query_RootKumon_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+export type Query_RootLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+export type Query_RootLesson_Snapshots_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootLesson_Vocabulary_ExtractionsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+export type Query_RootLesson_Vocabulary_Extractions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+export type Query_RootLesson_Vocabulary_Extractions_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -14805,6 +17868,46 @@ export type Query_RootReview_History_AggregateArgs = {
 };
 
 export type Query_RootReview_History_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootShu_Ha_Ri_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+export type Query_RootShu_Ha_Ri_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+export type Query_RootShu_Ha_Ri_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootShu_Ha_Ri_TestsArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+export type Query_RootShu_Ha_Ri_Tests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+export type Query_RootShu_Ha_Ri_Tests_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -15377,6 +18480,1197 @@ export type Review_History_Variance_Fields = {
 /** order by variance() on columns of table "review_history" */
 export type Review_History_Variance_Order_By = {
   response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress = {
+  __typename?: "shu_ha_ri_progress";
+  ai_analysis?: Maybe<Scalars["jsonb"]["output"]>;
+  ha_creative_applications?: Maybe<Scalars["Int"]["output"]>;
+  ha_started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ha_test_passed?: Maybe<Scalars["Boolean"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["numeric"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  ri_achieved_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["numeric"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Int"]["output"]>;
+  ri_test_passed?: Maybe<Scalars["Boolean"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  shu_completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Int"]["output"]>;
+  shu_test_passed?: Maybe<Scalars["Boolean"]["output"]>;
+  skill_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_type: Scalars["String"]["output"];
+  stage?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** columns and relationships of "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_ProgressAi_AnalysisArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregated selection of "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Aggregate = {
+  __typename?: "shu_ha_ri_progress_aggregate";
+  aggregate?: Maybe<Shu_Ha_Ri_Progress_Aggregate_Fields>;
+  nodes: Array<Shu_Ha_Ri_Progress>;
+};
+
+export type Shu_Ha_Ri_Progress_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Count>;
+};
+
+export type Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Shu_Ha_Ri_Progress_Select_Column_Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Shu_Ha_Ri_Progress_Select_Column_Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Aggregate_Fields = {
+  __typename?: "shu_ha_ri_progress_aggregate_fields";
+  avg?: Maybe<Shu_Ha_Ri_Progress_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Shu_Ha_Ri_Progress_Max_Fields>;
+  min?: Maybe<Shu_Ha_Ri_Progress_Min_Fields>;
+  stddev?: Maybe<Shu_Ha_Ri_Progress_Stddev_Fields>;
+  stddev_pop?: Maybe<Shu_Ha_Ri_Progress_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Shu_Ha_Ri_Progress_Stddev_Samp_Fields>;
+  sum?: Maybe<Shu_Ha_Ri_Progress_Sum_Fields>;
+  var_pop?: Maybe<Shu_Ha_Ri_Progress_Var_Pop_Fields>;
+  var_samp?: Maybe<Shu_Ha_Ri_Progress_Var_Samp_Fields>;
+  variance?: Maybe<Shu_Ha_Ri_Progress_Variance_Fields>;
+};
+
+/** aggregate fields of "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Aggregate_Order_By = {
+  avg?: InputMaybe<Shu_Ha_Ri_Progress_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Shu_Ha_Ri_Progress_Max_Order_By>;
+  min?: InputMaybe<Shu_Ha_Ri_Progress_Min_Order_By>;
+  stddev?: InputMaybe<Shu_Ha_Ri_Progress_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Shu_Ha_Ri_Progress_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Shu_Ha_Ri_Progress_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Shu_Ha_Ri_Progress_Sum_Order_By>;
+  var_pop?: InputMaybe<Shu_Ha_Ri_Progress_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Shu_Ha_Ri_Progress_Var_Samp_Order_By>;
+  variance?: InputMaybe<Shu_Ha_Ri_Progress_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Shu_Ha_Ri_Progress_Append_Input = {
+  ai_analysis?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** input type for inserting array relation for remote table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Arr_Rel_Insert_Input = {
+  data: Array<Shu_Ha_Ri_Progress_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Progress_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Shu_Ha_Ri_Progress_Avg_Fields = {
+  __typename?: "shu_ha_ri_progress_avg_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Avg_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "shu_ha_ri_progress". All fields are combined with a logical 'AND'. */
+export type Shu_Ha_Ri_Progress_Bool_Exp = {
+  _and?: InputMaybe<Array<Shu_Ha_Ri_Progress_Bool_Exp>>;
+  _not?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+  _or?: InputMaybe<Array<Shu_Ha_Ri_Progress_Bool_Exp>>;
+  ai_analysis?: InputMaybe<Jsonb_Comparison_Exp>;
+  ha_creative_applications?: InputMaybe<Int_Comparison_Exp>;
+  ha_started_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  ha_test_passed?: InputMaybe<Boolean_Comparison_Exp>;
+  ha_understanding_score?: InputMaybe<Numeric_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  ri_achieved_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  ri_fluency_score?: InputMaybe<Numeric_Comparison_Exp>;
+  ri_natural_usage_count?: InputMaybe<Int_Comparison_Exp>;
+  ri_test_passed?: InputMaybe<Boolean_Comparison_Exp>;
+  shu_accuracy?: InputMaybe<Numeric_Comparison_Exp>;
+  shu_completed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  shu_mastery_count?: InputMaybe<Int_Comparison_Exp>;
+  shu_test_passed?: InputMaybe<Boolean_Comparison_Exp>;
+  skill_id?: InputMaybe<Uuid_Comparison_Exp>;
+  skill_type?: InputMaybe<String_Comparison_Exp>;
+  stage?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "shu_ha_ri_progress" */
+export enum Shu_Ha_Ri_Progress_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ShuHaRiProgressPkey = "shu_ha_ri_progress_pkey",
+  /** unique or primary key constraint on columns "user_id", "skill_id", "skill_type" */
+  ShuHaRiProgressUserIdSkillIdSkillTypeKey = "shu_ha_ri_progress_user_id_skill_id_skill_type_key",
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Shu_Ha_Ri_Progress_Delete_At_Path_Input = {
+  ai_analysis?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Shu_Ha_Ri_Progress_Delete_Elem_Input = {
+  ai_analysis?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Shu_Ha_Ri_Progress_Delete_Key_Input = {
+  ai_analysis?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** input type for incrementing numeric columns in table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Inc_Input = {
+  ha_creative_applications?: InputMaybe<Scalars["Int"]["input"]>;
+  ha_understanding_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  ri_fluency_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  ri_natural_usage_count?: InputMaybe<Scalars["Int"]["input"]>;
+  shu_accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  shu_mastery_count?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Insert_Input = {
+  ai_analysis?: InputMaybe<Scalars["jsonb"]["input"]>;
+  ha_creative_applications?: InputMaybe<Scalars["Int"]["input"]>;
+  ha_started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ha_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ha_understanding_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  ri_achieved_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ri_fluency_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  ri_natural_usage_count?: InputMaybe<Scalars["Int"]["input"]>;
+  ri_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  shu_accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  shu_completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  shu_mastery_count?: InputMaybe<Scalars["Int"]["input"]>;
+  shu_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  skill_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_type?: InputMaybe<Scalars["String"]["input"]>;
+  stage?: InputMaybe<Scalars["String"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Shu_Ha_Ri_Progress_Max_Fields = {
+  __typename?: "shu_ha_ri_progress_max_fields";
+  ha_creative_applications?: Maybe<Scalars["Int"]["output"]>;
+  ha_started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  ri_achieved_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["numeric"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Int"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  shu_completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Int"]["output"]>;
+  skill_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_type?: Maybe<Scalars["String"]["output"]>;
+  stage?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Max_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_started_at?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  ri_achieved_at?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_completed_at?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+  skill_id?: InputMaybe<Order_By>;
+  skill_type?: InputMaybe<Order_By>;
+  stage?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Shu_Ha_Ri_Progress_Min_Fields = {
+  __typename?: "shu_ha_ri_progress_min_fields";
+  ha_creative_applications?: Maybe<Scalars["Int"]["output"]>;
+  ha_started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  ri_achieved_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["numeric"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Int"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  shu_completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Int"]["output"]>;
+  skill_id?: Maybe<Scalars["uuid"]["output"]>;
+  skill_type?: Maybe<Scalars["String"]["output"]>;
+  stage?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Min_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_started_at?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  ri_achieved_at?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_completed_at?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+  skill_id?: InputMaybe<Order_By>;
+  skill_type?: InputMaybe<Order_By>;
+  stage?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Mutation_Response = {
+  __typename?: "shu_ha_ri_progress_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Shu_Ha_Ri_Progress>;
+};
+
+/** on_conflict condition type for table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_On_Conflict = {
+  constraint: Shu_Ha_Ri_Progress_Constraint;
+  update_columns?: Array<Shu_Ha_Ri_Progress_Update_Column>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "shu_ha_ri_progress". */
+export type Shu_Ha_Ri_Progress_Order_By = {
+  ai_analysis?: InputMaybe<Order_By>;
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_started_at?: InputMaybe<Order_By>;
+  ha_test_passed?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  ri_achieved_at?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  ri_test_passed?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_completed_at?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+  shu_test_passed?: InputMaybe<Order_By>;
+  skill_id?: InputMaybe<Order_By>;
+  skill_type?: InputMaybe<Order_By>;
+  stage?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: shu_ha_ri_progress */
+export type Shu_Ha_Ri_Progress_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Shu_Ha_Ri_Progress_Prepend_Input = {
+  ai_analysis?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** select columns of table "shu_ha_ri_progress" */
+export enum Shu_Ha_Ri_Progress_Select_Column {
+  /** column name */
+  AiAnalysis = "ai_analysis",
+  /** column name */
+  HaCreativeApplications = "ha_creative_applications",
+  /** column name */
+  HaStartedAt = "ha_started_at",
+  /** column name */
+  HaTestPassed = "ha_test_passed",
+  /** column name */
+  HaUnderstandingScore = "ha_understanding_score",
+  /** column name */
+  Id = "id",
+  /** column name */
+  RiAchievedAt = "ri_achieved_at",
+  /** column name */
+  RiFluencyScore = "ri_fluency_score",
+  /** column name */
+  RiNaturalUsageCount = "ri_natural_usage_count",
+  /** column name */
+  RiTestPassed = "ri_test_passed",
+  /** column name */
+  ShuAccuracy = "shu_accuracy",
+  /** column name */
+  ShuCompletedAt = "shu_completed_at",
+  /** column name */
+  ShuMasteryCount = "shu_mastery_count",
+  /** column name */
+  ShuTestPassed = "shu_test_passed",
+  /** column name */
+  SkillId = "skill_id",
+  /** column name */
+  SkillType = "skill_type",
+  /** column name */
+  Stage = "stage",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+/** select "shu_ha_ri_progress_aggregate_bool_exp_bool_and_arguments_columns" columns of table "shu_ha_ri_progress" */
+export enum Shu_Ha_Ri_Progress_Select_Column_Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  HaTestPassed = "ha_test_passed",
+  /** column name */
+  RiTestPassed = "ri_test_passed",
+  /** column name */
+  ShuTestPassed = "shu_test_passed",
+}
+
+/** select "shu_ha_ri_progress_aggregate_bool_exp_bool_or_arguments_columns" columns of table "shu_ha_ri_progress" */
+export enum Shu_Ha_Ri_Progress_Select_Column_Shu_Ha_Ri_Progress_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  HaTestPassed = "ha_test_passed",
+  /** column name */
+  RiTestPassed = "ri_test_passed",
+  /** column name */
+  ShuTestPassed = "shu_test_passed",
+}
+
+/** input type for updating data in table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Set_Input = {
+  ai_analysis?: InputMaybe<Scalars["jsonb"]["input"]>;
+  ha_creative_applications?: InputMaybe<Scalars["Int"]["input"]>;
+  ha_started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ha_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ha_understanding_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  ri_achieved_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ri_fluency_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  ri_natural_usage_count?: InputMaybe<Scalars["Int"]["input"]>;
+  ri_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  shu_accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  shu_completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  shu_mastery_count?: InputMaybe<Scalars["Int"]["input"]>;
+  shu_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  skill_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_type?: InputMaybe<Scalars["String"]["input"]>;
+  stage?: InputMaybe<Scalars["String"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Shu_Ha_Ri_Progress_Stddev_Fields = {
+  __typename?: "shu_ha_ri_progress_stddev_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Stddev_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Shu_Ha_Ri_Progress_Stddev_Pop_Fields = {
+  __typename?: "shu_ha_ri_progress_stddev_pop_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Stddev_Pop_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Shu_Ha_Ri_Progress_Stddev_Samp_Fields = {
+  __typename?: "shu_ha_ri_progress_stddev_samp_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Stddev_Samp_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Shu_Ha_Ri_Progress_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Shu_Ha_Ri_Progress_Stream_Cursor_Value_Input = {
+  ai_analysis?: InputMaybe<Scalars["jsonb"]["input"]>;
+  ha_creative_applications?: InputMaybe<Scalars["Int"]["input"]>;
+  ha_started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ha_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ha_understanding_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  ri_achieved_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ri_fluency_score?: InputMaybe<Scalars["numeric"]["input"]>;
+  ri_natural_usage_count?: InputMaybe<Scalars["Int"]["input"]>;
+  ri_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  shu_accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  shu_completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  shu_mastery_count?: InputMaybe<Scalars["Int"]["input"]>;
+  shu_test_passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  skill_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  skill_type?: InputMaybe<Scalars["String"]["input"]>;
+  stage?: InputMaybe<Scalars["String"]["input"]>;
+  updated_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Shu_Ha_Ri_Progress_Sum_Fields = {
+  __typename?: "shu_ha_ri_progress_sum_fields";
+  ha_creative_applications?: Maybe<Scalars["Int"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["numeric"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["numeric"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Int"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Sum_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "shu_ha_ri_progress" */
+export enum Shu_Ha_Ri_Progress_Update_Column {
+  /** column name */
+  AiAnalysis = "ai_analysis",
+  /** column name */
+  HaCreativeApplications = "ha_creative_applications",
+  /** column name */
+  HaStartedAt = "ha_started_at",
+  /** column name */
+  HaTestPassed = "ha_test_passed",
+  /** column name */
+  HaUnderstandingScore = "ha_understanding_score",
+  /** column name */
+  Id = "id",
+  /** column name */
+  RiAchievedAt = "ri_achieved_at",
+  /** column name */
+  RiFluencyScore = "ri_fluency_score",
+  /** column name */
+  RiNaturalUsageCount = "ri_natural_usage_count",
+  /** column name */
+  RiTestPassed = "ri_test_passed",
+  /** column name */
+  ShuAccuracy = "shu_accuracy",
+  /** column name */
+  ShuCompletedAt = "shu_completed_at",
+  /** column name */
+  ShuMasteryCount = "shu_mastery_count",
+  /** column name */
+  ShuTestPassed = "shu_test_passed",
+  /** column name */
+  SkillId = "skill_id",
+  /** column name */
+  SkillType = "skill_type",
+  /** column name */
+  Stage = "stage",
+  /** column name */
+  UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
+}
+
+export type Shu_Ha_Ri_Progress_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Shu_Ha_Ri_Progress_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Progress_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Progress_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Shu_Ha_Ri_Progress_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Shu_Ha_Ri_Progress_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Shu_Ha_Ri_Progress_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Shu_Ha_Ri_Progress_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Shu_Ha_Ri_Progress_Var_Pop_Fields = {
+  __typename?: "shu_ha_ri_progress_var_pop_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Var_Pop_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Shu_Ha_Ri_Progress_Var_Samp_Fields = {
+  __typename?: "shu_ha_ri_progress_var_samp_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Var_Samp_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Shu_Ha_Ri_Progress_Variance_Fields = {
+  __typename?: "shu_ha_ri_progress_variance_fields";
+  ha_creative_applications?: Maybe<Scalars["Float"]["output"]>;
+  ha_understanding_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_fluency_score?: Maybe<Scalars["Float"]["output"]>;
+  ri_natural_usage_count?: Maybe<Scalars["Float"]["output"]>;
+  shu_accuracy?: Maybe<Scalars["Float"]["output"]>;
+  shu_mastery_count?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "shu_ha_ri_progress" */
+export type Shu_Ha_Ri_Progress_Variance_Order_By = {
+  ha_creative_applications?: InputMaybe<Order_By>;
+  ha_understanding_score?: InputMaybe<Order_By>;
+  ri_fluency_score?: InputMaybe<Order_By>;
+  ri_natural_usage_count?: InputMaybe<Order_By>;
+  shu_accuracy?: InputMaybe<Order_By>;
+  shu_mastery_count?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests = {
+  __typename?: "shu_ha_ri_tests";
+  completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  feedback?: Maybe<Scalars["jsonb"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  passed?: Maybe<Scalars["Boolean"]["output"]>;
+  questions: Scalars["jsonb"]["output"];
+  score?: Maybe<Scalars["numeric"]["output"]>;
+  skills_progress?: Maybe<Scalars["jsonb"]["output"]>;
+  started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  test_type: Scalars["String"]["output"];
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_answers?: Maybe<Scalars["jsonb"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  week_start_date: Scalars["date"]["output"];
+};
+
+/** columns and relationships of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_TestsFeedbackArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_TestsQuestionsArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_TestsSkills_ProgressArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_TestsUser_AnswersArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregated selection of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Aggregate = {
+  __typename?: "shu_ha_ri_tests_aggregate";
+  aggregate?: Maybe<Shu_Ha_Ri_Tests_Aggregate_Fields>;
+  nodes: Array<Shu_Ha_Ri_Tests>;
+};
+
+export type Shu_Ha_Ri_Tests_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Count>;
+};
+
+export type Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Shu_Ha_Ri_Tests_Select_Column_Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Shu_Ha_Ri_Tests_Select_Column_Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Aggregate_Fields = {
+  __typename?: "shu_ha_ri_tests_aggregate_fields";
+  avg?: Maybe<Shu_Ha_Ri_Tests_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Shu_Ha_Ri_Tests_Max_Fields>;
+  min?: Maybe<Shu_Ha_Ri_Tests_Min_Fields>;
+  stddev?: Maybe<Shu_Ha_Ri_Tests_Stddev_Fields>;
+  stddev_pop?: Maybe<Shu_Ha_Ri_Tests_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Shu_Ha_Ri_Tests_Stddev_Samp_Fields>;
+  sum?: Maybe<Shu_Ha_Ri_Tests_Sum_Fields>;
+  var_pop?: Maybe<Shu_Ha_Ri_Tests_Var_Pop_Fields>;
+  var_samp?: Maybe<Shu_Ha_Ri_Tests_Var_Samp_Fields>;
+  variance?: Maybe<Shu_Ha_Ri_Tests_Variance_Fields>;
+};
+
+/** aggregate fields of "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Aggregate_Order_By = {
+  avg?: InputMaybe<Shu_Ha_Ri_Tests_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Shu_Ha_Ri_Tests_Max_Order_By>;
+  min?: InputMaybe<Shu_Ha_Ri_Tests_Min_Order_By>;
+  stddev?: InputMaybe<Shu_Ha_Ri_Tests_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Shu_Ha_Ri_Tests_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Shu_Ha_Ri_Tests_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Shu_Ha_Ri_Tests_Sum_Order_By>;
+  var_pop?: InputMaybe<Shu_Ha_Ri_Tests_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Shu_Ha_Ri_Tests_Var_Samp_Order_By>;
+  variance?: InputMaybe<Shu_Ha_Ri_Tests_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Shu_Ha_Ri_Tests_Append_Input = {
+  feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
+  questions?: InputMaybe<Scalars["jsonb"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** input type for inserting array relation for remote table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Arr_Rel_Insert_Input = {
+  data: Array<Shu_Ha_Ri_Tests_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Shu_Ha_Ri_Tests_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Shu_Ha_Ri_Tests_Avg_Fields = {
+  __typename?: "shu_ha_ri_tests_avg_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Avg_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "shu_ha_ri_tests". All fields are combined with a logical 'AND'. */
+export type Shu_Ha_Ri_Tests_Bool_Exp = {
+  _and?: InputMaybe<Array<Shu_Ha_Ri_Tests_Bool_Exp>>;
+  _not?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+  _or?: InputMaybe<Array<Shu_Ha_Ri_Tests_Bool_Exp>>;
+  completed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  feedback?: InputMaybe<Jsonb_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  passed?: InputMaybe<Boolean_Comparison_Exp>;
+  questions?: InputMaybe<Jsonb_Comparison_Exp>;
+  score?: InputMaybe<Numeric_Comparison_Exp>;
+  skills_progress?: InputMaybe<Jsonb_Comparison_Exp>;
+  started_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  test_type?: InputMaybe<String_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_answers?: InputMaybe<Jsonb_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  week_start_date?: InputMaybe<Date_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "shu_ha_ri_tests" */
+export enum Shu_Ha_Ri_Tests_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ShuHaRiTestsPkey = "shu_ha_ri_tests_pkey",
+  /** unique or primary key constraint on columns "user_id", "test_type", "week_start_date" */
+  ShuHaRiTestsUserIdWeekStartDateTestTypeKey = "shu_ha_ri_tests_user_id_week_start_date_test_type_key",
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Shu_Ha_Ri_Tests_Delete_At_Path_Input = {
+  feedback?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  questions?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  skills_progress?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  user_answers?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Shu_Ha_Ri_Tests_Delete_Elem_Input = {
+  feedback?: InputMaybe<Scalars["Int"]["input"]>;
+  questions?: InputMaybe<Scalars["Int"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["Int"]["input"]>;
+  user_answers?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Shu_Ha_Ri_Tests_Delete_Key_Input = {
+  feedback?: InputMaybe<Scalars["String"]["input"]>;
+  questions?: InputMaybe<Scalars["String"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["String"]["input"]>;
+  user_answers?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** input type for incrementing numeric columns in table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Inc_Input = {
+  score?: InputMaybe<Scalars["numeric"]["input"]>;
+};
+
+/** input type for inserting data into table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Insert_Input = {
+  completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  questions?: InputMaybe<Scalars["jsonb"]["input"]>;
+  score?: InputMaybe<Scalars["numeric"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["jsonb"]["input"]>;
+  started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  test_type?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  week_start_date?: InputMaybe<Scalars["date"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Shu_Ha_Ri_Tests_Max_Fields = {
+  __typename?: "shu_ha_ri_tests_max_fields";
+  completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  score?: Maybe<Scalars["numeric"]["output"]>;
+  started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  test_type?: Maybe<Scalars["String"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  week_start_date?: Maybe<Scalars["date"]["output"]>;
+};
+
+/** order by max() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Max_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  score?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  test_type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  week_start_date?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Shu_Ha_Ri_Tests_Min_Fields = {
+  __typename?: "shu_ha_ri_tests_min_fields";
+  completed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  score?: Maybe<Scalars["numeric"]["output"]>;
+  started_at?: Maybe<Scalars["timestamp"]["output"]>;
+  test_type?: Maybe<Scalars["String"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  week_start_date?: Maybe<Scalars["date"]["output"]>;
+};
+
+/** order by min() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Min_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  score?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  test_type?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  week_start_date?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Mutation_Response = {
+  __typename?: "shu_ha_ri_tests_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Shu_Ha_Ri_Tests>;
+};
+
+/** on_conflict condition type for table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_On_Conflict = {
+  constraint: Shu_Ha_Ri_Tests_Constraint;
+  update_columns?: Array<Shu_Ha_Ri_Tests_Update_Column>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "shu_ha_ri_tests". */
+export type Shu_Ha_Ri_Tests_Order_By = {
+  completed_at?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  feedback?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  passed?: InputMaybe<Order_By>;
+  questions?: InputMaybe<Order_By>;
+  score?: InputMaybe<Order_By>;
+  skills_progress?: InputMaybe<Order_By>;
+  started_at?: InputMaybe<Order_By>;
+  test_type?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_answers?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  week_start_date?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: shu_ha_ri_tests */
+export type Shu_Ha_Ri_Tests_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Shu_Ha_Ri_Tests_Prepend_Input = {
+  feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
+  questions?: InputMaybe<Scalars["jsonb"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
+};
+
+/** select columns of table "shu_ha_ri_tests" */
+export enum Shu_Ha_Ri_Tests_Select_Column {
+  /** column name */
+  CompletedAt = "completed_at",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Feedback = "feedback",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Passed = "passed",
+  /** column name */
+  Questions = "questions",
+  /** column name */
+  Score = "score",
+  /** column name */
+  SkillsProgress = "skills_progress",
+  /** column name */
+  StartedAt = "started_at",
+  /** column name */
+  TestType = "test_type",
+  /** column name */
+  UserAnswers = "user_answers",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  WeekStartDate = "week_start_date",
+}
+
+/** select "shu_ha_ri_tests_aggregate_bool_exp_bool_and_arguments_columns" columns of table "shu_ha_ri_tests" */
+export enum Shu_Ha_Ri_Tests_Select_Column_Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Passed = "passed",
+}
+
+/** select "shu_ha_ri_tests_aggregate_bool_exp_bool_or_arguments_columns" columns of table "shu_ha_ri_tests" */
+export enum Shu_Ha_Ri_Tests_Select_Column_Shu_Ha_Ri_Tests_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Passed = "passed",
+}
+
+/** input type for updating data in table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Set_Input = {
+  completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  questions?: InputMaybe<Scalars["jsonb"]["input"]>;
+  score?: InputMaybe<Scalars["numeric"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["jsonb"]["input"]>;
+  started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  test_type?: InputMaybe<Scalars["String"]["input"]>;
+  user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  week_start_date?: InputMaybe<Scalars["date"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Shu_Ha_Ri_Tests_Stddev_Fields = {
+  __typename?: "shu_ha_ri_tests_stddev_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Stddev_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Shu_Ha_Ri_Tests_Stddev_Pop_Fields = {
+  __typename?: "shu_ha_ri_tests_stddev_pop_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Stddev_Pop_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Shu_Ha_Ri_Tests_Stddev_Samp_Fields = {
+  __typename?: "shu_ha_ri_tests_stddev_samp_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Stddev_Samp_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Shu_Ha_Ri_Tests_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Shu_Ha_Ri_Tests_Stream_Cursor_Value_Input = {
+  completed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  feedback?: InputMaybe<Scalars["jsonb"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  passed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  questions?: InputMaybe<Scalars["jsonb"]["input"]>;
+  score?: InputMaybe<Scalars["numeric"]["input"]>;
+  skills_progress?: InputMaybe<Scalars["jsonb"]["input"]>;
+  started_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  test_type?: InputMaybe<Scalars["String"]["input"]>;
+  user_answers?: InputMaybe<Scalars["jsonb"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  week_start_date?: InputMaybe<Scalars["date"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Shu_Ha_Ri_Tests_Sum_Fields = {
+  __typename?: "shu_ha_ri_tests_sum_fields";
+  score?: Maybe<Scalars["numeric"]["output"]>;
+};
+
+/** order by sum() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Sum_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "shu_ha_ri_tests" */
+export enum Shu_Ha_Ri_Tests_Update_Column {
+  /** column name */
+  CompletedAt = "completed_at",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Feedback = "feedback",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Passed = "passed",
+  /** column name */
+  Questions = "questions",
+  /** column name */
+  Score = "score",
+  /** column name */
+  SkillsProgress = "skills_progress",
+  /** column name */
+  StartedAt = "started_at",
+  /** column name */
+  TestType = "test_type",
+  /** column name */
+  UserAnswers = "user_answers",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  WeekStartDate = "week_start_date",
+}
+
+export type Shu_Ha_Ri_Tests_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Shu_Ha_Ri_Tests_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Shu_Ha_Ri_Tests_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Shu_Ha_Ri_Tests_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Shu_Ha_Ri_Tests_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Shu_Ha_Ri_Tests_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Shu_Ha_Ri_Tests_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Shu_Ha_Ri_Tests_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Shu_Ha_Ri_Tests_Var_Pop_Fields = {
+  __typename?: "shu_ha_ri_tests_var_pop_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Var_Pop_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Shu_Ha_Ri_Tests_Var_Samp_Fields = {
+  __typename?: "shu_ha_ri_tests_var_samp_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Var_Samp_Order_By = {
+  score?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Shu_Ha_Ri_Tests_Variance_Fields = {
+  __typename?: "shu_ha_ri_tests_variance_fields";
+  score?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "shu_ha_ri_tests" */
+export type Shu_Ha_Ri_Tests_Variance_Order_By = {
+  score?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "stage_progress" */
@@ -17546,6 +21840,14 @@ export type Subscription_Root = {
   /** fetch data from the table in a streaming manner: "achievements" */
   achievements_stream: Array<Achievements>;
   /** An array relationship */
+  active_recall_sessions: Array<Active_Recall_Sessions>;
+  /** An aggregate relationship */
+  active_recall_sessions_aggregate: Active_Recall_Sessions_Aggregate;
+  /** fetch data from the table: "active_recall_sessions" using primary key columns */
+  active_recall_sessions_by_pk?: Maybe<Active_Recall_Sessions>;
+  /** fetch data from the table in a streaming manner: "active_recall_sessions" */
+  active_recall_sessions_stream: Array<Active_Recall_Sessions>;
+  /** An array relationship */
   ai_sessions: Array<Ai_Sessions>;
   /** An aggregate relationship */
   ai_sessions_aggregate: Ai_Sessions_Aggregate;
@@ -17625,6 +21927,30 @@ export type Subscription_Root = {
   invites_by_pk?: Maybe<Invites>;
   /** fetch data from the table in a streaming manner: "invites" */
   invites_stream: Array<Invites>;
+  /** fetch data from the table: "kumon_progress" */
+  kumon_progress: Array<Kumon_Progress>;
+  /** fetch aggregated fields from the table: "kumon_progress" */
+  kumon_progress_aggregate: Kumon_Progress_Aggregate;
+  /** fetch data from the table: "kumon_progress" using primary key columns */
+  kumon_progress_by_pk?: Maybe<Kumon_Progress>;
+  /** fetch data from the table in a streaming manner: "kumon_progress" */
+  kumon_progress_stream: Array<Kumon_Progress>;
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
+  /** fetch data from the table: "lesson_snapshots" using primary key columns */
+  lesson_snapshots_by_pk?: Maybe<Lesson_Snapshots>;
+  /** fetch data from the table in a streaming manner: "lesson_snapshots" */
+  lesson_snapshots_stream: Array<Lesson_Snapshots>;
+  /** An array relationship */
+  lesson_vocabulary_extractions: Array<Lesson_Vocabulary_Extractions>;
+  /** An aggregate relationship */
+  lesson_vocabulary_extractions_aggregate: Lesson_Vocabulary_Extractions_Aggregate;
+  /** fetch data from the table: "lesson_vocabulary_extractions" using primary key columns */
+  lesson_vocabulary_extractions_by_pk?: Maybe<Lesson_Vocabulary_Extractions>;
+  /** fetch data from the table in a streaming manner: "lesson_vocabulary_extractions" */
+  lesson_vocabulary_extractions_stream: Array<Lesson_Vocabulary_Extractions>;
   /** fetch data from the table: "logs.diffs" */
   logs_diffs: Array<Logs_Diffs>;
   /** fetch aggregated fields from the table: "logs.diffs" */
@@ -17721,6 +22047,22 @@ export type Subscription_Root = {
   review_history_by_pk?: Maybe<Review_History>;
   /** fetch data from the table in a streaming manner: "review_history" */
   review_history_stream: Array<Review_History>;
+  /** fetch data from the table: "shu_ha_ri_progress" */
+  shu_ha_ri_progress: Array<Shu_Ha_Ri_Progress>;
+  /** fetch aggregated fields from the table: "shu_ha_ri_progress" */
+  shu_ha_ri_progress_aggregate: Shu_Ha_Ri_Progress_Aggregate;
+  /** fetch data from the table: "shu_ha_ri_progress" using primary key columns */
+  shu_ha_ri_progress_by_pk?: Maybe<Shu_Ha_Ri_Progress>;
+  /** fetch data from the table in a streaming manner: "shu_ha_ri_progress" */
+  shu_ha_ri_progress_stream: Array<Shu_Ha_Ri_Progress>;
+  /** An array relationship */
+  shu_ha_ri_tests: Array<Shu_Ha_Ri_Tests>;
+  /** An aggregate relationship */
+  shu_ha_ri_tests_aggregate: Shu_Ha_Ri_Tests_Aggregate;
+  /** fetch data from the table: "shu_ha_ri_tests" using primary key columns */
+  shu_ha_ri_tests_by_pk?: Maybe<Shu_Ha_Ri_Tests>;
+  /** fetch data from the table in a streaming manner: "shu_ha_ri_tests" */
+  shu_ha_ri_tests_stream: Array<Shu_Ha_Ri_Tests>;
   /** fetch data from the table: "stage_progress" */
   stage_progress: Array<Stage_Progress>;
   /** fetch aggregated fields from the table: "stage_progress" */
@@ -17853,6 +22195,32 @@ export type Subscription_RootAchievements_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Achievements_Stream_Cursor_Input>>;
   where?: InputMaybe<Achievements_Bool_Exp>;
+};
+
+export type Subscription_RootActive_Recall_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+export type Subscription_RootActive_Recall_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+export type Subscription_RootActive_Recall_Sessions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootActive_Recall_Sessions_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Active_Recall_Sessions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
 };
 
 export type Subscription_RootAi_SessionsArgs = {
@@ -18113,6 +22481,84 @@ export type Subscription_RootInvites_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Invites_Stream_Cursor_Input>>;
   where?: InputMaybe<Invites_Bool_Exp>;
+};
+
+export type Subscription_RootKumon_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootKumon_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootKumon_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootKumon_Progress_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Kumon_Progress_Stream_Cursor_Input>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_Snapshots_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootLesson_Snapshots_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Lesson_Snapshots_Stream_Cursor_Input>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_Vocabulary_ExtractionsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_Vocabulary_Extractions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+export type Subscription_RootLesson_Vocabulary_Extractions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootLesson_Vocabulary_Extractions_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Lesson_Vocabulary_Extractions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
 };
 
 export type Subscription_RootLogs_DiffsArgs = {
@@ -18440,6 +22886,58 @@ export type Subscription_RootReview_History_StreamArgs = {
   where?: InputMaybe<Review_History_Bool_Exp>;
 };
 
+export type Subscription_RootShu_Ha_Ri_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootShu_Ha_Ri_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootShu_Ha_Ri_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootShu_Ha_Ri_Progress_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Shu_Ha_Ri_Progress_Stream_Cursor_Input>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootShu_Ha_Ri_TestsArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+export type Subscription_RootShu_Ha_Ri_Tests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+export type Subscription_RootShu_Ha_Ri_Tests_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootShu_Ha_Ri_Tests_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Shu_Ha_Ri_Tests_Stream_Cursor_Input>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
 export type Subscription_RootStage_ProgressArgs = {
   distinct_on?: InputMaybe<Array<Stage_Progress_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -18751,6 +23249,10 @@ export type Users = {
   /** An aggregate relationship */
   achievements_aggregate: Achievements_Aggregate;
   /** An array relationship */
+  active_recall_sessions: Array<Active_Recall_Sessions>;
+  /** An aggregate relationship */
+  active_recall_sessions_aggregate: Active_Recall_Sessions_Aggregate;
+  /** An array relationship */
   ai_sessions: Array<Ai_Sessions>;
   /** An aggregate relationship */
   ai_sessions_aggregate: Ai_Sessions_Aggregate;
@@ -18777,6 +23279,14 @@ export type Users = {
   image?: Maybe<Scalars["String"]["output"]>;
   /** Admin flag */
   is_admin?: Maybe<Scalars["Boolean"]["output"]>;
+  /** An array relationship */
+  kumon_progresses: Array<Kumon_Progress>;
+  /** An aggregate relationship */
+  kumon_progresses_aggregate: Kumon_Progress_Aggregate;
+  /** An array relationship */
+  lesson_snapshots: Array<Lesson_Snapshots>;
+  /** An aggregate relationship */
+  lesson_snapshots_aggregate: Lesson_Snapshots_Aggregate;
   /** An array relationship */
   methods: Array<Payments_Methods>;
   /** An aggregate relationship */
@@ -18812,6 +23322,14 @@ export type Users = {
   review_histories: Array<Review_History>;
   /** An aggregate relationship */
   review_histories_aggregate: Review_History_Aggregate;
+  /** An array relationship */
+  shu_ha_ri_progresses: Array<Shu_Ha_Ri_Progress>;
+  /** An aggregate relationship */
+  shu_ha_ri_progresses_aggregate: Shu_Ha_Ri_Progress_Aggregate;
+  /** An array relationship */
+  shu_ha_ri_tests: Array<Shu_Ha_Ri_Tests>;
+  /** An aggregate relationship */
+  shu_ha_ri_tests_aggregate: Shu_Ha_Ri_Tests_Aggregate;
   /** An array relationship */
   stage_progresses: Array<Stage_Progress>;
   /** An aggregate relationship */
@@ -18878,6 +23396,24 @@ export type UsersAchievements_AggregateArgs = {
 };
 
 /** columns and relationships of "users" */
+export type UsersActive_Recall_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersActive_Recall_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Active_Recall_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Active_Recall_Sessions_Order_By>>;
+  where?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
 export type UsersAi_SessionsArgs = {
   distinct_on?: InputMaybe<Array<Ai_Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -18929,6 +23465,42 @@ export type UsersError_Logs_AggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Error_Log_Order_By>>;
   where?: InputMaybe<Error_Log_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersKumon_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersKumon_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Kumon_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Kumon_Progress_Order_By>>;
+  where?: InputMaybe<Kumon_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersLesson_SnapshotsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersLesson_Snapshots_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Snapshots_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Snapshots_Order_By>>;
+  where?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -19073,6 +23645,42 @@ export type UsersReview_Histories_AggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   order_by?: InputMaybe<Array<Review_History_Order_By>>;
   where?: InputMaybe<Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersShu_Ha_Ri_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersShu_Ha_Ri_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Progress_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersShu_Ha_Ri_TestsArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersShu_Ha_Ri_Tests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Shu_Ha_Ri_Tests_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Shu_Ha_Ri_Tests_Order_By>>;
+  where?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
 };
 
 /** columns and relationships of "users" */
@@ -19221,6 +23829,8 @@ export type Users_Bool_Exp = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Bool_Exp>;
   achievements?: InputMaybe<Achievements_Bool_Exp>;
   achievements_aggregate?: InputMaybe<Achievements_Aggregate_Bool_Exp>;
+  active_recall_sessions?: InputMaybe<Active_Recall_Sessions_Bool_Exp>;
+  active_recall_sessions_aggregate?: InputMaybe<Active_Recall_Sessions_Aggregate_Bool_Exp>;
   ai_sessions?: InputMaybe<Ai_Sessions_Bool_Exp>;
   ai_sessions_aggregate?: InputMaybe<Ai_Sessions_Aggregate_Bool_Exp>;
   created_at?: InputMaybe<Bigint_Comparison_Exp>;
@@ -19237,6 +23847,10 @@ export type Users_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
   is_admin?: InputMaybe<Boolean_Comparison_Exp>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Bool_Exp>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Bool_Exp>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Bool_Exp>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Bool_Exp>;
   methods?: InputMaybe<Payments_Methods_Bool_Exp>;
   methods_aggregate?: InputMaybe<Payments_Methods_Aggregate_Bool_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -19255,6 +23869,10 @@ export type Users_Bool_Exp = {
   reminder_enabled?: InputMaybe<Boolean_Comparison_Exp>;
   review_histories?: InputMaybe<Review_History_Bool_Exp>;
   review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Bool_Exp>;
+  shu_ha_ri_progresses?: InputMaybe<Shu_Ha_Ri_Progress_Bool_Exp>;
+  shu_ha_ri_progresses_aggregate?: InputMaybe<Shu_Ha_Ri_Progress_Aggregate_Bool_Exp>;
+  shu_ha_ri_tests?: InputMaybe<Shu_Ha_Ri_Tests_Bool_Exp>;
+  shu_ha_ri_tests_aggregate?: InputMaybe<Shu_Ha_Ri_Tests_Aggregate_Bool_Exp>;
   stage_progresses?: InputMaybe<Stage_Progress_Bool_Exp>;
   stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Bool_Exp>;
   stage_tests?: InputMaybe<Stage_Tests_Bool_Exp>;
@@ -19294,6 +23912,7 @@ export type Users_Inc_Input = {
 export type Users_Insert_Input = {
   accounts?: InputMaybe<Accounts_Arr_Rel_Insert_Input>;
   achievements?: InputMaybe<Achievements_Arr_Rel_Insert_Input>;
+  active_recall_sessions?: InputMaybe<Active_Recall_Sessions_Arr_Rel_Insert_Input>;
   ai_sessions?: InputMaybe<Ai_Sessions_Arr_Rel_Insert_Input>;
   created_at?: InputMaybe<Scalars["bigint"]["input"]>;
   current_level?: InputMaybe<Scalars["String"]["input"]>;
@@ -19312,6 +23931,8 @@ export type Users_Insert_Input = {
   image?: InputMaybe<Scalars["String"]["input"]>;
   /** Admin flag */
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
+  kumon_progresses?: InputMaybe<Kumon_Progress_Arr_Rel_Insert_Input>;
+  lesson_snapshots?: InputMaybe<Lesson_Snapshots_Arr_Rel_Insert_Input>;
   methods?: InputMaybe<Payments_Methods_Arr_Rel_Insert_Input>;
   /** User display name */
   name?: InputMaybe<Scalars["String"]["input"]>;
@@ -19323,6 +23944,8 @@ export type Users_Insert_Input = {
   providers?: InputMaybe<Payments_Providers_Arr_Rel_Insert_Input>;
   reminder_enabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   review_histories?: InputMaybe<Review_History_Arr_Rel_Insert_Input>;
+  shu_ha_ri_progresses?: InputMaybe<Shu_Ha_Ri_Progress_Arr_Rel_Insert_Input>;
+  shu_ha_ri_tests?: InputMaybe<Shu_Ha_Ri_Tests_Arr_Rel_Insert_Input>;
   stage_progresses?: InputMaybe<Stage_Progress_Arr_Rel_Insert_Input>;
   stage_tests?: InputMaybe<Stage_Tests_Arr_Rel_Insert_Input>;
   start_date?: InputMaybe<Scalars["date"]["input"]>;
@@ -19411,6 +24034,7 @@ export type Users_On_Conflict = {
 export type Users_Order_By = {
   accounts_aggregate?: InputMaybe<Accounts_Aggregate_Order_By>;
   achievements_aggregate?: InputMaybe<Achievements_Aggregate_Order_By>;
+  active_recall_sessions_aggregate?: InputMaybe<Active_Recall_Sessions_Aggregate_Order_By>;
   ai_sessions_aggregate?: InputMaybe<Ai_Sessions_Aggregate_Order_By>;
   created_at?: InputMaybe<Order_By>;
   current_level?: InputMaybe<Order_By>;
@@ -19424,6 +24048,8 @@ export type Users_Order_By = {
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
   is_admin?: InputMaybe<Order_By>;
+  kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Order_By>;
+  lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Order_By>;
   methods_aggregate?: InputMaybe<Payments_Methods_Aggregate_Order_By>;
   name?: InputMaybe<Order_By>;
   notification_messages_aggregate?: InputMaybe<Notification_Messages_Aggregate_Order_By>;
@@ -19434,6 +24060,8 @@ export type Users_Order_By = {
   providers_aggregate?: InputMaybe<Payments_Providers_Aggregate_Order_By>;
   reminder_enabled?: InputMaybe<Order_By>;
   review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Order_By>;
+  shu_ha_ri_progresses_aggregate?: InputMaybe<Shu_Ha_Ri_Progress_Aggregate_Order_By>;
+  shu_ha_ri_tests_aggregate?: InputMaybe<Shu_Ha_Ri_Tests_Aggregate_Order_By>;
   stage_progresses_aggregate?: InputMaybe<Stage_Progress_Aggregate_Order_By>;
   stage_tests_aggregate?: InputMaybe<Stage_Tests_Aggregate_Order_By>;
   start_date?: InputMaybe<Order_By>;
@@ -19667,6 +24295,23 @@ export type Users_Variance_Fields = {
   /** Email verification timestamp */
   email_verified?: Maybe<Scalars["Float"]["output"]>;
   updated_at?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
+export type Uuid_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _eq?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _gt?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _gte?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _in?: InputMaybe<Array<Array<Scalars["uuid"]["input"]>>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _lte?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _neq?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+  _nin?: InputMaybe<Array<Array<Scalars["uuid"]["input"]>>>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
@@ -20314,6 +24959,10 @@ export type Vocabulary_Cards = {
   id: Scalars["uuid"]["output"];
   incorrect_count?: Maybe<Scalars["Int"]["output"]>;
   last_reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An array relationship */
+  lesson_vocabulary_extractions: Array<Lesson_Vocabulary_Extractions>;
+  /** An aggregate relationship */
+  lesson_vocabulary_extractions_aggregate: Lesson_Vocabulary_Extractions_Aggregate;
   next_review_date: Scalars["date"]["output"];
   part_of_speech?: Maybe<Scalars["String"]["output"]>;
   /** An array relationship */
@@ -20326,6 +24975,24 @@ export type Vocabulary_Cards = {
   user?: Maybe<Users>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
   word: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "vocabulary_cards" */
+export type Vocabulary_CardsLesson_Vocabulary_ExtractionsArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+};
+
+/** columns and relationships of "vocabulary_cards" */
+export type Vocabulary_CardsLesson_Vocabulary_Extractions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Lesson_Vocabulary_Extractions_Order_By>>;
+  where?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
 };
 
 /** columns and relationships of "vocabulary_cards" */
@@ -20434,6 +25101,8 @@ export type Vocabulary_Cards_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   incorrect_count?: InputMaybe<Int_Comparison_Exp>;
   last_reviewed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  lesson_vocabulary_extractions?: InputMaybe<Lesson_Vocabulary_Extractions_Bool_Exp>;
+  lesson_vocabulary_extractions_aggregate?: InputMaybe<Lesson_Vocabulary_Extractions_Aggregate_Bool_Exp>;
   next_review_date?: InputMaybe<Date_Comparison_Exp>;
   part_of_speech?: InputMaybe<String_Comparison_Exp>;
   review_histories?: InputMaybe<Review_History_Bool_Exp>;
@@ -20467,6 +25136,7 @@ export type Vocabulary_Cards_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   incorrect_count?: InputMaybe<Scalars["Int"]["input"]>;
   last_reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  lesson_vocabulary_extractions?: InputMaybe<Lesson_Vocabulary_Extractions_Arr_Rel_Insert_Input>;
   next_review_date?: InputMaybe<Scalars["date"]["input"]>;
   part_of_speech?: InputMaybe<Scalars["String"]["input"]>;
   review_histories?: InputMaybe<Review_History_Arr_Rel_Insert_Input>;
@@ -20584,6 +25254,7 @@ export type Vocabulary_Cards_Order_By = {
   id?: InputMaybe<Order_By>;
   incorrect_count?: InputMaybe<Order_By>;
   last_reviewed_at?: InputMaybe<Order_By>;
+  lesson_vocabulary_extractions_aggregate?: InputMaybe<Lesson_Vocabulary_Extractions_Aggregate_Order_By>;
   next_review_date?: InputMaybe<Order_By>;
   part_of_speech?: InputMaybe<Order_By>;
   review_histories_aggregate?: InputMaybe<Review_History_Aggregate_Order_By>;

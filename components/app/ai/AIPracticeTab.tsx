@@ -1,6 +1,8 @@
 'use client';
 
 import { FormEvent, useRef, useState } from 'react';
+import { Button } from '../Buttons/Button';
+import { Send } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -43,7 +45,7 @@ export function AIPracticeTab({ topic, messages, isLoading, onSendMessage }: AIP
               className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
                 message.role === 'assistant'
                   ? 'self-start bg-white text-gray-700 shadow-sm'
-                  : 'self-end bg-blue-600 text-white shadow-sm'
+                  : 'self-end bg-primary-deep text-white shadow-sm'
               }`}
             >
               {message.content}
@@ -67,15 +69,16 @@ export function AIPracticeTab({ topic, messages, isLoading, onSendMessage }: AIP
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder="Ответь AI или задай вопрос..."
-          className="flex-1 rounded-full border border-gray-200 px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="flex-1 rounded-full border border-gray-200 px-4 py-2 text-sm shadow-sm focus:border-primary-deep focus:outline-none focus:ring-2 focus:ring-primary-deep"
         />
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="inline-flex items-center rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-50"
+          variant="default"
+          leftIcon={<Send className="size-4" />}
         >
           Отправить
-        </button>
+        </Button>
       </form>
     </div>
   );

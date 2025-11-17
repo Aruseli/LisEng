@@ -1,43 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ClaudeService } from '@/lib/ai/claude-service';
+import { NextResponse } from 'next/server';
+import { getProvider } from '@/lib/ai/llm';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/options';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
-    const body = await req.json().catch(() => ({}));
-    const { topic, level, conversationHistory } = body;
+    const { messages } = await req.json();
 
-    if (!topic || !level) {
-      return NextResponse.json(
-        { error: 'topic and level are required' },
-        { status: 400 }
-      );
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
-    // Валидация conversationHistory
-    const validHistory = Array.isArray(conversationHistory)
-      ? conversationHistory.filter(
-          (msg: any) =>
-            msg &&
-            typeof msg === 'object' &&
-            (msg.role === 'user' || msg.role === 'assistant') &&
-            typeof msg.content === 'string'
-        )
-      : [];
+    const provider = getProvider();
+    const response = await provider.query(messages);
 
-    const response = await ClaudeService.conductSpeakingPractice(
-      String(topic),
-      String(level),
-      validHistory
-    );
-
-    return NextResponse.json({ message: response });
-  } catch (error: any) {
-    console.error('AI Speaking Error:', error);
-    return NextResponse.json(
-      {
-        error: error?.message ?? 'Failed to generate response',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+    return new Response(response.content, {
+      headers: {
+        'Content-Type': 'text/plain',
       },
+    });
+
+  } catch (error: any) {
+    console.error('[API /ai/speaking] Error:', error);
+    return NextResponse.json(
+      { error: error.message || 'An unexpected error occurred' },
       { status: 500 }
     );
   }

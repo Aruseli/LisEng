@@ -15,7 +15,9 @@ import {
   upsertDailyTaskFromStructure,
 } from '@/lib/hasura-queries';
 import { StageProgressionService, RequirementCheck } from '@/lib/stage-progression';
-import { ClaudeService } from '@/lib/ai/claude-service';
+import { generateJSON } from '@/lib/ai/llm';
+import { DailyPlan, DailyPlanAiSummary, EnrichedDailyPlan } from '@/types/daily-plan';
+import { User } from 'next-auth';
 
 type DailyTaskRecord = Awaited<ReturnType<typeof getDailyTasks>> extends (infer T)[]
   ? T
@@ -36,19 +38,6 @@ interface GenerateDailyPlanOptions {
   targetDate?: string;
   regenerate?: boolean;
   forceAi?: boolean;
-}
-
-interface DailyPlanAiSummary {
-  summary: string;
-  focus: string[];
-  motivation: string;
-  aiTasks: Array<{
-    type: string;
-    prompt: string;
-    context: string;
-  }>;
-  reviewReminders?: string[];
-  fallbackUsed?: boolean;
 }
 
 export interface DailyPlanResult {
@@ -457,11 +446,20 @@ export class DailyPlanService {
     const systemPrompt = `Ты — наставник японской методики обучения (Кумон, Шю, Кайдзен).
 Составь поддерживающее объяснение учебного дня для подростка, который учит английский.`;
 
-    if (!params.forceAi && !process.env.ANTHROPIC_API_KEY) {
+    if (!params.forceAi && !process.env.OPENROUTER_API_KEY) {
       return this.buildFallbackSummary(taskPayload, requirementsPayload);
     }
 
     try {
+      // Получить проблемные области из последних слепков
+      const problemAreas = await this.getRecentProblemAreas(params.user?.id || '');
+      
+      // Получить прогресс Кумон
+      const kumonProgress = await this.getKumonProgress(params.user?.id || '');
+      
+      // Получить Active Recall задания на сегодня
+      const activeRecallDue = await this.getActiveRecallDue(params.user?.id || '', params.targetDate);
+
       const prompt = [
         `Дата: ${params.targetDate}`,
         params.user
@@ -477,6 +475,17 @@ export class DailyPlanService {
         achievementsPayload.length
           ? `Последние достижения: ${JSON.stringify(achievementsPayload, null, 2)}`
           : 'Достижения пока не зафиксированы',
+        problemAreas.length > 0
+          ? `Проблемные области из последних уроков (на них нужно сделать акцент): ${JSON.stringify(problemAreas, null, 2)}`
+          : 'Проблемных областей не обнаружено',
+        kumonProgress.length > 0
+          ? `Текущий прогресс Кумон (уровни навыков): ${JSON.stringify(kumonProgress, null, 2)}`
+          : '',
+        activeRecallDue.length > 0
+          ? `Active Recall задания на сегодня: ${JSON.stringify(activeRecallDue, null, 2)}`
+          : '',
+        '',
+        'ВАЖНО: Учитывай проблемные области при генерации заданий. Сфокусируйся на них!',
         '',
         'Сформируй JSON вида:',
         `{
@@ -494,10 +503,7 @@ export class DailyPlanService {
 }`,
       ].join('\n');
 
-      const response = await ClaudeService.generateJSON<DailyPlanAiSummary>(prompt, {
-        maxTokens: 900,
-        systemPrompt,
-      });
+      const response = await generateJSON<DailyPlanAiSummary>(prompt, { systemPrompt });
 
       return {
         summary: response.summary,
@@ -555,6 +561,104 @@ export class DailyPlanService {
     const date = new Date(`${dateString}T00:00:00`);
     const day = date.getUTCDay();
     return day === 0 ? 7 : day;
+  }
+
+  /**
+   * Получить проблемные области из последних слепков
+   */
+  private async getRecentProblemAreas(userId: string): Promise<any[]> {
+    if (!userId) return [];
+
+    try {
+      const snapshots = await this.hasyx.select({
+        table: 'lesson_snapshots',
+        where: {
+          user_id: { _eq: userId },
+        },
+        order_by: [{ lesson_date: 'desc' }],
+        limit: 10,
+        returning: ['problem_areas', 'lesson_type'],
+      });
+
+      const allSnapshots = Array.isArray(snapshots) ? snapshots : snapshots ? [snapshots] : [];
+      const problemAreas: any[] = [];
+
+      for (const snapshot of allSnapshots) {
+        const areas = (snapshot.problem_areas as any[]) || [];
+        for (const area of areas) {
+          problemAreas.push({
+            ...area,
+            lesson_type: snapshot.lesson_type,
+          });
+        }
+      }
+
+      // Группировка по типу и категории
+      const grouped = new Map<string, any>();
+      for (const area of problemAreas) {
+        const key = `${area.type}_${area.content?.substring(0, 20)}`;
+        if (!grouped.has(key)) {
+          grouped.set(key, { ...area, frequency: 1 });
+        } else {
+          grouped.get(key)!.frequency++;
+        }
+      }
+
+      return Array.from(grouped.values())
+        .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
+        .slice(0, 5); // Топ-5 проблемных областей
+    } catch (error) {
+      console.error('Error getting problem areas:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Получить прогресс Кумон
+   */
+  private async getKumonProgress(userId: string): Promise<any[]> {
+    if (!userId) return [];
+
+    try {
+      const progress = await this.hasyx.select({
+        table: 'kumon_progress',
+        where: {
+          user_id: { _eq: userId },
+          status: { _in: ['practicing', 'ready_for_next'] },
+        },
+        returning: ['skill_category', 'skill_subcategory', 'current_level', 'status'],
+        limit: 10,
+      });
+
+      return Array.isArray(progress) ? progress : progress ? [progress] : [];
+    } catch (error) {
+      console.error('Error getting Kumon progress:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Получить Active Recall задания на сегодня
+   */
+  private async getActiveRecallDue(userId: string, date: string): Promise<any[]> {
+    if (!userId) return [];
+
+    try {
+      const recalls = await this.hasyx.select({
+        table: 'active_recall_sessions',
+        where: {
+          user_id: { _eq: userId },
+          next_review_date: { _lte: date },
+        },
+        returning: ['recall_type', 'context_prompt', 'correct_response'],
+        limit: 5,
+      });
+
+      return Array.isArray(recalls) ? recalls : recalls ? [recalls] : [];
+    } catch (error) {
+      console.error('Error getting Active Recall due:', error);
+      return [];
+    }
   }
 
   private extractPlanMetadata(tasks: DailyTaskRecord[]) {

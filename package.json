@@ -1,11 +1,18 @@
 {
   "dependencies": {
+    "@ai-sdk/groq": "^2.0.29",
     "@anthropic-ai/sdk": "^0.68.0",
+    "@floating-ui/react": "^0.27.16",
     "chart.js": "^4.5.1",
     "hasyx": "^0.2.0-alpha.70",
+    "jsonrepair": "^3.13.1",
+    "lucide-react": "^0.553.0",
+    "motion": "^12.23.24",
     "react": "19.1.1",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "19.1.1",
+    "sass": "^1.94.0",
+    "scss": "^0.2.4",
     "ws": "^8.18.3"
   },
   "scripts": {
