@@ -16,8 +16,13 @@ import {
 } from '@/lib/hasura-queries';
 import { StageProgressionService, RequirementCheck } from '@/lib/stage-progression';
 import { generateJSON } from '@/lib/ai/llm';
-import { DailyPlan, DailyPlanAiSummary, EnrichedDailyPlan } from '@/types/daily-plan';
-import { User } from 'next-auth';
+import { DailyPlanAiSummary } from '@/types/daily-plan';
+import {
+  SnapshotInsightsService,
+  MethodologyAdvisor,
+  type SnapshotInsights,
+} from '@/lib/lesson-snapshots';
+import { VocabularyGenerationService } from '@/lib/vocabulary/vocabulary-generation-service';
 
 type DailyTaskRecord = Awaited<ReturnType<typeof getDailyTasks>> extends (infer T)[]
   ? T
@@ -64,10 +69,16 @@ export interface DailyPlanResult {
     : never;
   weeklyStructure: WeeklyStructureRecord[];
   source: 'ai' | 'structure';
+  methodologyHighlights: string[];
+  snapshotInsights: SnapshotInsights | null;
 }
 
 export class DailyPlanService {
-  constructor(private readonly hasyx: Hasyx) {}
+  constructor(
+    private readonly hasyx: Hasyx,
+    private readonly snapshotInsightsService: SnapshotInsightsService = new SnapshotInsightsService(hasyx),
+    private readonly vocabularyGenerationService: VocabularyGenerationService = new VocabularyGenerationService(hasyx)
+  ) {}
 
   /**
    * Сгенерировать (или пересобрать) план дня
@@ -79,6 +90,13 @@ export class DailyPlanService {
     if (!userId) {
       throw new Error('userId is required to generate the daily plan');
     }
+
+    const snapshotInsightsPromise = this.snapshotInsightsService
+      .getInsights(userId, { referenceDate: targetDate })
+      .catch((error) => {
+        console.warn('[DailyPlanService] Failed to build snapshot insights', error);
+        return null;
+      });
 
     const [user, stageProgress, streakRaw, achievementsRaw] = await Promise.all([
       getUserProfile(this.hasyx, userId),
@@ -143,10 +161,43 @@ export class DailyPlanService {
       });
     }
 
-    const dailyTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
-    const dailyTasks = Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [];
+    let dailyTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
+    const snapshotInsights = await snapshotInsightsPromise;
+    let vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
 
-    const vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
+    if ((Array.isArray(vocabularyDue) ? vocabularyDue.length : 0) === 0) {
+      const generatedCards = await this.vocabularyGenerationService.generateCardsForUser({
+        userId,
+        level: user?.current_level || 'A2',
+        snapshotInsights,
+      });
+      if ((generatedCards?.length ?? 0) > 0) {
+        vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
+      }
+    }
+    const methodologyAdvisor = snapshotInsights ? new MethodologyAdvisor(snapshotInsights) : null;
+    const methodologyFocus =
+      methodologyAdvisor?.buildFocusTags({
+        userLevel: user?.current_level ?? null,
+        targetLevel: user?.target_level ?? null,
+      }) ?? snapshotInsights?.methodologyHighlights ?? [];
+
+    if (weeklyStructure.length === 0 && snapshotInsights) {
+      const augmented = await this.ensureSnapshotDrivenTasks({
+        userId,
+        stageId,
+        targetDate,
+        insights: snapshotInsights,
+        regenerate: options.regenerate ?? false,
+        existingTasks: Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [],
+      });
+
+      if (augmented) {
+        dailyTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
+      }
+    }
+
+    const dailyTasks = Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [];
     const latestMetrics = await getLatestProgressMetric(this.hasyx, userId);
 
     const requirementChecks = await this.calculateRequirementChecks(
@@ -168,14 +219,29 @@ export class DailyPlanService {
       achievements,
       targetDate,
       forceAi: options.forceAi ?? false,
+      snapshotInsights,
     });
+    const planFocus = aiSummary.focus.length > 0 ? aiSummary.focus : methodologyFocus;
 
     const sharedPayload = {
       plan_date: targetDate,
       summary: aiSummary.summary,
       motivation: aiSummary.motivation,
-      focus: aiSummary.focus,
+      focus: planFocus,
       review_reminders: aiSummary.reviewReminders ?? [],
+      methodology_focus: methodologyFocus,
+      methodology_highlights: snapshotInsights?.methodologyHighlights ?? [],
+      snapshot_insights: snapshotInsights
+        ? {
+            dominant_stage: snapshotInsights.shuHaRi?.dominantStage ?? null,
+            problem_areas: snapshotInsights.problemAreas,
+            kaizen_momentum: snapshotInsights.kaizenMomentum,
+            sm2_schedule: {
+              due_today: snapshotInsights.sm2Schedule.dueTodayCount,
+              upcoming: snapshotInsights.sm2Schedule.upcomingCount,
+            },
+          }
+        : undefined,
       requirement_checks: requirementChecks.map((check) => ({
         id: check.requirement.id,
         type: check.requirement.requirement_type,
@@ -223,7 +289,7 @@ export class DailyPlanService {
       stage: activeStageProgress?.stage ?? null,
       tasks: updatedTasks.length > 0 ? updatedTasks : dailyTasks,
       summary: aiSummary.summary,
-      focus: aiSummary.focus,
+      focus: planFocus,
       motivation: aiSummary.motivation,
       reviewReminders: aiSummary.reviewReminders ?? [],
       requirementChecks,
@@ -236,6 +302,8 @@ export class DailyPlanService {
       achievements,
       weeklyStructure,
       source: aiSummary.fallbackUsed ? 'structure' : 'ai',
+      methodologyHighlights: snapshotInsights?.methodologyHighlights ?? [],
+      snapshotInsights: snapshotInsights ?? null,
     };
   }
 
@@ -247,7 +315,21 @@ export class DailyPlanService {
     targetDate?: string
   ): Promise<DailyPlanResult> {
     const date = targetDate ?? this.formatDate(new Date());
-    const [stageProgress, tasksRaw, vocabularyDue, latestMetrics, streakRaw, achievementsRaw] =
+    const snapshotInsightsPromise = this.snapshotInsightsService
+      .getInsights(userId, { referenceDate: date })
+      .catch((error) => {
+        console.warn('[DailyPlanService] Failed to load snapshot insights (getDailyPlan):', error);
+        return null;
+      });
+    const [
+      stageProgress,
+      tasksRaw,
+      vocabularyDue,
+      latestMetrics,
+      streakRaw,
+      achievementsRaw,
+      snapshotInsights,
+    ] =
       await Promise.all([
         getActiveStageProgress(this.hasyx, userId),
         getDailyTasks(this.hasyx, userId, date),
@@ -255,6 +337,7 @@ export class DailyPlanService {
         getLatestProgressMetric(this.hasyx, userId),
         getStreak(this.hasyx, userId),
         getAchievements(this.hasyx, userId),
+        snapshotInsightsPromise,
       ]);
 
     const weeklyStructure = stageProgress?.stage_id
@@ -278,6 +361,11 @@ export class DailyPlanService {
       : [];
     const planMetadata = this.extractPlanMetadata(dailyTasks);
 
+    const resolvedSnapshotInsights =
+      (planMetadata?.snapshotInsights as SnapshotInsights | undefined) ?? (snapshotInsights ?? null);
+    const methodologyHighlights =
+      planMetadata?.methodologyHighlights ?? resolvedSnapshotInsights?.methodologyHighlights ?? [];
+
     const readiness = StageProgressionService.isReadyForTest(requirementChecks);
     const completionPercentage = StageProgressionService.getCompletionPercentage(requirementChecks);
 
@@ -299,6 +387,8 @@ export class DailyPlanService {
       achievements,
       weeklyStructure,
       source: planMetadata?.source ?? 'structure',
+      methodologyHighlights,
+      snapshotInsights: resolvedSnapshotInsights ?? null,
     };
   }
 
@@ -412,6 +502,7 @@ export class DailyPlanService {
       : never;
     targetDate: string;
     forceAi: boolean;
+    snapshotInsights?: SnapshotInsights | null;
   }): Promise<DailyPlanAiSummary> {
     const taskPayload = (params.tasks as DailyTaskRecord[]).map((task) => ({
       id: task.id,
@@ -443,24 +534,15 @@ export class DailyPlanService {
       unlocked_at: achievement.unlocked_at,
     }));
 
-    const systemPrompt = `Ты — наставник японской методики обучения (Кумон, Шю, Кайдзен).
+    const systemPrompt = `Ты — наставник японской методики обучения (Кумон, Сю-Ха-Ри, Кайдзен, Active Recall).
 Составь поддерживающее объяснение учебного дня для подростка, который учит английский.`;
 
     if (!params.forceAi && !process.env.OPENROUTER_API_KEY) {
-      return this.buildFallbackSummary(taskPayload, requirementsPayload);
+      return this.buildFallbackSummary(taskPayload, requirementsPayload, params.snapshotInsights ?? null);
     }
 
     try {
-      // Получить проблемные области из последних слепков
-      const problemAreas = await this.getRecentProblemAreas(params.user?.id || '');
-      
-      // Получить прогресс Кумон
-      const kumonProgress = await this.getKumonProgress(params.user?.id || '');
-      
-      // Получить Active Recall задания на сегодня
-      const activeRecallDue = await this.getActiveRecallDue(params.user?.id || '', params.targetDate);
-
-      const prompt = [
+      const promptParts = [
         `Дата: ${params.targetDate}`,
         params.user
           ? `Ученик: ${params.user.name || 'без имени'}, уровень ${params.user.current_level}, цель ${params.user.target_level}`
@@ -475,17 +557,25 @@ export class DailyPlanService {
         achievementsPayload.length
           ? `Последние достижения: ${JSON.stringify(achievementsPayload, null, 2)}`
           : 'Достижения пока не зафиксированы',
-        problemAreas.length > 0
-          ? `Проблемные области из последних уроков (на них нужно сделать акцент): ${JSON.stringify(problemAreas, null, 2)}`
-          : 'Проблемных областей не обнаружено',
-        kumonProgress.length > 0
-          ? `Текущий прогресс Кумон (уровни навыков): ${JSON.stringify(kumonProgress, null, 2)}`
-          : '',
-        activeRecallDue.length > 0
-          ? `Active Recall задания на сегодня: ${JSON.stringify(activeRecallDue, null, 2)}`
-          : '',
+      ];
+
+      if (params.snapshotInsights) {
+        promptParts.push(
+          `Проблемные области (Кайдзен): ${JSON.stringify(params.snapshotInsights.problemAreas, null, 2)}`
+        );
+        promptParts.push(`Динамика Кайдзен: ${JSON.stringify(params.snapshotInsights.kaizenMomentum, null, 2)}`);
+        promptParts.push(`Шу-Ха-Ри стадия: ${JSON.stringify(params.snapshotInsights.shuHaRi, null, 2)}`);
+        promptParts.push(`SM-2 повторения: ${JSON.stringify(params.snapshotInsights.sm2Schedule, null, 2)}`);
+        promptParts.push(
+          `Методические акценты: ${JSON.stringify(params.snapshotInsights.methodologyHighlights, null, 2)}`
+        );
+      } else {
+        promptParts.push('Инсайты snapshot недоступны — сгенерируй общий план с учетом требований.');
+      }
+
+      promptParts.push(
         '',
-        'ВАЖНО: Учитывай проблемные области при генерации заданий. Сфокусируйся на них!',
+        'ВАЖНО: Учитывай японские методики. Привяжи задания к проблемным областям и напомни про SM-2 повторения, если они есть.',
         '',
         'Сформируй JSON вида:',
         `{
@@ -500,8 +590,10 @@ export class DailyPlanService {
     }
   ],
   "reviewReminders": ["при необходимости, что повторить"]
-}`,
-      ].join('\n');
+}`
+      );
+
+      const prompt = promptParts.join('\n');
 
       const response = await generateJSON<DailyPlanAiSummary>(prompt, { systemPrompt });
 
@@ -515,13 +607,14 @@ export class DailyPlanService {
       };
     } catch (error) {
       console.warn('AI summary generation failed, using fallback:', error);
-      return this.buildFallbackSummary(taskPayload, requirementsPayload, true);
+      return this.buildFallbackSummary(taskPayload, requirementsPayload, params.snapshotInsights ?? null, true);
     }
   }
 
   private buildFallbackSummary(
     taskPayload: Array<{ type: string; title: string; duration: number; status: string; aiEnabled: boolean }>,
     requirementsPayload: Array<{ type: string; met: boolean; message: string }>,
+    snapshotInsights: SnapshotInsights | null,
     fallbackUsed = false
   ): DailyPlanAiSummary {
     const totalMinutes = taskPayload.reduce((sum, task) => sum + (task.duration || 0), 0);
@@ -530,9 +623,35 @@ export class DailyPlanService {
       .map((req) => req.message)
       .slice(0, 3);
 
+    if (focus.length === 0 && snapshotInsights?.problemAreas?.length) {
+      focus.push(
+        ...snapshotInsights.problemAreas
+          .slice(0, 2)
+          .map((area) => `Повтори тему: ${area.content} (${area.severity})`)
+      );
+    }
+
     const summary = `Сегодня ${taskPayload.length} заданий на ${totalMinutes} минут. Начни с самых важных и двигайся шаг за шагом.`;
-    const motivation =
+    let motivation =
       'Держи ритм и помни про маленькие улучшения каждый день — так работает Кайдзен. Ты справишься!';
+
+    if (snapshotInsights?.shuHaRi) {
+      const stage = snapshotInsights.shuHaRi.dominantStage;
+      if (stage === 'shu') {
+        focus.unshift('Shu: повтори правила без импровизации.');
+        motivation = 'Сохраняй дисциплину: точные повторения сейчас важнее скорости.';
+      } else if (stage === 'ha') {
+        focus.unshift('Ha: применяй правило в новых контекстах.');
+        motivation = 'Пробуй перестраивать фразы под себя — так рождается понимание.';
+      } else {
+        focus.unshift('Ri: свободно расскажи историю или мнение.');
+        motivation = 'Доверься интуиции: говори свободно и отмечай идеи для улучшения.';
+      }
+    }
+
+    const reviewReminders =
+      snapshotInsights?.sm2Schedule.dueToday.slice(0, 3).map((recall) => `Active Recall: ${recall.contextPrompt}`) ||
+      [];
 
     return {
       summary,
@@ -545,7 +664,7 @@ export class DailyPlanService {
           prompt: 'Обсудим тему дня. Расскажи, что уже знаешь, и задавай вопросы.',
           context: 'Поддерживай короткий диалог, уточняй ошибки и хвали за прогресс.',
         })),
-      reviewReminders: [],
+      reviewReminders,
       fallbackUsed,
     };
   }
@@ -563,104 +682,6 @@ export class DailyPlanService {
     return day === 0 ? 7 : day;
   }
 
-  /**
-   * Получить проблемные области из последних слепков
-   */
-  private async getRecentProblemAreas(userId: string): Promise<any[]> {
-    if (!userId) return [];
-
-    try {
-      const snapshots = await this.hasyx.select({
-        table: 'lesson_snapshots',
-        where: {
-          user_id: { _eq: userId },
-        },
-        order_by: [{ lesson_date: 'desc' }],
-        limit: 10,
-        returning: ['problem_areas', 'lesson_type'],
-      });
-
-      const allSnapshots = Array.isArray(snapshots) ? snapshots : snapshots ? [snapshots] : [];
-      const problemAreas: any[] = [];
-
-      for (const snapshot of allSnapshots) {
-        const areas = (snapshot.problem_areas as any[]) || [];
-        for (const area of areas) {
-          problemAreas.push({
-            ...area,
-            lesson_type: snapshot.lesson_type,
-          });
-        }
-      }
-
-      // Группировка по типу и категории
-      const grouped = new Map<string, any>();
-      for (const area of problemAreas) {
-        const key = `${area.type}_${area.content?.substring(0, 20)}`;
-        if (!grouped.has(key)) {
-          grouped.set(key, { ...area, frequency: 1 });
-        } else {
-          grouped.get(key)!.frequency++;
-        }
-      }
-
-      return Array.from(grouped.values())
-        .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
-        .slice(0, 5); // Топ-5 проблемных областей
-    } catch (error) {
-      console.error('Error getting problem areas:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Получить прогресс Кумон
-   */
-  private async getKumonProgress(userId: string): Promise<any[]> {
-    if (!userId) return [];
-
-    try {
-      const progress = await this.hasyx.select({
-        table: 'kumon_progress',
-        where: {
-          user_id: { _eq: userId },
-          status: { _in: ['practicing', 'ready_for_next'] },
-        },
-        returning: ['skill_category', 'skill_subcategory', 'current_level', 'status'],
-        limit: 10,
-      });
-
-      return Array.isArray(progress) ? progress : progress ? [progress] : [];
-    } catch (error) {
-      console.error('Error getting Kumon progress:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Получить Active Recall задания на сегодня
-   */
-  private async getActiveRecallDue(userId: string, date: string): Promise<any[]> {
-    if (!userId) return [];
-
-    try {
-      const recalls = await this.hasyx.select({
-        table: 'active_recall_sessions',
-        where: {
-          user_id: { _eq: userId },
-          next_review_date: { _lte: date },
-        },
-        returning: ['recall_type', 'context_prompt', 'correct_response'],
-        limit: 5,
-      });
-
-      return Array.isArray(recalls) ? recalls : recalls ? [recalls] : [];
-    } catch (error) {
-      console.error('Error getting Active Recall due:', error);
-      return [];
-    }
-  }
-
   private extractPlanMetadata(tasks: DailyTaskRecord[]) {
     for (const task of tasks) {
       const payload = (task as any)?.type_specific_payload as
@@ -670,17 +691,26 @@ export class DailyPlanService {
             focus?: string[];
             review_reminders?: string[];
             source?: string;
+            methodology_focus?: string[];
+            methodology_highlights?: string[];
+            snapshot_insights?: SnapshotInsights;
           }
         | undefined
         | null;
 
       if (payload && (payload.summary || payload.focus || payload.motivation)) {
+        const resolvedFocus =
+          (payload.focus && payload.focus.length > 0
+            ? payload.focus
+            : payload.methodology_focus?.slice(0, 4)) ?? [];
         return {
           summary: payload.summary ?? '',
           motivation: payload.motivation ?? '',
-          focus: payload.focus ?? [],
+          focus: resolvedFocus,
           reviewReminders: payload.review_reminders ?? [],
           source: (payload.source as 'ai' | 'structure' | undefined) ?? 'structure',
+          snapshotInsights: payload.snapshot_insights,
+          methodologyHighlights: payload.methodology_highlights,
         };
       }
     }
@@ -816,6 +846,63 @@ export class DailyPlanService {
         })
       )
     );
+  }
+
+  private async ensureSnapshotDrivenTasks(params: {
+    userId: string;
+    stageId: string | null;
+    targetDate: string;
+    insights: SnapshotInsights;
+    existingTasks: DailyTaskRecord[];
+    regenerate: boolean;
+  }): Promise<boolean> {
+    const existingInsightRefs = new Set<string>();
+    for (const task of params.existingTasks) {
+      const payload = (task as any)?.type_specific_payload as { insight_reference?: string } | undefined;
+      if (payload?.insight_reference) {
+        existingInsightRefs.add(String(payload.insight_reference));
+      }
+    }
+
+    const advisor = new MethodologyAdvisor(params.insights);
+    const descriptors = advisor.buildTaskBlueprints({
+      targetDate: params.targetDate,
+      existingInsightRefs,
+    });
+
+    if (descriptors.length === 0) {
+      return false;
+    }
+
+    await Promise.all(
+      descriptors.map((descriptor) =>
+        upsertDailyTaskFromStructure(this.hasyx, {
+          userId: params.userId,
+          stageId: params.stageId,
+          taskDate: params.targetDate,
+          type: descriptor.type,
+          title: descriptor.title,
+          description: descriptor.description,
+          duration: descriptor.duration,
+          aiEnabled: descriptor.aiEnabled,
+          aiContext: params.regenerate ? null : undefined,
+          suggestedPrompt: params.regenerate
+            ? descriptor.recommendedPrompt ?? null
+            : descriptor.recommendedPrompt ?? undefined,
+          typeSpecificPayload: {
+            source: 'snapshot_insights',
+            insight_type: descriptor.insightType,
+            insight_reference: descriptor.reference,
+            snapshot_summary: descriptor.snapshotSummary,
+            methodology_focus: descriptor.methodologyFocus,
+            recommended_prompt: descriptor.recommendedPrompt,
+            regenerate: params.regenerate,
+          },
+        })
+      )
+    );
+
+    return true;
   }
 }
 

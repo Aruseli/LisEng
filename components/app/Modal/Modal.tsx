@@ -88,7 +88,7 @@ export const ModalContainer = () => {
           key={modalData.id} 
           onClose={() => closeModal(modalData.id)}
           closeOnOverlayClick={modalData.closeOnOverlayClick}
-          clickPosition={modalData.clickPosition} // Передаем clickPosition
+          clickPosition={modalData.clickPosition ?? undefined} // Передаем clickPosition
         >
           {modalData.component}
         </Modal>

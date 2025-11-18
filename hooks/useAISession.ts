@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useClient } from 'hasyx';
 
 import {
@@ -23,6 +23,17 @@ interface UseAISessionOptions {
   suggestedPrompt?: string | null;
 }
 
+function messagesEqual(a: Message[], b: Message[]) {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].role !== b[i].role || a[i].content !== b[i].content || a[i].timestamp !== b[i].timestamp) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function useAISession({
   userId,
   type,
@@ -35,11 +46,14 @@ export function useAISession({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
+  const initialMessagesRef = useRef<Message[]>(initialMessages);
 
   useEffect(() => {
-    if (initialMessages.length) {
-      setMessages(initialMessages);
+    if (messagesEqual(initialMessagesRef.current, initialMessages)) {
+      return;
     }
+    initialMessagesRef.current = initialMessages;
+    setMessages(initialMessages);
   }, [initialMessages]);
 
   const ensureSession = useCallback(async () => {

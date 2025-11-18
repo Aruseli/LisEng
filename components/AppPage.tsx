@@ -11,6 +11,7 @@ import { RitualScreen } from './app/RitualScreen';
 import { Header } from './app/Header';
 import { Navigation } from './app/Navigation';
 import { DashboardTab } from './app/dashboard/DashboardTab';
+import type { TaskView as DashboardTask } from './app/dashboard/DashboardTab';
 import { VocabularyTab } from './app/vocabulary/VocabularyTab';
 import { AIPracticeTab } from './app/ai/AIPracticeTab';
 import { ProgressTab } from './app/progress/ProgressTab';
@@ -33,19 +34,9 @@ type ProgressMetricRaw = {
   study_minutes?: number | null;
 };
 
-type PlanTask = {
-  id: string;
+type PlanTask = DashboardTask & {
   stage_id?: string | null;
   task_date?: string | null;
-  type: string;
-  title: string;
-  description?: string | null;
-  duration_minutes?: number | null;
-  status: 'pending' | 'in_progress' | 'completed' | 'skipped';
-  ai_enabled?: boolean | null;
-  ai_context?: { context?: string } | Record<string, unknown> | null;
-  suggested_prompt?: string | null;
-  type_specific_payload?: Record<string, unknown> | null;
 };
 
 type PlanAchievement = {
@@ -113,10 +104,17 @@ export default function EnglishLearningApp() {
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const [levelTestShown, setLevelTestShown] = useState(false);
+  const [selectedAiTaskId, setSelectedAiTaskId] = useState<string | null>(null);
 
   const primaryAiTask = useMemo<PlanTask | null>(() => {
+    if (selectedAiTaskId) {
+      const selected = tasks.find((task) => String(task.id) === selectedAiTaskId);
+      if (selected) {
+        return selected;
+      }
+    }
     return tasks.find((task) => task.ai_enabled) ?? null;
-  }, [tasks]);
+  }, [selectedAiTaskId, tasks]);
 
   const aiContextMessage = useMemo(() => {
     const rawContext = primaryAiTask?.ai_context;
@@ -155,6 +153,16 @@ export default function EnglishLearningApp() {
       startSession();
     }
   }, [primaryAiTask, hasSession, startSession]);
+
+  useEffect(() => {
+    if (!selectedAiTaskId) {
+      return;
+    }
+    const stillExists = tasks.some((task) => String(task.id) === selectedAiTaskId);
+    if (!stillExists) {
+      setSelectedAiTaskId(null);
+    }
+  }, [selectedAiTaskId, tasks]);
 
   // Показываем модальное окно теста, если уровень не определен
   useEffect(() => {
@@ -196,7 +204,10 @@ export default function EnglishLearningApp() {
     completeTask(String(taskId));
   };
 
-  const handleStartAITask = () => {
+  const handleStartAITask = (task?: DashboardTask) => {
+    if (task?.id) {
+      setSelectedAiTaskId(String(task.id));
+    }
     setActiveTab('ai');
     startSession();
   };
@@ -211,7 +222,7 @@ export default function EnglishLearningApp() {
   };
 
   if (!userId) {
-    const callbackUrl = '/app';
+    const callbackUrl = '/';
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-black/5 space-y-6">
@@ -297,6 +308,12 @@ export default function EnglishLearningApp() {
             topic={primaryAiTask?.title ?? 'Практика с AI'}
             messages={aiMessages.map(({ role, content }) => ({ role, content }))}
             isLoading={isAISessionLoading}
+            suggestedPrompt={
+              primaryAiTask?.suggested_prompt ??
+              ((primaryAiTask?.type_specific_payload as { recommended_prompt?: string } | undefined)
+                ?.recommended_prompt ??
+                null)
+            }
             onSendMessage={handleSendAIMessage}
           />
         )}
