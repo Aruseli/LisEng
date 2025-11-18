@@ -11,6 +11,18 @@
 export { LessonSnapshotService } from './lesson-snapshot-service';
 export { ShuHaRiService } from './shu-ha-ri-service';
 export { ArchivingService } from './archiving-service';
+export {
+  SnapshotInsightsService,
+  type SnapshotInsights,
+  type ProblemAreaSummary,
+  type KaizenMomentumSummary,
+  type ActiveRecallScheduleSummary,
+  type ActiveRecallSummary,
+  type ShuHaRiStageSummary,
+  type ShuHaRiSkillSummary,
+  type SnapshotInsightsOptions,
+} from './snapshot-insights-service';
+export { MethodologyAdvisor, type SnapshotTaskBlueprint } from './methodology-advisor';
 export { calculateSM2, getQualityScore, initializeSM2, type SM2Params, type SM2Result } from './sm2-algorithm';
 export type { ProblemArea, LessonSnapshotData, KaizenMetrics } from './lesson-snapshot-service';
 export type { ShuHaRiTestQuestion, ShuHaRiTestResult } from '@/types/shu-ha-ri';

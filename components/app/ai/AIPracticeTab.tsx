@@ -13,10 +13,11 @@ interface AIPracticeTabProps {
   topic: string;
   messages: Message[];
   isLoading: boolean;
+  suggestedPrompt?: string | null;
   onSendMessage: (message: string) => Promise<void> | void;
 }
 
-export function AIPracticeTab({ topic, messages, isLoading, onSendMessage }: AIPracticeTabProps) {
+export function AIPracticeTab({ topic, messages, isLoading, suggestedPrompt, onSendMessage }: AIPracticeTabProps) {
   const [draft, setDraft] = useState('');
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -28,6 +29,11 @@ export function AIPracticeTab({ topic, messages, isLoading, onSendMessage }: AIP
     await onSendMessage(payload);
   };
 
+  const handleUseSuggestedPrompt = () => {
+    if (!suggestedPrompt) return;
+    setDraft(suggestedPrompt);
+  };
+
   return (
     <div className="flex h-[520px] flex-col rounded-3xl bg-white p-6 shadow-sm">
       <div className="mb-4">
@@ -35,6 +41,20 @@ export function AIPracticeTab({ topic, messages, isLoading, onSendMessage }: AIP
         <p className="text-sm text-gray-500">
           Общайся короткими фразами, задавай вопросы и повторяй новые слова. AI мягко поправит ошибки.
         </p>
+        {suggestedPrompt && (
+          <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/40 p-3 text-xs text-indigo-700">
+            <p className="font-semibold text-indigo-900">Предложенный промпт</p>
+            <p>{suggestedPrompt}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="self-start"
+              onClick={handleUseSuggestedPrompt}
+            >
+              Вставить в поле
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-100 bg-gray-50 p-4">
