@@ -1,0 +1,1053 @@
+[
+  {
+    "infinitive": "be",
+    "past_simple": "was/were",
+    "past_participle": "been",
+    "group_number": 6,
+    "frequency": "must_know",
+    "difficulty": "easy",
+    "mnemonic_tip": "Самый важный глагол в английском. Запомни: I was, you were, he/she/it was, we/they were",
+    "related_verbs": ["have", "do"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I am a student.",
+        "sentence_ru": "Я студент.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I was at school yesterday.",
+        "sentence_ru": "Вчера я был в школе.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have been studying English for two years.",
+        "sentence_ru": "Я изучаю английский уже два года.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "have",
+    "past_simple": "had",
+    "past_participle": "had",
+    "group_number": 6,
+    "frequency": "must_know",
+    "difficulty": "easy",
+    "mnemonic_tip": "had-had-had - все три формы одинаковые",
+    "related_verbs": ["be", "do"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I have a book.",
+        "sentence_ru": "У меня есть книга.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I had breakfast this morning.",
+        "sentence_ru": "Я завтракал этим утром.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have had this book for a week.",
+        "sentence_ru": "У меня эта книга уже неделю.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "do",
+    "past_simple": "did",
+    "past_participle": "done",
+    "group_number": 6,
+    "frequency": "must_know",
+    "difficulty": "easy",
+    "mnemonic_tip": "do-did-done - вспомогательный глагол",
+    "related_verbs": ["be", "have"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I do my homework every day.",
+        "sentence_ru": "Я делаю домашнее задание каждый день.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I did my homework yesterday.",
+        "sentence_ru": "Вчера я сделал домашнее задание.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have done my homework.",
+        "sentence_ru": "Я сделал домашнее задание.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "go",
+    "past_simple": "went",
+    "past_participle": "gone",
+    "group_number": 6,
+    "frequency": "must_know",
+    "difficulty": "medium",
+    "mnemonic_tip": "go-went-gone - запомни 'went' для прошедшего времени",
+    "related_verbs": ["come"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I go to school every day.",
+        "sentence_ru": "Я хожу в школу каждый день.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I went to the park yesterday.",
+        "sentence_ru": "Вчера я ходил в парк.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have gone to London.",
+        "sentence_ru": "Я был в Лондоне.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "say",
+    "past_simple": "said",
+    "past_participle": "said",
+    "group_number": 2,
+    "frequency": "must_know",
+    "difficulty": "easy",
+    "mnemonic_tip": "say-said-said - вторая и третья формы одинаковые",
+    "related_verbs": ["tell", "speak"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I say hello to my friends.",
+        "sentence_ru": "Я говорю 'привет' своим друзьям.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I said goodbye to my teacher.",
+        "sentence_ru": "Я попрощался с учителем.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have said it many times.",
+        "sentence_ru": "Я говорил это много раз.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "see",
+    "past_simple": "saw",
+    "past_participle": "seen",
+    "group_number": 6,
+    "frequency": "must_know",
+    "difficulty": "medium",
+    "mnemonic_tip": "see-saw-seen - запомни 'saw' для прошедшего",
+    "related_verbs": ["look", "watch"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I see my friends at school.",
+        "sentence_ru": "Я вижу своих друзей в школе.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I saw a movie yesterday.",
+        "sentence_ru": "Вчера я смотрел фильм.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have seen this film before.",
+        "sentence_ru": "Я уже видел этот фильм.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "make",
+    "past_simple": "made",
+    "past_participle": "made",
+    "group_number": 2,
+    "frequency": "must_know",
+    "difficulty": "easy",
+    "mnemonic_tip": "make-made-made - вторая и третья формы одинаковые",
+    "related_verbs": ["do"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I make breakfast every morning.",
+        "sentence_ru": "Я готовлю завтрак каждое утро.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I made a cake yesterday.",
+        "sentence_ru": "Вчера я испек торт.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have made my bed.",
+        "sentence_ru": "Я заправил кровать.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "get",
+    "past_simple": "got",
+    "past_participle": "got/gotten",
+    "group_number": 2,
+    "frequency": "must_know",
+    "difficulty": "medium",
+    "mnemonic_tip": "get-got-got (BrE) или get-got-gotten (AmE)",
+    "related_verbs": ["take", "receive"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I get up at 7 o'clock.",
+        "sentence_ru": "Я встаю в 7 часов.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I got a new book yesterday.",
+        "sentence_ru": "Вчера я получил новую книгу.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have got a letter.",
+        "sentence_ru": "Я получил письмо.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "cut",
+    "past_simple": "cut",
+    "past_participle": "cut",
+    "group_number": 1,
+    "frequency": "high",
+    "difficulty": "easy",
+    "mnemonic_tip": "cut-cut-cut - все три формы одинаковые (Группа 1)",
+    "related_verbs": ["put", "hit", "let"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I cut the paper with scissors.",
+        "sentence_ru": "Я режу бумагу ножницами.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I cut my finger yesterday.",
+        "sentence_ru": "Вчера я порезал палец.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have cut the cake.",
+        "sentence_ru": "Я разрезал торт.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "put",
+    "past_simple": "put",
+    "past_participle": "put",
+    "group_number": 1,
+    "frequency": "high",
+    "difficulty": "easy",
+    "mnemonic_tip": "put-put-put - все три формы одинаковые (Группа 1)",
+    "related_verbs": ["cut", "hit", "let"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I put my books on the table.",
+        "sentence_ru": "Я кладу книги на стол.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I put my bag in the locker.",
+        "sentence_ru": "Я положил сумку в шкафчик.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have put everything in order.",
+        "sentence_ru": "Я привел всё в порядок.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "begin",
+    "past_simple": "began",
+    "past_participle": "begun",
+    "group_number": 3,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "begin-began-begun - паттерн i-a-u (как sing-sang-sung)",
+    "related_verbs": ["sing", "drink", "swim"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I begin my day with exercises.",
+        "sentence_ru": "Я начинаю свой день с упражнений.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I began to study English last year.",
+        "sentence_ru": "Я начал учить английский в прошлом году.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have begun this project.",
+        "sentence_ru": "Я начал этот проект.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "bring",
+    "past_simple": "brought",
+    "past_participle": "brought",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "bring-brought-brought - вторая и третья формы одинаковые",
+    "related_verbs": ["buy", "think", "teach"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I bring my lunch to school.",
+        "sentence_ru": "Я приношу обед в школу.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I brought my friend to the party.",
+        "sentence_ru": "Я привел друга на вечеринку.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have brought my homework.",
+        "sentence_ru": "Я принес домашнее задание.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "buy",
+    "past_simple": "bought",
+    "past_participle": "bought",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "buy-bought-bought - вторая и третья формы одинаковые",
+    "related_verbs": ["bring", "think", "teach"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I buy books at the bookstore.",
+        "sentence_ru": "Я покупаю книги в книжном магазине.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I bought a new pen yesterday.",
+        "sentence_ru": "Вчера я купил новую ручку.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have bought all the supplies.",
+        "sentence_ru": "Я купил все необходимые вещи.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "think",
+    "past_simple": "thought",
+    "past_participle": "thought",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "think-thought-thought - вторая и третья формы одинаковые",
+    "related_verbs": ["bring", "buy", "teach"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I think about my future.",
+        "sentence_ru": "Я думаю о своем будущем.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I thought about the problem.",
+        "sentence_ru": "Я думал о проблеме.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have thought about it carefully.",
+        "sentence_ru": "Я тщательно об этом подумал.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "teach",
+    "past_simple": "taught",
+    "past_participle": "taught",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "teach-taught-taught - вторая и третья формы одинаковые",
+    "related_verbs": ["learn"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "My teacher teaches English.",
+        "sentence_ru": "Мой учитель преподает английский.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "She taught me how to read.",
+        "sentence_ru": "Она научила меня читать.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have taught this lesson many times.",
+        "sentence_ru": "Я преподавал этот урок много раз.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "sing",
+    "past_simple": "sang",
+    "past_participle": "sung",
+    "group_number": 3,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "sing-sang-sung - паттерн i-a-u (как begin-began-begun)",
+    "related_verbs": ["begin", "drink", "swim"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I sing songs in the shower.",
+        "sentence_ru": "Я пою песни в душе.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I sang at the concert yesterday.",
+        "sentence_ru": "Вчера я пел на концерте.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have sung this song before.",
+        "sentence_ru": "Я уже пел эту песню.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "drink",
+    "past_simple": "drank",
+    "past_participle": "drunk",
+    "group_number": 3,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "drink-drank-drunk - паттерн i-a-u",
+    "related_verbs": ["begin", "sing", "swim"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I drink water every day.",
+        "sentence_ru": "Я пью воду каждый день.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I drank juice this morning.",
+        "sentence_ru": "Этим утром я пил сок.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have drunk all the water.",
+        "sentence_ru": "Я выпил всю воду.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "swim",
+    "past_simple": "swam",
+    "past_participle": "swum",
+    "group_number": 3,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "swim-swam-swum - паттерн i-a-u",
+    "related_verbs": ["begin", "sing", "drink"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I swim in the pool every week.",
+        "sentence_ru": "Я плаваю в бассейне каждую неделю.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I swam in the sea last summer.",
+        "sentence_ru": "Прошлым летом я плавал в море.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have swum 1000 meters.",
+        "sentence_ru": "Я проплыл 1000 метров.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "build",
+    "past_simple": "built",
+    "past_participle": "built",
+    "group_number": 4,
+    "frequency": "medium",
+    "difficulty": "medium",
+    "mnemonic_tip": "build-built-built - окончание -d/-t во второй и третьей форме",
+    "related_verbs": ["send", "feel", "keep"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I build models in my free time.",
+        "sentence_ru": "Я строю модели в свободное время.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I built a sandcastle yesterday.",
+        "sentence_ru": "Вчера я построил замок из песка.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have built many things.",
+        "sentence_ru": "Я построил много вещей.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "send",
+    "past_simple": "sent",
+    "past_participle": "sent",
+    "group_number": 4,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "send-sent-sent - окончание -d/-t",
+    "related_verbs": ["build", "feel", "keep"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I send messages to my friends.",
+        "sentence_ru": "Я отправляю сообщения друзьям.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I sent an email yesterday.",
+        "sentence_ru": "Вчера я отправил письмо.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have sent all the invitations.",
+        "sentence_ru": "Я отправил все приглашения.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "feel",
+    "past_simple": "felt",
+    "past_participle": "felt",
+    "group_number": 4,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "feel-felt-felt - окончание -d/-t",
+    "related_verbs": ["build", "send", "keep"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I feel happy today.",
+        "sentence_ru": "Сегодня я чувствую себя счастливым.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I felt tired yesterday.",
+        "sentence_ru": "Вчера я чувствовал себя усталым.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have felt better recently.",
+        "sentence_ru": "В последнее время я чувствую себя лучше.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "keep",
+    "past_simple": "kept",
+    "past_participle": "kept",
+    "group_number": 4,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "keep-kept-kept - окончание -d/-t",
+    "related_verbs": ["build", "send", "feel"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I keep my room tidy.",
+        "sentence_ru": "Я содержу свою комнату в порядке.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I kept the secret.",
+        "sentence_ru": "Я хранил секрет.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have kept this photo for years.",
+        "sentence_ru": "Я храню эту фотографию годами.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "break",
+    "past_simple": "broke",
+    "past_participle": "broken",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "break-broke-broken - третья форма заканчивается на -en",
+    "related_verbs": ["speak", "choose"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I break eggs to make an omelet.",
+        "sentence_ru": "Я разбиваю яйца, чтобы сделать омлет.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I broke my phone yesterday.",
+        "sentence_ru": "Вчера я сломал телефон.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have broken the window.",
+        "sentence_ru": "Я разбил окно.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "speak",
+    "past_simple": "spoke",
+    "past_participle": "spoken",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "speak-spoke-spoken - третья форма заканчивается на -en",
+    "related_verbs": ["break", "choose"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I speak English every day.",
+        "sentence_ru": "Я говорю по-английски каждый день.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I spoke to my teacher yesterday.",
+        "sentence_ru": "Вчера я разговаривал с учителем.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have spoken to him many times.",
+        "sentence_ru": "Я разговаривал с ним много раз.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "choose",
+    "past_simple": "chose",
+    "past_participle": "chosen",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "choose-chose-chosen - третья форма заканчивается на -en",
+    "related_verbs": ["break", "speak"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I choose my clothes carefully.",
+        "sentence_ru": "Я тщательно выбираю одежду.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I chose the blue shirt.",
+        "sentence_ru": "Я выбрал синюю рубашку.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have chosen my favorite book.",
+        "sentence_ru": "Я выбрал свою любимую книгу.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "hit",
+    "past_simple": "hit",
+    "past_participle": "hit",
+    "group_number": 1,
+    "frequency": "medium",
+    "difficulty": "easy",
+    "mnemonic_tip": "hit-hit-hit - все три формы одинаковые (Группа 1)",
+    "related_verbs": ["cut", "put", "let"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I hit the ball with a bat.",
+        "sentence_ru": "Я бью по мячу битой.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I hit the target yesterday.",
+        "sentence_ru": "Вчера я попал в цель.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have hit the ball many times.",
+        "sentence_ru": "Я бил по мячу много раз.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "let",
+    "past_simple": "let",
+    "past_participle": "let",
+    "group_number": 1,
+    "frequency": "high",
+    "difficulty": "easy",
+    "mnemonic_tip": "let-let-let - все три формы одинаковые (Группа 1)",
+    "related_verbs": ["cut", "put", "hit"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I let my friend borrow my book.",
+        "sentence_ru": "Я разрешаю другу взять мою книгу.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I let him go home early.",
+        "sentence_ru": "Я разрешил ему уйти домой раньше.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have let him use my computer.",
+        "sentence_ru": "Я разрешил ему использовать мой компьютер.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "read",
+    "past_simple": "read",
+    "past_participle": "read",
+    "group_number": 1,
+    "frequency": "high",
+    "difficulty": "easy",
+    "mnemonic_tip": "read-read-read - все три формы одинаковые, но произношение разное (reed-red-red)",
+    "related_verbs": ["write"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I read books every day.",
+        "sentence_ru": "Я читаю книги каждый день.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I read a great book yesterday.",
+        "sentence_ru": "Вчера я прочитал отличную книгу.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have read this book three times.",
+        "sentence_ru": "Я читал эту книгу три раза.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "write",
+    "past_simple": "wrote",
+    "past_participle": "written",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "write-wrote-written - третья форма заканчивается на -en",
+    "related_verbs": ["read"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I write in my diary every evening.",
+        "sentence_ru": "Я пишу в дневнике каждый вечер.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I wrote a letter yesterday.",
+        "sentence_ru": "Вчера я написал письмо.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have written many stories.",
+        "sentence_ru": "Я написал много рассказов.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "come",
+    "past_simple": "came",
+    "past_participle": "come",
+    "group_number": 6,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "come-came-come - первая и третья формы одинаковые",
+    "related_verbs": ["go"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I come to school by bus.",
+        "sentence_ru": "Я приезжаю в школу на автобусе.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I came home late yesterday.",
+        "sentence_ru": "Вчера я пришел домой поздно.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have come to see you.",
+        "sentence_ru": "Я пришел, чтобы увидеть тебя.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "take",
+    "past_simple": "took",
+    "past_participle": "taken",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "take-took-taken - третья форма заканчивается на -en",
+    "related_verbs": ["get", "bring"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I take my umbrella when it rains.",
+        "sentence_ru": "Я беру зонт, когда идет дождь.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I took my books to school.",
+        "sentence_ru": "Я взял книги в школу.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have taken many photos.",
+        "sentence_ru": "Я сделал много фотографий.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "know",
+    "past_simple": "knew",
+    "past_participle": "known",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "know-knew-known - третья форма заканчивается на -n",
+    "related_verbs": ["think"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I know the answer.",
+        "sentence_ru": "Я знаю ответ.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I knew him when we were children.",
+        "sentence_ru": "Я знал его, когда мы были детьми.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have known her for years.",
+        "sentence_ru": "Я знаю ее годами.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "find",
+    "past_simple": "found",
+    "past_participle": "found",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "find-found-found - вторая и третья формы одинаковые",
+    "related_verbs": ["lose"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I find my keys every morning.",
+        "sentence_ru": "Я нахожу ключи каждое утро.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I found my lost book yesterday.",
+        "sentence_ru": "Вчера я нашел потерянную книгу.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have found the solution.",
+        "sentence_ru": "Я нашел решение.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "give",
+    "past_simple": "gave",
+    "past_participle": "given",
+    "group_number": 5,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "give-gave-given - третья форма заканчивается на -en",
+    "related_verbs": ["take", "get"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I give presents to my friends.",
+        "sentence_ru": "Я дарю подарки своим друзьям.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I gave my sister a book.",
+        "sentence_ru": "Я подарил сестре книгу.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have given many gifts.",
+        "sentence_ru": "Я подарил много подарков.",
+        "context": "Present Perfect"
+      }
+    ]
+  },
+  {
+    "infinitive": "tell",
+    "past_simple": "told",
+    "past_participle": "told",
+    "group_number": 2,
+    "frequency": "high",
+    "difficulty": "medium",
+    "mnemonic_tip": "tell-told-told - вторая и третья формы одинаковые",
+    "related_verbs": ["say", "speak"],
+    "examples": [
+      {
+        "form_type": "base",
+        "sentence_en": "I tell stories to my friends.",
+        "sentence_ru": "Я рассказываю истории друзьям.",
+        "context": "Present Simple"
+      },
+      {
+        "form_type": "past",
+        "sentence_en": "I told him the truth.",
+        "sentence_ru": "Я сказал ему правду.",
+        "context": "Past Simple"
+      },
+      {
+        "form_type": "participle",
+        "sentence_en": "I have told you many times.",
+        "sentence_ru": "Я говорил тебе много раз.",
+        "context": "Present Perfect"
+      }
+    ]
+  }
+]
+

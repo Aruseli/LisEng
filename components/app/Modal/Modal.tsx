@@ -4,10 +4,10 @@ import { useEffect, useState, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { IconButton } from '../Buttons/IconButton';
-import { X } from 'lucide-react';
 import s from './Modal.module.scss';
 import { overlayVariants, modalContentVariants, modalVariants, type ModalPosition } from './animation';
 import { useModalStore } from '@/store/modalStore'; 
+import { Close } from '@/components/icons/Close';
 
 interface ModalProps {
   onClose: () => void;
@@ -67,7 +67,7 @@ export const Modal = ({
           <IconButton 
             onClick={onClose} 
             ariaLabel='Закрыть'
-            icon={<X />}
+            icon={<Close className='size-6' />}
           />
         </div>
         {children}
