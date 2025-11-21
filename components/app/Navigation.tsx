@@ -1,16 +1,22 @@
 'use client';
 
 import { IconButton } from "./Buttons/IconButton";
-import { Calendar, Book, Sparkles, ChartLine, CheckCircle, LogOut } from "lucide-react";
 import { Tooltip } from "./Tooltip";
 import { Button } from "./Buttons/Button";
+import { Dictionary } from "../icons/Dictionary";
+import { Calendar } from "../icons/Calendar";
+import { AIPractice } from "../icons/AIPractice";
+import { Verbs } from "../icons/Verbs";
+import { LevelTest } from "../icons/LevelTest";
+import { Progress } from "../icons/Progress";
 
 const tabs = [
   { id: 'dashboard', label: 'План на день', icon: Calendar },
-  { id: 'vocabulary', label: 'Словарь', icon: Book },
-  { id: 'ai', label: 'AI практика', icon: Sparkles },
-  { id: 'progress', label: 'Прогресс', icon: ChartLine },
-  { id: 'level-test', label: 'Тест уровня', icon: CheckCircle },
+  { id: 'vocabulary', label: 'Словарь', icon: Dictionary },
+  { id: 'verbs', label: 'Неправильные глаголы', icon: Verbs },
+  { id: 'ai', label: 'AI практика', icon: AIPractice },
+  { id: 'progress', label: 'Прогресс', icon: Progress },
+  { id: 'level-test', label: 'Тест уровня', icon: LevelTest },
 ] as const;
 
 interface NavigationProps {
@@ -41,7 +47,7 @@ export function Navigation({ activeTab, onTabChange, onRefresh, onLevelTest, isL
               <Tooltip key={tab.id} message={tab.label}>
                 <IconButton
                   key={tab.id}
-                  icon={<IconComponent className="size-6" strokeWidth={1} />}
+                  icon={<IconComponent className="size-10" />}
                   ariaLabel={tab.label}
                   variant={isActive ? "outline" : "ghost"}
                   className={isActive ? "bg-accent/10 border-accent text-accent" : ""}
