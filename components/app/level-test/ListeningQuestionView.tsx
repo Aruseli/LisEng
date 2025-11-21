@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { ListeningQuestion, AnswerMetrics } from '@/types/level-test';
-import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
 import { useSpeechRecognition } from '@/components/speachComponents/hooks_useSpeechRecognition';
 import { usePronunciationAnalysis } from '@/components/speachComponents/hooks_usePronunciationAnalysis';
 import { Button } from '../Buttons/Button';
+import { ListeningPlayer } from '@/components/app/listening/ListeningPlayer';
 
 interface ListeningQuestionViewProps {
   question: ListeningQuestion;
@@ -20,18 +20,7 @@ export function ListeningQuestionView({
 }: ListeningQuestionViewProps) {
   const normalizedAnswer = useMemo(() => (Array.isArray(answer) ? answer : []), [answer]);
   const [localAnswers, setLocalAnswers] = useState<number[]>(normalizedAnswer);
-  const [showTranscript, setShowTranscript] = useState(false);
   const [pronunciationError, setPronunciationError] = useState<string | null>(null);
-  const {
-    isSpeaking,
-    speak,
-    cancel,
-  } = useSpeechSynthesis({
-    language: 'en-US',
-    rate: 0.95,
-    pitch: 1,
-  });
-
   const pronunciation = usePronunciationAnalysis();
 
   const {
@@ -94,41 +83,11 @@ export function ListeningQuestionView({
       </h3>
       
       <div className="space-y-4">
-        {question.audioUrl ? (
-          <audio controls className="w-full">
-            <source src={question.audioUrl} type="audio/mpeg" />
-            Ваш браузер не поддерживает аудио элемент.
-          </audio>
-        ) : (
-          <div className="space-y-3">
-            <div className="p-4 bg-emerald-50 border border-primary rounded-xl">
-              <p className="text-sm text-primary-deep">
-                Аудио дорожка генерируется из транскрипта. Нажмите кнопку ниже, чтобы прослушать текст с помощью синтезатора речи вашего браузера.
-              </p>
-            </div>
-            <Button
-              onClick={() => (isSpeaking ? cancel() : speak(question.transcript))}
-              variant={isSpeaking ? 'destructive' : 'secondary'}
-            >
-              {isSpeaking ? 'Остановить озвучку' : 'Прослушать текст'}
-            </Button>
-          </div>
-        )}
-
-        <Button
-          onClick={() => setShowTranscript(!showTranscript)}
-          variant="link"
-        >
-          {showTranscript ? 'Скрыть' : 'Показать'} транскрипт
-        </Button>
-
-        {showTranscript && (
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
-              {question.transcript}
-            </p>
-          </div>
-        )}
+        <ListeningPlayer
+          transcript={question.transcript}
+          audioUrl={question.audioUrl}
+          className="space-y-3"
+        />
       </div>
 
       <div className="space-y-3 rounded-2xl border border-blue-100 bg-white p-4">

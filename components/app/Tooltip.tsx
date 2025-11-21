@@ -47,7 +47,7 @@ export const Tooltip = ({ children, message, placement = "top" }: TooltipProps) 
       {open && (
         <div
           ref={refs.setFloating}
-          className="bg-nm-base text-foreground text-sm px-2 py-1 rounded-md shadow-sm w-fit"
+          className="bg-background text-foreground text-sm px-2 py-1 border border-primary rounded-md shadow-sm w-fit"
           style={{
             ...floatingStyles,
             zIndex: 1000,
@@ -58,7 +58,7 @@ export const Tooltip = ({ children, message, placement = "top" }: TooltipProps) 
           <FloatingArrow
             ref={arrowRef}
             context={context}
-            className="fill-nm-base"
+            className="fill-primary"
             width={14}
             height={7}
           />

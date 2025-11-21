@@ -30,9 +30,9 @@ export interface LessonMaterials {
   keyPoints: string[];
   examples: LessonExample[];
   readingPassages?: Array<{
-    title: string;
-    text: string;
-    targetWords: string[];
+    title?: string;
+    text?: string;
+    targetWords?: string[];
   }>;
   pronunciationScript?: string | null;
   targetWords?: string[];
@@ -118,18 +118,74 @@ export class LessonContentService {
     targetLevel: string;
   }) {
     const { task, currentLevel, targetLevel } = params;
+    const typeSpecificDirective = (() => {
+      switch (task.type) {
+        case 'listening':
+          return 'Обязательно включи блок "readingPassages" с полным текстом диалога (5-8 реплик), чтобы пользователь мог видеть транскрипт.';
+        case 'reading':
+          return 'Обязательно создай блок "readingPassages" с цельным текстом (минимум 120-150 слов) по теме урока.';
+        case 'vocabulary':
+          return 'ВАЖНО: Для уроков vocabulary (Active Recall) НЕ создавай questions в exercise. Вместо этого создай только overview и explanation о методе Active Recall. Карточки будут загружены автоматически из базы данных. Exercise должен содержать только title и steps с инструкциями по работе с карточками.';
+        case 'grammar':
+          return 'Для грамматических тем создавай ПОДРОБНЫЕ и РАЗВЕРНУТЫЕ объяснения (минимум 5-7 пунктов в explanation). Каждый пункт должен быть полным предложением или небольшим абзацем. Используй жизненные примеры из повседневной жизни подростка: школа, друзья, хобби, мобильные и настольные игры, литература, социальные сети, современная музыка. Объясняй не только правило, но и когда и почему его используют. Добавляй контекст использования и типичные ошибки.';
+        default:
+          return '';
+      }
+    })();
+
+    const grammarSpecificNote = 'ВАЖНО: В поле "explanation" НЕ используй нумерацию (1., 2., 3. или 1), 2), 3)). Просто перечисляй пункты описания без цифр и скобок, так как нумерация будет добавлена автоматически в интерфейсе. Каждый пункт должен быть отдельным элементом массива.';
+
     const basePrompt = [
       `Ты — наставник японских методик (Кайдзен, Кумон, Shu-Ha-Ri, Active Recall).`,
       `Создай учебный мини-урок для подростка, который учит английский.`,
       `Тип задания: ${task.type}. Заголовок: ${task.title}.`,
       task.description ? `Описание задания: ${task.description}` : '',
       `Текущий уровень ученика: ${currentLevel}. Цель: ${targetLevel}.`,
+      typeSpecificDirective,
+      grammarSpecificNote,
       `Структура JSON (строго соблюдай формат):`,
-      `{
+      task.type === 'grammar'
+        ? `{
   "lesson": {
     "overview": "короткое описание урока",
-    "explanation": ["пошаговое объяснение темы"],
+    "explanation": ["первый пункт подробного объяснения без нумерации (минимум 5-7 пунктов)", "второй пункт с жизненными примерами", "третий пункт о контексте использования", "четвертый пункт о типичных ошибках", "пятый пункт с дополнительными примерами"],
     "keyPoints": ["ключевой пункт"],
+    "examples": [
+      { "prompt": "пример", "explanation": "разбор" }
+    ],
+    "targetWords": ["слово1", "слово2"]
+  },
+  "exercise": {
+    "title": "название задания",
+    "steps": ["шаг 1", "шаг 2"],
+    "questions": [
+      {
+        "prompt": "вопрос/упражнение",
+        "expectedAnswer": "пример ответа",
+        "hint": "подсказка",
+        "evaluationCriteria": ["критерий"]
+      }
+    ]
+  }
+}`
+        : task.type === 'vocabulary'
+        ? `{
+  "lesson": {
+    "overview": "короткое описание метода Active Recall",
+    "explanation": ["пункт объяснения метода без нумерации", "еще один пункт о работе с карточками"],
+    "keyPoints": ["ключевой пункт"],
+    "targetWords": []
+  },
+  "exercise": {
+    "title": "Работа с карточками",
+    "steps": ["Возьмите стопку карточек", "На одной стороне слово, на другой - перевод и пример", "Попробуйте вспомнить значение слова", "Проверьте себя, перевернув карточку", "Рассортируйте карточки на выученные и требующие повторения"],
+    "questions": []
+  }
+}`
+        : `{
+  "lesson": {
+    "overview": "короткое описание урока",
+    "explanation": ["пункт объяснения без нумерации", "еще один пункт без нумерации"],
     "examples": [
       { "prompt": "пример", "explanation": "разбор" }
     ],
@@ -164,10 +220,13 @@ export class LessonContentService {
       .filter(Boolean)
       .join('\n');
 
+    const systemPrompt = task.type === 'grammar'
+      ? 'Ты — опытный методист английского, создающий структурированные уроки с заданиями и примерами. Для грамматических тем ОБЯЗАТЕЛЬНО создавай ПОДРОБНЫЕ и РАЗВЕРНУТЫЕ объяснения (минимум 5-7 пунктов). Каждый пункт должен быть полным и информативным. Используй жизненные примеры из повседневной жизни подростка (школа, друзья, хобби, игры, литература, соцсети, музыка). Объясняй не только правило, но и когда и почему его используют, добавляй контекст и типичные ошибки.'
+      : 'Ты — опытный методист английского, создающий структурированные уроки с заданиями и примерами.';
+
     return await generateJSON<any>(basePrompt, {
       maxTokens: 2000,
-      systemPrompt:
-        'Ты — опытный методист английского, создающий структурированные уроки с заданиями и примерами.',
+      systemPrompt,
     });
   }
 
@@ -180,9 +239,27 @@ export class LessonContentService {
 
     const safeArray = <T>(value: any): T[] => (Array.isArray(value) ? value : []);
 
+    const readingPassagesRaw = safeArray<{ title: string; text: string; targetWords: string[] }>(
+      lesson.readingPassages
+    ).slice(0, 2);
+    const ensuredReadingPassages = this.ensureReadingPassages(
+      readingPassagesRaw,
+      params.task.type,
+      params.task.description ?? ''
+    );
+
+    // Убираем нумерацию из explanation (1., 2., 3. или 1), 2), 3) и т.д.)
+    const cleanExplanation = safeArray<string>(lesson.explanation)
+      .map((item) => {
+        // Убираем нумерацию в начале строки: "1. ", "2. ", "1) ", "2) " и т.д.
+        return item.replace(/^\d+[\.\)]\s+/, '').trim();
+      })
+      .filter((item) => Boolean(item) && item.length > 0)
+      .slice(0, 8);
+
     return {
       overview: lesson.overview || `Разберём тему: ${params.task.title}`,
-      explanation: safeArray<string>(lesson.explanation).slice(0, 8),
+      explanation: cleanExplanation,
       keyPoints: safeArray<string>(lesson.keyPoints).slice(0, 8),
       examples: safeArray(lesson.examples)
         .map((item: any) => ({
@@ -191,9 +268,7 @@ export class LessonContentService {
         }))
         .filter((item) => item.prompt && item.explanation)
         .slice(0, 5),
-      readingPassages: safeArray<{ title: string; text: string; targetWords: string[] }>(
-        lesson.readingPassages
-      ).slice(0, 2),
+      readingPassages: ensuredReadingPassages,
       pronunciationScript:
         typeof lesson.pronunciationScript === 'string' ? lesson.pronunciationScript : null,
       targetWords: safeArray<string>(lesson.targetWords).slice(0, 10),
@@ -232,9 +307,9 @@ export class LessonContentService {
     return {
       overview: `Разбираем тему "${task.title}" на уровне ${params.currentLevel}.`,
       explanation: [
-        '1. Прочитай правило или описание темы.',
-        '2. Обрати внимание на примеры.',
-        '3. Попробуй составить собственные предложения.',
+        'Прочитай правило или описание темы.',
+        'Обрати внимание на примеры.',
+        'Попробуй составить собственные предложения.',
       ],
       keyPoints: ['Повтори основу правила', 'Собери 2-3 примера', 'Применяй в речи и письме'],
       examples: [
@@ -264,6 +339,29 @@ export class LessonContentService {
         taskType: task.type,
       },
     };
+  }
+
+  private ensureReadingPassages(
+    passages: Array<{ title?: string; text?: string; targetWords?: string[] }>,
+    taskType: string,
+    taskDescription?: string | null
+  ) {
+    if (
+      (taskType === 'reading' || taskType === 'listening') &&
+      (passages.length === 0 || !passages[0]?.text)
+    ) {
+      const fallbackText =
+        taskDescription?.trim() ||
+        'Контент временно недоступен. Используй тему и ключевые слова урока, чтобы составить короткий текст самостоятельно.';
+      return [
+        {
+          title: taskType === 'reading' ? 'Reading passage' : 'Listening transcript',
+          text: fallbackText,
+          targetWords: [],
+        },
+      ];
+    }
+    return passages;
   }
 }
 

@@ -66,7 +66,7 @@ export function WritingQuestionView({
             className={
               wordCount >= question.wordLimit * 0.8 && wordCount <= question.wordLimit * 1.2
                 ? 'text-primary-deep'
-                : 'text-amber-600'
+                : 'text-destructive'
             }
           >
             Цель: {question.wordLimit} слов
