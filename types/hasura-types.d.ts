@@ -63,6 +63,23 @@ export type Int_Comparison_Exp = {
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
+export type String_Array_Comparison_Exp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _eq?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _gt?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _gte?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _in?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
+  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _lte?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _neq?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  _nin?: InputMaybe<Array<Array<Scalars["String"]["input"]>>>;
+};
+
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type String_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["String"]["input"]>;
   _gt?: InputMaybe<Scalars["String"]["input"]>;
@@ -5904,6 +5921,385 @@ export type Invites_Variance_Fields = {
   updated_at?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_Verbs = {
+  __typename?: "irregular_verbs";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  difficulty?: Maybe<Scalars["String"]["output"]>;
+  frequency?: Maybe<Scalars["String"]["output"]>;
+  group_number?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  infinitive: Scalars["String"]["output"];
+  mnemonic_tip?: Maybe<Scalars["String"]["output"]>;
+  past_participle: Scalars["String"]["output"];
+  past_simple: Scalars["String"]["output"];
+  related_verbs?: Maybe<Array<Scalars["String"]["output"]>>;
+  /** An array relationship */
+  verb_examples: Array<Verb_Examples>;
+  /** An aggregate relationship */
+  verb_examples_aggregate: Verb_Examples_Aggregate;
+  /** An array relationship */
+  verb_learning_progresses: Array<Verb_Learning_Progress>;
+  /** An aggregate relationship */
+  verb_learning_progresses_aggregate: Verb_Learning_Progress_Aggregate;
+  /** An array relationship */
+  verb_review_histories: Array<Verb_Review_History>;
+  /** An aggregate relationship */
+  verb_review_histories_aggregate: Verb_Review_History_Aggregate;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_ExamplesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_Examples_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_Learning_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_Learning_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_Review_HistoriesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "irregular_verbs" */
+export type Irregular_VerbsVerb_Review_Histories_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+/** aggregated selection of "irregular_verbs" */
+export type Irregular_Verbs_Aggregate = {
+  __typename?: "irregular_verbs_aggregate";
+  aggregate?: Maybe<Irregular_Verbs_Aggregate_Fields>;
+  nodes: Array<Irregular_Verbs>;
+};
+
+/** aggregate fields of "irregular_verbs" */
+export type Irregular_Verbs_Aggregate_Fields = {
+  __typename?: "irregular_verbs_aggregate_fields";
+  avg?: Maybe<Irregular_Verbs_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Irregular_Verbs_Max_Fields>;
+  min?: Maybe<Irregular_Verbs_Min_Fields>;
+  stddev?: Maybe<Irregular_Verbs_Stddev_Fields>;
+  stddev_pop?: Maybe<Irregular_Verbs_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Irregular_Verbs_Stddev_Samp_Fields>;
+  sum?: Maybe<Irregular_Verbs_Sum_Fields>;
+  var_pop?: Maybe<Irregular_Verbs_Var_Pop_Fields>;
+  var_samp?: Maybe<Irregular_Verbs_Var_Samp_Fields>;
+  variance?: Maybe<Irregular_Verbs_Variance_Fields>;
+};
+
+/** aggregate fields of "irregular_verbs" */
+export type Irregular_Verbs_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Irregular_Verbs_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate avg on columns */
+export type Irregular_Verbs_Avg_Fields = {
+  __typename?: "irregular_verbs_avg_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Boolean expression to filter rows from the table "irregular_verbs". All fields are combined with a logical 'AND'. */
+export type Irregular_Verbs_Bool_Exp = {
+  _and?: InputMaybe<Array<Irregular_Verbs_Bool_Exp>>;
+  _not?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+  _or?: InputMaybe<Array<Irregular_Verbs_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  difficulty?: InputMaybe<String_Comparison_Exp>;
+  frequency?: InputMaybe<String_Comparison_Exp>;
+  group_number?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  infinitive?: InputMaybe<String_Comparison_Exp>;
+  mnemonic_tip?: InputMaybe<String_Comparison_Exp>;
+  past_participle?: InputMaybe<String_Comparison_Exp>;
+  past_simple?: InputMaybe<String_Comparison_Exp>;
+  related_verbs?: InputMaybe<String_Array_Comparison_Exp>;
+  verb_examples?: InputMaybe<Verb_Examples_Bool_Exp>;
+  verb_examples_aggregate?: InputMaybe<Verb_Examples_Aggregate_Bool_Exp>;
+  verb_learning_progresses?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  verb_learning_progresses_aggregate?: InputMaybe<Verb_Learning_Progress_Aggregate_Bool_Exp>;
+  verb_review_histories?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  verb_review_histories_aggregate?: InputMaybe<Verb_Review_History_Aggregate_Bool_Exp>;
+};
+
+/** unique or primary key constraints on table "irregular_verbs" */
+export enum Irregular_Verbs_Constraint {
+  /** unique or primary key constraint on columns "infinitive" */
+  IrregularVerbsInfinitiveKey = "irregular_verbs_infinitive_key",
+  /** unique or primary key constraint on columns "id" */
+  IrregularVerbsPkey = "irregular_verbs_pkey",
+}
+
+/** input type for incrementing numeric columns in table "irregular_verbs" */
+export type Irregular_Verbs_Inc_Input = {
+  group_number?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "irregular_verbs" */
+export type Irregular_Verbs_Insert_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  difficulty?: InputMaybe<Scalars["String"]["input"]>;
+  frequency?: InputMaybe<Scalars["String"]["input"]>;
+  group_number?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  infinitive?: InputMaybe<Scalars["String"]["input"]>;
+  mnemonic_tip?: InputMaybe<Scalars["String"]["input"]>;
+  past_participle?: InputMaybe<Scalars["String"]["input"]>;
+  past_simple?: InputMaybe<Scalars["String"]["input"]>;
+  related_verbs?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  verb_examples?: InputMaybe<Verb_Examples_Arr_Rel_Insert_Input>;
+  verb_learning_progresses?: InputMaybe<Verb_Learning_Progress_Arr_Rel_Insert_Input>;
+  verb_review_histories?: InputMaybe<Verb_Review_History_Arr_Rel_Insert_Input>;
+};
+
+/** aggregate max on columns */
+export type Irregular_Verbs_Max_Fields = {
+  __typename?: "irregular_verbs_max_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  difficulty?: Maybe<Scalars["String"]["output"]>;
+  frequency?: Maybe<Scalars["String"]["output"]>;
+  group_number?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  infinitive?: Maybe<Scalars["String"]["output"]>;
+  mnemonic_tip?: Maybe<Scalars["String"]["output"]>;
+  past_participle?: Maybe<Scalars["String"]["output"]>;
+  past_simple?: Maybe<Scalars["String"]["output"]>;
+  related_verbs?: Maybe<Array<Scalars["String"]["output"]>>;
+};
+
+/** aggregate min on columns */
+export type Irregular_Verbs_Min_Fields = {
+  __typename?: "irregular_verbs_min_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  difficulty?: Maybe<Scalars["String"]["output"]>;
+  frequency?: Maybe<Scalars["String"]["output"]>;
+  group_number?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  infinitive?: Maybe<Scalars["String"]["output"]>;
+  mnemonic_tip?: Maybe<Scalars["String"]["output"]>;
+  past_participle?: Maybe<Scalars["String"]["output"]>;
+  past_simple?: Maybe<Scalars["String"]["output"]>;
+  related_verbs?: Maybe<Array<Scalars["String"]["output"]>>;
+};
+
+/** response of any mutation on the table "irregular_verbs" */
+export type Irregular_Verbs_Mutation_Response = {
+  __typename?: "irregular_verbs_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Irregular_Verbs>;
+};
+
+/** input type for inserting object relation for remote table "irregular_verbs" */
+export type Irregular_Verbs_Obj_Rel_Insert_Input = {
+  data: Irregular_Verbs_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Irregular_Verbs_On_Conflict>;
+};
+
+/** on_conflict condition type for table "irregular_verbs" */
+export type Irregular_Verbs_On_Conflict = {
+  constraint: Irregular_Verbs_Constraint;
+  update_columns?: Array<Irregular_Verbs_Update_Column>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "irregular_verbs". */
+export type Irregular_Verbs_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  difficulty?: InputMaybe<Order_By>;
+  frequency?: InputMaybe<Order_By>;
+  group_number?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  infinitive?: InputMaybe<Order_By>;
+  mnemonic_tip?: InputMaybe<Order_By>;
+  past_participle?: InputMaybe<Order_By>;
+  past_simple?: InputMaybe<Order_By>;
+  related_verbs?: InputMaybe<Order_By>;
+  verb_examples_aggregate?: InputMaybe<Verb_Examples_Aggregate_Order_By>;
+  verb_learning_progresses_aggregate?: InputMaybe<Verb_Learning_Progress_Aggregate_Order_By>;
+  verb_review_histories_aggregate?: InputMaybe<Verb_Review_History_Aggregate_Order_By>;
+};
+
+/** primary key columns input for table: irregular_verbs */
+export type Irregular_Verbs_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "irregular_verbs" */
+export enum Irregular_Verbs_Select_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Difficulty = "difficulty",
+  /** column name */
+  Frequency = "frequency",
+  /** column name */
+  GroupNumber = "group_number",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Infinitive = "infinitive",
+  /** column name */
+  MnemonicTip = "mnemonic_tip",
+  /** column name */
+  PastParticiple = "past_participle",
+  /** column name */
+  PastSimple = "past_simple",
+  /** column name */
+  RelatedVerbs = "related_verbs",
+}
+
+/** input type for updating data in table "irregular_verbs" */
+export type Irregular_Verbs_Set_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  difficulty?: InputMaybe<Scalars["String"]["input"]>;
+  frequency?: InputMaybe<Scalars["String"]["input"]>;
+  group_number?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  infinitive?: InputMaybe<Scalars["String"]["input"]>;
+  mnemonic_tip?: InputMaybe<Scalars["String"]["input"]>;
+  past_participle?: InputMaybe<Scalars["String"]["input"]>;
+  past_simple?: InputMaybe<Scalars["String"]["input"]>;
+  related_verbs?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** aggregate stddev on columns */
+export type Irregular_Verbs_Stddev_Fields = {
+  __typename?: "irregular_verbs_stddev_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Irregular_Verbs_Stddev_Pop_Fields = {
+  __typename?: "irregular_verbs_stddev_pop_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Irregular_Verbs_Stddev_Samp_Fields = {
+  __typename?: "irregular_verbs_stddev_samp_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Streaming cursor of the table "irregular_verbs" */
+export type Irregular_Verbs_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Irregular_Verbs_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Irregular_Verbs_Stream_Cursor_Value_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  difficulty?: InputMaybe<Scalars["String"]["input"]>;
+  frequency?: InputMaybe<Scalars["String"]["input"]>;
+  group_number?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  infinitive?: InputMaybe<Scalars["String"]["input"]>;
+  mnemonic_tip?: InputMaybe<Scalars["String"]["input"]>;
+  past_participle?: InputMaybe<Scalars["String"]["input"]>;
+  past_simple?: InputMaybe<Scalars["String"]["input"]>;
+  related_verbs?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+/** aggregate sum on columns */
+export type Irregular_Verbs_Sum_Fields = {
+  __typename?: "irregular_verbs_sum_fields";
+  group_number?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** update columns of table "irregular_verbs" */
+export enum Irregular_Verbs_Update_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Difficulty = "difficulty",
+  /** column name */
+  Frequency = "frequency",
+  /** column name */
+  GroupNumber = "group_number",
+  /** column name */
+  Id = "id",
+  /** column name */
+  Infinitive = "infinitive",
+  /** column name */
+  MnemonicTip = "mnemonic_tip",
+  /** column name */
+  PastParticiple = "past_participle",
+  /** column name */
+  PastSimple = "past_simple",
+  /** column name */
+  RelatedVerbs = "related_verbs",
+}
+
+export type Irregular_Verbs_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Irregular_Verbs_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Irregular_Verbs_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Irregular_Verbs_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Irregular_Verbs_Var_Pop_Fields = {
+  __typename?: "irregular_verbs_var_pop_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate var_samp on columns */
+export type Irregular_Verbs_Var_Samp_Fields = {
+  __typename?: "irregular_verbs_var_samp_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate variance on columns */
+export type Irregular_Verbs_Variance_Fields = {
+  __typename?: "irregular_verbs_variance_fields";
+  group_number?: Maybe<Scalars["Float"]["output"]>;
+};
+
 export type Jsonb_Cast_Exp = {
   String?: InputMaybe<String_Comparison_Exp>;
 };
@@ -8056,6 +8452,10 @@ export type Mutation_Root = {
   delete_invites?: Maybe<Invites_Mutation_Response>;
   /** delete single row from the table: "invites" */
   delete_invites_by_pk?: Maybe<Invites>;
+  /** delete data from the table: "irregular_verbs" */
+  delete_irregular_verbs?: Maybe<Irregular_Verbs_Mutation_Response>;
+  /** delete single row from the table: "irregular_verbs" */
+  delete_irregular_verbs_by_pk?: Maybe<Irregular_Verbs>;
   /** delete data from the table: "kumon_progress" */
   delete_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
   /** delete single row from the table: "kumon_progress" */
@@ -8148,6 +8548,22 @@ export type Mutation_Root = {
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
   delete_users_by_pk?: Maybe<Users>;
+  /** delete data from the table: "verb_examples" */
+  delete_verb_examples?: Maybe<Verb_Examples_Mutation_Response>;
+  /** delete single row from the table: "verb_examples" */
+  delete_verb_examples_by_pk?: Maybe<Verb_Examples>;
+  /** delete data from the table: "verb_learning_progress" */
+  delete_verb_learning_progress?: Maybe<Verb_Learning_Progress_Mutation_Response>;
+  /** delete single row from the table: "verb_learning_progress" */
+  delete_verb_learning_progress_by_pk?: Maybe<Verb_Learning_Progress>;
+  /** delete data from the table: "verb_practice_sessions" */
+  delete_verb_practice_sessions?: Maybe<Verb_Practice_Sessions_Mutation_Response>;
+  /** delete single row from the table: "verb_practice_sessions" */
+  delete_verb_practice_sessions_by_pk?: Maybe<Verb_Practice_Sessions>;
+  /** delete data from the table: "verb_review_history" */
+  delete_verb_review_history?: Maybe<Verb_Review_History_Mutation_Response>;
+  /** delete single row from the table: "verb_review_history" */
+  delete_verb_review_history_by_pk?: Maybe<Verb_Review_History>;
   /** delete data from the table: "verification_codes" */
   delete_verification_codes?: Maybe<Verification_Codes_Mutation_Response>;
   /** delete single row from the table: "verification_codes" */
@@ -8216,6 +8632,10 @@ export type Mutation_Root = {
   insert_invites?: Maybe<Invites_Mutation_Response>;
   /** insert a single row into the table: "invites" */
   insert_invites_one?: Maybe<Invites>;
+  /** insert data into the table: "irregular_verbs" */
+  insert_irregular_verbs?: Maybe<Irregular_Verbs_Mutation_Response>;
+  /** insert a single row into the table: "irregular_verbs" */
+  insert_irregular_verbs_one?: Maybe<Irregular_Verbs>;
   /** insert data into the table: "kumon_progress" */
   insert_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
   /** insert a single row into the table: "kumon_progress" */
@@ -8308,6 +8728,22 @@ export type Mutation_Root = {
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
   insert_users_one?: Maybe<Users>;
+  /** insert data into the table: "verb_examples" */
+  insert_verb_examples?: Maybe<Verb_Examples_Mutation_Response>;
+  /** insert a single row into the table: "verb_examples" */
+  insert_verb_examples_one?: Maybe<Verb_Examples>;
+  /** insert data into the table: "verb_learning_progress" */
+  insert_verb_learning_progress?: Maybe<Verb_Learning_Progress_Mutation_Response>;
+  /** insert a single row into the table: "verb_learning_progress" */
+  insert_verb_learning_progress_one?: Maybe<Verb_Learning_Progress>;
+  /** insert data into the table: "verb_practice_sessions" */
+  insert_verb_practice_sessions?: Maybe<Verb_Practice_Sessions_Mutation_Response>;
+  /** insert a single row into the table: "verb_practice_sessions" */
+  insert_verb_practice_sessions_one?: Maybe<Verb_Practice_Sessions>;
+  /** insert data into the table: "verb_review_history" */
+  insert_verb_review_history?: Maybe<Verb_Review_History_Mutation_Response>;
+  /** insert a single row into the table: "verb_review_history" */
+  insert_verb_review_history_one?: Maybe<Verb_Review_History>;
   /** insert data into the table: "verification_codes" */
   insert_verification_codes?: Maybe<Verification_Codes_Mutation_Response>;
   /** insert a single row into the table: "verification_codes" */
@@ -8408,6 +8844,14 @@ export type Mutation_Root = {
   update_invites_by_pk?: Maybe<Invites>;
   /** update multiples rows of table: "invites" */
   update_invites_many?: Maybe<Array<Maybe<Invites_Mutation_Response>>>;
+  /** update data of the table: "irregular_verbs" */
+  update_irregular_verbs?: Maybe<Irregular_Verbs_Mutation_Response>;
+  /** update single row of the table: "irregular_verbs" */
+  update_irregular_verbs_by_pk?: Maybe<Irregular_Verbs>;
+  /** update multiples rows of table: "irregular_verbs" */
+  update_irregular_verbs_many?: Maybe<
+    Array<Maybe<Irregular_Verbs_Mutation_Response>>
+  >;
   /** update data of the table: "kumon_progress" */
   update_kumon_progress?: Maybe<Kumon_Progress_Mutation_Response>;
   /** update single row of the table: "kumon_progress" */
@@ -8584,6 +9028,38 @@ export type Mutation_Root = {
   update_users_by_pk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   update_users_many?: Maybe<Array<Maybe<Users_Mutation_Response>>>;
+  /** update data of the table: "verb_examples" */
+  update_verb_examples?: Maybe<Verb_Examples_Mutation_Response>;
+  /** update single row of the table: "verb_examples" */
+  update_verb_examples_by_pk?: Maybe<Verb_Examples>;
+  /** update multiples rows of table: "verb_examples" */
+  update_verb_examples_many?: Maybe<
+    Array<Maybe<Verb_Examples_Mutation_Response>>
+  >;
+  /** update data of the table: "verb_learning_progress" */
+  update_verb_learning_progress?: Maybe<Verb_Learning_Progress_Mutation_Response>;
+  /** update single row of the table: "verb_learning_progress" */
+  update_verb_learning_progress_by_pk?: Maybe<Verb_Learning_Progress>;
+  /** update multiples rows of table: "verb_learning_progress" */
+  update_verb_learning_progress_many?: Maybe<
+    Array<Maybe<Verb_Learning_Progress_Mutation_Response>>
+  >;
+  /** update data of the table: "verb_practice_sessions" */
+  update_verb_practice_sessions?: Maybe<Verb_Practice_Sessions_Mutation_Response>;
+  /** update single row of the table: "verb_practice_sessions" */
+  update_verb_practice_sessions_by_pk?: Maybe<Verb_Practice_Sessions>;
+  /** update multiples rows of table: "verb_practice_sessions" */
+  update_verb_practice_sessions_many?: Maybe<
+    Array<Maybe<Verb_Practice_Sessions_Mutation_Response>>
+  >;
+  /** update data of the table: "verb_review_history" */
+  update_verb_review_history?: Maybe<Verb_Review_History_Mutation_Response>;
+  /** update single row of the table: "verb_review_history" */
+  update_verb_review_history_by_pk?: Maybe<Verb_Review_History>;
+  /** update multiples rows of table: "verb_review_history" */
+  update_verb_review_history_many?: Maybe<
+    Array<Maybe<Verb_Review_History_Mutation_Response>>
+  >;
   /** update data of the table: "verification_codes" */
   update_verification_codes?: Maybe<Verification_Codes_Mutation_Response>;
   /** update single row of the table: "verification_codes" */
@@ -8749,6 +9225,16 @@ export type Mutation_RootDelete_InvitesArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Invites_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Irregular_VerbsArgs = {
+  where: Irregular_Verbs_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Irregular_Verbs_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -8984,6 +9470,46 @@ export type Mutation_RootDelete_Users_By_PkArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDelete_Verb_ExamplesArgs = {
+  where: Verb_Examples_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Examples_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Learning_ProgressArgs = {
+  where: Verb_Learning_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Learning_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Practice_SessionsArgs = {
+  where: Verb_Practice_Sessions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Practice_Sessions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Review_HistoryArgs = {
+  where: Verb_Review_History_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootDelete_Verb_Review_History_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootDelete_Verification_CodesArgs = {
   where: Verification_Codes_Bool_Exp;
 };
@@ -9179,6 +9705,18 @@ export type Mutation_RootInsert_InvitesArgs = {
 export type Mutation_RootInsert_Invites_OneArgs = {
   object: Invites_Insert_Input;
   on_conflict?: InputMaybe<Invites_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Irregular_VerbsArgs = {
+  objects: Array<Irregular_Verbs_Insert_Input>;
+  on_conflict?: InputMaybe<Irregular_Verbs_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Irregular_Verbs_OneArgs = {
+  object: Irregular_Verbs_Insert_Input;
+  on_conflict?: InputMaybe<Irregular_Verbs_On_Conflict>;
 };
 
 /** mutation root */
@@ -9456,6 +9994,54 @@ export type Mutation_RootInsert_UsersArgs = {
 export type Mutation_RootInsert_Users_OneArgs = {
   object: Users_Insert_Input;
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_ExamplesArgs = {
+  objects: Array<Verb_Examples_Insert_Input>;
+  on_conflict?: InputMaybe<Verb_Examples_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Examples_OneArgs = {
+  object: Verb_Examples_Insert_Input;
+  on_conflict?: InputMaybe<Verb_Examples_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Learning_ProgressArgs = {
+  objects: Array<Verb_Learning_Progress_Insert_Input>;
+  on_conflict?: InputMaybe<Verb_Learning_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Learning_Progress_OneArgs = {
+  object: Verb_Learning_Progress_Insert_Input;
+  on_conflict?: InputMaybe<Verb_Learning_Progress_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Practice_SessionsArgs = {
+  objects: Array<Verb_Practice_Sessions_Insert_Input>;
+  on_conflict?: InputMaybe<Verb_Practice_Sessions_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Practice_Sessions_OneArgs = {
+  object: Verb_Practice_Sessions_Insert_Input;
+  on_conflict?: InputMaybe<Verb_Practice_Sessions_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Review_HistoryArgs = {
+  objects: Array<Verb_Review_History_Insert_Input>;
+  on_conflict?: InputMaybe<Verb_Review_History_On_Conflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsert_Verb_Review_History_OneArgs = {
+  object: Verb_Review_History_Insert_Input;
+  on_conflict?: InputMaybe<Verb_Review_History_On_Conflict>;
 };
 
 /** mutation root */
@@ -9817,6 +10403,25 @@ export type Mutation_RootUpdate_Invites_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Invites_ManyArgs = {
   updates: Array<Invites_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Irregular_VerbsArgs = {
+  _inc?: InputMaybe<Irregular_Verbs_Inc_Input>;
+  _set?: InputMaybe<Irregular_Verbs_Set_Input>;
+  where: Irregular_Verbs_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Irregular_Verbs_By_PkArgs = {
+  _inc?: InputMaybe<Irregular_Verbs_Inc_Input>;
+  _set?: InputMaybe<Irregular_Verbs_Set_Input>;
+  pk_columns: Irregular_Verbs_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Irregular_Verbs_ManyArgs = {
+  updates: Array<Irregular_Verbs_Updates>;
 };
 
 /** mutation root */
@@ -10386,6 +10991,80 @@ export type Mutation_RootUpdate_Users_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Users_ManyArgs = {
   updates: Array<Users_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_ExamplesArgs = {
+  _set?: InputMaybe<Verb_Examples_Set_Input>;
+  where: Verb_Examples_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Examples_By_PkArgs = {
+  _set?: InputMaybe<Verb_Examples_Set_Input>;
+  pk_columns: Verb_Examples_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Examples_ManyArgs = {
+  updates: Array<Verb_Examples_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Learning_ProgressArgs = {
+  _inc?: InputMaybe<Verb_Learning_Progress_Inc_Input>;
+  _set?: InputMaybe<Verb_Learning_Progress_Set_Input>;
+  where: Verb_Learning_Progress_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Learning_Progress_By_PkArgs = {
+  _inc?: InputMaybe<Verb_Learning_Progress_Inc_Input>;
+  _set?: InputMaybe<Verb_Learning_Progress_Set_Input>;
+  pk_columns: Verb_Learning_Progress_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Learning_Progress_ManyArgs = {
+  updates: Array<Verb_Learning_Progress_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Practice_SessionsArgs = {
+  _inc?: InputMaybe<Verb_Practice_Sessions_Inc_Input>;
+  _set?: InputMaybe<Verb_Practice_Sessions_Set_Input>;
+  where: Verb_Practice_Sessions_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Practice_Sessions_By_PkArgs = {
+  _inc?: InputMaybe<Verb_Practice_Sessions_Inc_Input>;
+  _set?: InputMaybe<Verb_Practice_Sessions_Set_Input>;
+  pk_columns: Verb_Practice_Sessions_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Practice_Sessions_ManyArgs = {
+  updates: Array<Verb_Practice_Sessions_Updates>;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Review_HistoryArgs = {
+  _inc?: InputMaybe<Verb_Review_History_Inc_Input>;
+  _set?: InputMaybe<Verb_Review_History_Set_Input>;
+  where: Verb_Review_History_Bool_Exp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Review_History_By_PkArgs = {
+  _inc?: InputMaybe<Verb_Review_History_Inc_Input>;
+  _set?: InputMaybe<Verb_Review_History_Set_Input>;
+  pk_columns: Verb_Review_History_Pk_Columns_Input;
+};
+
+/** mutation root */
+export type Mutation_RootUpdate_Verb_Review_History_ManyArgs = {
+  updates: Array<Verb_Review_History_Updates>;
 };
 
 /** mutation root */
@@ -17139,6 +17818,12 @@ export type Query_Root = {
   invites_aggregate: Invites_Aggregate;
   /** fetch data from the table: "invites" using primary key columns */
   invites_by_pk?: Maybe<Invites>;
+  /** fetch data from the table: "irregular_verbs" */
+  irregular_verbs: Array<Irregular_Verbs>;
+  /** fetch aggregated fields from the table: "irregular_verbs" */
+  irregular_verbs_aggregate: Irregular_Verbs_Aggregate;
+  /** fetch data from the table: "irregular_verbs" using primary key columns */
+  irregular_verbs_by_pk?: Maybe<Irregular_Verbs>;
   /** fetch data from the table: "kumon_progress" */
   kumon_progress: Array<Kumon_Progress>;
   /** fetch aggregated fields from the table: "kumon_progress" */
@@ -17277,6 +17962,30 @@ export type Query_Root = {
   users_aggregate: Users_Aggregate;
   /** fetch data from the table: "users" using primary key columns */
   users_by_pk?: Maybe<Users>;
+  /** An array relationship */
+  verb_examples: Array<Verb_Examples>;
+  /** An aggregate relationship */
+  verb_examples_aggregate: Verb_Examples_Aggregate;
+  /** fetch data from the table: "verb_examples" using primary key columns */
+  verb_examples_by_pk?: Maybe<Verb_Examples>;
+  /** fetch data from the table: "verb_learning_progress" */
+  verb_learning_progress: Array<Verb_Learning_Progress>;
+  /** fetch aggregated fields from the table: "verb_learning_progress" */
+  verb_learning_progress_aggregate: Verb_Learning_Progress_Aggregate;
+  /** fetch data from the table: "verb_learning_progress" using primary key columns */
+  verb_learning_progress_by_pk?: Maybe<Verb_Learning_Progress>;
+  /** An array relationship */
+  verb_practice_sessions: Array<Verb_Practice_Sessions>;
+  /** An aggregate relationship */
+  verb_practice_sessions_aggregate: Verb_Practice_Sessions_Aggregate;
+  /** fetch data from the table: "verb_practice_sessions" using primary key columns */
+  verb_practice_sessions_by_pk?: Maybe<Verb_Practice_Sessions>;
+  /** fetch data from the table: "verb_review_history" */
+  verb_review_history: Array<Verb_Review_History>;
+  /** fetch aggregated fields from the table: "verb_review_history" */
+  verb_review_history_aggregate: Verb_Review_History_Aggregate;
+  /** fetch data from the table: "verb_review_history" using primary key columns */
+  verb_review_history_by_pk?: Maybe<Verb_Review_History>;
   /** fetch data from the table: "verification_codes" */
   verification_codes: Array<Verification_Codes>;
   /** fetch aggregated fields from the table: "verification_codes" */
@@ -17560,6 +18269,26 @@ export type Query_RootInvites_AggregateArgs = {
 };
 
 export type Query_RootInvites_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootIrregular_VerbsArgs = {
+  distinct_on?: InputMaybe<Array<Irregular_Verbs_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Irregular_Verbs_Order_By>>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+};
+
+export type Query_RootIrregular_Verbs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Irregular_Verbs_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Irregular_Verbs_Order_By>>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+};
+
+export type Query_RootIrregular_Verbs_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -18028,6 +18757,86 @@ export type Query_RootUsers_AggregateArgs = {
 };
 
 export type Query_RootUsers_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVerb_ExamplesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+export type Query_RootVerb_Examples_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+export type Query_RootVerb_Examples_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVerb_Learning_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+export type Query_RootVerb_Learning_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+export type Query_RootVerb_Learning_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVerb_Practice_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+export type Query_RootVerb_Practice_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+export type Query_RootVerb_Practice_Sessions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Query_RootVerb_Review_HistoryArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+export type Query_RootVerb_Review_History_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+export type Query_RootVerb_Review_History_By_PkArgs = {
   id: Scalars["uuid"]["input"];
 };
 
@@ -21927,6 +22736,14 @@ export type Subscription_Root = {
   invites_by_pk?: Maybe<Invites>;
   /** fetch data from the table in a streaming manner: "invites" */
   invites_stream: Array<Invites>;
+  /** fetch data from the table: "irregular_verbs" */
+  irregular_verbs: Array<Irregular_Verbs>;
+  /** fetch aggregated fields from the table: "irregular_verbs" */
+  irregular_verbs_aggregate: Irregular_Verbs_Aggregate;
+  /** fetch data from the table: "irregular_verbs" using primary key columns */
+  irregular_verbs_by_pk?: Maybe<Irregular_Verbs>;
+  /** fetch data from the table in a streaming manner: "irregular_verbs" */
+  irregular_verbs_stream: Array<Irregular_Verbs>;
   /** fetch data from the table: "kumon_progress" */
   kumon_progress: Array<Kumon_Progress>;
   /** fetch aggregated fields from the table: "kumon_progress" */
@@ -22111,6 +22928,38 @@ export type Subscription_Root = {
   users_by_pk?: Maybe<Users>;
   /** fetch data from the table in a streaming manner: "users" */
   users_stream: Array<Users>;
+  /** An array relationship */
+  verb_examples: Array<Verb_Examples>;
+  /** An aggregate relationship */
+  verb_examples_aggregate: Verb_Examples_Aggregate;
+  /** fetch data from the table: "verb_examples" using primary key columns */
+  verb_examples_by_pk?: Maybe<Verb_Examples>;
+  /** fetch data from the table in a streaming manner: "verb_examples" */
+  verb_examples_stream: Array<Verb_Examples>;
+  /** fetch data from the table: "verb_learning_progress" */
+  verb_learning_progress: Array<Verb_Learning_Progress>;
+  /** fetch aggregated fields from the table: "verb_learning_progress" */
+  verb_learning_progress_aggregate: Verb_Learning_Progress_Aggregate;
+  /** fetch data from the table: "verb_learning_progress" using primary key columns */
+  verb_learning_progress_by_pk?: Maybe<Verb_Learning_Progress>;
+  /** fetch data from the table in a streaming manner: "verb_learning_progress" */
+  verb_learning_progress_stream: Array<Verb_Learning_Progress>;
+  /** An array relationship */
+  verb_practice_sessions: Array<Verb_Practice_Sessions>;
+  /** An aggregate relationship */
+  verb_practice_sessions_aggregate: Verb_Practice_Sessions_Aggregate;
+  /** fetch data from the table: "verb_practice_sessions" using primary key columns */
+  verb_practice_sessions_by_pk?: Maybe<Verb_Practice_Sessions>;
+  /** fetch data from the table in a streaming manner: "verb_practice_sessions" */
+  verb_practice_sessions_stream: Array<Verb_Practice_Sessions>;
+  /** fetch data from the table: "verb_review_history" */
+  verb_review_history: Array<Verb_Review_History>;
+  /** fetch aggregated fields from the table: "verb_review_history" */
+  verb_review_history_aggregate: Verb_Review_History_Aggregate;
+  /** fetch data from the table: "verb_review_history" using primary key columns */
+  verb_review_history_by_pk?: Maybe<Verb_Review_History>;
+  /** fetch data from the table in a streaming manner: "verb_review_history" */
+  verb_review_history_stream: Array<Verb_Review_History>;
   /** fetch data from the table: "verification_codes" */
   verification_codes: Array<Verification_Codes>;
   /** fetch aggregated fields from the table: "verification_codes" */
@@ -22481,6 +23330,32 @@ export type Subscription_RootInvites_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Invites_Stream_Cursor_Input>>;
   where?: InputMaybe<Invites_Bool_Exp>;
+};
+
+export type Subscription_RootIrregular_VerbsArgs = {
+  distinct_on?: InputMaybe<Array<Irregular_Verbs_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Irregular_Verbs_Order_By>>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+};
+
+export type Subscription_RootIrregular_Verbs_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Irregular_Verbs_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Irregular_Verbs_Order_By>>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+};
+
+export type Subscription_RootIrregular_Verbs_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootIrregular_Verbs_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Irregular_Verbs_Stream_Cursor_Input>>;
+  where?: InputMaybe<Irregular_Verbs_Bool_Exp>;
 };
 
 export type Subscription_RootKumon_ProgressArgs = {
@@ -23094,6 +23969,110 @@ export type Subscription_RootUsers_StreamArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
+export type Subscription_RootVerb_ExamplesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Examples_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Examples_Order_By>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Examples_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVerb_Examples_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Verb_Examples_Stream_Cursor_Input>>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Learning_ProgressArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Learning_Progress_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Learning_Progress_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVerb_Learning_Progress_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Verb_Learning_Progress_Stream_Cursor_Input>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Practice_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Practice_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Practice_Sessions_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVerb_Practice_Sessions_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Verb_Practice_Sessions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Review_HistoryArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Review_History_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+export type Subscription_RootVerb_Review_History_By_PkArgs = {
+  id: Scalars["uuid"]["input"];
+};
+
+export type Subscription_RootVerb_Review_History_StreamArgs = {
+  batch_size: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<Verb_Review_History_Stream_Cursor_Input>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
 export type Subscription_RootVerification_CodesArgs = {
   distinct_on?: InputMaybe<Array<Verification_Codes_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23353,6 +24332,18 @@ export type Users = {
   user_payment_provider_mappings: Array<Payments_User_Payment_Provider_Mappings>;
   /** An aggregate relationship */
   user_payment_provider_mappings_aggregate: Payments_User_Payment_Provider_Mappings_Aggregate;
+  /** An array relationship */
+  verb_learning_progresses: Array<Verb_Learning_Progress>;
+  /** An aggregate relationship */
+  verb_learning_progresses_aggregate: Verb_Learning_Progress_Aggregate;
+  /** An array relationship */
+  verb_practice_sessions: Array<Verb_Practice_Sessions>;
+  /** An aggregate relationship */
+  verb_practice_sessions_aggregate: Verb_Practice_Sessions_Aggregate;
+  /** An array relationship */
+  verb_review_histories: Array<Verb_Review_History>;
+  /** An aggregate relationship */
+  verb_review_histories_aggregate: Verb_Review_History_Aggregate;
   /** An array relationship */
   vocabulary_cards: Array<Vocabulary_Cards>;
   /** An aggregate relationship */
@@ -23764,6 +24755,60 @@ export type UsersUser_Payment_Provider_Mappings_AggregateArgs = {
 };
 
 /** columns and relationships of "users" */
+export type UsersVerb_Learning_ProgressesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVerb_Learning_Progresses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Learning_Progress_Order_By>>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVerb_Practice_SessionsArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVerb_Practice_Sessions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Practice_Sessions_Order_By>>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVerb_Review_HistoriesArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersVerb_Review_Histories_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Verb_Review_History_Order_By>>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
 export type UsersVocabulary_CardsArgs = {
   distinct_on?: InputMaybe<Array<Vocabulary_Cards_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23887,6 +24932,12 @@ export type Users_Bool_Exp = {
   updated_at?: InputMaybe<Bigint_Comparison_Exp>;
   user_payment_provider_mappings?: InputMaybe<Payments_User_Payment_Provider_Mappings_Bool_Exp>;
   user_payment_provider_mappings_aggregate?: InputMaybe<Payments_User_Payment_Provider_Mappings_Aggregate_Bool_Exp>;
+  verb_learning_progresses?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  verb_learning_progresses_aggregate?: InputMaybe<Verb_Learning_Progress_Aggregate_Bool_Exp>;
+  verb_practice_sessions?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+  verb_practice_sessions_aggregate?: InputMaybe<Verb_Practice_Sessions_Aggregate_Bool_Exp>;
+  verb_review_histories?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  verb_review_histories_aggregate?: InputMaybe<Verb_Review_History_Aggregate_Bool_Exp>;
   vocabulary_cards?: InputMaybe<Vocabulary_Cards_Bool_Exp>;
   vocabulary_cards_aggregate?: InputMaybe<Vocabulary_Cards_Aggregate_Bool_Exp>;
 };
@@ -23956,6 +25007,9 @@ export type Users_Insert_Input = {
   target_level?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["bigint"]["input"]>;
   user_payment_provider_mappings?: InputMaybe<Payments_User_Payment_Provider_Mappings_Arr_Rel_Insert_Input>;
+  verb_learning_progresses?: InputMaybe<Verb_Learning_Progress_Arr_Rel_Insert_Input>;
+  verb_practice_sessions?: InputMaybe<Verb_Practice_Sessions_Arr_Rel_Insert_Input>;
+  verb_review_histories?: InputMaybe<Verb_Review_History_Arr_Rel_Insert_Input>;
   vocabulary_cards?: InputMaybe<Vocabulary_Cards_Arr_Rel_Insert_Input>;
 };
 
@@ -24072,6 +25126,9 @@ export type Users_Order_By = {
   target_level?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_payment_provider_mappings_aggregate?: InputMaybe<Payments_User_Payment_Provider_Mappings_Aggregate_Order_By>;
+  verb_learning_progresses_aggregate?: InputMaybe<Verb_Learning_Progress_Aggregate_Order_By>;
+  verb_practice_sessions_aggregate?: InputMaybe<Verb_Practice_Sessions_Aggregate_Order_By>;
+  verb_review_histories_aggregate?: InputMaybe<Verb_Review_History_Aggregate_Order_By>;
   vocabulary_cards_aggregate?: InputMaybe<Vocabulary_Cards_Aggregate_Order_By>;
 };
 
@@ -24325,6 +25382,1565 @@ export type Uuid_Comparison_Exp = {
   _lte?: InputMaybe<Scalars["uuid"]["input"]>;
   _neq?: InputMaybe<Scalars["uuid"]["input"]>;
   _nin?: InputMaybe<Array<Scalars["uuid"]["input"]>>;
+};
+
+/** columns and relationships of "verb_examples" */
+export type Verb_Examples = {
+  __typename?: "verb_examples";
+  context?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  form_type: Scalars["String"]["output"];
+  id: Scalars["uuid"]["output"];
+  /** An object relationship */
+  irregular_verb?: Maybe<Irregular_Verbs>;
+  sentence_en: Scalars["String"]["output"];
+  sentence_ru: Scalars["String"]["output"];
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** aggregated selection of "verb_examples" */
+export type Verb_Examples_Aggregate = {
+  __typename?: "verb_examples_aggregate";
+  aggregate?: Maybe<Verb_Examples_Aggregate_Fields>;
+  nodes: Array<Verb_Examples>;
+};
+
+export type Verb_Examples_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Verb_Examples_Aggregate_Bool_Exp_Count>;
+};
+
+export type Verb_Examples_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Examples_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "verb_examples" */
+export type Verb_Examples_Aggregate_Fields = {
+  __typename?: "verb_examples_aggregate_fields";
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Verb_Examples_Max_Fields>;
+  min?: Maybe<Verb_Examples_Min_Fields>;
+};
+
+/** aggregate fields of "verb_examples" */
+export type Verb_Examples_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Verb_Examples_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "verb_examples" */
+export type Verb_Examples_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Verb_Examples_Max_Order_By>;
+  min?: InputMaybe<Verb_Examples_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "verb_examples" */
+export type Verb_Examples_Arr_Rel_Insert_Input = {
+  data: Array<Verb_Examples_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Verb_Examples_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "verb_examples". All fields are combined with a logical 'AND'. */
+export type Verb_Examples_Bool_Exp = {
+  _and?: InputMaybe<Array<Verb_Examples_Bool_Exp>>;
+  _not?: InputMaybe<Verb_Examples_Bool_Exp>;
+  _or?: InputMaybe<Array<Verb_Examples_Bool_Exp>>;
+  context?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  form_type?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+  sentence_en?: InputMaybe<String_Comparison_Exp>;
+  sentence_ru?: InputMaybe<String_Comparison_Exp>;
+  verb_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "verb_examples" */
+export enum Verb_Examples_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VerbExamplesPkey = "verb_examples_pkey",
+}
+
+/** input type for inserting data into table "verb_examples" */
+export type Verb_Examples_Insert_Input = {
+  context?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  form_type?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Obj_Rel_Insert_Input>;
+  sentence_en?: InputMaybe<Scalars["String"]["input"]>;
+  sentence_ru?: InputMaybe<Scalars["String"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Verb_Examples_Max_Fields = {
+  __typename?: "verb_examples_max_fields";
+  context?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  form_type?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  sentence_en?: Maybe<Scalars["String"]["output"]>;
+  sentence_ru?: Maybe<Scalars["String"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "verb_examples" */
+export type Verb_Examples_Max_Order_By = {
+  context?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  form_type?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  sentence_en?: InputMaybe<Order_By>;
+  sentence_ru?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Verb_Examples_Min_Fields = {
+  __typename?: "verb_examples_min_fields";
+  context?: Maybe<Scalars["String"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  form_type?: Maybe<Scalars["String"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  sentence_en?: Maybe<Scalars["String"]["output"]>;
+  sentence_ru?: Maybe<Scalars["String"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "verb_examples" */
+export type Verb_Examples_Min_Order_By = {
+  context?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  form_type?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  sentence_en?: InputMaybe<Order_By>;
+  sentence_ru?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "verb_examples" */
+export type Verb_Examples_Mutation_Response = {
+  __typename?: "verb_examples_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Verb_Examples>;
+};
+
+/** on_conflict condition type for table "verb_examples" */
+export type Verb_Examples_On_Conflict = {
+  constraint: Verb_Examples_Constraint;
+  update_columns?: Array<Verb_Examples_Update_Column>;
+  where?: InputMaybe<Verb_Examples_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "verb_examples". */
+export type Verb_Examples_Order_By = {
+  context?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  form_type?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Order_By>;
+  sentence_en?: InputMaybe<Order_By>;
+  sentence_ru?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: verb_examples */
+export type Verb_Examples_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "verb_examples" */
+export enum Verb_Examples_Select_Column {
+  /** column name */
+  Context = "context",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  FormType = "form_type",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SentenceEn = "sentence_en",
+  /** column name */
+  SentenceRu = "sentence_ru",
+  /** column name */
+  VerbId = "verb_id",
+}
+
+/** input type for updating data in table "verb_examples" */
+export type Verb_Examples_Set_Input = {
+  context?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  form_type?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  sentence_en?: InputMaybe<Scalars["String"]["input"]>;
+  sentence_ru?: InputMaybe<Scalars["String"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** Streaming cursor of the table "verb_examples" */
+export type Verb_Examples_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Verb_Examples_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Verb_Examples_Stream_Cursor_Value_Input = {
+  context?: InputMaybe<Scalars["String"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  form_type?: InputMaybe<Scalars["String"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  sentence_en?: InputMaybe<Scalars["String"]["input"]>;
+  sentence_ru?: InputMaybe<Scalars["String"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** update columns of table "verb_examples" */
+export enum Verb_Examples_Update_Column {
+  /** column name */
+  Context = "context",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  FormType = "form_type",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SentenceEn = "sentence_en",
+  /** column name */
+  SentenceRu = "sentence_ru",
+  /** column name */
+  VerbId = "verb_id",
+}
+
+export type Verb_Examples_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Verb_Examples_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Verb_Examples_Bool_Exp;
+};
+
+/** columns and relationships of "verb_learning_progress" */
+export type Verb_Learning_Progress = {
+  __typename?: "verb_learning_progress";
+  correct_count?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  incorrect_count?: Maybe<Scalars["Int"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  /** An object relationship */
+  irregular_verb?: Maybe<Irregular_Verbs>;
+  last_reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  mastered?: Maybe<Scalars["Boolean"]["output"]>;
+  next_review_date: Scalars["date"]["output"];
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** aggregated selection of "verb_learning_progress" */
+export type Verb_Learning_Progress_Aggregate = {
+  __typename?: "verb_learning_progress_aggregate";
+  aggregate?: Maybe<Verb_Learning_Progress_Aggregate_Fields>;
+  nodes: Array<Verb_Learning_Progress>;
+};
+
+export type Verb_Learning_Progress_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Verb_Learning_Progress_Aggregate_Bool_Exp_Count>;
+};
+
+export type Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Verb_Learning_Progress_Select_Column_Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Verb_Learning_Progress_Select_Column_Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Verb_Learning_Progress_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "verb_learning_progress" */
+export type Verb_Learning_Progress_Aggregate_Fields = {
+  __typename?: "verb_learning_progress_aggregate_fields";
+  avg?: Maybe<Verb_Learning_Progress_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Verb_Learning_Progress_Max_Fields>;
+  min?: Maybe<Verb_Learning_Progress_Min_Fields>;
+  stddev?: Maybe<Verb_Learning_Progress_Stddev_Fields>;
+  stddev_pop?: Maybe<Verb_Learning_Progress_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Verb_Learning_Progress_Stddev_Samp_Fields>;
+  sum?: Maybe<Verb_Learning_Progress_Sum_Fields>;
+  var_pop?: Maybe<Verb_Learning_Progress_Var_Pop_Fields>;
+  var_samp?: Maybe<Verb_Learning_Progress_Var_Samp_Fields>;
+  variance?: Maybe<Verb_Learning_Progress_Variance_Fields>;
+};
+
+/** aggregate fields of "verb_learning_progress" */
+export type Verb_Learning_Progress_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Verb_Learning_Progress_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Aggregate_Order_By = {
+  avg?: InputMaybe<Verb_Learning_Progress_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Verb_Learning_Progress_Max_Order_By>;
+  min?: InputMaybe<Verb_Learning_Progress_Min_Order_By>;
+  stddev?: InputMaybe<Verb_Learning_Progress_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Verb_Learning_Progress_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Verb_Learning_Progress_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Verb_Learning_Progress_Sum_Order_By>;
+  var_pop?: InputMaybe<Verb_Learning_Progress_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Verb_Learning_Progress_Var_Samp_Order_By>;
+  variance?: InputMaybe<Verb_Learning_Progress_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "verb_learning_progress" */
+export type Verb_Learning_Progress_Arr_Rel_Insert_Input = {
+  data: Array<Verb_Learning_Progress_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Verb_Learning_Progress_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Verb_Learning_Progress_Avg_Fields = {
+  __typename?: "verb_learning_progress_avg_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Avg_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "verb_learning_progress". All fields are combined with a logical 'AND'. */
+export type Verb_Learning_Progress_Bool_Exp = {
+  _and?: InputMaybe<Array<Verb_Learning_Progress_Bool_Exp>>;
+  _not?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+  _or?: InputMaybe<Array<Verb_Learning_Progress_Bool_Exp>>;
+  correct_count?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  ease_factor?: InputMaybe<Numeric_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  incorrect_count?: InputMaybe<Int_Comparison_Exp>;
+  interval_days?: InputMaybe<Int_Comparison_Exp>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+  last_reviewed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  mastered?: InputMaybe<Boolean_Comparison_Exp>;
+  next_review_date?: InputMaybe<Date_Comparison_Exp>;
+  repetitions?: InputMaybe<Int_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  verb_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "verb_learning_progress" */
+export enum Verb_Learning_Progress_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VerbLearningProgressPkey = "verb_learning_progress_pkey",
+  /** unique or primary key constraint on columns "user_id", "verb_id" */
+  VerbLearningProgressUserIdVerbIdKey = "verb_learning_progress_user_id_verb_id_key",
+}
+
+/** input type for incrementing numeric columns in table "verb_learning_progress" */
+export type Verb_Learning_Progress_Inc_Input = {
+  correct_count?: InputMaybe<Scalars["Int"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  incorrect_count?: InputMaybe<Scalars["Int"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "verb_learning_progress" */
+export type Verb_Learning_Progress_Insert_Input = {
+  correct_count?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  incorrect_count?: InputMaybe<Scalars["Int"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Obj_Rel_Insert_Input>;
+  last_reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  mastered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Verb_Learning_Progress_Max_Fields = {
+  __typename?: "verb_learning_progress_max_fields";
+  correct_count?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Int"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  last_reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  next_review_date?: Maybe<Scalars["date"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Max_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  last_reviewed_at?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Verb_Learning_Progress_Min_Fields = {
+  __typename?: "verb_learning_progress_min_fields";
+  correct_count?: Maybe<Scalars["Int"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Int"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  last_reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  next_review_date?: Maybe<Scalars["date"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Min_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  last_reviewed_at?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "verb_learning_progress" */
+export type Verb_Learning_Progress_Mutation_Response = {
+  __typename?: "verb_learning_progress_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Verb_Learning_Progress>;
+};
+
+/** on_conflict condition type for table "verb_learning_progress" */
+export type Verb_Learning_Progress_On_Conflict = {
+  constraint: Verb_Learning_Progress_Constraint;
+  update_columns?: Array<Verb_Learning_Progress_Update_Column>;
+  where?: InputMaybe<Verb_Learning_Progress_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "verb_learning_progress". */
+export type Verb_Learning_Progress_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Order_By>;
+  last_reviewed_at?: InputMaybe<Order_By>;
+  mastered?: InputMaybe<Order_By>;
+  next_review_date?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: verb_learning_progress */
+export type Verb_Learning_Progress_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "verb_learning_progress" */
+export enum Verb_Learning_Progress_Select_Column {
+  /** column name */
+  CorrectCount = "correct_count",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EaseFactor = "ease_factor",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IncorrectCount = "incorrect_count",
+  /** column name */
+  IntervalDays = "interval_days",
+  /** column name */
+  LastReviewedAt = "last_reviewed_at",
+  /** column name */
+  Mastered = "mastered",
+  /** column name */
+  NextReviewDate = "next_review_date",
+  /** column name */
+  Repetitions = "repetitions",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbId = "verb_id",
+}
+
+/** select "verb_learning_progress_aggregate_bool_exp_bool_and_arguments_columns" columns of table "verb_learning_progress" */
+export enum Verb_Learning_Progress_Select_Column_Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Mastered = "mastered",
+}
+
+/** select "verb_learning_progress_aggregate_bool_exp_bool_or_arguments_columns" columns of table "verb_learning_progress" */
+export enum Verb_Learning_Progress_Select_Column_Verb_Learning_Progress_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Mastered = "mastered",
+}
+
+/** input type for updating data in table "verb_learning_progress" */
+export type Verb_Learning_Progress_Set_Input = {
+  correct_count?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  incorrect_count?: InputMaybe<Scalars["Int"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  last_reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  mastered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Verb_Learning_Progress_Stddev_Fields = {
+  __typename?: "verb_learning_progress_stddev_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Stddev_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Verb_Learning_Progress_Stddev_Pop_Fields = {
+  __typename?: "verb_learning_progress_stddev_pop_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Stddev_Pop_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Verb_Learning_Progress_Stddev_Samp_Fields = {
+  __typename?: "verb_learning_progress_stddev_samp_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Stddev_Samp_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "verb_learning_progress" */
+export type Verb_Learning_Progress_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Verb_Learning_Progress_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Verb_Learning_Progress_Stream_Cursor_Value_Input = {
+  correct_count?: InputMaybe<Scalars["Int"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  ease_factor?: InputMaybe<Scalars["numeric"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  incorrect_count?: InputMaybe<Scalars["Int"]["input"]>;
+  interval_days?: InputMaybe<Scalars["Int"]["input"]>;
+  last_reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  mastered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  next_review_date?: InputMaybe<Scalars["date"]["input"]>;
+  repetitions?: InputMaybe<Scalars["Int"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Verb_Learning_Progress_Sum_Fields = {
+  __typename?: "verb_learning_progress_sum_fields";
+  correct_count?: Maybe<Scalars["Int"]["output"]>;
+  ease_factor?: Maybe<Scalars["numeric"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Int"]["output"]>;
+  interval_days?: Maybe<Scalars["Int"]["output"]>;
+  repetitions?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Sum_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "verb_learning_progress" */
+export enum Verb_Learning_Progress_Update_Column {
+  /** column name */
+  CorrectCount = "correct_count",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  EaseFactor = "ease_factor",
+  /** column name */
+  Id = "id",
+  /** column name */
+  IncorrectCount = "incorrect_count",
+  /** column name */
+  IntervalDays = "interval_days",
+  /** column name */
+  LastReviewedAt = "last_reviewed_at",
+  /** column name */
+  Mastered = "mastered",
+  /** column name */
+  NextReviewDate = "next_review_date",
+  /** column name */
+  Repetitions = "repetitions",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbId = "verb_id",
+}
+
+export type Verb_Learning_Progress_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Verb_Learning_Progress_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Verb_Learning_Progress_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Verb_Learning_Progress_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Verb_Learning_Progress_Var_Pop_Fields = {
+  __typename?: "verb_learning_progress_var_pop_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Var_Pop_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Verb_Learning_Progress_Var_Samp_Fields = {
+  __typename?: "verb_learning_progress_var_samp_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Var_Samp_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Verb_Learning_Progress_Variance_Fields = {
+  __typename?: "verb_learning_progress_variance_fields";
+  correct_count?: Maybe<Scalars["Float"]["output"]>;
+  ease_factor?: Maybe<Scalars["Float"]["output"]>;
+  incorrect_count?: Maybe<Scalars["Float"]["output"]>;
+  interval_days?: Maybe<Scalars["Float"]["output"]>;
+  repetitions?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "verb_learning_progress" */
+export type Verb_Learning_Progress_Variance_Order_By = {
+  correct_count?: InputMaybe<Order_By>;
+  ease_factor?: InputMaybe<Order_By>;
+  incorrect_count?: InputMaybe<Order_By>;
+  interval_days?: InputMaybe<Order_By>;
+  repetitions?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "verb_practice_sessions" */
+export type Verb_Practice_Sessions = {
+  __typename?: "verb_practice_sessions";
+  accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  session_date?: Maybe<Scalars["date"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** aggregated selection of "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Aggregate = {
+  __typename?: "verb_practice_sessions_aggregate";
+  aggregate?: Maybe<Verb_Practice_Sessions_Aggregate_Fields>;
+  nodes: Array<Verb_Practice_Sessions>;
+};
+
+export type Verb_Practice_Sessions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Verb_Practice_Sessions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Verb_Practice_Sessions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Aggregate_Fields = {
+  __typename?: "verb_practice_sessions_aggregate_fields";
+  avg?: Maybe<Verb_Practice_Sessions_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Verb_Practice_Sessions_Max_Fields>;
+  min?: Maybe<Verb_Practice_Sessions_Min_Fields>;
+  stddev?: Maybe<Verb_Practice_Sessions_Stddev_Fields>;
+  stddev_pop?: Maybe<Verb_Practice_Sessions_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Verb_Practice_Sessions_Stddev_Samp_Fields>;
+  sum?: Maybe<Verb_Practice_Sessions_Sum_Fields>;
+  var_pop?: Maybe<Verb_Practice_Sessions_Var_Pop_Fields>;
+  var_samp?: Maybe<Verb_Practice_Sessions_Var_Samp_Fields>;
+  variance?: Maybe<Verb_Practice_Sessions_Variance_Fields>;
+};
+
+/** aggregate fields of "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Verb_Practice_Sessions_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Aggregate_Order_By = {
+  avg?: InputMaybe<Verb_Practice_Sessions_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Verb_Practice_Sessions_Max_Order_By>;
+  min?: InputMaybe<Verb_Practice_Sessions_Min_Order_By>;
+  stddev?: InputMaybe<Verb_Practice_Sessions_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Verb_Practice_Sessions_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Verb_Practice_Sessions_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Verb_Practice_Sessions_Sum_Order_By>;
+  var_pop?: InputMaybe<Verb_Practice_Sessions_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Verb_Practice_Sessions_Var_Samp_Order_By>;
+  variance?: InputMaybe<Verb_Practice_Sessions_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Arr_Rel_Insert_Input = {
+  data: Array<Verb_Practice_Sessions_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Verb_Practice_Sessions_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Verb_Practice_Sessions_Avg_Fields = {
+  __typename?: "verb_practice_sessions_avg_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Avg_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "verb_practice_sessions". All fields are combined with a logical 'AND'. */
+export type Verb_Practice_Sessions_Bool_Exp = {
+  _and?: InputMaybe<Array<Verb_Practice_Sessions_Bool_Exp>>;
+  _not?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+  _or?: InputMaybe<Array<Verb_Practice_Sessions_Bool_Exp>>;
+  accuracy?: InputMaybe<Numeric_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  duration_minutes?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  session_date?: InputMaybe<Date_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  verbs_practiced?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "verb_practice_sessions" */
+export enum Verb_Practice_Sessions_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VerbPracticeSessionsPkey = "verb_practice_sessions_pkey",
+}
+
+/** input type for incrementing numeric columns in table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Inc_Input = {
+  accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  verbs_practiced?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Insert_Input = {
+  accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  session_date?: InputMaybe<Scalars["date"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verbs_practiced?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Verb_Practice_Sessions_Max_Fields = {
+  __typename?: "verb_practice_sessions_max_fields";
+  accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  session_date?: Maybe<Scalars["date"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by max() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Max_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  session_date?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Verb_Practice_Sessions_Min_Fields = {
+  __typename?: "verb_practice_sessions_min_fields";
+  accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  session_date?: Maybe<Scalars["date"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by min() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Min_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  session_date?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Mutation_Response = {
+  __typename?: "verb_practice_sessions_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Verb_Practice_Sessions>;
+};
+
+/** on_conflict condition type for table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_On_Conflict = {
+  constraint: Verb_Practice_Sessions_Constraint;
+  update_columns?: Array<Verb_Practice_Sessions_Update_Column>;
+  where?: InputMaybe<Verb_Practice_Sessions_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "verb_practice_sessions". */
+export type Verb_Practice_Sessions_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  session_date?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: verb_practice_sessions */
+export type Verb_Practice_Sessions_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "verb_practice_sessions" */
+export enum Verb_Practice_Sessions_Select_Column {
+  /** column name */
+  Accuracy = "accuracy",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DurationMinutes = "duration_minutes",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SessionDate = "session_date",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbsPracticed = "verbs_practiced",
+}
+
+/** input type for updating data in table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Set_Input = {
+  accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  session_date?: InputMaybe<Scalars["date"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verbs_practiced?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Verb_Practice_Sessions_Stddev_Fields = {
+  __typename?: "verb_practice_sessions_stddev_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Stddev_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Verb_Practice_Sessions_Stddev_Pop_Fields = {
+  __typename?: "verb_practice_sessions_stddev_pop_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Stddev_Pop_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Verb_Practice_Sessions_Stddev_Samp_Fields = {
+  __typename?: "verb_practice_sessions_stddev_samp_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Stddev_Samp_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Verb_Practice_Sessions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Verb_Practice_Sessions_Stream_Cursor_Value_Input = {
+  accuracy?: InputMaybe<Scalars["numeric"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  duration_minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  session_date?: InputMaybe<Scalars["date"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verbs_practiced?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Verb_Practice_Sessions_Sum_Fields = {
+  __typename?: "verb_practice_sessions_sum_fields";
+  accuracy?: Maybe<Scalars["numeric"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Int"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Sum_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "verb_practice_sessions" */
+export enum Verb_Practice_Sessions_Update_Column {
+  /** column name */
+  Accuracy = "accuracy",
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  DurationMinutes = "duration_minutes",
+  /** column name */
+  Id = "id",
+  /** column name */
+  SessionDate = "session_date",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbsPracticed = "verbs_practiced",
+}
+
+export type Verb_Practice_Sessions_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Verb_Practice_Sessions_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Verb_Practice_Sessions_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Verb_Practice_Sessions_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Verb_Practice_Sessions_Var_Pop_Fields = {
+  __typename?: "verb_practice_sessions_var_pop_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Var_Pop_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Verb_Practice_Sessions_Var_Samp_Fields = {
+  __typename?: "verb_practice_sessions_var_samp_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Var_Samp_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Verb_Practice_Sessions_Variance_Fields = {
+  __typename?: "verb_practice_sessions_variance_fields";
+  accuracy?: Maybe<Scalars["Float"]["output"]>;
+  duration_minutes?: Maybe<Scalars["Float"]["output"]>;
+  verbs_practiced?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "verb_practice_sessions" */
+export type Verb_Practice_Sessions_Variance_Order_By = {
+  accuracy?: InputMaybe<Order_By>;
+  duration_minutes?: InputMaybe<Order_By>;
+  verbs_practiced?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "verb_review_history" */
+export type Verb_Review_History = {
+  __typename?: "verb_review_history";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  id: Scalars["uuid"]["output"];
+  /** An object relationship */
+  irregular_verb?: Maybe<Irregular_Verbs>;
+  practice_mode?: Maybe<Scalars["String"]["output"]>;
+  response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  /** An object relationship */
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+  was_correct: Scalars["Boolean"]["output"];
+};
+
+/** aggregated selection of "verb_review_history" */
+export type Verb_Review_History_Aggregate = {
+  __typename?: "verb_review_history_aggregate";
+  aggregate?: Maybe<Verb_Review_History_Aggregate_Fields>;
+  nodes: Array<Verb_Review_History>;
+};
+
+export type Verb_Review_History_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Verb_Review_History_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Verb_Review_History_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Verb_Review_History_Aggregate_Bool_Exp_Count>;
+};
+
+export type Verb_Review_History_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Verb_Review_History_Select_Column_Verb_Review_History_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Verb_Review_History_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Verb_Review_History_Select_Column_Verb_Review_History_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Verb_Review_History_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "verb_review_history" */
+export type Verb_Review_History_Aggregate_Fields = {
+  __typename?: "verb_review_history_aggregate_fields";
+  avg?: Maybe<Verb_Review_History_Avg_Fields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<Verb_Review_History_Max_Fields>;
+  min?: Maybe<Verb_Review_History_Min_Fields>;
+  stddev?: Maybe<Verb_Review_History_Stddev_Fields>;
+  stddev_pop?: Maybe<Verb_Review_History_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Verb_Review_History_Stddev_Samp_Fields>;
+  sum?: Maybe<Verb_Review_History_Sum_Fields>;
+  var_pop?: Maybe<Verb_Review_History_Var_Pop_Fields>;
+  var_samp?: Maybe<Verb_Review_History_Var_Samp_Fields>;
+  variance?: Maybe<Verb_Review_History_Variance_Fields>;
+};
+
+/** aggregate fields of "verb_review_history" */
+export type Verb_Review_History_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Verb_Review_History_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "verb_review_history" */
+export type Verb_Review_History_Aggregate_Order_By = {
+  avg?: InputMaybe<Verb_Review_History_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Verb_Review_History_Max_Order_By>;
+  min?: InputMaybe<Verb_Review_History_Min_Order_By>;
+  stddev?: InputMaybe<Verb_Review_History_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Verb_Review_History_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Verb_Review_History_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Verb_Review_History_Sum_Order_By>;
+  var_pop?: InputMaybe<Verb_Review_History_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Verb_Review_History_Var_Samp_Order_By>;
+  variance?: InputMaybe<Verb_Review_History_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "verb_review_history" */
+export type Verb_Review_History_Arr_Rel_Insert_Input = {
+  data: Array<Verb_Review_History_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Verb_Review_History_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Verb_Review_History_Avg_Fields = {
+  __typename?: "verb_review_history_avg_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "verb_review_history" */
+export type Verb_Review_History_Avg_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "verb_review_history". All fields are combined with a logical 'AND'. */
+export type Verb_Review_History_Bool_Exp = {
+  _and?: InputMaybe<Array<Verb_Review_History_Bool_Exp>>;
+  _not?: InputMaybe<Verb_Review_History_Bool_Exp>;
+  _or?: InputMaybe<Array<Verb_Review_History_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Bool_Exp>;
+  practice_mode?: InputMaybe<String_Comparison_Exp>;
+  response_time_seconds?: InputMaybe<Int_Comparison_Exp>;
+  reviewed_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  verb_id?: InputMaybe<Uuid_Comparison_Exp>;
+  was_correct?: InputMaybe<Boolean_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "verb_review_history" */
+export enum Verb_Review_History_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  VerbReviewHistoryPkey = "verb_review_history_pkey",
+}
+
+/** input type for incrementing numeric columns in table "verb_review_history" */
+export type Verb_Review_History_Inc_Input = {
+  response_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** input type for inserting data into table "verb_review_history" */
+export type Verb_Review_History_Insert_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Obj_Rel_Insert_Input>;
+  practice_mode?: InputMaybe<Scalars["String"]["input"]>;
+  response_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  was_correct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type Verb_Review_History_Max_Fields = {
+  __typename?: "verb_review_history_max_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  practice_mode?: Maybe<Scalars["String"]["output"]>;
+  response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "verb_review_history" */
+export type Verb_Review_History_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  practice_mode?: InputMaybe<Order_By>;
+  response_time_seconds?: InputMaybe<Order_By>;
+  reviewed_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Verb_Review_History_Min_Fields = {
+  __typename?: "verb_review_history_min_fields";
+  created_at?: Maybe<Scalars["timestamp"]["output"]>;
+  id?: Maybe<Scalars["uuid"]["output"]>;
+  practice_mode?: Maybe<Scalars["String"]["output"]>;
+  response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+  reviewed_at?: Maybe<Scalars["timestamp"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  verb_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "verb_review_history" */
+export type Verb_Review_History_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  practice_mode?: InputMaybe<Order_By>;
+  response_time_seconds?: InputMaybe<Order_By>;
+  reviewed_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "verb_review_history" */
+export type Verb_Review_History_Mutation_Response = {
+  __typename?: "verb_review_history_mutation_response";
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Verb_Review_History>;
+};
+
+/** on_conflict condition type for table "verb_review_history" */
+export type Verb_Review_History_On_Conflict = {
+  constraint: Verb_Review_History_Constraint;
+  update_columns?: Array<Verb_Review_History_Update_Column>;
+  where?: InputMaybe<Verb_Review_History_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "verb_review_history". */
+export type Verb_Review_History_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  irregular_verb?: InputMaybe<Irregular_Verbs_Order_By>;
+  practice_mode?: InputMaybe<Order_By>;
+  response_time_seconds?: InputMaybe<Order_By>;
+  reviewed_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  verb_id?: InputMaybe<Order_By>;
+  was_correct?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: verb_review_history */
+export type Verb_Review_History_Pk_Columns_Input = {
+  id: Scalars["uuid"]["input"];
+};
+
+/** select columns of table "verb_review_history" */
+export enum Verb_Review_History_Select_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  PracticeMode = "practice_mode",
+  /** column name */
+  ResponseTimeSeconds = "response_time_seconds",
+  /** column name */
+  ReviewedAt = "reviewed_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbId = "verb_id",
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
+/** select "verb_review_history_aggregate_bool_exp_bool_and_arguments_columns" columns of table "verb_review_history" */
+export enum Verb_Review_History_Select_Column_Verb_Review_History_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
+/** select "verb_review_history_aggregate_bool_exp_bool_or_arguments_columns" columns of table "verb_review_history" */
+export enum Verb_Review_History_Select_Column_Verb_Review_History_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
+/** input type for updating data in table "verb_review_history" */
+export type Verb_Review_History_Set_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  practice_mode?: InputMaybe<Scalars["String"]["input"]>;
+  response_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  was_correct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type Verb_Review_History_Stddev_Fields = {
+  __typename?: "verb_review_history_stddev_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "verb_review_history" */
+export type Verb_Review_History_Stddev_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Verb_Review_History_Stddev_Pop_Fields = {
+  __typename?: "verb_review_history_stddev_pop_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_pop() on columns of table "verb_review_history" */
+export type Verb_Review_History_Stddev_Pop_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Verb_Review_History_Stddev_Samp_Fields = {
+  __typename?: "verb_review_history_stddev_samp_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev_samp() on columns of table "verb_review_history" */
+export type Verb_Review_History_Stddev_Samp_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "verb_review_history" */
+export type Verb_Review_History_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Verb_Review_History_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Verb_Review_History_Stream_Cursor_Value_Input = {
+  created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  id?: InputMaybe<Scalars["uuid"]["input"]>;
+  practice_mode?: InputMaybe<Scalars["String"]["input"]>;
+  response_time_seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  reviewed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  verb_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  was_correct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Verb_Review_History_Sum_Fields = {
+  __typename?: "verb_review_history_sum_fields";
+  response_time_seconds?: Maybe<Scalars["Int"]["output"]>;
+};
+
+/** order by sum() on columns of table "verb_review_history" */
+export type Verb_Review_History_Sum_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "verb_review_history" */
+export enum Verb_Review_History_Update_Column {
+  /** column name */
+  CreatedAt = "created_at",
+  /** column name */
+  Id = "id",
+  /** column name */
+  PracticeMode = "practice_mode",
+  /** column name */
+  ResponseTimeSeconds = "response_time_seconds",
+  /** column name */
+  ReviewedAt = "reviewed_at",
+  /** column name */
+  UserId = "user_id",
+  /** column name */
+  VerbId = "verb_id",
+  /** column name */
+  WasCorrect = "was_correct",
+}
+
+export type Verb_Review_History_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Verb_Review_History_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Verb_Review_History_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Verb_Review_History_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Verb_Review_History_Var_Pop_Fields = {
+  __typename?: "verb_review_history_var_pop_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_pop() on columns of table "verb_review_history" */
+export type Verb_Review_History_Var_Pop_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Verb_Review_History_Var_Samp_Fields = {
+  __typename?: "verb_review_history_var_samp_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by var_samp() on columns of table "verb_review_history" */
+export type Verb_Review_History_Var_Samp_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Verb_Review_History_Variance_Fields = {
+  __typename?: "verb_review_history_variance_fields";
+  response_time_seconds?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "verb_review_history" */
+export type Verb_Review_History_Variance_Order_By = {
+  response_time_seconds?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "verification_codes" */

@@ -15,6 +15,7 @@ import type { TaskView as DashboardTask } from './app/dashboard/DashboardTab';
 import { VocabularyTab } from './app/vocabulary/VocabularyTab';
 import { AIPracticeTab } from './app/ai/AIPracticeTab';
 import { ProgressTab } from './app/progress/ProgressTab';
+import { IrregularVerbsScreen } from './app/verbs/IrregularVerbsScreen';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useAISession } from '@/hooks/useAISession';
 
@@ -327,6 +328,8 @@ export default function EnglishLearningApp() {
             requirementChecks={dashboard?.plan?.requirementChecks ?? []}
           />
         )}
+
+        {activeTab === 'verbs' && <IrregularVerbsScreen />}
       </main>
     </div>
   );
