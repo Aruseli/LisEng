@@ -53,6 +53,10 @@
         "schema": "public",
         "table": "invites"
       },
+      "irregular_verbs": {
+        "schema": "public",
+        "table": "irregular_verbs"
+      },
       "kumon_progress": {
         "schema": "public",
         "table": "kumon_progress"
@@ -144,6 +148,22 @@
       "users": {
         "schema": "public",
         "table": "users"
+      },
+      "verb_examples": {
+        "schema": "verb",
+        "table": "examples"
+      },
+      "verb_learning_progress": {
+        "schema": "public",
+        "table": "verb_learning_progress"
+      },
+      "verb_practice_sessions": {
+        "schema": "public",
+        "table": "verb_practice_sessions"
+      },
+      "verb_review_history": {
+        "schema": "public",
+        "table": "verb_review_history"
       },
       "verification_codes": {
         "schema": "public",
@@ -514,6 +534,22 @@
           ]
         }
       },
+      "irregular_verbs": {
+        "select": {
+          "user": [
+            "id",
+            "infinitive",
+            "past_simple",
+            "past_participle",
+            "group_number",
+            "frequency",
+            "difficulty",
+            "mnemonic_tip",
+            "related_verbs",
+            "created_at"
+          ]
+        }
+      },
       "notifications": {
         "select": {
           "anonymous": [],
@@ -584,6 +620,51 @@
             "study_time",
             "target_level",
             "updated_at"
+          ]
+        }
+      },
+      "verb_learning_progress": {
+        "select": {
+          "user": [
+            "id",
+            "user_id",
+            "verb_id",
+            "next_review_date",
+            "correct_count",
+            "incorrect_count",
+            "last_reviewed_at",
+            "mastered",
+            "ease_factor",
+            "interval_days",
+            "repetitions",
+            "created_at"
+          ]
+        }
+      },
+      "verb_practice_sessions": {
+        "select": {
+          "user": [
+            "id",
+            "user_id",
+            "session_date",
+            "verbs_practiced",
+            "accuracy",
+            "duration_minutes",
+            "created_at"
+          ]
+        }
+      },
+      "verb_review_history": {
+        "select": {
+          "user": [
+            "id",
+            "verb_id",
+            "user_id",
+            "reviewed_at",
+            "was_correct",
+            "response_time_seconds",
+            "practice_mode",
+            "created_at"
           ]
         }
       },
@@ -1532,6 +1613,77 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[irregular_verbs_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[irregular_verbs_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[irregular_verbs_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[irregular_verbs_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
                 "kind": "OBJECT"
               }
             },
@@ -3169,6 +3321,290 @@
               }
             },
             {
+              "name": "verb_examples",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_examples_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_examples_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_examples_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_examples_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_learning_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_learning_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_learning_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_learning_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_practice_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_practice_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_practice_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_practice_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_review_history_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_review_history_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_review_history_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_review_history_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "verification_codes",
               "args": [
                 {
@@ -3821,6 +4257,32 @@
               }
             },
             {
+              "name": "delete_irregular_verbs",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_irregular_verbs_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "delete_kumon_progress",
               "args": [
                 {
@@ -4419,6 +4881,110 @@
               }
             },
             {
+              "name": "delete_verb_examples",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_examples_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_learning_progress",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_learning_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_practice_sessions",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_practice_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_review_history",
+              "args": [
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_verb_review_history_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "delete_verification_codes",
               "args": [
                 {
@@ -4969,6 +5535,40 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_irregular_verbs",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[irregular_verbs_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "irregular_verbs_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_irregular_verbs_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "irregular_verbs_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "irregular_verbs_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
                 "kind": "OBJECT"
               }
             },
@@ -5751,6 +6351,142 @@
               ],
               "returnType": {
                 "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_examples",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[verb_examples_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_examples_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_examples_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "verb_examples_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_examples_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_learning_progress",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[verb_learning_progress_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_learning_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_learning_progress_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "verb_learning_progress_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_learning_progress_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_practice_sessions",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[verb_practice_sessions_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_practice_sessions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_practice_sessions_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "verb_practice_sessions_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_practice_sessions_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_review_history",
+              "args": [
+                {
+                  "name": "objects",
+                  "gqlType": "[verb_review_history_insert_input!]!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_review_history_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "insert_verb_review_history_one",
+              "args": [
+                {
+                  "name": "object",
+                  "gqlType": "verb_review_history_insert_input!"
+                },
+                {
+                  "name": "on_conflict",
+                  "gqlType": "verb_review_history_on_conflict"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
                 "kind": "OBJECT"
               }
             },
@@ -6866,6 +7602,61 @@
               ],
               "returnType": {
                 "name": "invites_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_irregular_verbs",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "irregular_verbs_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "irregular_verbs_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_irregular_verbs_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "irregular_verbs_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "irregular_verbs_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "irregular_verbs_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_irregular_verbs_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[irregular_verbs_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_mutation_response",
                 "kind": "OBJECT"
               }
             },
@@ -8655,6 +9446,218 @@
               }
             },
             {
+              "name": "update_verb_examples",
+              "args": [
+                {
+                  "name": "_set",
+                  "gqlType": "verb_examples_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_examples_by_pk",
+              "args": [
+                {
+                  "name": "_set",
+                  "gqlType": "verb_examples_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "verb_examples_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_examples_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[verb_examples_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_learning_progress",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_learning_progress_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_learning_progress_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_learning_progress_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_learning_progress_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_learning_progress_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "verb_learning_progress_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_learning_progress_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[verb_learning_progress_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_practice_sessions",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_practice_sessions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_practice_sessions_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_practice_sessions_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_practice_sessions_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_practice_sessions_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "verb_practice_sessions_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_practice_sessions_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[verb_practice_sessions_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_review_history",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_review_history_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_review_history_set_input"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_review_history_by_pk",
+              "args": [
+                {
+                  "name": "_inc",
+                  "gqlType": "verb_review_history_inc_input"
+                },
+                {
+                  "name": "_set",
+                  "gqlType": "verb_review_history_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "verb_review_history_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_verb_review_history_many",
+              "args": [
+                {
+                  "name": "updates",
+                  "gqlType": "[verb_review_history_updates!]!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "update_verification_codes",
               "args": [
                 {
@@ -10029,6 +11032,98 @@
               ],
               "returnType": {
                 "name": "invites",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[irregular_verbs_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[irregular_verbs_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[irregular_verbs_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[irregular_verbs_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "irregular_verbs_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[irregular_verbs_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "irregular_verbs_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "irregular_verbs",
                 "kind": "OBJECT"
               }
             },
@@ -12145,6 +13240,374 @@
               ],
               "returnType": {
                 "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_examples_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_examples_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_examples_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_examples_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_examples_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[verb_examples_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_examples_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_learning_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_learning_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_learning_progress_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_learning_progress_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progress_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[verb_learning_progress_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_learning_progress_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_practice_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_practice_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_practice_sessions_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_practice_sessions_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[verb_practice_sessions_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_practice_sessions_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_review_history_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_review_history_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history_aggregate",
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "gqlType": "[verb_review_history_select_column!]"
+                },
+                {
+                  "name": "limit",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "offset",
+                  "gqlType": "Int"
+                },
+                {
+                  "name": "order_by",
+                  "gqlType": "[verb_review_history_order_by!]"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history_aggregate",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_history_stream",
+              "args": [
+                {
+                  "name": "batch_size",
+                  "gqlType": "Int!"
+                },
+                {
+                  "name": "cursor",
+                  "gqlType": "[verb_review_history_stream_cursor_input]!"
+                },
+                {
+                  "name": "where",
+                  "gqlType": "verb_review_history_bool_exp"
+                }
+              ],
+              "returnType": {
+                "name": "verb_review_history",
                 "kind": "OBJECT"
               }
             },
@@ -14556,6 +16019,167 @@
           "fields": []
         },
         "invites_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "irregular_verbs": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "difficulty",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "frequency",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "group_number",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "infinitive",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "mnemonic_tip",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "past_participle",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "past_simple",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "related_verbs",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "verb_examples",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_learning_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_histories",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "irregular_verbs_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "irregular_verbs_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "irregular_verbs_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "irregular_verbs_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "irregular_verbs_pk_columns_input": {
           "kind": "INPUT_OBJECT",
           "fields": []
         },
@@ -18771,6 +20395,33 @@
               }
             },
             {
+              "name": "verb_learning_progresses",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_practice_sessions",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "verb_review_histories",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            },
+            {
               "name": "vocabulary_cards",
               "isList": true,
               "args": [],
@@ -18817,6 +20468,542 @@
           "fields": []
         },
         "users_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_examples": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "context",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "form_type",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "irregular_verb",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "sentence_en",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "sentence_ru",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "verb_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "verb_examples_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_examples",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "verb_examples_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_examples_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_examples_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_examples_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_learning_progress": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "correct_count",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "ease_factor",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "incorrect_count",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "interval_days",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "irregular_verb",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "last_reviewed_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "mastered",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "next_review_date",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "date",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "repetitions",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "verb_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "verb_learning_progress_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_learning_progress",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "verb_learning_progress_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_learning_progress_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_learning_progress_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_learning_progress_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_practice_sessions": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "accuracy",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "duration_minutes",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "session_date",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "date",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "verbs_practiced",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "verb_practice_sessions_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_practice_sessions",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "verb_practice_sessions_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_practice_sessions_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_practice_sessions_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_practice_sessions_pk_columns_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_review_history": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "created_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "irregular_verb",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "irregular_verbs",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "practice_mode",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "response_time_seconds",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "reviewed_at",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "timestamp",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "user",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "users",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "user_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "verb_id",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "uuid",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "was_correct",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Boolean",
+                "kind": "SCALAR"
+              }
+            }
+          ]
+        },
+        "verb_review_history_mutation_response": {
+          "kind": "OBJECT",
+          "fields": [
+            {
+              "name": "affected_rows",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "Int",
+                "kind": "SCALAR"
+              }
+            },
+            {
+              "name": "returning",
+              "isList": true,
+              "args": [],
+              "returnType": {
+                "name": "verb_review_history",
+                "kind": "OBJECT"
+              }
+            }
+          ]
+        },
+        "verb_review_history_bool_exp": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_review_history_insert_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_review_history_set_input": {
+          "kind": "INPUT_OBJECT",
+          "fields": []
+        },
+        "verb_review_history_pk_columns_input": {
           "kind": "INPUT_OBJECT",
           "fields": []
         },
@@ -19412,7 +21599,7 @@
         }
       }
     },
-    "timestamp": 1763232028542,
+    "timestamp": 1763734624554,
     "version": "3.0.0"
   }
 }
