@@ -160,13 +160,38 @@ export class VocabularyGenerationService {
 
     return response.cards
       .filter((card) => typeof card.word === 'string' && typeof card.translation === 'string')
-      .map((card) => ({
-        ...card,
-        word: card.word.trim(),
-        translation: card.translation.trim(),
-        example: card.example?.trim() ?? `Use the word "${card.word}" in your own sentence.`,
-        hint: card.hint?.trim(),
-      }));
+      .map((card) => {
+        // Нормализуем слово сразу после получения от AI
+        const normalizedWord = card.word.toLowerCase().trim();
+        return {
+          ...card,
+          word: normalizedWord, // Сохраняем нормализованное слово
+          translation: card.translation.trim(),
+          example: card.example?.trim() ?? `Use the word "${normalizedWord}" in your own sentence.`,
+          hint: card.hint?.trim(),
+        };
+      });
+  }
+
+  /**
+   * Нормализует слово: приводит к lowercase и убирает пробелы
+   */
+  private normalizeWord(word: string): string {
+    return word.toLowerCase().trim();
+  }
+
+  /**
+   * Объединяет примеры предложений, если они отличаются
+   */
+  private mergeExamples(existingExample: string | null, newExample: string): string {
+    if (!existingExample || existingExample.trim() === '') {
+      return newExample;
+    }
+    if (existingExample === newExample) {
+      return existingExample;
+    }
+    // Объединяем примеры через разделитель " | "
+    return `${existingExample} | ${newExample}`;
   }
 
   /**
@@ -179,22 +204,46 @@ export class VocabularyGenerationService {
     const saved: StoredCard[] = [];
 
     for (const card of cards) {
+      // Нормализуем слово перед проверкой и сохранением
+      const normalizedWord = this.normalizeWord(card.word);
+
+      // Ищем существующую карточку по нормализованному слову
       const existing = await this.hasyx.select({
         table: 'vocabulary_cards',
         where: {
           user_id: { _eq: options.userId },
-          word: { _ilike: card.word },
+          word: { _eq: normalizedWord },
         },
         limit: 1,
-        returning: ['id'],
+        returning: ['id', 'example_sentence', 'translation', 'part_of_speech'],
       });
 
       const normalizedExisting = Array.isArray(existing) ? existing[0] : existing ?? null;
+      
       if (normalizedExisting?.id) {
-        saved.push({ id: normalizedExisting.id, word: card.word });
+        // Карточка существует - обновляем её вместо создания новой
+        const mergedExample = this.mergeExamples(
+          normalizedExisting.example_sentence,
+          card.example
+        );
+
+        // Обновляем карточку, объединяя примеры и обновляя другие поля если нужно
+        await this.hasyx.update({
+          table: 'vocabulary_cards',
+          pk_columns: { id: normalizedExisting.id },
+          _set: {
+            example_sentence: mergedExample,
+            // Обновляем translation и part_of_speech если они пустые или отличаются
+            translation: normalizedExisting.translation || card.translation,
+            part_of_speech: (normalizedExisting.part_of_speech || card.partOfSpeech) ?? null,
+          },
+        });
+
+        saved.push({ id: normalizedExisting.id, word: normalizedWord });
         continue;
       }
 
+      // Карточка не существует - создаём новую
       const sm2Base = initializeSM2();
       const schedule = calculateSM2({ ...sm2Base, quality: 0 });
       const nextReviewDate = schedule.nextReviewDate.toISOString().split('T')[0];
@@ -203,9 +252,9 @@ export class VocabularyGenerationService {
         table: 'vocabulary_cards',
         object: {
           user_id: options.userId,
-          word: card.word,
-          translation: card.translation,
-          example_sentence: card.example,
+          word: normalizedWord, // Сохраняем в нормализованном виде
+          translation: card.translation.trim(),
+          example_sentence: card.example.trim(),
           part_of_speech: card.partOfSpeech ?? null,
           next_review_date: nextReviewDate,
           difficulty: 'new',
@@ -245,7 +294,7 @@ export class VocabularyGenerationService {
           object: {
             lesson_snapshot_id: options.sourceSnapshotId,
             vocabulary_card_id: cardId,
-            word: card.word,
+            word: normalizedWord, // Используем нормализованное слово
             context_sentence: options.context ?? card.example,
             active_recall_context: card.example,
             user_action: 'pronunciation_flag',
@@ -254,7 +303,7 @@ export class VocabularyGenerationService {
         });
       }
 
-      saved.push({ id: cardId, word: card.word });
+      saved.push({ id: cardId, word: normalizedWord });
     }
 
     return saved;

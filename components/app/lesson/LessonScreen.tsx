@@ -528,7 +528,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
         </section>
       )}
 
-      {/* {hasReadingText && lesson?.readingPassages && (
+      {hasReadingText && lesson?.readingPassages && (
         <section className="space-y-4 rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
           <h3 className="text-lg font-semibold text-gray-900">
             {isReadingLesson ? 'Текст для чтения' : 'Текст задания'}
@@ -549,7 +549,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
             ))}
           </div>
         </section>
-      )} */}
+      )}
 
       {isListeningLesson && primaryTranscript && (
         <section className="space-y-3 rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
@@ -621,7 +621,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
       </section>
 
       {/* Для остальных типов уроков карточки показываем после exercise */}
-      {lesson.meta?.taskType !== 'vocabulary' && flashcards.length > 0 && (
+      {/* {lesson.meta?.taskType !== 'vocabulary' && flashcards.length > 0 && (
         // <FlashcardPractice
         //   cards={flashcards}
         //   onResult={handleFlashcardResults}
@@ -632,7 +632,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
           onResult={handleFlashcardResults}
           title="Слова для повторения"
         />
-      )}
+      )} */}
 
       {readingScript && (
         <PronunciationPractice
