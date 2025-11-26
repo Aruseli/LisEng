@@ -16,6 +16,7 @@ interface GenerateCardsParams {
   snapshotInsights?: SnapshotInsights | null;
   sourceSnapshotId?: string | null;
   context?: string | null;
+  contexts?: string[] | null; // Массив контекстов для каждого слова (если передан, используется вместо context)
 }
 
 interface ManualWordsParams extends GenerateCardsParams {
@@ -47,11 +48,17 @@ export class VocabularyGenerationService {
       return [];
     }
 
-    const specs = await this.generateSpecsFromAI(normalizedWords, params.level);
+    // Подготавливаем контексты для каждого слова
+    // Если передан массив contexts, используем его; иначе используем один context для всех слов
+    const contexts = params.contexts
+      ? params.contexts.slice(0, normalizedWords.length)
+      : normalizedWords.map(() => params.context ?? null);
+
+    const specs = await this.generateSpecsFromAI(normalizedWords, params.level, contexts);
     return await this.saveCards(specs, {
       userId: params.userId,
       sourceSnapshotId: params.sourceSnapshotId ?? null,
-      context: params.context ?? null,
+      contexts,
     });
   }
 
@@ -62,11 +69,13 @@ export class VocabularyGenerationService {
     if (!params.words.length) {
       return [];
     }
-    const specs = await this.generateSpecsFromAI(params.words, params.level);
+    // Для ManualWordsParams используем один context для всех слов, если передан
+    const contexts = params.words.map(() => params.context ?? null);
+    const specs = await this.generateSpecsFromAI(params.words, params.level, contexts);
     return await this.saveCards(specs, {
       userId: params.userId,
       sourceSnapshotId: params.sourceSnapshotId ?? null,
-      context: params.context ?? null,
+      contexts,
     });
   }
 
@@ -121,14 +130,37 @@ export class VocabularyGenerationService {
 
   /**
    * Просим AI подготовить перевод/пример/подсказку для списка слов
+   * @param contexts - массив контекстов (предложений) для каждого слова. Если null, контекста нет.
    */
-  private async generateSpecsFromAI(words: string[], level: string): Promise<RawCardSpec[]> {
-    const prompt = [
-      `Ты — преподаватель английского языка.`,
-      `Составь карточки для словаря ученика уровня ${level}.`,
-      `Слова: ${words.join(', ')}.`,
-      `Ответь валидным JSON:`,
-      `{
+  private async generateSpecsFromAI(
+    words: string[],
+    level: string,
+    contexts?: (string | null)[]
+  ): Promise<RawCardSpec[]> {
+    const hasContexts = contexts && contexts.some((ctx) => ctx !== null && ctx.trim().length > 0);
+
+    let prompt: string;
+
+    if (hasContexts) {
+      // Промпт с контекстом для слов из текста
+      const wordsWithContext = words
+        .map((word, i) => {
+          const context = contexts?.[i];
+          if (context && context.trim().length > 0) {
+            return `"${word}" в контексте: "${context}"`;
+          }
+          return `"${word}"`;
+        })
+        .join(', ');
+
+      prompt = [
+        `Ты — преподаватель английского языка.`,
+        `Составь карточки для словаря ученика уровня ${level}.`,
+        `Слова с контекстом:`,
+        wordsWithContext,
+        `Учитывай контекст предложения при генерации перевода. Контекст помогает понять значение слова в конкретной ситуации.`,
+        `Ответь валидным JSON:`,
+        `{
   "cards": [
     {
       "word": "слово",
@@ -139,13 +171,35 @@ export class VocabularyGenerationService {
     }
   ]
 }`,
-      `Сохрани порядок слов. Не добавляй пояснений.`,
-    ].join('\n');
+        `Сохрани порядок слов. Не добавляй пояснений.`,
+      ].join('\n');
+    } else {
+      // Стандартный промпт без контекста (для слов из практики произношения и т.д.)
+      prompt = [
+        `Ты — преподаватель английского языка.`,
+        `Составь карточки для словаря ученика уровня ${level}.`,
+        `Слова: ${words.join(', ')}.`,
+        `Ответь валидным JSON:`,
+        `{
+  "cards": [
+    {
+      "word": "слово",
+      "translation": "перевод",
+      "example": "пример предложения с переводом",
+      "hint": "краткая подсказка произношения или использования",
+      "partOfSpeech": "noun|verb|..."
+    }
+  ]
+}`,
+        `Сохрани порядок слов. Не добавляй пояснений.`,
+      ].join('\n');
+    }
 
     const response = await generateJSON<{ cards: RawCardSpec[] }>(prompt, {
       maxTokens: 1200,
-      systemPrompt:
-        'Ты создаёшь карточки слов для подростка: дай точный перевод, пример и краткую подсказку.',
+      systemPrompt: hasContexts
+        ? 'Ты создаёшь карточки слов для подростка с учётом контекста: дай точный перевод, пример и краткую подсказку, учитывая значение слова в предложении.'
+        : 'Ты создаёшь карточки слов для подростка: дай точный перевод, пример и краткую подсказку.',
     }).catch((error) => {
       console.warn('[VocabularyGenerationService] AI generation failed, using fallback', error);
       return {
@@ -199,11 +253,19 @@ export class VocabularyGenerationService {
    */
   private async saveCards(
     cards: RawCardSpec[],
-    options: { userId: string; sourceSnapshotId: string | null; context: string | null }
+    options: {
+      userId: string;
+      sourceSnapshotId: string | null;
+      context?: string | null; // Для обратной совместимости
+      contexts?: (string | null)[]; // Массив контекстов для каждого слова
+    }
   ): Promise<StoredCard[]> {
     const saved: StoredCard[] = [];
 
-    for (const card of cards) {
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      // Используем контекст из массива, если передан, иначе используем общий context
+      const context = options.contexts?.[i] ?? options.context ?? null;
       // Нормализуем слово перед проверкой и сохранением
       const normalizedWord = this.normalizeWord(card.word);
 
@@ -295,7 +357,7 @@ export class VocabularyGenerationService {
             lesson_snapshot_id: options.sourceSnapshotId,
             vocabulary_card_id: cardId,
             word: normalizedWord, // Используем нормализованное слово
-            context_sentence: options.context ?? card.example,
+            context_sentence: context ?? card.example,
             active_recall_context: card.example,
             user_action: 'pronunciation_flag',
             user_confidence: 'unknown',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '../Buttons/Button';
 import type { TestQuestion, UserAnswer, TestResult, AnswerMetrics } from '@/types/level-test';
 import { GrammarQuestionView } from './GrammarQuestionView';
@@ -17,12 +17,19 @@ interface TestRunnerProps {
   onCancel: () => void;
 }
 
+const STORAGE_KEY_PREFIX = 'level_test_';
+const STORAGE_KEY_QUESTIONS = `${STORAGE_KEY_PREFIX}questions`;
+const STORAGE_KEY_INDEX = `${STORAGE_KEY_PREFIX}current_index`;
+const STORAGE_KEY_ANSWERS = `${STORAGE_KEY_PREFIX}answers`;
+const STORAGE_KEY_START_TIME = `${STORAGE_KEY_PREFIX}start_time`;
+
 export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps) {
   const { addToast } = useToastStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [startTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(Date.now());
+  const isInitialized = useRef(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;

@@ -14,6 +14,7 @@ import { useClient } from 'hasyx';
 import { BackArrow } from '@/components/icons/BackArrow';
 import { IconButton } from '../Buttons/IconButton';
 import { SwipeCard } from '../vocabulary/SwipeCard';
+import { ClickableText } from './ClickableText';
 
 interface LessonScreenProps {
   taskId: string;
@@ -44,6 +45,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [flashcardResults, setFlashcardResults] = useState<Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
+  const [userLevel, setUserLevel] = useState<string>('A2');
   const client = useClient();
 
   const loadLesson = useCallback(async () => {
@@ -79,6 +81,32 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     }
     loadLesson();
   }, [userId, loadLesson]);
+
+  // Загрузка уровня пользователя
+  useEffect(() => {
+    if (!userId || !client) {
+      return;
+    }
+
+    const loadUserLevel = async () => {
+      try {
+        const userProfile = await client.select({
+          table: 'users',
+          pk_columns: { id: userId },
+          returning: ['current_level'],
+        });
+
+        const user = Array.isArray(userProfile) ? userProfile[0] : userProfile;
+        if (user?.current_level) {
+          setUserLevel(user.current_level);
+        }
+      } catch (error) {
+        console.error('Failed to load user level:', error);
+      }
+    };
+
+    loadUserLevel();
+  }, [userId, client]);
 
   const handleBack = () => {
     router.push('/');
@@ -542,9 +570,22 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                 {passage.title && (
                   <p className="text-sm font-semibold text-gray-800">{passage.title}</p>
                 )}
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-                  {passage.text}
-                </p>
+                {isReadingLesson && userId ? (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                    <ClickableText
+                      text={passage.text}
+                      userId={userId}
+                      userLevel={userLevel}
+                      onWordAdded={(word) => {
+                        console.log('Word added to vocabulary:', word);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                    {passage.text}
+                  </p>
+                )}
               </article>
             ))}
           </div>

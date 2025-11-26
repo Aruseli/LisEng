@@ -30,6 +30,8 @@ export async function POST(request: NextRequest) {
     const userId: string | undefined = body.userId;
     const level: string | undefined = body.level;
     const words: string[] | undefined = body.words;
+    const context: string | undefined = body.context; // Контекст предложения для слова/фразы
+    const contexts: string[] | undefined = body.contexts; // Массив контекстов для каждого слова
 
     if (!userId) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 });
@@ -47,6 +49,8 @@ export async function POST(request: NextRequest) {
       level: derivedLevel,
       words,
       snapshotInsights: null,
+      context: context ?? null,
+      contexts: contexts ?? null,
     });
 
     return NextResponse.json({
