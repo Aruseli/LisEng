@@ -38,8 +38,13 @@ interface CardPosition {
 }
 
 export function SwipeCard({ cards, onResult, title = 'Слова для повторения' }: SwipeCardProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userId = session?.user?.id ?? null;
+  
+  // Если сессия еще загружается, не показываем компонент
+  if (status === 'loading') {
+    return null;
+  }
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);

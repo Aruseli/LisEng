@@ -53,7 +53,7 @@ const typeLabels: Record<string, string> = {
   ai_practice: 'AI практика',
 };
 
-export function DashboardTab({
+export const DashboardTab = ({
   loading,
   userName,
   currentLevel,
@@ -66,7 +66,7 @@ export function DashboardTab({
   planSummary,
   planFocus,
   requirementChecks,
-}: DashboardTabProps) {
+}: DashboardTabProps) => {
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
 

@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from './Buttons/Button';
-import { useClient } from 'hasyx';
+import { useHasyx } from 'hasyx';
 import { TestRunner } from './level-test/TestRunner';
 import type { LevelTestData, TestResult } from '@/types/level-test';
 import { useToastStore } from '@/store/toastStore';
+import { useLevelTestStore } from '@/store/levelTestStore';
 
 const SKILL_LABELS: Record<string, string> = {
   grammar: 'Грамматика',
@@ -58,9 +59,10 @@ interface LevelTestModalProps {
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
-export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalProps) {
+export const LevelTestModal = ({ userId, onComplete, onSkip }: LevelTestModalProps) => {
   const { addToast } = useToastStore();
-  const client = useClient();
+  const hasyx = useHasyx();
+  const { questions: savedQuestions, isTestInProgress, clearTest } = useLevelTestStore();
   const [step, setStep] = useState<'select' | 'test' | 'manual' | 'running' | 'result'>('select');
   const [selectedLevel, setSelectedLevel] = useState<string>('');
   const [manualLevel, setManualLevel] = useState<string>('');
@@ -68,6 +70,18 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
   const [testData, setTestData] = useState<LevelTestData | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [isGeneratingTest, setIsGeneratingTest] = useState(false);
+
+  // Проверяем, есть ли сохраненный тест при монтировании
+  useEffect(() => {
+    if (savedQuestions && isTestInProgress() && step === 'select') {
+      // Есть сохраненный тест - восстановим testData из сохраненных questions
+      setTestData({
+        questions: savedQuestions,
+        estimatedDuration: 0, // Не критично для восстановления
+        levelRange: 'A2-B1', // Не критично для восстановления
+      });
+    }
+  }, [savedQuestions, isTestInProgress, step]);
 
   const handleStartTest = async () => {
     setIsGeneratingTest(true);
@@ -152,11 +166,11 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
 
 
   const saveUserLevel = async (level: string) => {
-    if (!client) return;
+    if (!hasyx) return;
 
     setIsLoading(true);
     try {
-      await client.upsert({
+      await hasyx.upsert({
         table: 'users',
         object: {
           id: userId,
@@ -179,12 +193,16 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
         message: 'Не удалось сохранить уровень. Попробуйте еще раз.', 
         type: 'error' 
       });
+      // НЕ обнуляем модалку при ошибке - остаемся на экране результатов
+      // Пользователь может попробовать еще раз или выбрать уровень вручную
       setIsLoading(false);
     }
   };
 
   // Экран выбора: пройти тест или ввести вручную
   if (step === 'select') {
+    const hasSavedTest = savedQuestions && isTestInProgress();
+
     return (
       <div className="max-w-2xl mx-auto p-6 space-y-6">
         <div className="text-center space-y-4">
@@ -196,34 +214,93 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button
-            onClick={() => {
-              // Сначала выбираем предполагаемый уровень для адаптации теста
-              setStep('test');
-            }}
-            className="p-6 rounded-2xl border border-primary bg-gray-50 hover:bg-gray-100 transition text-left"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Пройти тест
-            </h3>
-            <p className="text-sm text-gray-600">
-              Рекомендуется. Короткий тест поможет точно определить ваш уровень.
-            </p>
-          </button>
+        {hasSavedTest ? (
+          // Есть сохраненный тест - показываем кнопки для продолжения
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p className="text-sm text-blue-800">
+                <strong>Обнаружен сохраненный прогресс теста.</strong> Вы можете продолжить прохождение теста или начать заново.
+              </p>
+            </div>
 
-          <button
-            onClick={() => setStep('manual')}
-            className="p-6 rounded-2xl border border-primary bg-gray-50 hover:bg-gray-100 transition text-left"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Указать вручную
-            </h3>
-            <p className="text-sm text-gray-600">
-              Если вы уже знаете свой уровень, можете указать его сразу.
-            </p>
-          </button>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={() => {
+                  // Восстанавливаем testData и переходим к тесту
+                  if (savedQuestions) {
+                    setTestData({
+                      questions: savedQuestions,
+                      estimatedDuration: 0,
+                      levelRange: 'A2-B1',
+                    });
+                    setStep('running');
+                  }
+                }}
+                className="p-6 rounded-2xl border border-primary bg-emerald-50 hover:bg-emerald-100 transition text-left"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Продолжить тест
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Продолжить прохождение теста с сохраненным прогрессом.
+                </p>
+              </button>
+
+              <button
+                onClick={() => {
+                  clearTest();
+                  setStep('test');
+                }}
+                className="p-6 rounded-2xl border border-primary bg-gray-50 hover:bg-gray-100 transition text-left"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Начать заново
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Начать новый тест. Текущий прогресс будет удален.
+                </p>
+              </button>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                onClick={() => setStep('manual')}
+                className="text-sm text-gray-600 hover:text-gray-900 underline"
+              >
+                Указать уровень вручную
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Нет сохраненного теста - обычный экран выбора
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={() => {
+                setStep('test');
+              }}
+              className="p-6 rounded-2xl border border-primary bg-gray-50 hover:bg-gray-100 transition text-left"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Пройти тест
+              </h3>
+              <p className="text-sm text-gray-600">
+                Рекомендуется. Короткий тест поможет точно определить ваш уровень.
+              </p>
+            </button>
+
+            <button
+              onClick={() => setStep('manual')}
+              className="p-6 rounded-2xl border border-primary bg-gray-50 hover:bg-gray-100 transition text-left"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Указать вручную
+              </h3>
+              <p className="text-sm text-gray-600">
+                Если вы уже знаете свой уровень, можете указать его сразу.
+              </p>
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -231,7 +308,7 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
   // Экран ввода уровня вручную
   if (step === 'manual') {
     return (
-      <div className="max-w-xl mx-auto p-6 space-y-6">
+      <div className="mx-auto p-6 space-y-6">
         <div className="text-center space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Укажите ваш уровень
@@ -275,7 +352,7 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
   // Экран подготовки к тесту
   if (step === 'test') {
     return (
-      <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <div className="mx-auto p-6 space-y-6">
         <div className="text-center space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Тест на определение уровня
@@ -342,7 +419,11 @@ export function LevelTestModal({ userId, onComplete, onSkip }: LevelTestModalPro
       <TestRunner
         questions={testData.questions}
         onComplete={handleTestComplete}
-        onCancel={() => setStep('select')}
+        onCancel={() => {
+          // Очищаем сохраненное состояние при отмене
+          // Zustand стор автоматически очистит персистентное хранилище
+          setStep('select');
+        }}
       />
     );
   }

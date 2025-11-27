@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'hasyx';
 import { useModalStore } from '@/store/modalStore';
+import { useRitualStore } from '@/store/ritualStore';
 import { ModalContainer } from './app/Modal/Modal';
 import { LevelTestModal } from './app/LevelTestModal';
 
@@ -50,10 +51,10 @@ type PlanAchievement = {
 };
 
 export default function EnglishLearningApp() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userId = session?.user?.id ?? null;
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [showRitual, setShowRitual] = useState(true);
+  const { ritualCompleted, completeRitual } = useRitualStore();
 
   const { data: dashboard, isLoading, error, completeTask, regeneratePlan } = useDashboardData(
     userId,
@@ -168,7 +169,7 @@ export default function EnglishLearningApp() {
   // Показываем модальное окно теста, если уровень не определен
   useEffect(() => {
     // Не показываем модальное окно, если показывается RitualScreen
-    if (showRitual) return;
+    if (!ritualCompleted) return;
 
     // Проверяем условия для показа модального окна
     const shouldShowModal = 
@@ -199,7 +200,7 @@ export default function EnglishLearningApp() {
         closeOnOverlayClick: false,
       });
     }
-  }, [userId, currentLevel, isLoading, levelTestShown, showRitual, openModal, closeModal, regeneratePlan]);
+  }, [userId, currentLevel, isLoading, levelTestShown, ritualCompleted, openModal, closeModal, regeneratePlan]);
 
   const handleCompleteTask = (taskId: string | number) => {
     completeTask(String(taskId));
@@ -222,7 +223,19 @@ export default function EnglishLearningApp() {
     alert(wasCorrect ? '✅ Правильно!' : '❌ Попробуй ещё раз через 1 день');
   };
 
-  if (!userId) {
+  // Показываем загрузку, пока сессия загружается
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="text-center">
+          <p className="text-gray-600">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Показываем экран авторизации только если точно не авторизован
+  if (status === 'unauthenticated' || !userId) {
     const callbackUrl = '/';
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -239,8 +252,9 @@ export default function EnglishLearningApp() {
     );
   }
 
-  if (showRitual) {
-    return <RitualScreen onComplete={() => setShowRitual(false)} />;
+  // Показываем ритуал, если он еще не завершен
+  if (!ritualCompleted) {
+    return <RitualScreen onComplete={completeRitual} />;
   }
 
   return (

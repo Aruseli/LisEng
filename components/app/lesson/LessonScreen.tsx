@@ -10,10 +10,11 @@ import type { LessonMaterials } from '@/lib/lesson/lesson-content-service';
 import { PronunciationPractice } from './PronunciationPractice';
 import { ListeningPlayer } from '@/components/app/listening/ListeningPlayer';
 import { FlashcardPractice, type Flashcard } from '@/components/app/vocabulary/FlashcardPractice';
-import { useClient } from 'hasyx';
+import { useHasyx } from 'hasyx';
 import { BackArrow } from '@/components/icons/BackArrow';
 import { IconButton } from '../Buttons/IconButton';
 import { SwipeCard } from '../vocabulary/SwipeCard';
+import { ClickableText } from './ClickableText';
 
 interface LessonScreenProps {
   taskId: string;
@@ -26,7 +27,7 @@ type LessonFetchState =
 
 export function LessonScreen({ taskId }: LessonScreenProps) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userId = session?.user?.id ?? null;
 
   const [state, setState] = useState<LessonFetchState>({ status: 'loading' });
@@ -44,7 +45,8 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [flashcardResults, setFlashcardResults] = useState<Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
-  const client = useClient();
+  const [userLevel, setUserLevel] = useState<string>('A2');
+  const hasyx = useHasyx();
 
   const loadLesson = useCallback(async () => {
     if (!userId) {
@@ -79,6 +81,32 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     }
     loadLesson();
   }, [userId, loadLesson]);
+
+  // Загрузка уровня пользователя
+  useEffect(() => {
+    if (!userId || !hasyx) {
+      return;
+    }
+
+    const loadUserLevel = async () => {
+      try {
+        const userProfile = await hasyx.select({
+          table: 'users',
+          pk_columns: { id: userId },
+          returning: ['current_level'],
+        });
+
+        const user = Array.isArray(userProfile) ? userProfile[0] : userProfile;
+        if (user?.current_level) {
+          setUserLevel(user.current_level);
+        }
+      } catch (error) {
+        console.error('Failed to load user level:', error);
+      }
+    };
+
+    loadUserLevel();
+  }, [userId, hasyx]);
 
   const handleBack = () => {
     router.push('/');
@@ -119,7 +147,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
   // Загрузка карточек для урока
   useEffect(() => {
-    if (!userId || !lesson || !client) {
+    if (!userId || !lesson || !hasyx) {
       return;
     }
 
@@ -143,7 +171,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
         // Для заданий Active Recall (sm2_due) загружаем карточки из active_recall_sessions
         if (insightType === 'sm2_due' && insightReference) {
-          const recallSession = await client.select({
+          const recallSession = await hasyx.select({
             table: 'active_recall_sessions',
             pk_columns: { id: insightReference },
             returning: ['recall_item_id', 'recall_type'],
@@ -151,7 +179,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
           const recallData = Array.isArray(recallSession) ? recallSession[0] : recallSession;
           if (recallData && recallData.recall_type === 'vocabulary' && recallData.recall_item_id) {
-            const card = await client.select({
+            const card = await hasyx.select({
               table: 'vocabulary_cards',
               pk_columns: { id: recallData.recall_item_id },
               returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
@@ -176,7 +204,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
         // Если есть targetWords в уроке, создаем карточки из них
         if (lesson.targetWords && lesson.targetWords.length > 0) {
           // Пытаемся найти существующие карточки для этих слов
-          const cards = await client.select({
+          const cards = await hasyx.select({
             table: 'vocabulary_cards',
             where: {
               user_id: { _eq: userId },
@@ -202,7 +230,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
         // Если карточек нет, загружаем новые/плохо освоенные слова
         const today = new Date().toISOString().split('T')[0];
-        const reviewCards = await client.select({
+        const reviewCards = await hasyx.select({
           table: 'vocabulary_cards',
           where: {
             user_id: { _eq: userId },
@@ -242,7 +270,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
             if (wordsFromQuestions.length > 0) {
               // Проверяем, есть ли уже карточки для этих слов
-              const existingCards = await client.select({
+              const existingCards = await hasyx.select({
                 table: 'vocabulary_cards',
                 where: {
                   user_id: { _eq: userId },
@@ -267,7 +295,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
               // Если карточек нет, создаем их из questions через API
               try {
-                const userProfile = await client.select({
+                  const userProfile = await hasyx.select({
                   table: 'users',
                   pk_columns: { id: userId },
                   returning: ['current_level'],
@@ -291,7 +319,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                   if (generateResult.cards && generateResult.cards.length > 0) {
                     const cardIds = generateResult.cards.map((c: { id: string }) => c.id).filter(Boolean);
                     if (cardIds.length > 0) {
-                      const newCards = await client.select({
+                      const newCards = await hasyx.select({
                         table: 'vocabulary_cards',
                         where: {
                           user_id: { _eq: userId },
@@ -323,7 +351,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
           }
 
           // Если не получилось создать из questions, генерируем на основе уровня
-          const userProfile = await client.select({
+          const userProfile = await hasyx.select({
             table: 'users',
             pk_columns: { id: userId },
             returning: ['current_level'],
@@ -347,7 +375,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
               if (generateResult.cards && generateResult.cards.length > 0) {
                 const cardIds = generateResult.cards.map((c: { id: string }) => c.id).filter(Boolean);
                 if (cardIds.length > 0) {
-                  const newCards = await client.select({
+                  const newCards = await hasyx.select({
                     table: 'vocabulary_cards',
                     where: {
                       user_id: { _eq: userId },
@@ -384,7 +412,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     };
 
     loadCards();
-  }, [userId, lesson, client, taskId]);
+  }, [userId, lesson, hasyx, taskId]);
 
   const handleFlashcardResults = useCallback(
     (results: Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>) => {
@@ -429,7 +457,19 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     }
       }, [lesson, pronunciationResult, readingScript, flashcardResults, router, taskId, userId]);
 
-  if (!userId) {
+  // Показываем загрузку, пока сессия загружается
+  if (status === 'loading') {
+    return (
+      <div className="mx-auto mt-10 flex max-w-5xl flex-col gap-4">
+        <Skeleton className="h-10" />
+        <Skeleton className="h-32" />
+        <Skeleton className="h-48" />
+      </div>
+    );
+  }
+
+  // Показываем ошибку только если точно не авторизован
+  if (status === 'unauthenticated' || !userId) {
     return (
       <div className="mx-auto mt-16 max-w-3xl rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
         <p className="text-center text-gray-600">Нужна авторизация, чтобы открыть урок.</p>
@@ -542,9 +582,22 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                 {passage.title && (
                   <p className="text-sm font-semibold text-gray-800">{passage.title}</p>
                 )}
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-                  {passage.text}
-                </p>
+                {isReadingLesson && userId ? (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                    <ClickableText
+                      text={passage.text ?? ''}
+                      userId={userId}
+                      userLevel={userLevel}
+                      onWordAdded={(word) => {
+                        console.log('Word added to vocabulary:', word);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+                    {passage.text ?? ''}
+                  </p>
+                )}
               </article>
             ))}
           </div>

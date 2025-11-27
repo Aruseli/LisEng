@@ -27,7 +27,7 @@ interface NavigationProps {
   isLoading?: boolean;
 }
 
-export function Navigation({ activeTab, onTabChange, onRefresh, onLevelTest, isLoading }: NavigationProps) {
+export const Navigation = ({ activeTab, onTabChange, onRefresh, onLevelTest, isLoading }: NavigationProps) => {
   const handleTabClick = (tabId: string) => {
     if (tabId === 'level-test' && onLevelTest) {
       onLevelTest();

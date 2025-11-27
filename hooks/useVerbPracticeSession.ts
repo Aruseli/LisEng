@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'hasyx';
 
 interface SessionStats {
   verbsPracticed: number;
@@ -20,7 +20,7 @@ interface UseVerbPracticeSessionReturn {
 }
 
 export function useVerbPracticeSession(): UseVerbPracticeSessionReturn {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isActive, setIsActive] = useState(false);
   const [sessionStats, setSessionStats] = useState<SessionStats>({
     verbsPracticed: 0,
@@ -61,7 +61,7 @@ export function useVerbPracticeSession(): UseVerbPracticeSessionReturn {
   }, []);
 
   const endSession = useCallback(async () => {
-    if (!isActive || !session?.user?.id || !startTimeRef.current) return;
+    if (!isActive || status !== 'authenticated' || !session?.user?.id || !startTimeRef.current) return;
 
     const durationMs = Date.now() - startTimeRef.current;
     const durationMinutes = Math.round(durationMs / 60000) || 1;
@@ -88,7 +88,7 @@ export function useVerbPracticeSession(): UseVerbPracticeSessionReturn {
 
     setIsActive(false);
     startTimeRef.current = null;
-  }, [isActive, session?.user?.id, sessionStats]);
+  }, [isActive, status, session?.user?.id, sessionStats]);
 
   return {
     startSession,

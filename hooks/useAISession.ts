@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useClient } from 'hasyx';
+import { useHasyx } from 'hasyx';
 
 import {
   createAISession,
@@ -42,7 +42,7 @@ export function useAISession({
   initialMessages = [],
   suggestedPrompt,
 }: UseAISessionOptions) {
-  const client = useClient();
+  const hasyx = useHasyx();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,16 +57,16 @@ export function useAISession({
   }, [initialMessages]);
 
   const ensureSession = useCallback(async () => {
-    if (!client || !userId) return null;
+    if (!hasyx || !userId) return null;
     if (sessionId) return sessionId;
 
-    const result = await createAISession(client, userId, type, topic);
+    const result = await createAISession(hasyx, userId, type, topic);
     if (result?.id) {
       setSessionId(result.id);
       return result.id;
     }
     return null;
-  }, [client, userId, type, topic, sessionId]);
+  }, [hasyx, userId, type, topic, sessionId]);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
@@ -126,7 +126,7 @@ export function useAISession({
       setMessages(updated);
 
       if (sessionId) {
-        await updateAISession(client, sessionId, {
+        await updateAISession(hasyx, sessionId, {
           conversation: updated,
         });
       }
@@ -141,7 +141,7 @@ export function useAISession({
     } finally {
       setIsLoading(false);
     }
-  }, [type, topic, level, messages, ensureSession, client, sessionId, userId]);
+  }, [type, topic, level, messages, ensureSession, hasyx, sessionId, userId]);
 
   const startSession = useCallback(async () => {
     await ensureSession();
@@ -149,7 +149,7 @@ export function useAISession({
 
   const endSession = useCallback(
     async (feedback?: any) => {
-      if (!sessionId || !client || messages.length === 0) return;
+      if (!sessionId || !hasyx || messages.length === 0) return;
 
       const durationMinutes = Math.max(
         1,
@@ -158,13 +158,13 @@ export function useAISession({
         )
       );
 
-      await updateAISession(client, sessionId, {
+      await updateAISession(hasyx, sessionId, {
         conversation: messages,
         feedback,
         duration_minutes: durationMinutes,
       });
     },
-    [client, sessionId, messages]
+    [hasyx, sessionId, messages]
   );
 
   const resetSession = useCallback(() => {
