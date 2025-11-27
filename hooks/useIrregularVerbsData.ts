@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'hasyx';
 import type { IrregularVerb, VerbWithProgress, GroupProgress } from '@/lib/verbs/verbs-service';
 
 interface UseIrregularVerbsDataOptions {
@@ -24,7 +24,7 @@ interface UseIrregularVerbsDataReturn {
 export function useIrregularVerbsData(
   options: UseIrregularVerbsDataOptions = {}
 ): UseIrregularVerbsDataReturn {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [verbs, setVerbs] = useState<VerbWithProgress[]>([]);
   const [groups, setGroups] = useState<GroupProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +32,7 @@ export function useIrregularVerbsData(
   const [filters, setFilters] = useState<UseIrregularVerbsDataOptions>(options);
 
   const fetchVerbs = useCallback(async () => {
-    if (!session?.user?.id) {
+    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
       setIsLoading(false);
       return;
     }
@@ -60,10 +60,10 @@ export function useIrregularVerbsData(
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user?.id, filters]);
+  }, [status, session?.user?.id, filters]);
 
   const fetchGroups = useCallback(async () => {
-    if (!session?.user?.id) {
+    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
       return;
     }
 
@@ -78,7 +78,7 @@ export function useIrregularVerbsData(
     } catch (err: any) {
       console.error('[useIrregularVerbsData] Error fetching groups:', err);
     }
-  }, [session?.user?.id]);
+  }, [status, session?.user?.id]);
 
   useEffect(() => {
     fetchVerbs();
