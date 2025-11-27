@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'hasyx';
 import type { VerbWithProgress } from '@/lib/verbs/verbs-service';
 
 interface UseVerbFromLessonReturn {
@@ -12,13 +12,13 @@ interface UseVerbFromLessonReturn {
 }
 
 export function useVerbFromLesson(): UseVerbFromLessonReturn {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isAdding, setIsAdding] = useState(false);
   const [currentVerb, setCurrentVerb] = useState<VerbWithProgress | null>(null);
 
   const addToReviewQueue = useCallback(
     async (verbId: string) => {
-      if (!session?.user?.id || isAdding) return;
+      if (status !== 'authenticated' || !session?.user?.id || isAdding) return;
 
       setIsAdding(true);
       try {
@@ -38,12 +38,12 @@ export function useVerbFromLesson(): UseVerbFromLessonReturn {
         setIsAdding(false);
       }
     },
-    [session?.user?.id, isAdding]
+    [status, session?.user?.id, isAdding]
   );
 
   const showVerbCard = useCallback(
     async (verbId: string): Promise<VerbWithProgress | null> => {
-      if (!session?.user?.id) return null;
+      if (status !== 'authenticated' || !session?.user?.id) return null;
 
       try {
         const response = await fetch(`/api/verbs/${verbId}`);
@@ -60,7 +60,7 @@ export function useVerbFromLesson(): UseVerbFromLessonReturn {
         return null;
       }
     },
-    [session?.user?.id]
+    [status, session?.user?.id]
   );
 
   return {

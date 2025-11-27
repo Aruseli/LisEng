@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'hasyx';
 import type { VerbWithProgress, PracticeResult } from '@/lib/verbs/verbs-service';
 
 interface UseIrregularVerbsTrainerOptions {
@@ -23,7 +23,7 @@ interface UseIrregularVerbsTrainerReturn {
 export function useIrregularVerbsTrainer(
   options: UseIrregularVerbsTrainerOptions = {}
 ): UseIrregularVerbsTrainerReturn {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [verbs, setVerbs] = useState<VerbWithProgress[]>(options.verbs || []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mode, setMode] = useState<'form-to-meaning' | 'sentence-to-form'>(
@@ -47,7 +47,7 @@ export function useIrregularVerbsTrainer(
 
   const submitAnswer = useCallback(
     async (answer: string, wasCorrect: boolean) => {
-      if (!currentVerb || !session?.user?.id || isSubmitting) return;
+      if (!currentVerb || status !== 'authenticated' || !session?.user?.id || isSubmitting) return;
 
       setIsSubmitting(true);
       const responseTime = Math.round((Date.now() - startTime) / 1000);
@@ -75,7 +75,7 @@ export function useIrregularVerbsTrainer(
         setIsSubmitting(false);
       }
     },
-    [currentVerb, session?.user?.id, mode, startTime, isSubmitting]
+    [currentVerb, status, session?.user?.id, mode, startTime, isSubmitting]
   );
 
   const nextVerb = useCallback(() => {

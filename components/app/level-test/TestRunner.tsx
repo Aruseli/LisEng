@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { Button } from '../Buttons/Button';
 import type { TestQuestion, UserAnswer, TestResult, AnswerMetrics } from '@/types/level-test';
 import { GrammarQuestionView } from './GrammarQuestionView';
@@ -10,6 +10,7 @@ import { ListeningQuestionView } from './ListeningQuestionView';
 import { WritingQuestionView } from './WritingQuestionView';
 import { SpeakingQuestionView } from './SpeakingQuestionView';
 import { useToastStore } from '@/store/toastStore';
+import { useLevelTestStore } from '@/store/levelTestStore';
 
 interface TestRunnerProps {
   questions: TestQuestion[];
@@ -17,48 +18,76 @@ interface TestRunnerProps {
   onCancel: () => void;
 }
 
-const STORAGE_KEY_PREFIX = 'level_test_';
-const STORAGE_KEY_QUESTIONS = `${STORAGE_KEY_PREFIX}questions`;
-const STORAGE_KEY_INDEX = `${STORAGE_KEY_PREFIX}current_index`;
-const STORAGE_KEY_ANSWERS = `${STORAGE_KEY_PREFIX}answers`;
-const STORAGE_KEY_START_TIME = `${STORAGE_KEY_PREFIX}start_time`;
-
 export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps) {
   const { addToast } = useToastStore();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<UserAnswer[]>([]);
+  const {
+    questions: savedQuestions,
+    currentQuestionIndex,
+    answers,
+    startTime,
+    initializeTest,
+    setCurrentQuestionIndex,
+    addAnswer,
+    clearTest,
+    getCurrentAnswer,
+    isTestInProgress,
+  } = useLevelTestStore();
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [startTime, setStartTime] = useState(Date.now());
-  const isInitialized = useRef(false);
+  const isInitializedRef = useRef(false);
+
+  // Инициализация теста при монтировании (безопасно, без рекурсии)
+  useEffect(() => {
+    // Если уже инициализирован в этом монтировании - не трогаем
+    if (isInitializedRef.current) return;
+
+    // Проверяем, есть ли сохраненный тест и совместим ли он с текущими вопросами
+    if (savedQuestions && isTestInProgress()) {
+      // Проверяем совместимость сохраненных данных с текущими вопросами
+      const isCompatible =
+        savedQuestions.length === questions.length &&
+        savedQuestions.every((q, i) => q.id === questions[i].id);
+
+      if (isCompatible) {
+        // Тест совместим, состояние уже восстановлено из Zustand - используем его
+        addToast({
+          message: 'Прогресс теста восстановлен',
+          type: 'info',
+        });
+        isInitializedRef.current = true;
+        return; // НЕ вызываем initializeTest - используем сохраненные данные
+      } else {
+        // Данные не совместимы, инициализируем новый тест
+        clearTest();
+        initializeTest(questions);
+        isInitializedRef.current = true;
+        return;
+      }
+    }
+
+    // Нет сохраненного теста, инициализируем новый
+    initializeTest(questions);
+    isInitializedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Запускаем только один раз при монтировании
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   const handleAnswer = useCallback((answer: string | number | number[], metrics?: AnswerMetrics) => {
-    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+    // Если startTime нет, используем 0 (может быть после восстановления из store)
+    const timeSpent = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
 
-    setAnswers((prevAnswers) => {
-      const existingAnswerIndex = prevAnswers.findIndex(
-        (a) => a.questionId === currentQuestion.id
-      );
+    const newAnswer: UserAnswer = {
+      questionId: currentQuestion.id,
+      answer,
+      timeSpent,
+      metrics,
+    };
 
-      const newAnswer: UserAnswer = {
-        questionId: currentQuestion.id,
-        answer,
-        timeSpent,
-        metrics,
-      };
-
-      if (existingAnswerIndex >= 0) {
-        const updated = [...prevAnswers];
-        updated[existingAnswerIndex] = newAnswer;
-        return updated;
-      }
-
-      return [...prevAnswers, newAnswer];
-    });
-  }, [currentQuestion, startTime]);
+    addAnswer(newAnswer);
+  }, [currentQuestion, startTime, addAnswer]);
 
   const handleNext = () => {
     if (isLastQuestion) {
@@ -91,24 +120,28 @@ export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps)
       }
 
       const result = await response.json();
+      
+      // Сначала вызываем onComplete, потом очищаем состояние
+      // Это гарантирует, что результат будет передан до очистки
       onComplete(result);
+      
+      // Очищаем состояние теста только после успешного завершения
+      clearTest();
     } catch (error) {
       console.error('Failed to submit test:', error);
       addToast({
         message: 'Не удалось отправить тест. Попробуйте еще раз.',
         type: 'error',
       });
+      // При ошибке НЕ очищаем тест - пользователь может повторить попытку
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getCurrentAnswer = (): UserAnswer | undefined => {
-    return answers.find((a) => a.questionId === currentQuestion.id);
-  };
 
   const renderQuestion = () => {
-    const currentAnswer = getCurrentAnswer();
+    const currentAnswer = getCurrentAnswer(currentQuestion.id);
 
     switch (currentQuestion.type) {
       case 'grammar':
@@ -165,7 +198,7 @@ export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps)
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className=" mx-auto pt-8 px-1 space-y-6">
       {/* Прогресс */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm text-gray-600">
@@ -183,7 +216,7 @@ export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps)
       </div>
 
       {/* Вопрос */}
-      <div className="bg-white rounded-2xl border border-primary p-6">
+      <div className="bg-white rounded-2xl border border-primary p-2">
         {renderQuestion()}
       </div>
 
@@ -191,21 +224,33 @@ export function TestRunner({ questions, onComplete, onCancel }: TestRunnerProps)
       <div className="flex justify-between">
         <Button
           variant="outline"
-          onClick={handlePrevious}
-          disabled={currentQuestionIndex === 0}
-        >
-          Назад
-        </Button>
-        <Button
-          onClick={handleNext}
+          onClick={() => {
+            clearTest();
+            onCancel();
+          }}
           disabled={isSubmitting}
         >
-          {isSubmitting
-            ? 'Отправка...'
-            : isLastQuestion
-            ? 'Завершить тест'
-            : 'Далее'}
+          Отменить
         </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+          >
+            Назад
+          </Button>
+          <Button
+            onClick={handleNext}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? 'Отправка...'
+              : isLastQuestion
+              ? 'Завершить тест'
+              : 'Далее'}
+          </Button>
+        </div>
       </div>
     </div>
   );
