@@ -1,10 +1,41 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --background: 249 250 251;
+  --foreground: 18 18 18;
+  --card: 255 255 255;
+  --card-foreground: 18 18 18;
+  --popover: 255 255 255;
+  --popover-foreground: 18 18 18;
+  --primary: 64 198 195;
+  --primary-foreground: 255 255 255;
+  --secondary: 243 244 246;
+  --secondary-foreground: 18 18 18;
+  --muted: 243 244 246;
+  --muted-foreground: 107 114 128;
+  --accent: 64 198 195;
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 64 198 195;
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --shadow-md: 0 0 5px 0 rgba(75, 52, 62, 0.1);
+  --primary: 100 198 195;            /* Primary/Transformative Teal 64c6c3 */
+  --primary-deep: 35, 127, 123;       /* Primary/Deep Focus 237f7b */
+  --neutral: 165 181 174;
+  --block: 249 250 251;              /* White for light mode modal background */
+}
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: rgb(var(--background));
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -39,6 +70,7 @@
   --color-neutral: rgb(var(--neutral));
   --color-primary: rgb(var(--primary));
   --color-primary-deep: rgb(var(--primary-deep));
+  --color-card: rgb(var(--card));
 
   @keyframes accordion-down {
     from {
@@ -57,38 +89,6 @@
       height: 0;
     }
   }
-}
-
-:root {
-  --radius: 0.625rem;
-  --background: 249 250 251;
-  --foreground: 18 18 18;
-  --card: 255 255 255;
-  --card-foreground: 18 18 18;
-  --popover: 255 255 255;
-  --popover-foreground: 18 18 18;
-  --primary: 64 198 195;
-  --primary-foreground: 255 255 255;
-  --secondary: 243 244 246;
-  --secondary-foreground: 18 18 18;
-  --muted: 243 244 246;
-  --muted-foreground: 107 114 128;
-  --accent: 64 198 195;
-  --accent-foreground: 255 255 255;
-  --destructive: 239 68 68;
-  --border: 229 231 235;
-  --input: 229 231 235;
-  --ring: 64 198 195;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --shadow-md: 0 0 5px 0 rgba(75, 52, 62, 0.1);
-  --primary: 100 198 195;            /* Primary/Transformative Teal 64c6c3 */
-  --primary-deep: 35, 127, 123;       /* Primary/Deep Focus 237f7b */
-  --neutral: 165 181 174;
-  --block: 249 250 251;              /* White for light mode modal background */
 }
 
 /* @media (prefers-color-scheme: dark) {
