@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useClient } from 'hasyx';
+import { useHasyx } from 'hasyx';
 
 import type { DailyPlanResult } from '@/lib/plan/daily-plan-service';
 
@@ -24,11 +24,11 @@ interface UseDashboardDataOptions {
   autoRefresh?: boolean;
 }
 
-export function useDashboardData(
+export const useDashboardData = (
   userId?: string | null,
   options: UseDashboardDataOptions = {}
-) {
-  const client = useClient();
+) => {
+  const hasyx = useHasyx();
   const [state, setState] = useState<DashboardState>({
     data: null,
     isLoading: Boolean(userId),
@@ -46,7 +46,7 @@ export function useDashboardData(
   }, [options.date]);
 
   const fetchDashboard = useCallback(async () => {
-    if (!client || !userId) {
+    if (!hasyx || !userId) {
       return;
     }
 
@@ -67,7 +67,7 @@ export function useDashboardData(
       const { plan } = (await planResponse.json()) as { plan: DailyPlanResult };
 
       const [userProfile, vocabularyCards, progressMetrics] = await Promise.all([
-        client.select({
+        hasyx.select({
           table: 'users',
           pk_columns: { id: userId },
           returning: [
@@ -80,7 +80,7 @@ export function useDashboardData(
             'study_time',
           ],
         }),
-        client.select({
+        hasyx.select({
           table: 'vocabulary_cards',
           where: {
             user_id: { _eq: userId },
@@ -97,7 +97,7 @@ export function useDashboardData(
             'difficulty',
           ],
         }),
-        client.select({
+        hasyx.select({
           table: 'progress_metrics',
           where: {
             user_id: { _eq: userId },
@@ -136,7 +136,7 @@ export function useDashboardData(
         error: error?.message ?? 'Не удалось обновить данные дашборда',
       }));
     }
-  }, [client, targetDate, userId]);
+  }, [hasyx, targetDate, userId]);
 
   const scheduleAutoRefresh = useCallback(() => {
     if (!options.autoRefresh) {
@@ -154,7 +154,7 @@ export function useDashboardData(
   }, [fetchDashboard, options.autoRefresh]);
 
   useEffect(() => {
-    if (!client || !userId) {
+    if (!hasyx || !userId) {
       return;
     }
     fetchDashboard().then(scheduleAutoRefresh).catch(() => {
@@ -166,7 +166,7 @@ export function useDashboardData(
         clearTimeout(refreshTimerRef.current);
       }
     };
-  }, [client, userId, fetchDashboard, scheduleAutoRefresh]);
+  }, [hasyx, userId, fetchDashboard, scheduleAutoRefresh]);
 
   const regeneratePlan = useCallback(
     async (params?: { forceAi?: boolean }) => {
@@ -205,7 +205,7 @@ export function useDashboardData(
 
   const completeTask = useCallback(
     async (taskId: string) => {
-      if (!client) return;
+      if (!hasyx) return;
 
       setState((prev) => {
         if (!prev.data?.plan) {
@@ -227,7 +227,7 @@ export function useDashboardData(
       });
 
       try {
-        await client.update({
+        await hasyx.update({
           table: 'daily_tasks',
           pk_columns: { id: taskId },
           _set: {
@@ -244,7 +244,7 @@ export function useDashboardData(
         await fetchDashboard();
       }
     },
-    [client, fetchDashboard]
+    [hasyx, fetchDashboard]
   );
 
   return {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'hasyx';
 import type { VerbWithProgress, GroupProgress } from '@/lib/verbs/verbs-service';
 
 interface VerbProgressStats {
@@ -26,14 +26,15 @@ interface UseVerbProgressReturn {
 }
 
 export function useVerbProgress(): UseVerbProgressReturn {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [progress, setProgress] = useState<VerbProgressStats | null>(null);
   const [weakVerbs, setWeakVerbs] = useState<VerbWithProgress[]>([]);
   const [upcomingReviews, setUpcomingReviews] = useState<ReviewSchedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProgress = useCallback(async () => {
-    if (!session?.user?.id) {
+    // Не загружаем данные, пока сессия загружается или пользователь не авторизован
+    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
       setIsLoading(false);
       return;
     }
@@ -91,7 +92,7 @@ export function useVerbProgress(): UseVerbProgressReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.id, status]);
 
   useEffect(() => {
     fetchProgress();

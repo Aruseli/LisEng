@@ -7,7 +7,7 @@ interface RitualScreenProps {
   onComplete: () => void;
 }
 
-export function RitualScreen({ onComplete }: RitualScreenProps) {
+export const RitualScreen = ({ onComplete }: RitualScreenProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center px-4">
       <div className="max-w-xl w-full rounded-3xl bg-white shadow-xl p-6 text-center">

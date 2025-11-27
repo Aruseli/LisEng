@@ -12,7 +12,7 @@ interface HeaderProps {
   streak: number;
 }
 
-export function Header({ userName, streak }: HeaderProps) {
+export const Header = ({ userName, streak }: HeaderProps) => {
   const handleLogout = () => {
     signOut({ callbackUrl: '/' });
   };

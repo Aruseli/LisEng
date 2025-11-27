@@ -28,7 +28,7 @@ export function VocabularyQuestionView({
       
       <p className="text-base text-gray-700">{question.question}</p>
       
-      <div className="space-2">
+      <div className="flex flex-wrap gap-2 items-center justify-center">
         {question.options.map((option, index) => (
           <Button
             key={index}
