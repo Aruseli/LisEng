@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'motion/react'
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from '../Icons/ChevronDown';
+import { ChevronDown } from 'lucide-react';
 
 export interface Option {
   label: string;
