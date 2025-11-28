@@ -1,20 +1,33 @@
 {
-  "name": "LisEng",
+  "name": "LisEng - Изучение английского языка",
   "short_name": "LisEng",
+  "description": "Приложение для изучения английского языка",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ru",
   "background_color": "#ffffff",
   "theme_color": "#00b894",
+  "categories": ["education", "productivity"],
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icons/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
     apple: [
-      { url: '/icons/icon-192.webp' },
-      { url: '/icons/icon-152.webp', sizes: '152x152' },
-      { url: '/icons/icon-167.webp', sizes: '167x167' },
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180' },
+      { url: '/icons/android-chrome-192x192.png', sizes: '192x192' },
+      { url: '/icons/android-chrome-512x512.png', sizes: '512x512' },
     ],
   },
   
@@ -52,10 +52,10 @@ export const metadata: Metadata = {
   // Поле для всех остальных, нестандартных или редких тегов
   other: {
     'mobile-web-app-capable': 'yes',
-    'msapplication-TileColor': '#000000',
+    'msapplication-TileColor': '#00b894',
     'msapplication-tap-highlight': 'no',
-    'msapplication-navbutton-color': '#000000',
-    'msapplication-TileImage': '/icons/icon-192.webp',
+    'msapplication-navbutton-color': '#00b894',
+    'msapplication-TileImage': '/icons/android-chrome-192x192.png',
     'msapplication-config': '/browserconfig.xml',
   },
 };
