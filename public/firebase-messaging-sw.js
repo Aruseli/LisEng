@@ -80,3 +80,4 @@ if (typeof firebase !== 'undefined') {
 
 console.log('Firebase messaging service worker loaded');
 
+

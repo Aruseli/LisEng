@@ -7,6 +7,7 @@ import {
   createAISession,
   updateAISession,
 } from '@/lib/hasura-queries';
+import type { WritingFeedback } from '@/types/writing-feedback';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -111,10 +112,46 @@ export function useAISession({
 
       const responseJson = await response.json();
 
-      const aiText =
-        type === 'writing'
-          ? responseJson?.correctedText || responseJson?.message
-          : responseJson?.message;
+      let aiText: string | undefined;
+
+      if (type === 'writing') {
+        // Пытаемся распарсить ответ как WritingFeedback и собрать человекочитаемый текст
+        const fb = responseJson as Partial<WritingFeedback> | undefined;
+
+        if (fb && (fb.score !== undefined || fb.feedback || fb.corrections)) {
+          const parts: string[] = [];
+
+          if (typeof fb.score === 'number') {
+            parts.push(`Оценка за письмо: ${fb.score}/10.`);
+          }
+
+          if (fb.feedback) {
+            parts.push(`Общий отзыв: ${fb.feedback}`);
+          }
+
+          if (Array.isArray(fb.corrections) && fb.corrections.length > 0) {
+            const correctionsText = fb.corrections
+              .map((c, idx) => {
+                const num = `${idx + 1}.`;
+                const original = c.original ? `«${c.original}»` : '';
+                const corrected = c.corrected ? ` → «${c.corrected}»` : '';
+                const explanation = c.explanation ? ` (${c.explanation})` : '';
+                return `${num} ${original}${corrected}${explanation}`.trim();
+              })
+              .join('\n');
+
+            parts.push('Исправления:\n' + correctionsText);
+          }
+
+          aiText = parts.join('\n\n');
+        } else {
+          // fallback к старому формату, если структура другая
+          aiText = responseJson?.correctedText || responseJson?.message;
+        }
+      } else {
+        // speaking / ai_practice
+        aiText = responseJson?.message;
+      }
 
       const aiMessage: Message = {
         role: 'assistant',

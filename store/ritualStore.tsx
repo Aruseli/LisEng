@@ -36,3 +36,4 @@ export const useRitualStore = create<RitualState>()(
   )
 );
 
+
