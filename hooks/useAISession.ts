@@ -146,12 +146,10 @@ export function useAISession({
           aiText = parts.join('\n\n');
         } else {
           // fallback к старому формату, если структура другая
-          // @ts-expect-error – исторически могли приходить другие поля
           aiText = responseJson?.correctedText || responseJson?.message;
         }
       } else {
         // speaking / ai_practice
-        // @ts-expect-error – для универсальности поддерживаем разные форматы
         aiText = responseJson?.message;
       }
 
