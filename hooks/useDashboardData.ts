@@ -29,10 +29,36 @@ export const useDashboardData = (
   options: UseDashboardDataOptions = {}
 ) => {
   const hasyx = useHasyx();
-  const [state, setState] = useState<DashboardState>({
-    data: null,
-    isLoading: Boolean(userId),
-    error: null,
+  // Используем sessionStorage для сохранения данных между навигациями
+  const storageKey = userId ? `dashboard_data_${userId}` : null;
+  const [state, setState] = useState<DashboardState>(() => {
+    // Пытаемся восстановить данные из sessionStorage
+    if (storageKey && typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Проверяем, что данные не устарели (не старше 5 минут)
+          if (parsed.lastUpdatedAt) {
+            const age = Date.now() - new Date(parsed.lastUpdatedAt).getTime();
+            if (age < 5 * 60 * 1000) { // 5 минут
+              return {
+                data: parsed,
+                isLoading: false,
+                error: null,
+              };
+            }
+          }
+        }
+      } catch (e) {
+        // Игнорируем ошибки парсинга
+      }
+    }
+    return {
+      data: null,
+      isLoading: Boolean(userId),
+      error: null,
+    };
   });
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,7 +76,9 @@ export const useDashboardData = (
       return;
     }
 
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    // Не показываем загрузку, если данные уже есть (оптимистичное обновление)
+    const hasExistingData = state.data !== null;
+    setState((prev) => ({ ...prev, isLoading: !hasExistingData, error: null }));
 
     try {
       const planResponse = await fetch(
@@ -118,17 +146,28 @@ export const useDashboardData = (
         }),
       ]);
 
+      const newData = {
+        plan,
+        user: userProfile,
+        vocabularyCards: Array.isArray(vocabularyCards) ? vocabularyCards : [],
+        progressMetrics: Array.isArray(progressMetrics) ? progressMetrics : [],
+        lastUpdatedAt: new Date().toISOString(),
+      };
+
       setState({
         isLoading: false,
         error: null,
-        data: {
-          plan,
-          user: userProfile,
-          vocabularyCards: Array.isArray(vocabularyCards) ? vocabularyCards : [],
-          progressMetrics: Array.isArray(progressMetrics) ? progressMetrics : [],
-          lastUpdatedAt: new Date().toISOString(),
-        },
+        data: newData,
       });
+
+      // Сохраняем данные в sessionStorage для восстановления при навигации
+      if (storageKey && typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem(storageKey, JSON.stringify(newData));
+        } catch (e) {
+          // Игнорируем ошибки сохранения (например, если storage переполнен)
+        }
+      }
     } catch (error: any) {
       setState((prev) => ({
         ...prev,
@@ -153,20 +192,57 @@ export const useDashboardData = (
     }, 60_000);
   }, [fetchDashboard, options.autoRefresh]);
 
+  // Используем useRef для отслеживания последнего загруженного userId/targetDate
+  const lastFetchedRef = useRef<{ userId?: string | null; targetDate?: string }>({});
+  
+  // Устанавливаем lastFetchedRef при восстановлении данных из sessionStorage
+  useEffect(() => {
+    if (state.data && userId && !lastFetchedRef.current.userId) {
+      lastFetchedRef.current = { 
+        userId, 
+        targetDate: state.data.plan?.date || targetDate 
+      };
+    }
+  }, [state.data, userId, targetDate]);
+  
   useEffect(() => {
     if (!hasyx || !userId) {
       return;
     }
-    fetchDashboard().then(scheduleAutoRefresh).catch(() => {
-      // Ошибку обрабатывает fetchDashboard
-    });
+    
+    // Проверяем видимость вкладки - не обновляем данные, если вкладка не видна
+    if (typeof document !== 'undefined' && document.hidden) {
+      return;
+    }
+    
+    // Если данные уже загружены из sessionStorage и соответствуют текущему userId/targetDate,
+    // не загружаем их повторно
+    if (state.data && 
+        lastFetchedRef.current.userId === userId && 
+        lastFetchedRef.current.targetDate === targetDate) {
+      return;
+    }
+    
+    // Загружаем данные только если изменился userId или targetDate
+    // ИЛИ если данных нет вообще
+    const shouldFetch = 
+      lastFetchedRef.current.userId !== userId || 
+      lastFetchedRef.current.targetDate !== targetDate ||
+      state.data === null;
+    
+    if (shouldFetch) {
+      lastFetchedRef.current = { userId, targetDate };
+      fetchDashboard().catch(() => {
+        // Ошибку обрабатывает fetchDashboard
+      });
+    }
 
     return () => {
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current);
       }
     };
-  }, [hasyx, userId, fetchDashboard, scheduleAutoRefresh]);
+  }, [hasyx, userId, targetDate, fetchDashboard, state.data]);
 
   const regeneratePlan = useCallback(
     async (params?: { forceAi?: boolean }) => {
@@ -203,6 +279,98 @@ export const useDashboardData = (
     [fetchDashboard, targetDate, userId]
   );
 
+  // Функция для сохранения данных в sessionStorage
+  const saveToStorage = useCallback((data: DashboardData | null) => {
+    if (storageKey && typeof window !== 'undefined' && data) {
+      try {
+        sessionStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (e) {
+        // Игнорируем ошибки сохранения
+      }
+    }
+  }, [storageKey]);
+
+  const refreshRequirementChecks = useCallback(async () => {
+    if (!hasyx || !userId || !state.data?.plan?.stage?.id) {
+      return;
+    }
+
+    try {
+      // Получаем обновленные requirementChecks через API
+      const response = await fetch(
+        `/api/plan/requirement-checks?userId=${encodeURIComponent(userId)}&stageId=${encodeURIComponent(
+          state.data.plan.stage.id
+        )}`
+      );
+
+      if (response.ok) {
+        const { requirementChecks } = await response.json();
+        setState((prev) => {
+          if (!prev.data?.plan) {
+            return prev;
+          }
+          const newData = {
+            ...prev.data,
+            plan: {
+              ...prev.data.plan,
+              requirementChecks: requirementChecks || [],
+            },
+          };
+          saveToStorage(newData);
+          return {
+            ...prev,
+            data: newData,
+          };
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to refresh requirement checks:', error);
+    }
+  }, [hasyx, userId, state.data?.plan?.stage?.id, saveToStorage]);
+
+  const refreshProgressMetrics = useCallback(async () => {
+    if (!hasyx || !userId) {
+      return;
+    }
+
+    try {
+      const progressMetrics = await hasyx.select({
+        table: 'progress_metrics',
+        where: { user_id: { _eq: userId } },
+        order_by: [{ date: 'desc' }],
+        limit: 8,
+        returning: [
+          'date',
+          'words_learned',
+          'tasks_completed',
+          'study_minutes',
+          'accuracy_grammar',
+          'accuracy_vocabulary',
+          'accuracy_listening',
+          'accuracy_reading',
+          'accuracy_writing',
+        ],
+      });
+
+      setState((prev) => {
+        if (!prev.data) {
+          return prev;
+        }
+        const newData = {
+          ...prev.data,
+          progressMetrics: Array.isArray(progressMetrics) ? progressMetrics : [],
+        };
+        saveToStorage(newData);
+        return {
+          ...prev,
+          data: newData,
+        };
+      });
+    } catch (error) {
+      console.warn('Failed to refresh progress metrics:', error);
+    }
+  }, [hasyx, userId, saveToStorage]);
+
   const completeTask = useCallback(
     async (taskId: string) => {
       if (!hasyx) return;
@@ -214,15 +382,17 @@ export const useDashboardData = (
         const updatedTasks = prev.data.plan.tasks.map((task: any) =>
           task.id === taskId ? { ...task, status: 'completed' } : task
         );
+        const newData = {
+          ...prev.data,
+          plan: {
+            ...prev.data.plan,
+            tasks: updatedTasks,
+          },
+        };
+        saveToStorage(newData);
         return {
           ...prev,
-          data: {
-            ...prev.data,
-            plan: {
-              ...prev.data.plan,
-              tasks: updatedTasks,
-            },
-          },
+          data: newData,
         };
       });
 
@@ -236,6 +406,9 @@ export const useDashboardData = (
           },
           returning: ['id'],
         });
+
+        // Обновляем только requirementChecks после завершения задания
+        await refreshRequirementChecks();
       } catch (error: any) {
         setState((prev) => ({
           ...prev,
@@ -244,7 +417,7 @@ export const useDashboardData = (
         await fetchDashboard();
       }
     },
-    [hasyx, fetchDashboard]
+    [hasyx, refreshRequirementChecks, fetchDashboard, saveToStorage]
   );
 
   return {
@@ -254,6 +427,8 @@ export const useDashboardData = (
     refresh: fetchDashboard,
     regeneratePlan,
     completeTask,
+    refreshRequirementChecks,
+    refreshProgressMetrics,
     targetDate,
   };
 }

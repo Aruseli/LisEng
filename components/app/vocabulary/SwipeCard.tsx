@@ -6,6 +6,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Heart, Volume2 } from 'lucide-react';
 import { Button } from '@/components/app/Buttons/Button';
 import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
+import { useModalStore } from '@/store/modalStore';
 
 export interface Flashcard {
   id: string;
@@ -40,6 +41,9 @@ interface CardPosition {
 export function SwipeCard({ cards, onResult, title = 'Слова для повторения' }: SwipeCardProps) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id ?? null;
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+  const modalShownRef = useRef(false);
   
   // Если сессия еще загружается, не показываем компонент
   if (status === 'loading') {
@@ -153,12 +157,13 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
   const handleFlip = useCallback(() => {
     if (!isDragging) {
       setIsFlipped(true);
+      setIsHovered(false); // Сбрасываем hover при переворачивании
     }
   }, [isDragging]);
 
   const handleAnswer = useCallback(
     async (wasCorrect: boolean) => {
-      if (!currentCard) return;
+      if (!currentCard || !userId) return;
 
       const responseTime = Math.round((Date.now() - startTime) / 1000);
       setStartTime(Date.now());
@@ -169,35 +174,38 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
         userSentence: userSentence.trim() || undefined,
       };
 
+      // Обновляем карточку в БД через API
+      try {
+        const response = await fetch('/api/vocabulary/review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cardId: currentCard.id,
+            userId,
+            wasCorrect,
+            responseTimeSeconds: responseTime,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          throw new Error(errorBody.error || 'Failed to update card');
+        }
+      } catch (error) {
+        console.error('Failed to update vocabulary card:', error);
+        // Продолжаем работу даже при ошибке, чтобы не блокировать UI
+      }
+
       const newResults = [...results, result];
       setResults(newResults);
       setUserSentence('');
       setIsFlipped(false);
 
-      // Если неправильный ответ, добавляем слово в словарь
-      if (!wasCorrect && userId) {
-        try {
-          setIsAddingToDictionary(true);
-          await fetch('/api/vocabulary/generate-cards', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId,
-              words: [currentCard.word],
-            }),
-          });
-        } catch (error) {
-          console.error('Failed to add word to dictionary:', error);
-        } finally {
-          setIsAddingToDictionary(false);
-        }
-      }
-
       if (wasCorrect) {
+        // Увеличиваем currentIndex даже для последней карточки, чтобы allCardsCompleted стал true
+        setCurrentIndex((prev) => prev + 1);
         if (isLastCard) {
           onResult?.(newResults);
-        } else {
-          setCurrentIndex((prev) => prev + 1);
         }
       } else {
         setCardStack((prevStack) => {
@@ -207,10 +215,10 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
           return updated;
         });
 
+        // Увеличиваем currentIndex даже для последней карточки
+        setCurrentIndex((prev) => prev + 1);
         if (isLastCard) {
           onResult?.(newResults);
-        } else {
-          setCurrentIndex((prev) => prev + 1);
         }
       }
     },
@@ -253,6 +261,7 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
       const rect = cardRef.current.getBoundingClientRect();
       setDragStart({ x: clientX - rect.left, y: clientY - rect.top });
       setIsDragging(true);
+      setIsHovered(false); // Сбрасываем hover при начале перетаскивания
     }
   }, []);
 
@@ -284,16 +293,25 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
 
       // После анимации переходим к следующей карточке
       setTimeout(() => {
+        // Увеличиваем currentIndex даже для последней карточки, чтобы allCardsCompleted стал true
+        setCurrentIndex((prev) => prev + 1);
+        
         if (isFlipped) {
-          if (!isLastCard) {
-            setCurrentIndex((prev) => prev + 1);
-            setIsFlipped(false);
-            setUserSentence('');
-          }
-        } else {
-          if (!isLastCard) {
-            setCurrentIndex((prev) => prev + 1);
-          }
+          setIsFlipped(false);
+          setUserSentence('');
+        }
+        
+        // Если это была последняя карточка, вызываем onResult
+        if (isLastCard && currentCard) {
+          const responseTime = Math.round((Date.now() - startTime) / 1000);
+          const result: FlashcardResult = {
+            cardId: currentCard.id,
+            wasCorrect: direction === 'right', // Свайп вправо = правильно
+            responseTime,
+          };
+          const newResults = [...results, result];
+          setResults(newResults);
+          onResult?.(newResults);
         }
         
         // Сброс состояния
@@ -308,7 +326,7 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
       setDragOffset({ x: 0, y: 0 });
       setIsDragging(false);
     }
-  }, [isDragging, dragOffset, isFlipped, isLastCard]);
+  }, [isDragging, dragOffset, isFlipped, isLastCard, currentCard, results, startTime, onResult]);
 
   // Mouse события
   const handleMouseDown = useCallback(
@@ -399,6 +417,34 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
     );
   }
 
+  // Показываем модалку при завершении всех карточек
+  useEffect(() => {
+    if (allCardsCompleted && !modalShownRef.current) {
+      modalShownRef.current = true;
+      const modalId = openModal({
+        component: (
+          <div className="p-6 text-center">
+            <h3 className="text-2xl font-semibold text-green-900 mb-4">
+              🎉 Все слова выучены!
+            </h3>
+            <p className="text-gray-700 mb-6">
+              Ты повторил {cardStack.length} {cardStack.length === 1 ? 'слово' : 'слов'} на сегодня.
+            </p>
+            <Button
+              onClick={() => {
+                closeModal(modalId);
+              }}
+              className="w-full"
+            >
+              Отлично!
+            </Button>
+          </div>
+        ),
+        closeOnOverlayClick: true,
+      });
+    }
+  }, [allCardsCompleted, cardStack.length, openModal, closeModal]);
+
   if (allCardsCompleted) {
     return (
       <section className="rounded-3xl border border-green-100 bg-green-50 p-6 shadow-sm">
@@ -480,7 +526,7 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
                 onTouchMove={isCurrent ? handleTouchMove : undefined}
                 onTouchEnd={isCurrent ? handleTouchEnd : undefined}
                 onClick={isCurrent && !isDragging && !isSwipeAway ? handleFlip : undefined}
-                onMouseEnter={isCurrent && !isTouchDevice ? () => setIsHovered(true) : undefined}
+                onMouseEnter={isCurrent && !isTouchDevice && !isDragging && !isFlipped ? () => setIsHovered(true) : undefined}
                 onMouseLeave={isCurrent && !isTouchDevice ? () => setIsHovered(false) : undefined}
               >
                 <div
@@ -510,8 +556,8 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
                       </div>
 
                       {/* Hover overlay для desktop */}
-                      {isCurrent && !isTouchDevice && isHovered && !isFlipped && (
-                        <div className="absolute inset-0 bg-black/40 rounded-2xl flex flex-col items-center justify-center gap-4">
+                      {isCurrent && !isTouchDevice && isHovered && !isFlipped && !isDragging && (
+                        <div className="absolute inset-0 bg-black/40 rounded-2xl flex flex-col items-center justify-center gap-4 z-10">
                           <div className="flex items-center gap-4">
                             <button
                               onClick={(e) => {

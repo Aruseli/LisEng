@@ -30,6 +30,8 @@ export async function POST(request: NextRequest) {
     const taskId: string | undefined = body.taskId;
     const pronunciation = body.pronunciation;
     const flashcardResults = body.flashcardResults;
+    const conversationData = body.conversationData;
+    const voiceMessagesData = body.voiceMessagesData;
 
     if (!userId || !taskId) {
       return NextResponse.json(
@@ -47,6 +49,8 @@ export async function POST(request: NextRequest) {
       taskId,
       pronunciation,
       flashcardResults,
+      conversationData,
+      voiceMessagesData,
     });
 
     return NextResponse.json({

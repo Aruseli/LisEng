@@ -52,12 +52,39 @@
   - иногда `examples` с шаблонами.
 - **UI**: форма/textarea + отправка в AI-проверку (`/api/ai/check-writing`).
 
-## Speaking / AI Practice
-- **Источник**: blueprint тип `speaking` или `ai_practice`.
-- **Что генерится**:
+## Speaking (Ролевая игра с голосовым диалогом)
+- **Источник**: blueprint тип `speaking`.
+- **Что генерируется**:
   - `lesson.overview`, `examples`, `exercise` с подсказками для устной практики,
   - `pronunciationScript` / `targetWords`.
-- **UI**: вкладка AI-практики (`AIPracticeTab`) + PronunciationPractice.
+- **UI**: компонент `SpeakingRolePlayTab` с:
+  - Голосовым вводом через `useSpeechRecognition`
+  - Автоматической транскрипцией через `/api/listening/transcribe`
+  - Отправкой транскрипции в AI через `/api/ai/speaking`
+  - Автоматическим озвучиванием ответов AI через `useSpeechSynthesis`
+  - Отображением и проверкой использования `targetWords`
+  - Кнопкой "Завершить урок" с вызовом `/api/lesson/complete`
+- **AI Контекст**: AI играет роль друга, отвечает короткими репликами, мягко направляет диалог к использованию целевых слов.
+- **Завершение урока**: Сохраняет `conversationData` (messages, targetWordsUsed, sessionDuration) в `lesson_snapshots.content_snapshot.conversation` и обновляет `ai_sessions`.
+
+## AI Practice: Запись голосовых сообщений
+- **Источник**: blueprint тип `ai_practice` с названием, содержащим "Запись голосовых сообщений" или "голос".
+- **Что генерируется**:
+  - `lesson.overview`, `examples`, `exercise` с подсказками для записи голосовых сообщений,
+  - `targetWords` для использования в сообщениях.
+- **UI**: компонент `VoiceMessagesTab` с:
+  - Записью голосовых сообщений через `useSpeechRecognition`
+  - Транскрипцией через `/api/listening/transcribe`
+  - Анализом через `/api/ai/analyze-voice` с проверкой:
+    - Произношения (score, feedback, issues)
+    - Использования целевых слов (targetWordsUsed, missingWords, suggestions)
+    - Грамматических ошибок
+    - Общей оценки и рекомендаций
+  - Отображением фидбека для каждого сообщения
+  - Визуальной индикацией использованных/неиспользованных targetWords
+  - Кнопкой "Завершить урок" с вызовом `/api/lesson/complete`
+- **AI Контекст**: AI анализирует голосовые сообщения, проверяет использование каждого целевого слова, дает конструктивный фидбек.
+- **Завершение урока**: Сохраняет `voiceMessagesData` (messages с транскрипциями и фидбеком, targetWordsUsed, targetWordsMissing) в `lesson_snapshots.content_snapshot.voiceMessages` и создает `vocabulary_cards` для проблемных слов.
 
 ## Pronunciation
 - **Источник**: `requiresPronunciation = true` в lesson материалах (targetWords, pronunciationScript).

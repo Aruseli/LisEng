@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSession } from 'hasyx';
+import { useSession, useSubscription, useHasyx } from 'hasyx';
 import { useModalStore } from '@/store/modalStore';
 import { useRitualStore } from '@/store/ritualStore';
 import { ModalContainer } from './app/Modal/Modal';
@@ -15,6 +15,8 @@ import { DashboardTab } from './app/dashboard/DashboardTab';
 import type { TaskView as DashboardTask } from './app/dashboard/DashboardTab';
 import { VocabularyTab } from './app/vocabulary/VocabularyTab';
 import { AIPracticeTab } from './app/ai/AIPracticeTab';
+import { SpeakingRolePlayTab } from './app/ai/SpeakingRolePlayTab';
+import { VoiceMessagesTab } from './app/ai/VoiceMessagesTab';
 import { ProgressTab } from './app/progress/ProgressTab';
 import { IrregularVerbsScreen } from './app/verbs/IrregularVerbsScreen';
 import { useDashboardData } from '@/hooks/useDashboardData';
@@ -56,10 +58,12 @@ export default function EnglishLearningApp() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const { ritualCompleted, completeRitual } = useRitualStore();
 
-  const { data: dashboard, isLoading, error, completeTask, regeneratePlan } = useDashboardData(
+  const { data: dashboard, isLoading, error, completeTask, regeneratePlan, refresh, refreshRequirementChecks, refreshProgressMetrics } = useDashboardData(
     userId,
-    { autoRefresh: true }
+    { autoRefresh: false }
   );
+
+  // Убрали автоматическое обновление - обновляем только при явных действиях пользователя
 
   const tasks = useMemo<PlanTask[]>(() => {
     return (dashboard?.plan?.tasks ?? []) as PlanTask[];
@@ -102,11 +106,26 @@ export default function EnglishLearningApp() {
   const userName = dashboard?.user?.name ?? session?.user?.name ?? 'Ученик';
   const currentLevel = dashboard?.user?.current_level ?? null;
   const targetLevel = dashboard?.user?.target_level ?? 'B2';
-  const streak = dashboard?.plan?.streak?.current_streak ?? 0;
+  
+  // Подписка на стрик через useSubscription для автоматического обновления
+  const hasyx = useHasyx();
+  const { data: streakData } = useSubscription({
+    table: 'streaks',
+    where: userId ? { user_id: { _eq: userId } } : undefined,
+    returning: ['current_streak', 'longest_streak', 'last_activity_date'],
+    limit: 1,
+  });
+  
+  // Получаем стрик из подписки или из dashboard (fallback)
+  const streakFromSubscription = Array.isArray(streakData) 
+    ? streakData[0]?.current_streak ?? 0 
+    : streakData?.current_streak ?? 0;
+  const streak = streakFromSubscription || (dashboard?.plan?.streak?.current_streak ?? 0);
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const [levelTestShown, setLevelTestShown] = useState(false);
   const [selectedAiTaskId, setSelectedAiTaskId] = useState<string | null>(null);
+  const [targetWords, setTargetWords] = useState<string[]>([]);
 
   const primaryAiTask = useMemo<PlanTask | null>(() => {
     if (selectedAiTaskId) {
@@ -117,6 +136,49 @@ export default function EnglishLearningApp() {
     }
     return tasks.find((task) => task.ai_enabled) ?? null;
   }, [selectedAiTaskId, tasks]);
+
+  // Загружаем targetWords из задачи
+  useEffect(() => {
+    if (!primaryAiTask) {
+      setTargetWords([]);
+      return;
+    }
+
+    const loadTargetWords = async () => {
+      try {
+        // Сначала проверяем type_specific_payload
+        const payload = primaryAiTask.type_specific_payload as Record<string, any> | undefined;
+        if (payload?.lesson_materials?.targetWords) {
+          setTargetWords(payload.lesson_materials.targetWords);
+          return;
+        }
+        if (payload?.targetWords) {
+          setTargetWords(payload.targetWords);
+          return;
+        }
+
+        // Если нет в payload, загружаем через API
+        const response = await fetch(`/api/lesson/task?taskId=${primaryAiTask.id}`);
+        if (response.ok) {
+          const taskData = await response.json();
+          const taskPayload = taskData.type_specific_payload as Record<string, any> | undefined;
+          if (taskPayload?.lesson_materials?.targetWords) {
+            setTargetWords(taskPayload.lesson_materials.targetWords);
+            return;
+          }
+          if (taskPayload?.targetWords) {
+            setTargetWords(taskPayload.targetWords);
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load targetWords:', error);
+      }
+      setTargetWords([]);
+    };
+
+    loadTargetWords();
+  }, [primaryAiTask]);
 
   const aiContextMessage = useMemo(() => {
     const rawContext = primaryAiTask?.ai_context;
@@ -135,6 +197,21 @@ export default function EnglishLearningApp() {
     return undefined;
   }, [primaryAiTask?.ai_context]);
 
+  const aiSessionType = useMemo(
+    () => (primaryAiTask?.type as 'speaking' | 'writing' | 'ai_practice') ?? 'ai_practice',
+    [primaryAiTask?.type]
+  );
+
+  const aiSessionTopic = useMemo(
+    () => primaryAiTask?.title ?? dashboard?.plan?.focus?.[0] ?? 'Практика',
+    [primaryAiTask?.title, dashboard?.plan?.focus]
+  );
+
+  const aiInitialMessages = useMemo(
+    () => (aiContextMessage ? [aiContextMessage] : []),
+    [aiContextMessage]
+  );
+
   const {
     messages: aiMessages,
     isLoading: isAISessionLoading,
@@ -143,10 +220,10 @@ export default function EnglishLearningApp() {
     hasSession,
   } = useAISession({
     userId,
-    type: (primaryAiTask?.type as 'speaking' | 'writing' | 'ai_practice') ?? 'ai_practice',
-    topic: primaryAiTask?.title ?? dashboard?.plan?.focus?.[0] ?? 'Практика',
+    type: aiSessionType,
+    topic: aiSessionTopic,
     level: currentLevel,
-    initialMessages: aiContextMessage ? [aiContextMessage] : [],
+    initialMessages: aiInitialMessages,
     suggestedPrompt: primaryAiTask?.suggested_prompt ?? null,
   });
 
@@ -155,6 +232,17 @@ export default function EnglishLearningApp() {
       startSession();
     }
   }, [primaryAiTask, hasSession, startSession]);
+
+  // Обновляем requirementChecks при возврате на dashboard после завершения урока
+  useEffect(() => {
+    if (activeTab === 'dashboard' && refreshRequirementChecks) {
+      // Небольшая задержка, чтобы дать время БД обновиться после завершения урока
+      const timer = setTimeout(() => {
+        refreshRequirementChecks();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, refreshRequirementChecks]);
 
   useEffect(() => {
     if (!selectedAiTaskId) {
@@ -165,6 +253,29 @@ export default function EnglishLearningApp() {
       setSelectedAiTaskId(null);
     }
   }, [selectedAiTaskId, tasks]);
+
+  // Предотвращаем обновления при переключении вкладок
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const handleVisibilityChange = () => {
+      // Когда вкладка становится видимой, не обновляем данные автоматически
+      // Данные будут обновлены только при явных действиях пользователя
+      if (document.hidden) {
+        // Вкладка скрыта - ничего не делаем
+        return;
+      }
+      // Вкладка стала видимой - но не обновляем автоматически
+      // Это предотвращает ненужные обновления при переключении вкладок
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   // Показываем модальное окно теста, если уровень не определен
   useEffect(() => {
@@ -218,10 +329,6 @@ export default function EnglishLearningApp() {
     await sendMessage(message);
   };
 
-  const handleReviewCard = (cardId: string | number, wasCorrect: boolean) => {
-    // TODO: Replace with actual API call
-    alert(wasCorrect ? '✅ Правильно!' : '❌ Попробуй ещё раз через 1 день');
-  };
 
   // Показываем загрузку, пока сессия загружается
   if (status === 'loading') {
@@ -313,25 +420,84 @@ export default function EnglishLearningApp() {
           <VocabularyTab
             loading={isLoading}
             cards={vocabularyCards}
-            onReviewCard={handleReviewCard}
             dueToday={dashboard?.plan?.vocabulary?.dueToday ?? vocabularyCards.length}
           />
         )}
 
-        {activeTab === 'ai' && (
-          <AIPracticeTab
-            topic={primaryAiTask?.title ?? 'Практика с AI'}
-            messages={aiMessages.map(({ role, content }) => ({ role, content }))}
-            isLoading={isAISessionLoading}
-            suggestedPrompt={
-              primaryAiTask?.suggested_prompt ??
-              ((primaryAiTask?.type_specific_payload as { recommended_prompt?: string } | undefined)
-                ?.recommended_prompt ??
-                null)
-            }
-            onSendMessage={handleSendAIMessage}
-          />
-        )}
+        {activeTab === 'ai' && (() => {
+          const isSpeaking = primaryAiTask?.type === 'speaking';
+          const isVoiceMessages = primaryAiTask?.type === 'ai_practice' && 
+            (primaryAiTask?.title?.toLowerCase().includes('запись голосовых сообщений') ||
+             primaryAiTask?.title?.toLowerCase().includes('голос') ||
+             primaryAiTask?.description?.toLowerCase().includes('голос'));
+
+          if (isSpeaking) {
+            return (
+              <SpeakingRolePlayTab
+                topic={primaryAiTask?.title ?? 'Ролевая игра'}
+                messages={aiMessages.map(({ role, content }) => ({ role, content }))}
+                isLoading={isAISessionLoading}
+                suggestedPrompt={
+                  primaryAiTask?.suggested_prompt ??
+                  ((primaryAiTask?.type_specific_payload as { recommended_prompt?: string } | undefined)
+                    ?.recommended_prompt ??
+                    null)
+                }
+                targetWords={targetWords}
+                taskId={primaryAiTask?.id ? String(primaryAiTask.id) : undefined}
+                userId={userId ?? undefined}
+                refreshRequirementChecks={refreshRequirementChecks}
+                refreshProgressMetrics={refreshProgressMetrics}
+                onSendMessage={handleSendAIMessage}
+                onComplete={() => {
+                  setActiveTab('dashboard');
+                  setSelectedAiTaskId(null);
+                }}
+              />
+            );
+          }
+
+          if (isVoiceMessages) {
+            return (
+              <VoiceMessagesTab
+                topic={primaryAiTask?.title ?? 'Запись голосовых сообщений'}
+                messages={aiMessages.map(({ role, content }) => ({ role, content }))}
+                isLoading={isAISessionLoading}
+                suggestedPrompt={
+                  primaryAiTask?.suggested_prompt ??
+                  ((primaryAiTask?.type_specific_payload as { recommended_prompt?: string } | undefined)
+                    ?.recommended_prompt ??
+                    null)
+                }
+                targetWords={targetWords}
+                taskId={primaryAiTask?.id ? String(primaryAiTask.id) : undefined}
+                userId={userId ?? undefined}
+                refreshRequirementChecks={refreshRequirementChecks}
+                refreshProgressMetrics={refreshProgressMetrics}
+                onSendMessage={handleSendAIMessage}
+                onComplete={() => {
+                  setActiveTab('dashboard');
+                  setSelectedAiTaskId(null);
+                }}
+              />
+            );
+          }
+
+          return (
+            <AIPracticeTab
+              topic={primaryAiTask?.title ?? 'Практика с AI'}
+              messages={aiMessages.map(({ role, content }) => ({ role, content }))}
+              isLoading={isAISessionLoading}
+              suggestedPrompt={
+                primaryAiTask?.suggested_prompt ??
+                ((primaryAiTask?.type_specific_payload as { recommended_prompt?: string } | undefined)
+                  ?.recommended_prompt ??
+                  null)
+              }
+              onSendMessage={handleSendAIMessage}
+            />
+          );
+        })()}
 
         {activeTab === 'progress' && (
           <ProgressTab

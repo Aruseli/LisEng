@@ -1,13 +1,14 @@
 import { LessonScreen } from '@/components/app/lesson/LessonScreen';
 
 interface LessonPageProps {
-  params: {
+  params: Promise<{
     taskId: string;
-  };
+  }>;
 }
 
-export default function LessonPage({ params }: LessonPageProps) {
-  return <LessonScreen taskId={params.taskId} />;
+export default async function LessonPage({ params }: LessonPageProps) {
+  const { taskId } = await params;
+  return <LessonScreen taskId={taskId} />;
 }
 
 

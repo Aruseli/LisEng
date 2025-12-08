@@ -6,8 +6,8 @@ import { useHasyx } from 'hasyx';
 import {
   createAISession,
   updateAISession,
+  getAISession,
 } from '@/lib/hasura-queries';
-import type { WritingFeedback } from '@/types/writing-feedback';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -48,8 +48,13 @@ export function useAISession({
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const initialMessagesRef = useRef<Message[]>(initialMessages);
+  const isLoadedFromSessionRef = useRef<boolean>(false);
 
   useEffect(() => {
+    // Не перезаписывать сообщения, если они уже загружены из сессии
+    if (isLoadedFromSessionRef.current) {
+      return;
+    }
     if (messagesEqual(initialMessagesRef.current, initialMessages)) {
       return;
     }
@@ -61,6 +66,21 @@ export function useAISession({
     if (!hasyx || !userId) return null;
     if (sessionId) return sessionId;
 
+    // Сначала проверяем существующую активную сессию
+    const existingSession = await getAISession(hasyx, userId, type, topic);
+    if (existingSession?.id) {
+      setSessionId(existingSession.id);
+      // Загружаем сохраненные сообщения из сессии
+      if (existingSession.conversation && Array.isArray(existingSession.conversation)) {
+        const loadedMessages = existingSession.conversation as Message[];
+        setMessages(loadedMessages);
+        isLoadedFromSessionRef.current = true;
+        initialMessagesRef.current = loadedMessages;
+      }
+      return existingSession.id;
+    }
+
+    // Если сессии нет, создаем новую
     const result = await createAISession(hasyx, userId, type, topic);
     if (result?.id) {
       setSessionId(result.id);
@@ -91,18 +111,30 @@ export function useAISession({
           ? '/api/ai/speaking'
           : '/api/ai/check-writing';
 
+      // Для speaking/ai_practice отправляем messages, для writing - text/topic/level
+      const requestBody =
+        type === 'speaking' || type === 'ai_practice'
+          ? {
+              messages: nextMessages.map((m) => ({
+                role: m.role,
+                content: m.content,
+              })),
+            }
+          : {
+              userId: userId || '',
+              topic: topic || 'Практика',
+              level: level || 'A2',
+              conversationHistory: nextMessages.map((m) => ({
+                role: m.role,
+                content: m.content,
+              })),
+              text: content,
+            };
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic: topic || 'Практика',
-          level: level || 'A2',
-          conversationHistory: nextMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-          text: type === 'writing' ? content : undefined,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -110,37 +142,51 @@ export function useAISession({
         throw new Error(errorBody.error || `Ошибка сервера: ${response.status}`);
       }
 
-      const responseJson = await response.json();
-
       let aiText: string | undefined;
 
       if (type === 'writing') {
-        // Пытаемся распарсить ответ как WritingFeedback и собрать человекочитаемый текст
-        const fb = responseJson as Partial<WritingFeedback> | undefined;
+        // Для writing парсим JSON ответ
+        const responseJson = await response.json();
+        // API /api/ai/check-writing возвращает структуру:
+        // { overall_quality, specific_areas_for_improvement, suggestions, errors_or_typos, rating }
+        const fb = responseJson as {
+          overall_quality?: string;
+          specific_areas_for_improvement?: string[];
+          suggestions?: string[];
+          errors_or_typos?: string[];
+          rating?: number;
+        } | undefined;
 
-        if (fb && (fb.score !== undefined || fb.feedback || fb.corrections)) {
+        if (fb && (fb.overall_quality || fb.rating !== undefined || fb.suggestions || fb.errors_or_typos)) {
           const parts: string[] = [];
 
-          if (typeof fb.score === 'number') {
-            parts.push(`Оценка за письмо: ${fb.score}/10.`);
+          if (typeof fb.rating === 'number') {
+            parts.push(`Оценка: ${fb.rating}/5`);
           }
 
-          if (fb.feedback) {
-            parts.push(`Общий отзыв: ${fb.feedback}`);
+          if (fb.overall_quality) {
+            parts.push(`Общий отзыв: ${fb.overall_quality}`);
           }
 
-          if (Array.isArray(fb.corrections) && fb.corrections.length > 0) {
-            const correctionsText = fb.corrections
-              .map((c, idx) => {
-                const num = `${idx + 1}.`;
-                const original = c.original ? `«${c.original}»` : '';
-                const corrected = c.corrected ? ` → «${c.corrected}»` : '';
-                const explanation = c.explanation ? ` (${c.explanation})` : '';
-                return `${num} ${original}${corrected}${explanation}`.trim();
-              })
+          if (Array.isArray(fb.specific_areas_for_improvement) && fb.specific_areas_for_improvement.length > 0) {
+            const improvementsText = fb.specific_areas_for_improvement
+              .map((item, idx) => `${idx + 1}. ${item}`)
               .join('\n');
+            parts.push('Области для улучшения:\n' + improvementsText);
+          }
 
-            parts.push('Исправления:\n' + correctionsText);
+          if (Array.isArray(fb.suggestions) && fb.suggestions.length > 0) {
+            const suggestionsText = fb.suggestions
+              .map((item, idx) => `${idx + 1}. ${item}`)
+              .join('\n');
+            parts.push('Предложения:\n' + suggestionsText);
+          }
+
+          if (Array.isArray(fb.errors_or_typos) && fb.errors_or_typos.length > 0) {
+            const errorsText = fb.errors_or_typos
+              .map((item, idx) => `${idx + 1}. ${item}`)
+              .join('\n');
+            parts.push('Ошибки и опечатки:\n' + errorsText);
           }
 
           aiText = parts.join('\n\n');
@@ -149,8 +195,15 @@ export function useAISession({
           aiText = responseJson?.correctedText || responseJson?.message;
         }
       } else {
-        // speaking / ai_practice
-        aiText = responseJson?.message;
+        // speaking / ai_practice - API возвращает plain text
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('text/plain')) {
+          aiText = await response.text();
+        } else {
+          // Если вернули JSON (на будущее)
+          const responseJson = await response.json();
+          aiText = responseJson?.message || responseJson?.content;
+        }
       }
 
       const aiMessage: Message = {
@@ -199,6 +252,7 @@ export function useAISession({
         conversation: messages,
         feedback,
         duration_minutes: durationMinutes,
+        ended_at: new Date().toISOString(),
       });
     },
     [hasyx, sessionId, messages]
