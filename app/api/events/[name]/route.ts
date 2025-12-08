@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { hasyxEvent, HasuraEventPayload } from 'hasyx/lib/events';
 
 /**
  * Default handler for Hasura event triggers
  * Processes events from Hasura and returns operation details
  */
-export const POST = hasyxEvent(async (payload: HasuraEventPayload) => {
+const handler = hasyxEvent(async (payload: HasuraEventPayload) => {
   const { event, table } = payload;
   const { op, data } = event;
   
@@ -22,4 +22,11 @@ export const POST = hasyxEvent(async (payload: HasuraEventPayload) => {
             op === 'DELETE' ? { id: data.old?.id } : {}
     }
   };
-}); 
+});
+
+export const POST = async (
+  request: NextRequest,
+  context: { params: Promise<{ name: string }> }
+) => {
+  return handler(request as any, context as any);
+}; 

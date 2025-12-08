@@ -8,9 +8,10 @@
     "jsonrepair": "^3.13.1",
     "lucide-react": "^0.553.0",
     "motion": "^12.23.24",
-    "react": "19.1.1",
+    "next": "^15.5.7",
+    "react": "19.1.2",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "19.1.1",
+    "react-dom": "19.1.2",
     "sass": "^1.94.0",
     "scss": "^0.2.4",
     "ws": "^8.18.3"
@@ -57,7 +58,12 @@
     "node": "^22.14"
   },
   "overrides": {
-    "zod": "^4.0.15"
+    "zod": "^4.0.15",
+    "react": "19.1.2",
+    "react-dom": "19.1.2",
+    "hasyx": {
+      "next": "15.5.7"
+    }
   },
   "devDependencies": {
     "@types/jest": "29.5.12",
