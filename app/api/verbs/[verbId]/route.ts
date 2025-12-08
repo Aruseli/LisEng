@@ -26,9 +26,10 @@ function createAdminClient(): HasyxApolloClient {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { verbId: string } }
+  { params }: { params: Promise<{ verbId: string }> }
 ) {
   try {
+    const { verbId } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -38,7 +39,7 @@ export async function GET(
     const hasyx = new Hasyx(apolloClient, generate);
     const verbsService = new VerbsService(hasyx);
 
-    const verb = await verbsService.getVerbWithDetails(params.verbId, session.user.id);
+    const verb = await verbsService.getVerbWithDetails(verbId, session.user.id);
 
     if (!verb) {
       return NextResponse.json({ error: 'Verb not found' }, { status: 404 });

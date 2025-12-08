@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createGroq } from '@ai-sdk/groq';
+import { groq } from '@ai-sdk/groq';
 import { experimental_transcribe as transcribe } from 'ai';
-import type { TranscriptionModelV1 } from '@ai-sdk/provider';
 
 export const runtime = 'edge';
-
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-});
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,16 +38,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Используем AI SDK согласно документации:
+    // https://ai-sdk.dev/providers/ai-sdk-providers/groq#transcription-models
     const arrayBuffer = await audioFile.arrayBuffer();
-    const model = groq.transcription('whisper-large-v3') as unknown as TranscriptionModelV1;
     const result = await transcribe({
-      model,
+      // @ts-ignore - groq.transcription returns V2 but experimental_transcribe expects V1, runtime works correctly
+      model: groq.transcription('whisper-large-v3'),
       audio: new Uint8Array(arrayBuffer),
       providerOptions: {
         groq: {
-          response_format: 'verbose_json',
-          temperature: 0,
           language: 'en',
+          timestampGranularities: ['segment', 'word'],
+          temperature: 0,
         },
       },
     });
