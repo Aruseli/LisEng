@@ -27,6 +27,36 @@ export async function createAISession(
 }
 
 /**
+ * Get active AI session for user
+ */
+export async function getAISession(
+  hasyx: Hasyx,
+  userId: string,
+  type: string,
+  topic?: string
+) {
+  const where: any = {
+    user_id: { _eq: userId },
+    type: { _eq: type },
+    ended_at: { _is_null: true },
+  };
+
+  if (topic) {
+    where.topic = { _eq: topic };
+  }
+
+  const result = await hasyx.select({
+    table: 'ai_sessions',
+    where,
+    order_by: [{ started_at: 'desc' }],
+    limit: 1,
+    returning: ['id', 'conversation', 'started_at'],
+  });
+
+  return Array.isArray(result) && result.length > 0 ? result[0] : null;
+}
+
+/**
  * Update AI session
  */
 export async function updateAISession(
@@ -36,15 +66,20 @@ export async function updateAISession(
     conversation?: any[];
     feedback?: any;
     duration_minutes?: number;
+    ended_at?: string | null;
   }
 ) {
+  const updateData: any = { ...data };
+  // ended_at устанавливается только если явно передан
+  if (!('ended_at' in data)) {
+    // Не устанавливаем ended_at при обычном обновлении
+    delete updateData.ended_at;
+  }
+
   return await hasyx.update({
     table: 'ai_sessions',
     pk_columns: { id: sessionId },
-    _set: {
-      ...data,
-      ended_at: new Date().toISOString(),
-    },
+    _set: updateData,
     returning: ['id'],
   });
 }
@@ -95,6 +130,38 @@ export async function completeTask(hasyx: Hasyx, taskId: string) {
       completed_at: new Date().toISOString(),
     },
     returning: ['id', 'status'],
+  });
+}
+
+/**
+ * Get user instruction language preference
+ */
+export async function getUserInstructionLanguage(hasyx: Hasyx, userId: string): Promise<string> {
+  const result = await hasyx.select({
+    table: 'users',
+    pk_columns: { id: userId },
+    returning: ['instruction_language'],
+  });
+
+  const user = Array.isArray(result) ? result[0] : result;
+  return user?.instruction_language || 'ru';
+}
+
+/**
+ * Update user instruction language preference
+ */
+export async function updateUserInstructionLanguage(
+  hasyx: Hasyx,
+  userId: string,
+  language: string
+) {
+  return await hasyx.update({
+    table: 'users',
+    pk_columns: { id: userId },
+    _set: {
+      instruction_language: language,
+    },
+    returning: ['id', 'instruction_language'],
   });
 }
 
@@ -526,6 +593,260 @@ export async function updateStageProgressStats(
     pk_columns: { id: stageProgressId },
     _set: payload,
     returning: ['id'],
+  });
+}
+
+/**
+ * Обновить или создать метрики прогресса для пользователя
+ */
+export async function updateProgressMetrics(
+  hasyx: Hasyx,
+  userId: string,
+  date: string,
+  data: {
+    tasksCompleted?: number;
+    studyMinutes?: number;
+    wordsLearned?: number;
+  }
+) {
+  // Получаем текущие метрики
+  const existing = await hasyx.select({
+    table: 'progress_metrics',
+    where: {
+      user_id: { _eq: userId },
+      date: { _eq: date },
+    },
+    limit: 1,
+    returning: ['id', 'tasks_completed', 'study_minutes', 'words_learned'],
+  });
+
+  const existingMetric = Array.isArray(existing) ? existing[0] : existing;
+
+  const updates: any = {};
+  if (typeof data.tasksCompleted === 'number') {
+    updates.tasks_completed = existingMetric
+      ? (existingMetric.tasks_completed || 0) + data.tasksCompleted
+      : data.tasksCompleted;
+  }
+  if (typeof data.studyMinutes === 'number') {
+    updates.study_minutes = existingMetric
+      ? (existingMetric.study_minutes || 0) + data.studyMinutes
+      : data.studyMinutes;
+  }
+  if (typeof data.wordsLearned === 'number') {
+    updates.words_learned = existingMetric
+      ? (existingMetric.words_learned || 0) + data.wordsLearned
+      : data.wordsLearned;
+  }
+
+  if (existingMetric?.id) {
+    return await hasyx.update({
+      table: 'progress_metrics',
+      pk_columns: { id: existingMetric.id },
+      _set: updates,
+      returning: ['id'],
+    });
+  } else {
+    return await hasyx.insert({
+      table: 'progress_metrics',
+      object: {
+        user_id: userId,
+        date,
+        ...updates,
+      },
+      returning: ['id'],
+    });
+  }
+}
+
+/**
+ * Обновить стрик пользователя (увеличить только если все задания дня выполнены)
+ * Также проверяет, нужно ли создать тест Shu-Ha-Ri на 7-й день стрика
+ */
+export async function updateStreak(hasyx: Hasyx, userId: string, date: string) {
+  // Получаем все задания дня
+  const tasks = await getDailyTasks(hasyx, userId, date);
+  const allTasks = Array.isArray(tasks) ? tasks : [];
+  
+  // Проверяем, все ли задания выполнены
+  const allCompleted = allTasks.length > 0 && allTasks.every((task: any) => task.status === 'completed');
+  
+  if (!allCompleted) {
+    return null; // Не обновляем стрик, если не все задания выполнены
+  }
+
+  // Получаем текущий стрик
+  const streakResult = await hasyx.select({
+    table: 'streaks',
+    where: {
+      user_id: { _eq: userId },
+    },
+    limit: 1,
+    returning: ['id', 'current_streak', 'longest_streak', 'last_activity_date'],
+  });
+
+  const streak = Array.isArray(streakResult) ? streakResult[0] : streakResult;
+  const today = new Date(date);
+  const todayStr = today.toISOString().split('T')[0];
+  const lastActivity = streak?.last_activity_date ? new Date(streak.last_activity_date) : null;
+  const lastActivityStr = lastActivity ? lastActivity.toISOString().split('T')[0] : null;
+  
+  let newCurrentStreak = streak?.current_streak || 0;
+  const longestStreak = streak?.longest_streak || 0;
+
+  // Если уже обновляли сегодня - не увеличиваем стрик повторно
+  if (lastActivityStr === todayStr) {
+    // Уже обновляли сегодня, возвращаем текущий стрик без изменений
+    return streak;
+  }
+
+  // Проверяем, был ли вчера активность
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const wasActiveYesterday = lastActivityStr === yesterdayStr;
+
+  if (wasActiveYesterday) {
+    // Продолжаем стрик - увеличиваем на 1
+    newCurrentStreak = (streak?.current_streak || 0) + 1;
+  } else if (!lastActivity) {
+    // Первый день - начинаем стрик с 1
+    newCurrentStreak = 1;
+  } else {
+    // Пропустили день(и) - сбрасываем стрик и начинаем с 1
+    newCurrentStreak = 1;
+  }
+
+  const newLongestStreak = Math.max(longestStreak, newCurrentStreak);
+
+  let updatedStreak;
+  if (streak?.id) {
+    updatedStreak = await hasyx.update({
+      table: 'streaks',
+      pk_columns: { id: streak.id },
+      _set: {
+        current_streak: newCurrentStreak,
+        longest_streak: newLongestStreak,
+        last_activity_date: date,
+        updated_at: new Date().toISOString(),
+      },
+      returning: ['id', 'current_streak'],
+    });
+  } else {
+    updatedStreak = await hasyx.insert({
+      table: 'streaks',
+      object: {
+        user_id: userId,
+        current_streak: newCurrentStreak,
+        longest_streak: newLongestStreak,
+        last_activity_date: date,
+      },
+      returning: ['id', 'current_streak'],
+    });
+  }
+
+  const finalStreak = Array.isArray(updatedStreak) ? updatedStreak[0] : updatedStreak;
+
+  // Проверяем, нужно ли создать тест Shu-Ha-Ri на 7-й день стрика (или кратный 7)
+  if (newCurrentStreak > 0 && newCurrentStreak % 7 === 0) {
+    try {
+      // Динамически импортируем ShuHaRiService, чтобы избежать циклических зависимостей
+      const { ShuHaRiService } = await import('@/lib/lesson-snapshots/shu-ha-ri-service');
+      const shuHaRiService = new ShuHaRiService(hasyx);
+      
+      // Рассчитываем дату начала недели стрика (7 дней назад от текущей даты)
+      const weekStartDate = new Date(today);
+      weekStartDate.setDate(weekStartDate.getDate() - 6); // 7 дней назад (включая сегодня)
+      
+      // Проверяем, был ли уже создан тест на этот стрик-день
+      const testExists = await shuHaRiService.shouldCreateWeeklyTest(userId, weekStartDate);
+      
+      if (testExists) {
+        // Создаем тест для этого стрик-дня
+        await shuHaRiService.generateWeeklyTest(userId, weekStartDate, 'comprehensive');
+        console.log(`[updateStreak] Created Shu-Ha-Ri test for streak day ${newCurrentStreak}`);
+      }
+    } catch (error) {
+      // Не прерываем обновление стрика, если не удалось создать тест
+      console.error('[updateStreak] Failed to create Shu-Ha-Ri test:', error);
+    }
+  }
+
+  return finalStreak;
+}
+
+/**
+ * Получить прогресс Кумон для пользователя
+ */
+export async function getKumonProgress(hasyx: Hasyx, userId: string) {
+  return await hasyx.select({
+    table: 'kumon_progress',
+    where: {
+      user_id: { _eq: userId },
+    },
+    order_by: [
+      { current_level: 'desc' },
+      { last_practiced_at: 'desc' },
+    ],
+    returning: [
+      'id',
+      'skill_category',
+      'skill_subcategory',
+      'current_level',
+      'target_level',
+      'consecutive_correct',
+      'accuracy_rate',
+      'completion_time_avg',
+      'status',
+      'last_practiced_at',
+      'created_at',
+      'updated_at',
+    ],
+  });
+}
+
+/**
+ * Обновить прогресс этапа на основе задания
+ */
+export async function updateStageProgressFromTask(
+  hasyx: Hasyx,
+  userId: string,
+  taskId: string
+) {
+  // Получаем задание
+  const taskResult = await hasyx.select({
+    table: 'daily_tasks',
+    pk_columns: { id: taskId },
+    returning: ['stage_id', 'duration_minutes'],
+  });
+
+  const taskData = Array.isArray(taskResult) ? taskResult[0] : taskResult;
+  if (!taskData?.stage_id) {
+    return null;
+  }
+
+  // Получаем прогресс этапа
+  const progressResult = await hasyx.select({
+    table: 'stage_progress',
+    pk_columns: { id: taskData.stage_id },
+    returning: ['id', 'tasks_completed', 'tasks_total'],
+  });
+
+  const progress = Array.isArray(progressResult) ? progressResult[0] : progressResult;
+  if (!progress?.id) {
+    return null;
+  }
+
+  // Увеличиваем счетчик выполненных заданий
+  const newTasksCompleted = (progress.tasks_completed || 0) + 1;
+
+  return await hasyx.update({
+    table: 'stage_progress',
+    pk_columns: { id: progress.id },
+    _set: {
+      tasks_completed: newTasksCompleted,
+    },
+    returning: ['id', 'tasks_completed'],
   });
 }
 

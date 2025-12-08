@@ -81,6 +81,49 @@ export class DailyPlanService {
   ) {}
 
   /**
+   * Проверяет, есть ли уже урок с произношением в списке задач
+   */
+  private hasPronunciationTask(tasks: DailyTaskRecord[]): boolean {
+    for (const task of tasks) {
+      // speaking - всегда голосовой
+      if (task.type === 'speaking') {
+        return true;
+      }
+
+      // ai_practice - если название/описание содержит "голос" или "запись голосовых сообщений"
+      if (task.type === 'ai_practice') {
+        const title = (task.title || '').toLowerCase();
+        const description = ((task as any).description || '').toLowerCase();
+        if (title.includes('голос') || title.includes('запись голосовых сообщений') ||
+            description.includes('голос') || description.includes('запись голосовых сообщений')) {
+          return true;
+        }
+      }
+
+      // vocabulary - если есть pronunciationScript или requiresPronunciation
+      if (task.type === 'vocabulary') {
+        const payload = (task as any)?.type_specific_payload as Record<string, any> | undefined;
+        if (payload) {
+          const lessonMaterials = payload.lesson_materials as Record<string, any> | undefined;
+          if (lessonMaterials?.pronunciationScript || lessonMaterials?.requiresPronunciation) {
+            return true;
+          }
+          if (payload.pronunciationScript || payload.requiresPronunciation) {
+            return true;
+          }
+        }
+      }
+
+      // Любой урок с флагом requiresPronunciation
+      const payload = (task as any)?.type_specific_payload as Record<string, any> | undefined;
+      if (payload?.requiresPronunciation === true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Сгенерировать (или пересобрать) план дня
    */
   async generateDailyPlan(options: GenerateDailyPlanOptions): Promise<DailyPlanResult> {
@@ -203,7 +246,8 @@ export class DailyPlanService {
     const requirementChecks = await this.calculateRequirementChecks(
       activeStageProgress,
       weeklyStructure,
-      latestMetrics
+      latestMetrics,
+      userId
     );
 
     const readiness = StageProgressionService.isReadyForTest(requirementChecks);
@@ -351,7 +395,8 @@ export class DailyPlanService {
     const requirementChecks = await this.calculateRequirementChecks(
       stageProgress,
       weeklyStructure,
-      latestMetrics
+      latestMetrics,
+      userId
     );
 
     const dailyTasks = Array.isArray(tasksRaw) ? tasksRaw : [];
@@ -395,7 +440,8 @@ export class DailyPlanService {
   private async calculateRequirementChecks(
     stageProgress: StageProgressRecord,
     weeklyStructure: WeeklyStructureRecord[],
-    latestMetrics: Awaited<ReturnType<typeof getLatestProgressMetric>>
+    latestMetrics: Awaited<ReturnType<typeof getLatestProgressMetric>>,
+    userId: string
   ): Promise<RequirementCheck[]> {
     if (!stageProgress?.stage_id) {
       return [];
@@ -410,11 +456,31 @@ export class DailyPlanService {
       latestMetrics ?? {}
     );
 
+    // Вычисляем errors_pending динамически
+    // Если errors_pending в БД = 0, но это может быть про слова из Active Recall
+    // Проверяем количество неповторенных слов из vocabulary_cards
+    let calculatedErrorsPending = stageProgress.errors_pending ?? 0;
+    
+    // Если errors_pending = 0, но это может быть про слова, проверяем vocabulary_cards
+    // TODO: Разобраться, что именно имеется в виду под "ошибками" в requirements
+    // Возможно, это неповторенные слова из Active Recall
+    if (calculatedErrorsPending === 0) {
+      try {
+        // Проверяем, есть ли неповторенные слова для Active Recall
+        const today = new Date().toISOString().split('T')[0];
+        const vocabularyCards = await getVocabularyCardsForReview(this.hasyx, userId, today);
+        // Если есть слова для повторения, это может быть то, что имеется в виду под "ошибками"
+        // Но пока оставляем как есть, так как нужно уточнить логику
+      } catch (error) {
+        // Игнорируем ошибку, используем значение из БД
+      }
+    }
+
     const stageProgressData = {
       tasks_completed: stageProgress.tasks_completed ?? 0,
       tasks_total: stageProgress.tasks_total ?? weeklyStructure.length,
       words_learned: stageProgress.words_learned ?? 0,
-      errors_pending: stageProgress.errors_pending ?? 0,
+      errors_pending: calculatedErrorsPending,
       average_accuracy:
         stageProgress.average_accuracy ??
         averageAccuracyFromMetrics ??
@@ -467,9 +533,26 @@ export class DailyPlanService {
       }
     };
 
+    // Получаем существующие задачи для проверки дубликатов
+    const existingTasks = await getDailyTasks(this.hasyx, params.userId, params.targetDate);
+    const existingTasksArray = Array.isArray(existingTasks) ? existingTasks : [];
+
     await Promise.all(
-      (params.weeklyStructure as WeeklyStructureRecord[]).map((slot) =>
-        upsertDailyTaskFromStructure(this.hasyx, {
+      (params.weeklyStructure as WeeklyStructureRecord[]).map((slot) => {
+        // Проверяем, не создаем ли мы дубликат урока с произношением
+        const isPronunciationTask =
+          slot.activity_type === 'speaking' ||
+          (slot.activity_type === 'ai_practice' &&
+            (slot.title?.toLowerCase().includes('голос') ||
+             slot.title?.toLowerCase().includes('запись голосовых сообщений'))) ||
+          (slot.activity_type === 'vocabulary' && slot.requires_pronunciation);
+
+        if (isPronunciationTask && this.hasPronunciationTask(existingTasksArray)) {
+          // Пропускаем создание задачи, если уже есть урок с произношением
+          return Promise.resolve();
+        }
+
+        return upsertDailyTaskFromStructure(this.hasyx, {
           userId: params.userId,
           stageId: params.stageId,
           taskDate: params.targetDate,
@@ -485,8 +568,8 @@ export class DailyPlanService {
             weekly_structure_id: slot.id,
             regenerate: params.regenerate,
           },
-        })
-      )
+        });
+      })
     );
   }
 
@@ -659,11 +742,29 @@ export class DailyPlanService {
       motivation,
       aiTasks: taskPayload
         .filter((task) => task.aiEnabled)
-        .map((task) => ({
-          type: task.type,
-          prompt: 'Обсудим тему дня. Расскажи, что уже знаешь, и задавай вопросы.',
-          context: 'Поддерживай короткий диалог, уточняй ошибки и хвали за прогресс.',
-        })),
+        .map((task) => {
+          // Базовый контекст
+          let context = 'Поддерживай короткий диалог, уточняй ошибки и хвали за прогресс.';
+          
+          // Для speaking уроков добавляем инструкции для ролевой игры
+          if (task.type === 'speaking') {
+            context = 'Ты играешь роль друга в ролевой игре. Отвечай короткими репликами, подходящими для голосового диалога. Мягко направляй разговор, чтобы ученик использовал целевые слова урока.';
+          }
+          
+          // Для ai_practice с голосовыми сообщениями
+          if (task.type === 'ai_practice') {
+            const title = (task.title || '').toLowerCase();
+            if (title.includes('запись голосовых сообщений') || title.includes('голос')) {
+              context = 'Ты анализируешь голосовые сообщения ученика. Проверь произношение, использование целевых слов, грамматику и дай конструктивный фидбек.';
+            }
+          }
+          
+          return {
+            type: task.type,
+            prompt: 'Обсудим тему дня. Расскажи, что уже знаешь, и задавай вопросы.',
+            context,
+          };
+        }),
       reviewReminders,
       fallbackUsed,
     };
@@ -802,6 +903,10 @@ export class DailyPlanService {
     userLevel: string;
     regenerate: boolean;
   }) {
+    // Получаем существующие задачи для проверки дубликатов
+    const existingTasks = await getDailyTasks(this.hasyx, params.userId, params.targetDate);
+    const existingTasksArray = Array.isArray(existingTasks) ? existingTasks : [];
+
     const defaultTasks = [
       {
         type: 'grammar',
@@ -826,8 +931,20 @@ export class DailyPlanService {
       },
     ];
 
+    // Фильтруем задачи, чтобы не создавать дубликаты уроков с произношением
+    const filteredTasks = defaultTasks.filter((task) => {
+      const isPronunciationTask = task.type === 'speaking' ||
+        (task.type === 'ai_practice' && (task.title.toLowerCase().includes('голос') || task.description.toLowerCase().includes('голос'))) ||
+        (task.type === 'vocabulary' && (task as any).requiresPronunciation);
+      
+      if (isPronunciationTask && this.hasPronunciationTask(existingTasksArray)) {
+        return false; // Пропускаем
+      }
+      return true;
+    });
+
     await Promise.all(
-      defaultTasks.map((task) =>
+      filteredTasks.map((task) =>
         upsertDailyTaskFromStructure(this.hasyx, {
           userId: params.userId,
           stageId: params.stageId,
@@ -874,8 +991,28 @@ export class DailyPlanService {
       return false;
     }
 
+    // Фильтруем дескрипторы, чтобы не создавать дубликаты уроков с произношением
+    const filteredDescriptors = descriptors.filter((descriptor) => {
+      // Проверяем, является ли этот дескриптор уроком с произношением
+      const isPronunciationTask =
+        descriptor.type === 'speaking' ||
+        (descriptor.type === 'ai_practice' &&
+          (descriptor.title?.toLowerCase().includes('голос') ||
+           descriptor.title?.toLowerCase().includes('запись голосовых сообщений') ||
+           descriptor.description?.toLowerCase().includes('голос'))) ||
+        (descriptor.type === 'vocabulary' &&
+          (descriptor.title?.toLowerCase().includes('произношение') ||
+           descriptor.description?.toLowerCase().includes('произношение')));
+
+      // Если это урок с произношением, проверяем, нет ли уже такого
+      if (isPronunciationTask && this.hasPronunciationTask(params.existingTasks)) {
+        return false; // Пропускаем этот дескриптор
+      }
+      return true;
+    });
+
     await Promise.all(
-      descriptors.map((descriptor) =>
+      filteredDescriptors.map((descriptor) =>
         upsertDailyTaskFromStructure(this.hasyx, {
           userId: params.userId,
           stageId: params.stageId,

@@ -1,7 +1,7 @@
 import { Hasyx } from 'hasyx';
 
 import { generateJSON } from '@/lib/ai/llm';
-import { getUserProfile, updateDailyTaskMetadata } from '@/lib/hasura-queries';
+import { getUserProfile, updateDailyTaskMetadata, getUserInstructionLanguage } from '@/lib/hasura-queries';
 
 interface TaskRow {
   id: string;
@@ -72,6 +72,7 @@ export class LessonContentService {
       task: options.task,
       currentLevel,
       targetLevel,
+      userId: options.userId,
     });
 
     const mergedPayload = {
@@ -102,6 +103,7 @@ export class LessonContentService {
     task: TaskRow;
     currentLevel: string;
     targetLevel: string;
+    userId: string;
   }): Promise<LessonMaterials> {
     const payload = await this.invokeAi(params).catch((error) => {
       console.warn('[LessonContentService] AI generation failed, using fallback:', error);
@@ -116,6 +118,7 @@ export class LessonContentService {
     task: TaskRow;
     currentLevel: string;
     targetLevel: string;
+    userId: string;
   }) {
     const { task, currentLevel, targetLevel } = params;
     const typeSpecificDirective = (() => {
@@ -135,10 +138,17 @@ export class LessonContentService {
 
     const grammarSpecificNote = 'ВАЖНО: В поле "explanation" НЕ используй нумерацию (1., 2., 3. или 1), 2), 3)). Просто перечисляй пункты описания без цифр и скобок, так как нумерация будет добавлена автоматически в интерфейсе. Каждый пункт должен быть отдельным элементом массива.';
 
+    // Получаем язык инструкций пользователя
+    const instructionLanguage = await getUserInstructionLanguage(this.hasyx, params.userId);
+    const languageNote = instructionLanguage === 'ru' 
+      ? 'Все объяснения, инструкции, шаги (explanation, steps, keyPoints) должны быть на русском языке.'
+      : `Все объяснения, инструкции, шаги (explanation, steps, keyPoints) должны быть на языке: ${instructionLanguage}.`;
+
     const basePrompt = [
       `Ты — наставник японских методик (Кайдзен, Кумон, Shu-Ha-Ri, Active Recall).`,
       `Создай учебный мини-урок для подростка, который учит английский.`,
       `Тип задания: ${task.type}. Заголовок: ${task.title}.`,
+      languageNote,
       task.description ? `Описание задания: ${task.description}` : '',
       `Текущий уровень ученика: ${currentLevel}. Цель: ${targetLevel}.`,
       typeSpecificDirective,
@@ -257,10 +267,54 @@ export class LessonContentService {
       .filter((item) => Boolean(item) && item.length > 0)
       .slice(0, 8);
 
+    // Если explanation пустой, используем fallback
+    // Для грамматических уроков особенно важно иметь объяснение
+    let finalExplanation = cleanExplanation;
+    if (finalExplanation.length === 0) {
+      console.warn('[LessonContentService] Empty explanation, using fallback for task type:', params.task.type);
+      // Для грамматических уроков создаем подробное объяснение
+      if (params.task.type === 'grammar') {
+        finalExplanation = [
+          'Изучи грамматическое правило, которое описывает эту структуру.',
+          'Обрати внимание на форму и порядок слов в предложении.',
+          'Посмотри на примеры использования этой структуры в разных контекстах.',
+          'Попробуй понять, когда и почему используется именно такая форма.',
+          'Составь собственные примеры, используя изученную структуру.',
+          'Проверь правильность использования структуры в своих предложениях.',
+        ];
+      } else {
+        // Для других типов уроков используем базовый fallback
+        const fallbackLesson = this.buildFallbackLesson(params);
+        finalExplanation = fallbackLesson.explanation;
+      }
+    }
+    
+    // Дополнительная проверка: если после всех проверок explanation все еще пустой, принудительно добавляем fallback
+    if (finalExplanation.length === 0) {
+      console.error('[LessonContentService] Explanation still empty after fallback, forcing default');
+      finalExplanation = params.task.type === 'grammar' 
+        ? [
+            'Изучи грамматическое правило, которое описывает эту структуру.',
+            'Обрати внимание на форму и порядок слов в предложении.',
+            'Посмотри на примеры использования этой структуры в разных контекстах.',
+            'Попробуй понять, когда и почему используется именно такая форма.',
+            'Составь собственные примеры, используя изученную структуру.',
+            'Проверь правильность использования структуры в своих предложениях.',
+          ]
+        : ['Прочитай правило или описание темы.', 'Обрати внимание на примеры.', 'Попробуй составить собственные предложения.'];
+    }
+
     return {
       overview: lesson.overview || `Разберём тему: ${params.task.title}`,
-      explanation: cleanExplanation,
-      keyPoints: safeArray<string>(lesson.keyPoints).slice(0, 8),
+      explanation: finalExplanation,
+      keyPoints: (() => {
+        const keyPoints = safeArray<string>(lesson.keyPoints);
+        if (keyPoints.length === 0) {
+          const fallbackLesson = this.buildFallbackLesson(params);
+          return fallbackLesson.keyPoints;
+        }
+        return keyPoints;
+      })().slice(0, 8),
       examples: safeArray(lesson.examples)
         .map((item: any) => ({
           prompt: item?.prompt ?? '',

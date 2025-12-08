@@ -15,6 +15,7 @@ import { BackArrow } from '@/components/icons/BackArrow';
 import { IconButton } from '../Buttons/IconButton';
 import { SwipeCard } from '../vocabulary/SwipeCard';
 import { ClickableText } from './ClickableText';
+import { useModalStore } from '@/store/modalStore';
 
 interface LessonScreenProps {
   taskId: string;
@@ -46,12 +47,24 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [flashcardResults, setFlashcardResults] = useState<Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
   const [userLevel, setUserLevel] = useState<string>('A2');
+  const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
+  const [questionResults, setQuestionResults] = useState<Record<number, boolean | null>>({});
+  const [shownSuccessModals, setShownSuccessModals] = useState<Set<number>>(new Set());
+  const [errorMessages, setErrorMessages] = useState<Record<number, string>>({});
   const hasyx = useHasyx();
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const loadLesson = useCallback(async () => {
     if (!userId) {
       return;
     }
+    
+    // Не загружаем урок, если вкладка не видна
+    if (typeof document !== 'undefined' && document.hidden) {
+      return;
+    }
+    
     setState({ status: 'loading' });
     try {
       const response = await fetch('/api/lesson/generate', {
@@ -79,6 +92,22 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     if (!userId) {
       return;
     }
+    
+    // Загружаем урок только если вкладка видна
+    if (typeof document !== 'undefined' && document.hidden) {
+      // Если вкладка скрыта, ждем когда она станет видимой
+      const handleVisibilityChange = () => {
+        if (!document.hidden && userId) {
+          loadLesson();
+        }
+      };
+      
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
+    }
+    
     loadLesson();
   }, [userId, loadLesson]);
 
@@ -662,13 +691,119 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
         {/* Для остальных типов уроков показываем questions как обычно */}
         {lesson.meta?.taskType !== 'vocabulary' && lesson.exercise.questions.length > 0 && (
           <div className="mt-4 space-y-3">
-            {lesson?.exercise.questions.map((question, index) => (
-              <div key={`${question.prompt}-${index}`} className="rounded-2xl bg-gray-50 p-4">
-                <p className="font-medium text-gray-900">{question.prompt}</p>
-                <p className="text-sm text-gray-600">Перевод: {question.expectedAnswer}</p>
-                {question.hint && <p className="text-xs text-gray-500">Подсказка: {question.hint}</p>}
-              </div>
-            ))}
+            {lesson?.exercise.questions.map((question, index) => {
+              const userAnswer = questionAnswers[index] || '';
+              const isCorrect = questionResults[index];
+              const isGrammarLesson = lesson.meta?.taskType === 'grammar';
+              const hasMissingVerb = question.prompt?.includes('___') || question.prompt?.toLowerCase().includes('[глагол]') || question.prompt?.toLowerCase().includes('глагол');
+              
+              const handleAnswer = () => {
+                // Более гибкое сравнение: убираем лишние пробелы, пунктуацию, приводим к нижнему регистру
+                const normalize = (text: string) => {
+                  if (!text) return '';
+                  return text
+                    .trim()
+                    .toLowerCase()
+                    .replace(/[.,!?;:'"]/g, '') // Убираем пунктуацию
+                    .replace(/\s+/g, ' '); // Нормализуем пробелы
+                };
+                
+                const normalizedUserAnswer = normalize(userAnswer);
+                const normalizedExpected = normalize(question.expectedAnswer || '');
+                
+                // Дополнительная проверка: частичное совпадение для длинных ответов
+                const correct = normalizedUserAnswer === normalizedExpected ||
+                  (normalizedExpected.length > 20 && normalizedExpected.includes(normalizedUserAnswer)) ||
+                  (normalizedUserAnswer.length > 20 && normalizedUserAnswer.includes(normalizedExpected));
+                
+                console.log('Answer check:', {
+                  user: normalizedUserAnswer,
+                  expected: normalizedExpected,
+                  correct,
+                });
+                
+                setQuestionResults((prev) => ({ ...prev, [index]: correct }));
+                
+                // Показываем модальное окно для правильного ответа в уроках с временами
+                if (correct && isGrammarLesson && hasMissingVerb && !shownSuccessModals.has(index)) {
+                  setShownSuccessModals((prev) => new Set(prev).add(index));
+                  const modalId = openModal({
+                    component: (
+                      <div className="p-6 text-center">
+                        <h3 className="text-2xl font-semibold text-green-900 mb-4">
+                          🎉 Правильно!
+                        </h3>
+                        <p className="text-gray-700 mb-6">
+                          Отличная работа! Ты правильно использовал форму глагола.
+                        </p>
+                        <Button onClick={() => closeModal(modalId)}>
+                          Продолжить
+                        </Button>
+                      </div>
+                    ),
+                    closeOnOverlayClick: true,
+                  });
+                }
+                
+                // Формируем детальное сообщение об ошибке
+                if (!correct) {
+                  let errorMessage = 'Неверно. ';
+                  
+                  // Проверяем, есть ли информация об ошибке в evaluationCriteria
+                  if (question.evaluationCriteria && Array.isArray(question.evaluationCriteria) && question.evaluationCriteria.length > 0) {
+                    errorMessage += question.evaluationCriteria[0];
+                  } else if (isGrammarLesson && hasMissingVerb) {
+                    errorMessage += `Правильный ответ: "${question.expectedAnswer}". Проверь форму глагола и время.`;
+                  } else {
+                    errorMessage += `Правильный ответ: "${question.expectedAnswer}".`;
+                  }
+                  
+                  setErrorMessages((prev) => ({ ...prev, [index]: errorMessage }));
+                } else {
+                  // Убираем сообщение об ошибке при правильном ответе
+                  setErrorMessages((prev) => {
+                    const newMessages = { ...prev };
+                    delete newMessages[index];
+                    return newMessages;
+                  });
+                }
+              };
+
+              return (
+                <div key={`${question.prompt}-${index}`} className="rounded-2xl bg-gray-50 p-4 space-y-2">
+                  <p className="font-medium text-gray-900">{question.prompt}</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={userAnswer}
+                      onChange={(e) => setQuestionAnswers((prev) => ({ ...prev, [index]: e.target.value }))}
+                      placeholder="Введите ответ..."
+                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-deep focus:outline-none focus:ring-2 focus:ring-primary-deep"
+                      disabled={isCorrect === true}
+                    />
+                    <button
+                      onClick={handleAnswer}
+                      disabled={!userAnswer.trim() || isCorrect === true}
+                      className="rounded-lg bg-primary-deep px-4 py-2 text-sm font-medium text-white hover:bg-primary-deep/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Ответить
+                    </button>
+                  </div>
+                  {isCorrect === true && (
+                    <p className="text-sm text-green-600 font-medium">✓ Правильно!</p>
+                  )}
+                  {isCorrect === false && errorMessages[index] && (
+                    <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                      <p className="text-sm text-red-700 font-medium">✗ {errorMessages[index]}</p>
+                    </div>
+                  )}
+                  {isCorrect === false && !errorMessages[index] && (
+                    <p className="text-sm text-red-600">✗ Неверно. Попробуйте еще раз.</p>
+                  )}
+                  {question.hint && <p className="text-xs text-gray-500 mt-1">Подсказка: {question.hint}</p>}
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

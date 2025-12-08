@@ -76,8 +76,10 @@ export const useSpeechSynthesis = (
       return;
     }
 
-    // Останавливаем предыдущее озвучивание
-    synthRef.current.cancel();
+    // Останавливаем предыдущее озвучивание перед началом нового
+    if (synthRef.current.speaking) {
+      synthRef.current.cancel();
+    }
 
     if (!text.trim()) {
       console.warn('Empty text provided to speak');
@@ -105,12 +107,24 @@ export const useSpeechSynthesis = (
 
     utterance.onerror = (event) => {
       setIsSpeaking(false);
-      const errorMessage = `Speech error: ${event.error}`;
-      console.error(errorMessage);
-      if (onError) onError(errorMessage);
+      // Игнорируем ошибку "interrupted", так как она возникает при нормальной отмене
+      if (event.error !== 'interrupted') {
+        const errorMessage = `Speech error: ${event.error}`;
+        console.error(errorMessage);
+        if (onError) onError(errorMessage);
+      }
     };
 
-    synthRef.current.speak(utterance);
+    try {
+      synthRef.current.speak(utterance);
+    } catch (error: any) {
+      setIsSpeaking(false);
+      // Игнорируем ошибки, связанные с прерыванием
+      if (error?.message && !error.message.includes('interrupted')) {
+        console.error('Failed to speak:', error);
+        if (onError) onError(error.message);
+      }
+    }
   }, [language, rate, pitch, volume, selectedVoice, onEnd, onError]);
 
   const cancel = useCallback(() => {

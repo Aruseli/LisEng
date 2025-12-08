@@ -370,6 +370,7 @@ ${JSON.stringify(userAnswers, null, 2)}
 
   /**
    * Проверка необходимости создания еженедельного теста
+   * Проверяет, есть ли уже тест на эту неделю (week_start_date)
    */
   async shouldCreateWeeklyTest(userId: string, weekStartDate: Date): Promise<boolean> {
     // Проверить, есть ли уже тест на эту неделю
@@ -383,7 +384,8 @@ ${JSON.stringify(userAnswers, null, 2)}
       limit: 1,
     });
 
-    return !existing || (Array.isArray(existing) && existing.length === 0);
+    const existingTest = Array.isArray(existing) ? existing[0] : existing;
+    return !existingTest;
   }
 }
 

@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Radar, PolarArea } from 'react-chartjs-2';
 import { useMemo } from 'react';
+import { KumonSkillsList } from './KumonSkillsList';
 
 ChartJS.register(
   RadialLinearScale,
@@ -273,6 +274,8 @@ export function ProgressTab({
           ))}
         </ul>
       </section>
+
+      <KumonSkillsList />
 
       {achievements.length > 0 && (
         <section className="rounded-3xl bg-white p-6 shadow-sm">
