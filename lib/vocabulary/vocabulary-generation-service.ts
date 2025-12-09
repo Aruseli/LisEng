@@ -3,6 +3,7 @@ import { Hasyx } from 'hasyx';
 import { generateJSON } from '@/lib/ai/llm';
 import { calculateSM2, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
 import type { SnapshotInsights } from '@/lib/lesson-snapshots';
+import { getUserInstructionLanguage } from '@/lib/hasura-queries';
 
 interface SnapshotWord {
   word: string;
@@ -54,7 +55,7 @@ export class VocabularyGenerationService {
       ? params.contexts.slice(0, normalizedWords.length)
       : normalizedWords.map(() => params.context ?? null);
 
-    const specs = await this.generateSpecsFromAI(normalizedWords, params.level, contexts);
+    const specs = await this.generateSpecsFromAI(normalizedWords, params.level, contexts, params.userId);
     return await this.saveCards(specs, {
       userId: params.userId,
       sourceSnapshotId: params.sourceSnapshotId ?? null,
@@ -71,7 +72,7 @@ export class VocabularyGenerationService {
     }
     // Для ManualWordsParams используем один context для всех слов, если передан
     const contexts = params.words.map(() => params.context ?? null);
-    const specs = await this.generateSpecsFromAI(params.words, params.level, contexts);
+    const specs = await this.generateSpecsFromAI(params.words, params.level, contexts, params.userId);
     return await this.saveCards(specs, {
       userId: params.userId,
       sourceSnapshotId: params.sourceSnapshotId ?? null,
@@ -131,13 +132,25 @@ export class VocabularyGenerationService {
   /**
    * Просим AI подготовить перевод/пример/подсказку для списка слов
    * @param contexts - массив контекстов (предложений) для каждого слова. Если null, контекста нет.
+   * @param userId - ID пользователя для получения языка инструкций
    */
   private async generateSpecsFromAI(
     words: string[],
     level: string,
-    contexts?: (string | null)[]
+    contexts?: (string | null)[],
+    userId?: string
   ): Promise<RawCardSpec[]> {
     const hasContexts = contexts && contexts.some((ctx) => ctx !== null && ctx.trim().length > 0);
+
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId) {
+      try {
+        instructionLanguage = await getUserInstructionLanguage(this.hasyx, userId);
+      } catch (error) {
+        console.warn('[VocabularyGenerationService] Failed to get user instruction language, using default');
+      }
+    }
 
     let prompt: string;
 
@@ -155,6 +168,9 @@ export class VocabularyGenerationService {
 
       prompt = [
         `Ты — преподаватель английского языка.`,
+        instructionLanguage === 'ru'
+          ? 'Все переводы, примеры и подсказки должны быть на русском языке.'
+          : `Все переводы, примеры и подсказки должны быть на языке: ${instructionLanguage}.`,
         `Составь карточки для словаря ученика уровня ${level}.`,
         `Слова с контекстом:`,
         wordsWithContext,
@@ -177,6 +193,9 @@ export class VocabularyGenerationService {
       // Стандартный промпт без контекста (для слов из практики произношения и т.д.)
       prompt = [
         `Ты — преподаватель английского языка.`,
+        instructionLanguage === 'ru'
+          ? 'Все переводы, примеры и подсказки должны быть на русском языке.'
+          : `Все переводы, примеры и подсказки должны быть на языке: ${instructionLanguage}.`,
         `Составь карточки для словаря ученика уровня ${level}.`,
         `Слова: ${words.join(', ')}.`,
         `Ответь валидным JSON:`,
@@ -198,8 +217,8 @@ export class VocabularyGenerationService {
     const response = await generateJSON<{ cards: RawCardSpec[] }>(prompt, {
       maxTokens: 1200,
       systemPrompt: hasContexts
-        ? 'Ты создаёшь карточки слов для подростка с учётом контекста: дай точный перевод, пример и краткую подсказку, учитывая значение слова в предложении.'
-        : 'Ты создаёшь карточки слов для подростка: дай точный перевод, пример и краткую подсказку.',
+        ? `Ты создаёшь карточки слов для подростка с учётом контекста: дай точный перевод, пример и краткую подсказку, учитывая значение слова в предложении. ${instructionLanguage === 'ru' ? 'Все переводы и подсказки на русском языке.' : `Все переводы и подсказки на языке: ${instructionLanguage}.`}`
+        : `Ты создаёшь карточки слов для подростка: дай точный перевод, пример и краткую подсказку. ${instructionLanguage === 'ru' ? 'Все переводы и подсказки на русском языке.' : `Все переводы и подсказки на языке: ${instructionLanguage}.`}`,
     }).catch((error) => {
       console.warn('[VocabularyGenerationService] AI generation failed, using fallback', error);
       return {

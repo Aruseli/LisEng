@@ -124,12 +124,22 @@ export class LessonSnapshotService {
 
     // Анализ ошибок через AI
     try {
+      // Получаем язык инструкций пользователя
+      let instructionLanguage = 'ru';
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(this.hasyx, data.userId);
+      } catch (error) {
+        console.warn('[LessonSnapshotService] Failed to get instruction language');
+      }
+
       const ai = getAI();
       const prompt = `
         Analyze the following user responses and correct answers for errors and hesitations.
         User Responses: ${JSON.stringify(data.userResponses)}
         Correct Answers: ${JSON.stringify(data.correctAnswers)}
         Lesson Type: ${data.lessonType}
+        IMPORTANT: All error descriptions, context explanations, and hesitation notes must be in ${instructionLanguage === 'ru' ? 'Russian' : instructionLanguage} language.
         Please return a JSON object with 'errors' and 'hesitations' arrays.
         Each error should have 'mistake', 'context', 'severity', and 'timestamp'.
         Each hesitation should have 'content', 'context', and 'timestamp'.
@@ -395,11 +405,21 @@ export class LessonSnapshotService {
     }
 
     try {
+      // Получаем язык инструкций пользователя
+      let instructionLanguage = 'ru';
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(this.hasyx, data.userId);
+      } catch (error) {
+        console.warn('[LessonSnapshotService] Failed to get instruction language');
+      }
+
       const ai = getAI();
       const prompt = `
         Extract unknown words from the following text.
         Text: ${data.contentSnapshot.originalContent?.text || ''}
         User ID: ${data.userId}
+        IMPORTANT: All descriptions and context explanations must be in ${instructionLanguage === 'ru' ? 'Russian' : instructionLanguage} language.
         Please return a JSON object with an 'unknown_words' array.
         Each word should have 'word', 'form', 'contextSentence', 'contextParagraph', 'frequency', and 'user_confidence'.
       `;

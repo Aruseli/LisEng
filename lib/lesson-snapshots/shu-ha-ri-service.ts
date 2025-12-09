@@ -80,6 +80,15 @@ export class ShuHaRiService {
     skills: any[],
     weekSnapshots: any[]
   ): Promise<ShuHaRiTestQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    try {
+      const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+      instructionLanguage = await getUserInstructionLanguage(this.hasyx, userId);
+    } catch (error) {
+      console.warn('[ShuHaRiService] Failed to get instruction language');
+    }
+
     const prompt = `Создай еженедельный тест типа "${testType}" для проверки прогресса ученика.
 
 Навыки ученика:
@@ -94,13 +103,15 @@ ${JSON.stringify(weekSnapshots.slice(0, 10), null, 2)}
 - Для "ri": свободное владение без опоры на правила
 - Для "comprehensive": все стадии
 
+ВАЖНО: Все вопросы и ответы должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке.
+
 Верни JSON:
 {
   "questions": [
     {
-      "question": "текст вопроса",
+      "question": "текст вопроса на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}",
       "type": "grammar" | "vocabulary" | "comprehension" | "application",
-      "correct_answer": "правильный ответ",
+      "correct_answer": "правильный ответ на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}",
       "skill_id": "uuid навыка (если есть)",
       "skill_type": "тип навыка"
     }

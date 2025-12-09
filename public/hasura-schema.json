@@ -605,21 +605,22 @@
             "hasura_role"
           ],
           "user": [
-            "created_at",
-            "current_level",
-            "daily_goal_minutes",
-            "email",
-            "exam_date",
-            "hasura_role",
             "id",
-            "image",
             "name",
-            "reminder_enabled",
-            "start_date",
-            "study_place",
-            "study_time",
+            "email",
+            "image",
+            "created_at",
+            "updated_at",
+            "current_level",
             "target_level",
-            "updated_at"
+            "exam_date",
+            "start_date",
+            "study_time",
+            "study_place",
+            "daily_goal_minutes",
+            "reminder_enabled",
+            "instruction_language",
+            "hasura_role"
           ]
         }
       },
@@ -20170,6 +20171,15 @@
               }
             },
             {
+              "name": "instruction_language",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            },
+            {
               "name": "is_admin",
               "isList": false,
               "args": [],
@@ -21599,7 +21609,7 @@
         }
       }
     },
-    "timestamp": 1764274879388,
+    "timestamp": 1765319308018,
     "version": "3.0.0"
   }
 }

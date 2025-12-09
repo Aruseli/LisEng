@@ -8,6 +8,7 @@ import {
   getStageRequirements,
   getStreak,
   getUserProfile,
+  getUserInstructionLanguage,
   getVocabularyCardsForReview,
   getWeeklyStructureForStage,
   updateDailyTaskMetadata,
@@ -617,8 +618,21 @@ export class DailyPlanService {
       unlocked_at: achievement.unlocked_at,
     }));
 
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (params.user?.id) {
+      try {
+        instructionLanguage = await getUserInstructionLanguage(this.hasyx, params.user.id);
+      } catch (error) {
+        console.warn('[DailyPlanService] Failed to get user instruction language, using default');
+      }
+    }
+
     const systemPrompt = `Ты — наставник японской методики обучения (Кумон, Сю-Ха-Ри, Кайдзен, Active Recall).
-Составь поддерживающее объяснение учебного дня для подростка, который учит английский.`;
+Составь поддерживающее объяснение учебного дня для подростка, который учит английский.
+${instructionLanguage === 'ru' 
+  ? 'Все ответы должны быть на русском языке.' 
+  : `Все ответы должны быть на языке: ${instructionLanguage}.`}`;
 
     if (!params.forceAi && !process.env.OPENROUTER_API_KEY) {
       return this.buildFallbackSummary(taskPayload, requirementsPayload, params.snapshotInsights ?? null);
@@ -659,6 +673,10 @@ export class DailyPlanService {
       promptParts.push(
         '',
         'ВАЖНО: Учитывай японские методики. Привяжи задания к проблемным областям и напомни про SM-2 повторения, если они есть.',
+        '',
+        instructionLanguage === 'ru'
+          ? 'ВАЖНО: Все ответы (summary, focus, motivation, aiTasks, reviewReminders) должны быть на русском языке.'
+          : `ВАЖНО: Все ответы должны быть на языке: ${instructionLanguage}.`,
         '',
         'Сформируй JSON вида:',
         `{

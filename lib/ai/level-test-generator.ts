@@ -9,11 +9,14 @@ import type {
   SpeakingQuestion,
   LevelTestData
 } from '@/types/level-test';
+import type { Hasyx } from 'hasyx';
 
 interface GenerateTestOptions {
   estimatedLevel?: string; // предполагаемый уровень для адаптации теста
   includeSpeaking?: boolean;
   includeWriting?: boolean;
+  userId?: string; // ID пользователя для получения языка инструкций
+  hasyx?: Hasyx; // Hasyx клиент для получения языка инструкций
 }
 
 /**
@@ -24,35 +27,35 @@ export class LevelTestGenerator {
    * Генерирует полный тест для определения уровня
    */
   static async generateTest(options: GenerateTestOptions = {}): Promise<LevelTestData> {
-    const { estimatedLevel = 'A2', includeSpeaking = true, includeWriting = true } = options;
+    const { estimatedLevel = 'A2', includeSpeaking = true, includeWriting = true, userId, hasyx } = options;
 
     const questions: TestQuestion[] = [];
 
     // Грамматика (10 вопросов)
-    const grammarQuestions = await this.generateGrammarQuestions(10, estimatedLevel);
+    const grammarQuestions = await this.generateGrammarQuestions(10, estimatedLevel, userId, hasyx);
     questions.push(...grammarQuestions);
 
     // Словарь (10 вопросов)
-    const vocabularyQuestions = await this.generateVocabularyQuestions(10, estimatedLevel);
+    const vocabularyQuestions = await this.generateVocabularyQuestions(10, estimatedLevel, userId, hasyx);
     questions.push(...vocabularyQuestions);
 
     // Чтение (1 текст с 5 вопросами)
-    const readingQuestions = await this.generateReadingQuestions(estimatedLevel);
+    const readingQuestions = await this.generateReadingQuestions(estimatedLevel, userId, hasyx);
     questions.push(...readingQuestions);
 
     // Аудирование (1 диалог с 5 вопросами)
-    const listeningQuestions = await this.generateListeningQuestions(estimatedLevel);
+    const listeningQuestions = await this.generateListeningQuestions(estimatedLevel, userId, hasyx);
     questions.push(...listeningQuestions);
 
     // Письмо (1 задание)
     if (includeWriting) {
-      const writingQuestions = await this.generateWritingQuestions(estimatedLevel);
+      const writingQuestions = await this.generateWritingQuestions(estimatedLevel, userId, hasyx);
       questions.push(...writingQuestions);
     }
 
     // Говорение (2 вопроса)
     if (includeSpeaking) {
-      const speakingQuestions = await this.generateSpeakingQuestions(estimatedLevel);
+      const speakingQuestions = await this.generateSpeakingQuestions(estimatedLevel, userId, hasyx);
       questions.push(...speakingQuestions);
     }
 
@@ -71,8 +74,21 @@ export class LevelTestGenerator {
    */
   private static async generateGrammarQuestions(
     count: number,
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<GrammarQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
     const prompt = `Создай ${count} вопросов по грамматике английского языка для определения уровня ${level}.
 
 Каждый вопрос должен иметь:
@@ -80,7 +96,7 @@ export class LevelTestGenerator {
 - 4 варианта ответа (только один правильный)
 - Краткое объяснение правильного ответа
 
-ВАЖНО: Все объяснения (explanation) должны быть на русском языке. Это объяснения для пользователя, который проходит тест на русском языке.
+ВАЖНО: Все объяснения (explanation) должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке. Это объяснения для пользователя, который проходит тест на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке.
 
 Формат JSON:
 {
@@ -130,8 +146,21 @@ export class LevelTestGenerator {
    */
   private static async generateVocabularyQuestions(
     count: number,
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<VocabularyQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
     const prompt = `Создай ${count} вопросов по словарю английского языка для уровня ${level}.
 
 Каждый вопрос должен иметь:
@@ -140,7 +169,7 @@ export class LevelTestGenerator {
 - 4 варианта перевода/определения
 - Правильный ответ
 
-ВАЖНО: Все варианты перевода (options) должны быть на русском языке. Это переводы устойчивых выражений или слов на русский язык.
+ВАЖНО: Все варианты перевода (options) должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке. Это переводы устойчивых выражений или слов на ${instructionLanguage === 'ru' ? 'русский' : instructionLanguage} язык.
 
 Формат JSON:
 {
@@ -195,21 +224,36 @@ export class LevelTestGenerator {
    * Генерирует вопросы по чтению
    */
   private static async generateReadingQuestions(
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<ReadingQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
     const wordCount = this.getWordCountForLevel(level);
     
     const prompt = `Создай текст для чтения на английском языке уровня ${level} (около ${wordCount} слов) и 5 вопросов к нему.
 
 Текст должен быть интересным и подходящим для уровня ${level}.
 
+ВАЖНО: Все вопросы и варианты ответов должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке.
+
 Формат JSON:
 {
   "text": "текст для чтения",
   "questions": [
     {
-      "question": "вопрос по тексту",
-      "options": ["вариант 1", "вариант 2", "вариант 3", "вариант 4"],
+      "question": "вопрос по тексту на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}",
+      "options": ["вариант 1 на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}", "вариант 2", "вариант 3", "вариант 4"],
       "correctAnswer": 0
     }
   ]
@@ -254,17 +298,32 @@ export class LevelTestGenerator {
    * Генерирует вопросы по аудированию
    */
   private static async generateListeningQuestions(
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<ListeningQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
     const prompt = `Создай диалог или монолог на английском языке уровня ${level} (около 150-200 слов) и 5 вопросов к нему.
+
+ВАЖНО: Все вопросы и варианты ответов должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке.
 
 Формат JSON (строго валидный, без комментариев):
 {
   "transcript": "строка с текстом (дважды экранируй переносы как \\\\n и кавычки как \\\")",
   "questions": [
     {
-      "question": "вопрос по аудио",
-      "options": ["вариант 1", "вариант 2", "вариант 3", "вариант 4"],
+      "question": "вопрос по аудио на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}",
+      "options": ["вариант 1 на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}", "вариант 2", "вариант 3", "вариант 4"],
       "correctAnswer": 0
     }
   ]
@@ -311,8 +370,21 @@ export class LevelTestGenerator {
    * Генерирует задание по письму
    */
   private static async generateWritingQuestions(
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<WritingQuestion[]> {
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
     const prompt = `Создай задание по письму для уровня ${level}.
 
 Задание должно быть:
@@ -320,13 +392,13 @@ export class LevelTestGenerator {
 - Подходящим для уровня ${level}
 - С указанием примерного количества слов
 
-ВАЖНО: Все тексты (prompt и criteria) должны быть на русском языке. Это задания и критерии оценки для пользователя, который проходит тест на русском языке.
+ВАЖНО: Все тексты (prompt и criteria) должны быть на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке. Это задания и критерии оценки для пользователя, который проходит тест на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке.
 
 Формат JSON:
 {
-  "prompt": "описание задания на русском языке",
+  "prompt": "описание задания на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage} языке",
   "wordLimit": 100,
-  "criteria": ["критерий 1 на русском", "критерий 2 на русском", "критерий 3 на русском"]
+  "criteria": ["критерий 1 на ${instructionLanguage === 'ru' ? 'русском' : instructionLanguage}", "критерий 2", "критерий 3"]
 }`;
 
     try {
@@ -364,12 +436,32 @@ export class LevelTestGenerator {
    * Генерирует вопросы для говорения
    */
   private static async generateSpeakingQuestions(
-    level: string
+    level: string,
+    userId?: string,
+    hasyx?: Hasyx
   ): Promise<SpeakingQuestion[]> {
-    const prompts = [
-      `Расскажите о себе. Где вы живете? Чем занимаетесь? Какие у вас хобби?`,
-      `Опишите свой последний отпуск или поездку. Что вам больше всего понравилось?`,
-    ];
+    // Получаем язык инструкций пользователя
+    let instructionLanguage = 'ru';
+    if (userId && hasyx) {
+      try {
+        const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+        instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+      } catch (error) {
+        console.warn('[LevelTestGenerator] Failed to get instruction language');
+      }
+    }
+
+    // Вопросы для говорения всегда на русском (это инструкции для пользователя)
+    // Но можно адаптировать под язык инструкций, если нужно
+    const prompts = instructionLanguage === 'ru' 
+      ? [
+          `Расскажите о себе. Где вы живете? Чем занимаетесь? Какие у вас хобби?`,
+          `Опишите свой последний отпуск или поездку. Что вам больше всего понравилось?`,
+        ]
+      : [
+          `Tell me about yourself. Where do you live? What do you do? What are your hobbies?`,
+          `Describe your last vacation or trip. What did you like most?`,
+        ];
 
     return prompts.map((prompt, index) => ({
       id: `speaking-${index + 1}`,
