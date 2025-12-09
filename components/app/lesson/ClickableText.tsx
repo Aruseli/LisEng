@@ -111,6 +111,18 @@ export function ClickableText({ text, userId, userLevel, onWordAdded }: Clickabl
     async (wordOrPhrase: string, context?: string) => {
       if (addingWord) return; // Предотвращаем дублирование запросов
 
+      // Проверяем, не является ли текст fallback сообщением
+      const isFallbackText = 
+        text.toLowerCase().includes('[fallback_message]') ||
+        text.toLowerCase().includes('временно недоступен') ||
+        text.toLowerCase().includes('попробуй позже') ||
+        text.toLowerCase().includes('обратись к преподавателю');
+      
+      if (isFallbackText) {
+        console.warn('Skipping vocabulary extraction from fallback message');
+        return;
+      }
+
       setAddingWord(wordOrPhrase);
 
       try {

@@ -11,7 +11,9 @@ export class LevelTestEvaluator {
    */
   static async evaluateTest(
     questions: TestQuestion[],
-    answers: UserAnswer[]
+    answers: UserAnswer[],
+    userId?: string,
+    hasyx?: any
   ): Promise<TestResult> {
     const breakdown = {
       grammar: { points: 0, maxPoints: 0 },
@@ -73,7 +75,9 @@ export class LevelTestEvaluator {
             const writingScore = await this.evaluateWriting(
               answer.answer,
               question,
-              question.points
+              question.points,
+              userId,
+              hasyx
             );
             breakdown.writing.points += writingScore;
             totalPoints += writingScore;
@@ -87,7 +91,9 @@ export class LevelTestEvaluator {
             const speakingScore = await this.evaluateSpeaking(
               answer.answer,
               question,
-              question.points
+              question.points,
+              userId,
+              hasyx
             );
             breakdown.speaking.points += speakingScore;
             totalPoints += speakingScore;
@@ -146,9 +152,22 @@ export class LevelTestEvaluator {
   private static async evaluateWriting(
     text: string,
     question: WritingQuestion,
-    maxPoints: number
+    maxPoints: number,
+    userId?: string,
+    hasyx?: any
   ): Promise<number> {
     try {
+      // Получаем язык инструкций пользователя
+      let instructionLanguage = 'ru';
+      if (userId && hasyx) {
+        try {
+          const { getUserInstructionLanguage } = await import('@/lib/hasura-queries');
+          instructionLanguage = await getUserInstructionLanguage(hasyx, userId);
+        } catch (error) {
+          console.warn('[LevelTestEvaluator] Failed to get instruction language');
+        }
+      }
+
       console.log(`Checking writing for level A2...`); // Уровень пока захардкожен, т.к. question не содержит level
       
       const ai = getAI();
@@ -160,15 +179,16 @@ export class LevelTestEvaluator {
         ---
         ${text}
         ---
+        IMPORTANT: All feedback, corrections, and explanations must be in ${instructionLanguage === 'ru' ? 'Russian' : instructionLanguage} language.
         Please provide feedback in JSON format with the following structure:
         {
           "score": number (0-100),
-          "feedback": "string",
+          "feedback": "string in ${instructionLanguage === 'ru' ? 'Russian' : instructionLanguage}",
           "corrections": [
             {
               "original": "string",
               "corrected": "string",
-              "explanation": "string"
+              "explanation": "string in ${instructionLanguage === 'ru' ? 'Russian' : instructionLanguage}"
             }
           ]
         }
@@ -204,7 +224,9 @@ export class LevelTestEvaluator {
   private static async evaluateSpeaking(
     transcript: string, // транскрипт из Whisper или текст ответа
     question: any,
-    maxPoints: number
+    maxPoints: number,
+    userId?: string,
+    hasyx?: any
   ): Promise<number> {
     try {
       // Здесь можно добавить анализ через Whisper + Claude

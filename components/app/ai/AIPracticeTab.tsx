@@ -35,7 +35,7 @@ export function AIPracticeTab({ topic, messages, isLoading, suggestedPrompt, onS
   };
 
   return (
-    <div className="flex h-[520px] flex-col rounded-3xl bg-white p-6 shadow-sm">
+    <div className="flex h-auto flex-col rounded-3xl bg-white p-6 shadow-sm">
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-gray-900">AI-практика: {topic}</h2>
         <p className="text-sm text-gray-500">

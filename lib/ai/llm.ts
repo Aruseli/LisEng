@@ -36,22 +36,20 @@ export function parseJSONResponse<T>(text: string): T {
     .replace(/```\n?/g, '')
     .trim();
 
-  const tryParse = (value: string, label: string) => {
-    const parsed = JSON.parse(value);
-    console.log(`[AI] Successfully parsed JSON from ${label}`);
-    return parsed;
+  const tryParse = (value: string) => {
+    return JSON.parse(value);
   };
 
   try {
     const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      return tryParse(jsonMatch[0], 'matched block');
+      return tryParse(jsonMatch[0]);
     }
-    return tryParse(cleanedText, 'cleaned text');
+    return tryParse(cleanedText);
   } catch (initialError) {
     try {
       const repaired = jsonrepair(cleanedText);
-      return tryParse(repaired, 'repaired text');
+      return tryParse(repaired);
     } catch (repairError) {
       console.error('[AI] Failed to parse JSON response');
       console.error('[AI] Raw response text (first 500 chars):', text.substring(0, 500));

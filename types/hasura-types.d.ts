@@ -24256,6 +24256,7 @@ export type Users = {
   id: Scalars["uuid"]["output"];
   /** User profile image URL */
   image?: Maybe<Scalars["String"]["output"]>;
+  instruction_language?: Maybe<Scalars["String"]["output"]>;
   /** Admin flag */
   is_admin?: Maybe<Scalars["Boolean"]["output"]>;
   /** An array relationship */
@@ -24891,6 +24892,7 @@ export type Users_Bool_Exp = {
   hasura_role?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   image?: InputMaybe<String_Comparison_Exp>;
+  instruction_language?: InputMaybe<String_Comparison_Exp>;
   is_admin?: InputMaybe<Boolean_Comparison_Exp>;
   kumon_progresses?: InputMaybe<Kumon_Progress_Bool_Exp>;
   kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Bool_Exp>;
@@ -24980,6 +24982,7 @@ export type Users_Insert_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   /** User profile image URL */
   image?: InputMaybe<Scalars["String"]["input"]>;
+  instruction_language?: InputMaybe<Scalars["String"]["input"]>;
   /** Admin flag */
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
   kumon_progresses?: InputMaybe<Kumon_Progress_Arr_Rel_Insert_Input>;
@@ -25029,6 +25032,7 @@ export type Users_Max_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   /** User profile image URL */
   image?: Maybe<Scalars["String"]["output"]>;
+  instruction_language?: Maybe<Scalars["String"]["output"]>;
   /** User display name */
   name?: Maybe<Scalars["String"]["output"]>;
   start_date?: Maybe<Scalars["date"]["output"]>;
@@ -25053,6 +25057,7 @@ export type Users_Min_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   /** User profile image URL */
   image?: Maybe<Scalars["String"]["output"]>;
+  instruction_language?: Maybe<Scalars["String"]["output"]>;
   /** User display name */
   name?: Maybe<Scalars["String"]["output"]>;
   start_date?: Maybe<Scalars["date"]["output"]>;
@@ -25101,6 +25106,7 @@ export type Users_Order_By = {
   hasura_role?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   image?: InputMaybe<Order_By>;
+  instruction_language?: InputMaybe<Order_By>;
   is_admin?: InputMaybe<Order_By>;
   kumon_progresses_aggregate?: InputMaybe<Kumon_Progress_Aggregate_Order_By>;
   lesson_snapshots_aggregate?: InputMaybe<Lesson_Snapshots_Aggregate_Order_By>;
@@ -25158,6 +25164,8 @@ export enum Users_Select_Column {
   /** column name */
   Image = "image",
   /** column name */
+  InstructionLanguage = "instruction_language",
+  /** column name */
   IsAdmin = "is_admin",
   /** column name */
   Name = "name",
@@ -25190,6 +25198,7 @@ export type Users_Set_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   /** User profile image URL */
   image?: InputMaybe<Scalars["String"]["input"]>;
+  instruction_language?: InputMaybe<Scalars["String"]["input"]>;
   /** Admin flag */
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** User display name */
@@ -25255,6 +25264,7 @@ export type Users_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   /** User profile image URL */
   image?: InputMaybe<Scalars["String"]["input"]>;
+  instruction_language?: InputMaybe<Scalars["String"]["input"]>;
   /** Admin flag */
   is_admin?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** User display name */
@@ -25297,6 +25307,8 @@ export enum Users_Update_Column {
   Id = "id",
   /** column name */
   Image = "image",
+  /** column name */
+  InstructionLanguage = "instruction_language",
   /** column name */
   IsAdmin = "is_admin",
   /** column name */
