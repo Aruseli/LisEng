@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useSpeechRecognition } from '@/components/speachComponents/hooks_useSpeechRecognition';
 import {
@@ -29,6 +29,7 @@ export function PronunciationPractice({
   onResultChange,
 }: PronunciationPracticeProps) {
   const [manualFlags, setManualFlags] = useState<string[]>([]);
+  const [excludedWords, setExcludedWords] = useState<string[]>([]);
   const [analysisComplete, setAnalysisComplete] = useState(false);
 
   const { words, accuracy, analyze, reset } = usePronunciationAnalysis();
@@ -48,8 +49,10 @@ export function PronunciationPractice({
 
   const allFlaggedWords = useMemo(() => {
     const unique = new Set<string>([...manualFlags, ...lowAccuracyWords]);
-    return Array.from(unique);
-  }, [manualFlags, lowAccuracyWords]);
+    return Array.from(unique).filter(
+      (word) => !excludedWords.includes(word.toLowerCase())
+    );
+  }, [manualFlags, lowAccuracyWords, excludedWords]);
 
   const handleReset = () => {
     resetRecognition();
@@ -65,14 +68,18 @@ export function PronunciationPractice({
       return [...prev, word];
     });
   };
+  
+  // Сообщаем родителю об изменении результатов через эффект,
+  // чтобы не вызывать setState во время рендера другого компонента.
+  useEffect(() => {
+    if (!analysisComplete || !onResultChange) return;
 
-  if (analysisComplete && onResultChange) {
     onResultChange({
       accuracy,
       lowAccuracyWords,
       flaggedWords: allFlaggedWords,
     });
-  }
+  }, [analysisComplete, accuracy, lowAccuracyWords, allFlaggedWords, onResultChange]);
 
   return (
     <section className="space-y-6 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
@@ -134,8 +141,18 @@ export function PronunciationPractice({
         <div className="space-y-3 rounded-2xl border border-gray-100 p-4">
           <p className="text-sm font-semibold text-gray-700">Анализ слов</p>
           <div className="flex flex-wrap">
-            {words.map((word: Word) => (
-              <WordDisplay key={word.text} word={word} onPlayWord={(text) => speak(text)} />
+            {words.map((word: Word, index) => (
+              <WordDisplay
+                key={`${word.text}-${index}`}
+                word={word}
+                onPlayWord={(text) => speak(text)}
+                onRemove={(text) =>
+                  setExcludedWords((prev) => [
+                    ...prev,
+                    text.toLowerCase(),
+                  ])
+                }
+              />
             ))}
           </div>
           {lowAccuracyWords.length > 0 && (

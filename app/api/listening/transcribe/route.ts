@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
       providerOptions: {
         groq: {
           language: 'en',
-          timestampGranularities: ['segment', 'word'],
+          // Groq API не поддерживает timestamp_granularities (этот параметр используется в OpenAI Whisper API),
+          // поэтому не передаём его, чтобы избежать ошибки \"unknown param `timestamp_granularities`\".
           temperature: 0,
         },
       },
