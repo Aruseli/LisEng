@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useSession } from 'hasyx';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { Heart, Volume2 } from 'lucide-react';
 import { Button } from '@/components/app/Buttons/Button';
 import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
@@ -44,6 +44,7 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const modalShownRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   
   // Если сессия еще загружается, не показываем компонент
   if (status === 'loading') {
@@ -59,10 +60,6 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
   const [isHovered, setIsHovered] = useState(false);
   const [isAddingToDictionary, setIsAddingToDictionary] = useState(false);
 
-  // Для свайпа
-  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const [isSwipeAway, setIsSwipeAway] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -82,7 +79,6 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
     const stackIndex = index - currentIndex;
     
     if (stackIndex < 0) {
-      // Карточки, которые уже пройдены
       return {
         x: 0,
         y: 0,
@@ -92,23 +88,20 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
         scale: 0.8,
       };
     }
-
+  
     if (stackIndex === 0) {
-      // Текущая карточка
       return {
-        x: dragOffset.x,
-        y: dragOffset.y,
-        rotation: isDragging ? dragOffset.x * 0.1 : 0,
+        x: 0,
+        y: 0,
+        rotation: 0,
         zIndex: total,
         opacity: 1,
-        scale: isDragging ? 1.05 : 1,
+        scale: 1,
       };
     }
-
-    // Остальные карточки в стопке
+  
     const offset = stackIndex * 4;
-    // Стабильный поворот на основе индекса для эффекта неровной стопки
-    const rotation = ((index % 5) - 2) * 2.5; // Поворот от -5 до +5 градусов
+    const rotation = ((index % 5) - 2) * 2.5;
     return {
       x: 0,
       y: offset,
@@ -119,46 +112,15 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
     };
   };
 
-  // Motion values для текущей карточки
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotation = useMotionValue(0);
-  const scale = useMotionValue(1);
-
-  // Spring анимации
-  const springX = useSpring(x, { stiffness: 300, damping: 30 });
-  const springY = useSpring(y, { stiffness: 300, damping: 30 });
-  const springRotation = useSpring(rotation, { stiffness: 300, damping: 30 });
-  const springScale = useSpring(scale, { stiffness: 300, damping: 30 });
-
-  // Обновляем motion values при изменении dragOffset
-  useEffect(() => {
-    if (isSwipeAway && swipeDirection) {
-      // Анимация улетания карточки
-      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
-      const exitX = swipeDirection === 'left' ? -screenWidth * 1.5 : screenWidth * 1.5;
-      x.set(exitX);
-      y.set(screenWidth);
-      rotation.set(swipeDirection === 'left' ? -45 : 45);
-      scale.set(0.5);
-    } else if (isDragging) {
-      x.set(dragOffset.x);
-      y.set(dragOffset.y);
-      rotation.set(dragOffset.x * 0.1);
-      scale.set(1.05);
-    } else {
-      x.set(0);
-      y.set(0);
-      rotation.set(0);
-      scale.set(1);
-    }
-  }, [dragOffset, isDragging, isSwipeAway, swipeDirection, x, y, rotation, scale]);
-
   const handleFlip = useCallback(() => {
+    console.log('isDragging111', isDragging, 'isFlipped111', isFlipped);
+    console.log('currentCard111', currentCard);
     if (!isDragging) {
       setIsFlipped(true);
       setIsHovered(false); // Сбрасываем hover при переворачивании
     }
+    console.log('isDragging', isDragging, 'isFlipped', isFlipped);
+    console.log('currentCard', currentCard);
   }, [isDragging]);
 
   const handleAnswer = useCallback(
@@ -255,132 +217,54 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
     }
   }, [currentCard, isSpeaking, speak, cancel]);
 
-  // Обработчики свайпа
-  const handleDragStart = useCallback((clientX: number, clientY: number) => {
-    if (cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
-      setDragStart({ x: clientX - rect.left, y: clientY - rect.top });
-      setIsDragging(true);
-      setIsHovered(false); // Сбрасываем hover при начале перетаскивания
-    }
-  }, []);
+  // Замените handleDragEnd на:
+  const handleDragEndMotion = useCallback(
+    (event: any, info: { offset: { x: number; y: number } }) => {
+      const threshold = 100;
+      const absX = Math.abs(info.offset.x);
+      const absY = Math.abs(info.offset.y);
+      console.log('absX111', absX, 'absY111', absY);
+      console.log('currentCard', currentCard);
 
-  const handleDragMove = useCallback(
-    (clientX: number, clientY: number) => {
-      if (dragStart && cardRef.current) {
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = clientX - rect.left - dragStart.x;
-        const y = clientY - rect.top - dragStart.y;
-        setDragOffset({ x, y });
+      if (absX > threshold || absY > threshold) {
+        const direction = info.offset.x < 0 ? 'left' : 'right';
+
+        // Сохраняем текущую карточку ДО изменения индекса
+        const swipedCard = cardStack[currentIndex];
+        const wasLastCard = currentIndex === cardStack.length - 1;
+
+        setSwipeDirection(direction);
+        setIsSwipeAway(true);
+
+        setTimeout(() => {
+          setSwipeDirection(null);
+          setIsSwipeAway(false);
+          
+          setCurrentIndex((prev) => prev + 1);
+          
+          if (isFlipped) {
+            setIsFlipped(false);
+            setUserSentence('');
+          }
+          
+          if (wasLastCard && swipedCard) {
+            const responseTime = Math.round((Date.now() - startTime) / 1000);
+            const result: FlashcardResult = {
+              cardId: swipedCard.id,
+              wasCorrect: direction === 'right',
+              responseTime,
+            };
+            const newResults = [...results, result];
+            setResults(newResults);
+            onResult?.(newResults);
+          }
+        }, 300);
       }
     },
-    [dragStart]
+    [isFlipped, isLastCard, currentCard, results, startTime, onResult, userSentence]
   );
 
-  const handleDragEnd = useCallback(() => {
-    if (!isDragging) return;
-
-    const threshold = 100;
-    const absX = Math.abs(dragOffset.x);
-    const absY = Math.abs(dragOffset.y);
-
-    if (absX > threshold || absY > threshold) {
-      // Свайп произошел - анимируем улетание карточки
-      const direction = dragOffset.x < 0 ? 'left' : 'right';
-      setSwipeDirection(direction);
-      setIsSwipeAway(true);
-      setIsDragging(false);
-
-      // После анимации переходим к следующей карточке
-      setTimeout(() => {
-        // Увеличиваем currentIndex даже для последней карточки, чтобы allCardsCompleted стал true
-        setCurrentIndex((prev) => prev + 1);
-        
-        if (isFlipped) {
-          setIsFlipped(false);
-          setUserSentence('');
-        }
-        
-        // Если это была последняя карточка, вызываем onResult
-        if (isLastCard && currentCard) {
-          const responseTime = Math.round((Date.now() - startTime) / 1000);
-          const result: FlashcardResult = {
-            cardId: currentCard.id,
-            wasCorrect: direction === 'right', // Свайп вправо = правильно
-            responseTime,
-          };
-          const newResults = [...results, result];
-          setResults(newResults);
-          onResult?.(newResults);
-        }
-        
-        // Сброс состояния
-        setSwipeDirection(null);
-        setIsSwipeAway(false);
-        setDragStart(null);
-        setDragOffset({ x: 0, y: 0 });
-      }, 300); // Время анимации
-    } else {
-      // Свайп недостаточный - возвращаем карточку
-      setDragStart(null);
-      setDragOffset({ x: 0, y: 0 });
-      setIsDragging(false);
-    }
-  }, [isDragging, dragOffset, isFlipped, isLastCard, currentCard, results, startTime, onResult]);
-
-  // Mouse события
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      // Не начинаем свайп, если клик был на кнопках или внутри формы
-      const target = e.target as HTMLElement;
-      if (target.closest('button') || target.closest('textarea') || target.closest('input')) {
-        return;
-      }
-      if (!isFlipped) {
-        handleDragStart(e.clientX, e.clientY);
-      }
-    },
-    [isFlipped, handleDragStart]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (isDragging) {
-        handleDragMove(e.clientX, e.clientY);
-      }
-    },
-    [isDragging, handleDragMove]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  // Touch события
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 1 && !isFlipped) {
-        handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    },
-    [isFlipped, handleDragStart]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 1 && isDragging) {
-        e.preventDefault();
-        handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    },
-    [isDragging, handleDragMove]
-  );
-
-  const handleTouchEnd = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  // Обновляем стопку карточек при изменении пропсов
+  // 1. Инициализация при загрузке новых карточек
   useEffect(() => {
     if (cards.length > 0) {
       setCardStack(cards);
@@ -388,23 +272,10 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
       setIsFlipped(false);
       setResults([]);
       setStartTime(Date.now());
-      setDragOffset({ x: 0, y: 0 });
       setIsSwipeAway(false);
       setSwipeDirection(null);
     }
-  }, [cards]);
-
-  // Глобальные обработчики для mouse
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove as any);
-      document.addEventListener('mouseup', handleMouseUp);
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove as any);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [cards]); 
 
   // Определяем touch device
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
@@ -497,36 +368,59 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
               return null; // Пропускаем пройденные карточки
             }
 
+            let motionStyle: any;
+  
+            if (isCurrent) {
+              if (isSwipeAway && swipeDirection) {
+                const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
+                const exitX = swipeDirection === 'left' ? -screenWidth * 1.5 : screenWidth * 1.5;
+                motionStyle = {
+                  x: exitX,
+                  y: screenWidth,
+                  rotate: swipeDirection === 'left' ? -45 : 45,
+                  scale: 0.3,
+                  opacity: 0,
+                  zIndex: position.zIndex,
+                };
+              } else {
+                motionStyle = {
+                  x: 0,
+                  y: 0,
+                  rotate: 0,
+                  scale: 1,
+                  opacity: 1,
+                  zIndex: position.zIndex,
+                };
+              }
+            } else {
+              motionStyle = {
+                x: position.x,
+                y: position.y,
+                rotate: position.rotation,
+                scale: position.scale,
+                opacity: position.opacity,
+                zIndex: position.zIndex,
+              };
+            }
+
             return (
               <motion.div
-                key={card.id}
-                ref={isCurrent ? cardRef : null}
-                className="absolute inset-0 cursor-pointer"
-                style={
-                  isCurrent
-                    ? {
-                        x: springX,
-                        y: springY,
-                        rotate: springRotation,
-                        scale: springScale,
-                        opacity: 1,
-                        zIndex: position.zIndex,
-                      }
-                    : {
-                        x: position.x,
-                        y: position.y,
-                        rotate: position.rotation,
-                        scale: position.scale,
-                        opacity: position.opacity,
-                        zIndex: position.zIndex,
-                      }
-                }
-                onMouseDown={isCurrent && !isFlipped ? handleMouseDown : undefined}
-                onTouchStart={isCurrent && !isFlipped ? handleTouchStart : undefined}
-                onTouchMove={isCurrent ? handleTouchMove : undefined}
-                onTouchEnd={isCurrent ? handleTouchEnd : undefined}
-                onClick={isCurrent && !isDragging && !isSwipeAway ? handleFlip : undefined}
-                onMouseEnter={isCurrent && !isTouchDevice && !isDragging && !isFlipped ? () => setIsHovered(true) : undefined}
+                key={`${card.id}-${currentIndex}`}
+                ref={index === currentIndex ? cardRef : null}
+                className={`absolute inset-0 cursor-pointer ${isCurrent ? 'touch-none' : 'touch-auto'}`}
+                drag={isCurrent && !isFlipped && !isSwipeAway}
+                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                dragElastic={1}
+                onDragStart={() => setIsDragging(true)} // ← Добавили
+                onDragEnd={isCurrent ? (event, info) => {
+                  setIsDragging(false); // ← Сбрасываем
+                  handleDragEndMotion(event, info);
+                } : undefined}
+                whileDrag={isCurrent ? { scale: 1.05 } : undefined}
+                animate={motionStyle}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                onClick={isCurrent && !isSwipeAway && !isDragging ? handleFlip : undefined} // ← Используем state
+                onMouseEnter={isCurrent && !isTouchDevice && !isFlipped && !isDragging ? () => setIsHovered(true) : undefined} // ← Используем state
                 onMouseLeave={isCurrent && !isTouchDevice ? () => setIsHovered(false) : undefined}
               >
                 <div
