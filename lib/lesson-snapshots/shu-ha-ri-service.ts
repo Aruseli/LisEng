@@ -1,9 +1,13 @@
 import { Hasyx } from 'hasyx';
 import getAI, { parseJSONResponse } from '@/lib/ai/llm';
 import { ShuHaRiTestQuestion, ShuHaRiTestResult } from '@/types/shu-ha-ri';
+import { ScheduleService } from '@/lib/schedule/schedule-service';
 
 export class ShuHaRiService {
-  constructor(private readonly hasyx: Hasyx) {}
+  constructor(
+    private readonly hasyx: Hasyx,
+    private readonly scheduleService?: ScheduleService
+  ) {}
 
   /**
    * Генерация еженедельного Shu-Ha-Ri теста
@@ -397,6 +401,206 @@ ${JSON.stringify(userAnswers, null, 2)}
 
     const existingTest = Array.isArray(existing) ? existing[0] : existing;
     return !existingTest;
+  }
+
+  /**
+   * Создает или обновляет еженедельное расписание Shu-Ha-Ri тестов для пользователя
+   */
+  async setupWeeklySchedule(userId: string, minSessionsCompleted: number = 5): Promise<string> {
+    if (!this.scheduleService) {
+      throw new Error('ScheduleService not provided to ShuHaRiService');
+    }
+
+    // Проверить, есть ли уже активное расписание
+    const existingSchedules = await this.scheduleService.getUserSchedules(userId, true);
+    const shuHaRiSchedule = existingSchedules.find(s => s.meta?.type === 'shu_ha_ri_weekly');
+
+    if (shuHaRiSchedule) {
+      // Обновить существующее расписание
+      await this.scheduleService.updateSchedule(shuHaRiSchedule.id, {
+        meta: {
+          ...shuHaRiSchedule.meta,
+          min_sessions_completed: minSessionsCompleted,
+          last_updated: Math.floor(Date.now() / 1000)
+        }
+      });
+
+      console.log(`✅ Updated Shu-Ha-Ri schedule for user ${userId}`);
+      return shuHaRiSchedule.id;
+    } else {
+      // Создать новое расписание
+      const schedule = await this.scheduleService.createShuHaRiWeeklySchedule(userId, minSessionsCompleted);
+      console.log(`✅ Created Shu-Ha-Ri schedule for user ${userId}: ${schedule.id}`);
+      return schedule.id;
+    }
+  }
+
+  /**
+   * Проверяет и создает тест, если условия выполнены
+   */
+  async checkAndCreateWeeklyTest(userId: string): Promise<{ created: boolean; testId?: string; scheduleId?: string }> {
+    if (!this.scheduleService) {
+      throw new Error('ScheduleService not provided to ShuHaRiService');
+    }
+
+    // Найти активное Shu-Ha-Ri расписание
+    const schedules = await this.scheduleService.getUserSchedules(userId, true);
+    const shuHaRiSchedule = schedules.find(s => s.meta?.type === 'shu_ha_ri_weekly');
+
+    if (!shuHaRiSchedule) {
+      // Создать расписание, если его нет
+      const scheduleId = await this.setupWeeklySchedule(userId);
+      return { created: false, scheduleId };
+    }
+
+    // Проверить готовность к созданию теста
+    const isReady = await this.scheduleService.isScheduleReadyForTest(shuHaRiSchedule.id, userId);
+
+    if (!isReady) {
+      return { created: false, scheduleId: shuHaRiSchedule.id };
+    }
+
+    // Создать тест
+    const weekStart = this.getWeekStart();
+    const testId = await this.generateWeeklyTest(userId, weekStart);
+
+    console.log(`✅ Created Shu-Ha-Ri test for user ${userId}: ${testId}`);
+    return { created: true, testId, scheduleId: shuHaRiSchedule.id };
+  }
+
+  /**
+   * Обновляет расписание после завершения теста
+   */
+  async updateScheduleAfterTest(userId: string, testResult: ShuHaRiTestResult): Promise<void> {
+    if (!this.scheduleService) {
+      return; // Не критично, если ScheduleService не доступен
+    }
+
+    try {
+      const schedules = await this.scheduleService.getUserSchedules(userId, true);
+      const shuHaRiSchedule = schedules.find(s => s.meta?.type === 'shu_ha_ri_weekly');
+
+      if (shuHaRiSchedule) {
+        // Обновить метаданные расписания
+        await this.scheduleService.updateSchedule(shuHaRiSchedule.id, {
+          meta: {
+            ...shuHaRiSchedule.meta,
+            last_test_date: Math.floor(Date.now() / 1000),
+            last_test_passed: testResult.passed,
+            next_test_date: this.scheduleService['calculateNextSunday'](Math.floor(Date.now() / 1000))
+          }
+        });
+
+        console.log(`✅ Updated Shu-Ha-Ri schedule after test completion for user ${userId}`);
+      }
+    } catch (error) {
+      console.warn(`⚠️ Could not update Shu-Ha-Ri schedule for user ${userId}:`, error);
+    }
+  }
+
+  /**
+   * Приостанавливает Shu-Ha-Ri тестирование (например, при паузе в обучении)
+   */
+  async pauseTesting(userId: string): Promise<void> {
+    if (!this.scheduleService) {
+      return;
+    }
+
+    try {
+      const schedules = await this.scheduleService.getUserSchedules(userId, true);
+      const shuHaRiSchedule = schedules.find(s => s.meta?.type === 'shu_ha_ri_weekly');
+
+      if (shuHaRiSchedule) {
+        await this.scheduleService.updateSchedule(shuHaRiSchedule.id, {
+          end_at: Math.floor(Date.now() / 1000), // Завершить расписание сейчас
+          meta: {
+            ...shuHaRiSchedule.meta,
+            paused: true,
+            paused_at: Math.floor(Date.now() / 1000)
+          }
+        });
+
+        console.log(`⏸️ Paused Shu-Ha-Ri testing for user ${userId}`);
+      }
+    } catch (error) {
+      console.warn(`⚠️ Could not pause Shu-Ha-Ri testing for user ${userId}:`, error);
+    }
+  }
+
+  /**
+   * Возобновляет Shu-Ha-Ri тестирование
+   */
+  async resumeTesting(userId: string): Promise<string> {
+    if (!this.scheduleService) {
+      throw new Error('ScheduleService not provided to ShuHaRiService');
+    }
+
+    // Найти приостановленное расписание
+    const schedules = await this.scheduleService.getUserSchedules(userId, false);
+    const pausedSchedule = schedules.find(s =>
+      s.meta?.type === 'shu_ha_ri_weekly' && s.meta?.paused
+    );
+
+    if (pausedSchedule) {
+      // Возобновить расписание
+      await this.scheduleService.updateSchedule(pausedSchedule.id, {
+        end_at: undefined, // Снять ограничение окончания
+        meta: {
+          ...pausedSchedule.meta,
+          paused: false,
+          resumed_at: Math.floor(Date.now() / 1000)
+        }
+      });
+
+      console.log(`▶️ Resumed Shu-Ha-Ri testing for user ${userId}`);
+      return pausedSchedule.id;
+    } else {
+      // Создать новое расписание
+      return await this.setupWeeklySchedule(userId);
+    }
+  }
+
+  /**
+   * Получает текущие Shu-Ha-Ri стадии для всех навыков пользователя
+   */
+  async getUserShuHaRiStages(userId: string): Promise<Record<string, 'shu' | 'ha' | 'ri'>> {
+    try {
+      const progress = await this.hasyx.select({
+        table: 'shu_ha_ri_progress',
+        where: { user_id: { _eq: userId } },
+        returning: ['skill_id', 'skill_type', 'stage'],
+        order_by: [{ updated_at: 'desc' }]
+      });
+
+      const stages: Record<string, 'shu' | 'ha' | 'ri'> = {};
+      const progressList = Array.isArray(progress) ? progress : progress ? [progress] : [];
+
+      for (const item of progressList) {
+        const skillKey = `${item.skill_type}_${item.skill_id}`;
+        stages[skillKey] = item.stage || 'shu';
+      }
+
+      console.log(`🌀 Shu-Ha-Ri stages for user ${userId}:`, stages);
+      return stages;
+
+    } catch (error) {
+      console.warn(`⚠️ Failed to get Shu-Ha-Ri stages for user ${userId}:`, error);
+      return {};
+    }
+  }
+
+  /**
+   * Получает начало текущей недели (понедельник 00:00)
+   */
+  private getWeekStart(): Date {
+    const now = new Date();
+    const dayOfWeek = now.getUTCDay(); // 0 = воскресенье, 1 = понедельник
+    const diff = now.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is sunday
+
+    const monday = new Date(now.setUTCDate(diff));
+    monday.setUTCHours(0, 0, 0, 0);
+
+    return monday;
   }
 }
 

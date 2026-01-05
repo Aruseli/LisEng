@@ -5,6 +5,12 @@ import { Generator } from 'hasyx/lib/generator';
 
 import schema from '@/public/hasura-schema.json';
 import { DailyPlanService } from '@/lib/plan/daily-plan-service';
+import {
+  LessonSnapshotService,
+  ShuHaRiService,
+  ProgressInsightsService,
+  ScheduleService
+} from '@/lib/lesson-snapshots';
 
 const generate = Generator(schema as any);
 
@@ -39,7 +45,18 @@ export async function GET(request: NextRequest) {
     const apolloClient = createAdminClient();
     const hasyx = new Hasyx(apolloClient, generate);
 
-    const service = new DailyPlanService(hasyx);
+    // Создаем зависимые сервисы
+    const scheduleService = new ScheduleService(hasyx);
+    const shuHaRiService = new ShuHaRiService(hasyx, scheduleService);
+    const lessonSnapshotService = new LessonSnapshotService(hasyx);
+    const progressInsightsService = new ProgressInsightsService(
+      hasyx,
+      lessonSnapshotService,
+      shuHaRiService,
+      scheduleService
+    );
+
+    const service = new DailyPlanService(hasyx, progressInsightsService);
     const plan = await service.getDailyPlan(userId, targetDate ?? undefined);
 
     return NextResponse.json({ plan });

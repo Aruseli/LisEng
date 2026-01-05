@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useRef } from 'react';
 import { Button } from '../Buttons/Button';
+import { CircleSpinner } from '../CircleSpinner';
 import { Mic, MicOff, CheckCircle2, XCircle } from 'lucide-react';
 import { useSpeechRecognition } from '@/components/speachComponents/hooks_useSpeechRecognition';
 
@@ -71,6 +72,8 @@ export function VoiceMessagesTab({
 }: VoiceMessagesTabProps) {
   const [voiceMessages, setVoiceMessages] = useState<VoiceMessage[]>([]);
   const [sessionStartTime] = useState<Date>(new Date());
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isCompletingLesson, setIsCompletingLesson] = useState(false);
   const audioBlobsRef = useRef<Map<string, Blob>>(new Map());
 
   // Голосовое распознавание
@@ -95,6 +98,7 @@ export function VoiceMessagesTab({
 
         // Отправляем на анализ
         try {
+          setIsAnalyzing(true);
           const feedback = await analyzeVoiceMessage(text, targetWords);
           setVoiceMessages((prev) =>
             prev.map((msg) =>
@@ -103,6 +107,8 @@ export function VoiceMessagesTab({
           );
         } catch (error) {
           console.error('Failed to analyze voice message:', error);
+        } finally {
+          setIsAnalyzing(false);
         }
 
         resetRecognition();
@@ -144,6 +150,7 @@ export function VoiceMessagesTab({
     }
 
     try {
+      setIsCompletingLesson(true);
       const sessionDuration = Math.max(
         1,
         Math.round((new Date().getTime() - sessionStartTime.getTime()) / 60000)
@@ -195,12 +202,15 @@ export function VoiceMessagesTab({
         await refreshProgressMetrics();
       }
 
+      // Только после завершения всех операций переходим на dashboard
       if (onComplete) {
         onComplete();
       }
     } catch (error: any) {
       console.error('Failed to complete lesson:', error);
       alert(`Ошибка при завершении урока: ${error?.message || 'Неизвестная ошибка'}`);
+    } finally {
+      setIsCompletingLesson(false);
     }
   }, [
     taskId,
@@ -382,8 +392,11 @@ export function VoiceMessagesTab({
                 </div>
               )}
 
-              {!msg.feedback && isProcessing && (
-                <div className="mt-2 text-xs text-blue-600">Анализирую сообщение...</div>
+              {!msg.feedback && isAnalyzing && (
+                <div className="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                  <CircleSpinner className="size-4" />
+                  Анализирую сообщение...
+                </div>
               )}
             </div>
           ))}
@@ -408,7 +421,7 @@ export function VoiceMessagesTab({
             <Button
               variant="default"
               onClick={startRecording}
-              disabled={isLoading || isProcessing}
+              disabled={isLoading || isProcessing || isAnalyzing}
               leftIcon={<Mic className="size-4" />}
               className="flex-1"
             >
@@ -438,10 +451,17 @@ export function VoiceMessagesTab({
           <Button
             variant="default"
             onClick={handleCompleteLesson}
-            disabled={isLoading || isRecording || isProcessing || voiceMessages.length === 0}
+            disabled={isLoading || isRecording || isProcessing || isAnalyzing || isCompletingLesson || voiceMessages.length === 0}
             className="w-full bg-green-500 hover:bg-green-600"
           >
-            Завершить урок
+            {isCompletingLesson ? (
+              <>
+                <CircleSpinner className="size-4 mr-2" />
+                Завершается урок...
+              </>
+            ) : (
+              'Завершить урок'
+            )}
           </Button>
         )}
       </div>

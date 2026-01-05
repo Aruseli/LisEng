@@ -1,5 +1,7 @@
 import type { SnapshotInsights } from './snapshot-insights-service';
 
+export type { SnapshotInsights };
+
 export type SnapshotInsightType =
   | 'sm2_due'
   | 'problem_area'

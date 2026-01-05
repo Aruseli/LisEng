@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type DrawerContent = 'therapist-profile' | null;
+type DrawerContent = 'analyze-voice-message' | null;
 
 interface DrawerState {
   isOpen: boolean;

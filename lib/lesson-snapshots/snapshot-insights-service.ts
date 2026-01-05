@@ -62,6 +62,7 @@ export interface SnapshotInsights {
   kaizenMomentum: KaizenMomentumSummary;
   masteryDistribution: Record<string, number>;
   shuHaRi: ShuHaRiStageSummary | null;
+  shuHaRiStages?: Record<string, 'shu' | 'ha' | 'ri'>;
   sm2Schedule: ActiveRecallScheduleSummary;
   methodologyHighlights: string[];
 }
@@ -165,6 +166,7 @@ export class SnapshotInsightsService {
     const kaizenMomentum = this.buildKaizenMomentumSummary(snapshots);
     const masteryDistribution = this.buildMasteryDistribution(snapshots);
     const shuHaRi = this.buildShuHaRiSummary(shuHaRiProgress, opts.shuHaRiSkillLimit);
+    const shuHaRiStages = this.buildShuHaRiStages(shuHaRiProgress);
     const sm2Schedule = this.buildActiveRecallSchedule(activeRecalls, opts.referenceDate);
     const methodologyHighlights = this.buildMethodologyHighlights(problemAreas, shuHaRi, sm2Schedule);
 
@@ -174,6 +176,7 @@ export class SnapshotInsightsService {
       kaizenMomentum,
       masteryDistribution,
       shuHaRi,
+      shuHaRiStages,
       sm2Schedule,
       methodologyHighlights,
     };
@@ -437,6 +440,17 @@ export class SnapshotInsightsService {
     const date = new Date(`${dateString}T00:00:00`);
     date.setDate(date.getDate() + days);
     return this.formatDate(date);
+  }
+
+  private buildShuHaRiStages(records: ShuHaRiProgressRecord[]): Record<string, 'shu' | 'ha' | 'ri'> {
+    const stages: Record<string, 'shu' | 'ha' | 'ri'> = {};
+
+    for (const record of records) {
+      const skillKey = `${record.skill_type}_${record.skill_id}`;
+      stages[skillKey] = record.stage || 'shu';
+    }
+
+    return stages;
   }
 }
 

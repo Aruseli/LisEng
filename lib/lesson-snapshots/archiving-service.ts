@@ -147,5 +147,82 @@ export class ArchivingService {
       activeRecallArchived,
     };
   }
+
+  /**
+   * Глобальная архивация для всех пользователей (ежемесячная)
+   * Вызывается по расписанию через Schedule
+   */
+  async archiveAllUsersData(): Promise<{
+    totalUsers: number;
+    totalSnapshotsArchived: number;
+    totalActiveRecallArchived: number;
+    errors: Array<{ userId: string; error: string }>;
+  }> {
+    console.log('🏁 Starting global archiving for all users...');
+
+    try {
+      // Получить всех пользователей
+      const users = await this.hasyx.select({
+        table: 'users',
+        returning: ['id'],
+      });
+
+      const userList = Array.isArray(users) ? users : users ? [users] : [];
+
+      console.log(`📊 Found ${userList.length} users to archive`);
+
+      let totalSnapshotsArchived = 0;
+      let totalActiveRecallArchived = 0;
+      const errors: Array<{ userId: string; error: string }> = [];
+
+      // Архивация для каждого пользователя
+      for (const user of userList) {
+        try {
+          console.log(`📦 Archiving data for user ${user.id}...`);
+
+          const result = await this.archiveUserData(user.id);
+
+          totalSnapshotsArchived += result.snapshotsArchived;
+          totalActiveRecallArchived += result.activeRecallArchived;
+
+          console.log(`✅ User ${user.id}: ${result.snapshotsArchived} snapshots, ${result.activeRecallArchived} active recall sessions archived`);
+
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          console.error(`❌ Failed to archive user ${user.id}:`, error);
+          errors.push({ userId: user.id, error: errorMessage });
+        }
+      }
+
+      const result = {
+        totalUsers: userList.length,
+        totalSnapshotsArchived,
+        totalActiveRecallArchived,
+        errors,
+      };
+
+      console.log('🏁 Global archiving completed:', result);
+      return result;
+
+    } catch (error) {
+      console.error('❌ Global archiving failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Настройка ежемесячного расписания архивации
+   * Вызывается при инициализации системы
+   */
+  async setupMonthlyArchivingSchedule(): Promise<string> {
+    // Импортируем ScheduleService для создания расписания
+    const { ScheduleService } = await import('@/lib/schedule/schedule-service');
+
+    const scheduleService = new ScheduleService(this.hasyx);
+    const schedule = await scheduleService.createArchivingSchedule();
+
+    console.log(`✅ Created monthly archiving schedule: ${schedule.id}`);
+    return schedule.id;
+  }
 }
 

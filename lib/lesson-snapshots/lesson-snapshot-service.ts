@@ -31,6 +31,13 @@ export interface ProblemArea {
   context: string;
   severity: 'low' | 'medium' | 'high';
   timestamp: string;
+  metadata?: {
+    aiConfidence?: number;
+    aiValidated?: boolean;
+    aiReasoning?: string;
+    aiValidationFailed?: boolean;
+    aiValidationError?: boolean;
+  };
 }
 
 export interface LessonSnapshotData {
@@ -65,12 +72,15 @@ export class LessonSnapshotService {
    */
   async createSnapshot(data: LessonSnapshotData): Promise<string> {
     // 1. Извлечение проблемных мест (только проблемных!)
-    const problemAreas = await this.extractProblemAreas(data);
+    const rawProblemAreas = await this.extractProblemAreas(data);
 
-    // 2. Кайдзен анализ (сравнение с предыдущей версией, если есть)
+    // 2. AI валидация проблемных мест (фильтрация ложных ошибок)
+    const problemAreas = await this.validateProblemAreasWithAI(data, rawProblemAreas);
+
+    // 3. Кайдзен анализ (сравнение с предыдущей версией, если есть)
     const kaizenMetrics = await this.calculateKaizenMetrics(data);
 
-    // 3. Определение mastery level
+    // 4. Определение mastery level
     const masteryLevel = this.determineMasteryLevel(data.performanceScore || 0);
 
     // 4. Создание слепка
@@ -329,6 +339,217 @@ export class LessonSnapshotService {
         });
       }
     }
+  }
+
+  /**
+   * AI валидация проблемных мест (фильтрация ложных ошибок)
+   */
+  private async validateProblemAreasWithAI(
+    data: LessonSnapshotData,
+    problemAreas: ProblemArea[]
+  ): Promise<ProblemArea[]> {
+    if (problemAreas.length === 0) {
+      return problemAreas;
+    }
+
+    try {
+      console.log(`🤖 AI validating ${problemAreas.length} problem areas for user ${data.userId}`);
+
+      // Группируем проблемы по типам для более эффективной валидации
+      const errors = problemAreas.filter(p => p.type === 'error');
+      const hesitations = problemAreas.filter(p => p.type === 'hesitation');
+      const unknownWords = problemAreas.filter(p => p.type === 'unknown_word');
+
+      const validatedProblems: ProblemArea[] = [];
+
+      // Валидируем ошибки
+      if (errors.length > 0) {
+        const validatedErrors = await this.validateErrorsWithAI(data, errors);
+        validatedProblems.push(...validatedErrors);
+      }
+
+      // Валидируем неизвестные слова
+      if (unknownWords.length > 0) {
+        const validatedWords = await this.validateUnknownWordsWithAI(data, unknownWords);
+        validatedProblems.push(...validatedWords);
+      }
+
+      // Hesitations обычно более надежны, добавляем с базовым confidence
+      hesitations.forEach(h => validatedProblems.push({
+        ...h,
+        metadata: { ...h.metadata, aiConfidence: 0.8, aiValidated: true }
+      }));
+
+      console.log(`✅ AI validation complete: ${validatedProblems.length}/${problemAreas.length} problems validated`);
+      return validatedProblems;
+
+    } catch (error) {
+      console.warn('⚠️ AI validation failed, using original problem areas:', error);
+      // В случае ошибки AI валидации возвращаем оригинальные данные с пониженным confidence
+      return problemAreas.map(p => ({
+        ...p,
+        metadata: { ...p.metadata, aiConfidence: 0.5, aiValidationFailed: true }
+      }));
+    }
+  }
+
+  /**
+   * AI валидация ошибок (исключение ложных срабатываний)
+   */
+  private async validateErrorsWithAI(
+    data: LessonSnapshotData,
+    errors: ProblemArea[]
+  ): Promise<ProblemArea[]> {
+    const validatedErrors: ProblemArea[] = [];
+
+    // Обрабатываем ошибки по одной для более точной валидации
+    for (const errorItem of errors) {
+      try {
+        const validation = await this.validateSingleErrorWithAI(data, errorItem);
+
+        if (validation.isValid && validation.confidence > 0.6) {
+          validatedErrors.push({
+            ...errorItem,
+            metadata: {
+              ...errorItem.metadata,
+              aiConfidence: validation.confidence,
+              aiValidated: true,
+              aiReasoning: validation.reasoning
+            }
+          });
+        } else {
+          console.log(`❌ AI rejected error "${errorItem.content}" (confidence: ${validation.confidence})`);
+        }
+      } catch (validationError) {
+        console.warn(`⚠️ Failed to validate error "${errorItem.content}":`, validationError);
+        // В случае ошибки добавляем с низким confidence
+        validatedErrors.push({
+          ...errorItem,
+          metadata: { ...errorItem.metadata, aiConfidence: 0.4, aiValidationError: true }
+        });
+      }
+    }
+
+    return validatedErrors;
+  }
+
+  /**
+   * AI валидация неизвестных слов
+   */
+  private async validateUnknownWordsWithAI(
+    data: LessonSnapshotData,
+    words: ProblemArea[]
+  ): Promise<ProblemArea[]> {
+    const validatedWords: ProblemArea[] = [];
+
+    for (const word of words) {
+      try {
+        const validation = await this.validateSingleWordWithAI(data, word);
+
+        if (validation.isValid && validation.confidence > 0.5) {
+          validatedWords.push({
+            ...word,
+            metadata: {
+              ...word.metadata,
+              aiConfidence: validation.confidence,
+              aiValidated: true,
+              aiReasoning: validation.reasoning
+            }
+          });
+        } else {
+          console.log(`❌ AI rejected unknown word "${word.content}" (confidence: ${validation.confidence})`);
+        }
+      } catch (error) {
+        console.warn(`⚠️ Failed to validate word "${word.content}":`, error);
+        // Добавляем с низким confidence
+        validatedWords.push({
+          ...word,
+          metadata: { ...word.metadata, aiConfidence: 0.3, aiValidationError: true }
+        });
+      }
+    }
+
+    return validatedWords;
+  }
+
+  /**
+   * AI валидация одной ошибки
+   */
+  private async validateSingleErrorWithAI(
+    data: LessonSnapshotData,
+    error: ProblemArea
+  ): Promise<{ isValid: boolean; confidence: number; reasoning: string }> {
+    interface AIValidationResult {
+      isValidError?: boolean;
+      confidence?: number;
+      reasoning?: string;
+    }
+    const prompt = `Проанализируй, является ли следующее реальной ошибкой в английском языке:
+
+Контекст урока: "${data.lessonType}"
+Ответ ученика: "${error.context}"
+Предполагаемая ошибка: "${error.content}"
+
+Это реальная грамматическая ошибка, орфографическая ошибка или стилистическая проблема?
+Учитывай уровень ученика и контекст.
+
+Ответь в формате JSON:
+{
+  "isValidError": true/false,
+  "confidence": 0.0-1.0,
+  "reasoning": "краткое объяснение"
+}`;
+
+    const ai = getAI();
+    const response = await ai.query({ role: 'user', content: prompt });
+    const result = parseJSONResponse<AIValidationResult>(response as string);
+
+    return {
+      isValid: result.isValidError || false,
+      confidence: Math.max(0, Math.min(1, result.confidence || 0)),
+      reasoning: result.reasoning || 'AI validation completed'
+    };
+  }
+
+  /**
+   * AI валидация одного неизвестного слова
+   */
+  private async validateSingleWordWithAI(
+    data: LessonSnapshotData,
+    word: ProblemArea
+  ): Promise<{ isValid: boolean; confidence: number; reasoning: string }> {
+    interface AIWordValidationResult {
+      isUnknownWord?: boolean;
+      confidence?: number;
+      reasoning?: string;
+    }
+    const prompt = `Определи, является ли слово "${word.content}" действительно неизвестным для ученика английского:
+
+Контекст использования: "${word.context}"
+Тип упражнения: "${data.lessonType}"
+Уровень ученика: предположительно intermediate
+
+Учитывай:
+- Частотность слова в английском
+- Подходит ли слово под уровень ученика
+- Может ли ученик знать это слово в данном контексте
+
+Ответь в формате JSON:
+{
+  "isUnknownWord": true/false,
+  "confidence": 0.0-1.0,
+  "reasoning": "краткое объяснение"
+}`;
+
+    const ai = getAI();
+    const response = await ai.query({ role: 'user', content: prompt });
+    const result = parseJSONResponse<AIWordValidationResult>(response as string);
+
+    return {
+      isValid: result.isUnknownWord || false,
+      confidence: Math.max(0, Math.min(1, result.confidence || 0)),
+      reasoning: result.reasoning || 'AI validation completed'
+    };
   }
 
   /**

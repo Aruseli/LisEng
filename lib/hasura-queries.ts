@@ -750,9 +750,11 @@ export async function updateStreak(hasyx: Hasyx, userId: string, date: string) {
   // Проверяем, нужно ли создать тест Shu-Ha-Ri на 7-й день стрика (или кратный 7)
   if (newCurrentStreak > 0 && newCurrentStreak % 7 === 0) {
     try {
-      // Динамически импортируем ShuHaRiService, чтобы избежать циклических зависимостей
+      // Динамически импортируем сервисы, чтобы избежать циклических зависимостей
       const { ShuHaRiService } = await import('@/lib/lesson-snapshots/shu-ha-ri-service');
-      const shuHaRiService = new ShuHaRiService(hasyx);
+      const { ScheduleService } = await import('@/lib/schedule/schedule-service');
+      const scheduleService = new ScheduleService(hasyx);
+      const shuHaRiService = new ShuHaRiService(hasyx, scheduleService);
       
       // Рассчитываем дату начала недели стрика (7 дней назад от текущей даты)
       const weekStartDate = new Date(today);

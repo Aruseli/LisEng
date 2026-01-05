@@ -1,0 +1,17 @@
+{
+  "name": "schedule",
+  "table": {
+    "schema": "public",
+    "name": "schedule"
+  },
+  "webhook_path": "/api/events/schedule",
+  "insert": {
+    "columns": "*"
+  },
+  "update": {
+    "columns": "*"
+  },
+  "delete": {
+    "columns": "*"
+  }
+}

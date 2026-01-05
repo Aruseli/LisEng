@@ -1,6 +1,7 @@
 import { Hasyx } from 'hasyx';
 
 import { LessonContentService, LessonMaterials } from '@/lib/lesson/lesson-content-service';
+import { LessonSnapshotService, LessonSnapshotData } from '@/lib/lesson-snapshots';
 import { VocabularyGenerationService } from '@/lib/vocabulary/vocabulary-generation-service';
 import {
   completeTask,
@@ -57,10 +58,12 @@ interface CompleteLessonOptions {
 export class LessonCompletionService {
   private readonly lessonContentService: LessonContentService;
   private readonly vocabularyService: VocabularyGenerationService;
+  private readonly lessonSnapshotService: LessonSnapshotService;
 
   constructor(private readonly hasyx: Hasyx) {
     this.lessonContentService = new LessonContentService(hasyx);
     this.vocabularyService = new VocabularyGenerationService(hasyx);
+    this.lessonSnapshotService = new LessonSnapshotService(hasyx);
   }
 
   async completeLesson(options: CompleteLessonOptions) {
@@ -84,6 +87,60 @@ export class LessonCompletionService {
       conversationData: options.conversationData,
       voiceMessagesData: options.voiceMessagesData,
     });
+
+    // Создаем детальный слепок урока с анализом методик
+    try {
+      // Получаем или создаем AI сессию для связывания
+      let sessionId: string | undefined;
+
+      if (options.conversationData) {
+        // Для speaking уроков используем существующую логику
+        const existingSession = await getAISession(
+          this.hasyx,
+          options.userId,
+          task.type === 'speaking' ? 'speaking' : 'ai_practice',
+          task.title
+        );
+
+        if (existingSession?.id) {
+          sessionId = existingSession.id;
+        } else {
+          // Создаем новую сессию
+          const newSession = await createAISession(
+            this.hasyx,
+            options.userId,
+            task.type === 'speaking' ? 'speaking' : 'ai_practice',
+            task.title
+          );
+          sessionId = newSession?.id;
+        }
+      }
+
+      // Подготавливаем данные для детального слепка
+      const lessonSnapshotData: LessonSnapshotData = {
+        userId: options.userId,
+        sessionId,
+        taskId: options.taskId,
+        lessonType: task.type,
+        durationSeconds: (task.duration_minutes ?? 0) * 60,
+        contentSnapshot: {
+          originalContent: lesson,
+          userResponses: options.conversationData?.messages || options.voiceMessagesData?.messages || [],
+          aiFeedback: options.voiceMessagesData?.overallFeedback || null,
+          interactionLog: [],
+        },
+        userResponses: options.conversationData?.messages || options.voiceMessagesData?.messages || [],
+        correctAnswers: [], // Будет заполняться AI анализом
+        performanceScore: options.pronunciation?.accuracy || options.voiceMessagesData?.overallFeedback?.score || null,
+      };
+
+      // Создаем детальный слепок с анализом методик
+      await this.lessonSnapshotService.createSnapshot(lessonSnapshotData);
+
+    } catch (error) {
+      console.warn('⚠️ Failed to create detailed lesson snapshot:', error);
+      // Не бросаем ошибку, чтобы не ломать завершение урока
+    }
 
     const flaggedWords = this.normalizeWords(options.pronunciation);
     if (flaggedWords.length > 0) {
@@ -141,6 +198,18 @@ export class LessonCompletionService {
     // Обновляем прогресс этапа
     if (task.stage_id) {
       await updateStageProgressFromTask(this.hasyx, options.userId, options.taskId);
+    }
+
+    // Настроить Shu-Ha-Ri расписание при первом уроке
+    try {
+      const { ShuHaRiService, ScheduleService } = await import('@/lib/lesson-snapshots');
+      const scheduleService = new ScheduleService(this.hasyx);
+      const shuHaRiService = new ShuHaRiService(this.hasyx, scheduleService);
+
+      await shuHaRiService.setupWeeklySchedule(options.userId);
+    } catch (error) {
+      console.warn('⚠️ Could not setup Shu-Ha-Ri schedule:', error);
+      // Не бросаем ошибку, чтобы не ломать завершение урока
     }
 
     return {

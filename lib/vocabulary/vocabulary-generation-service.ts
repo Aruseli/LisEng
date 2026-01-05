@@ -90,7 +90,7 @@ export class VocabularyGenerationService {
 
     const fromInsights =
       params.snapshotInsights?.problemAreas
-        ?.filter((area) => area.type === 'unknown_word' || area.type === 'error')
+        ?.filter((area) => area.severity === 'high' || area.severity === 'medium') // Фильтруем значимые проблемы
         .map((area) => area.content?.toLowerCase().trim())
         .filter(Boolean) ?? [];
 

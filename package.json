@@ -28,6 +28,8 @@
     "client": "npx hasyx client",
     "doc:build": "NODE_OPTIONS=\"--experimental-vm-modules\" npx hasyx doc",
     "migrate": "npx hasyx migrate",
+    "init": "NODE_OPTIONS=\"--experimental-vm-modules\" npx tsx lib/init/system-init.ts",
+    "test:integration": "NODE_OPTIONS=\"--experimental-vm-modules\" npx tsx test-integration.ts",
     "unmigrate": "npx hasyx unmigrate",
     "events": "NODE_OPTIONS=\"--experimental-vm-modules\" npx hasyx events",
     "schema": "npx hasyx schema",
