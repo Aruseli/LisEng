@@ -1,0 +1,6 @@
+{
+  "name": "schedule-cron",
+  "webhook_path": "/api/events/schedule-cron",
+  "schedule": "* * * * *",
+  "comment": "Process scheduled events every minute - handles pending events that are ready to execute"
+}

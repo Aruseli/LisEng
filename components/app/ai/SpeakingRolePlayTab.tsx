@@ -2,14 +2,38 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../Buttons/Button';
-import { Mic, MicOff, Send, CheckCircle2 } from 'lucide-react';
+import { Mic, MicOff, Send, CheckCircle2, BarChart3, MessageSquare } from 'lucide-react';
 import { useSpeechRecognition } from '@/components/speachComponents/hooks_useSpeechRecognition';
 import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
+import { useModalStore } from '@/store/modalStore';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: string;
+}
+
+interface VoiceFeedback {
+  pronunciation: {
+    score: number;
+    feedback: string;
+    issues: string[];
+  };
+  vocabulary: {
+    targetWordsUsed: string[];
+    missingWords: string[];
+    feedback: string;
+    suggestions: Array<{ word: string; example: string }>;
+  };
+  grammar: {
+    errors: Array<{ text: string; correction: string; explanation: string }>;
+    feedback: string;
+  };
+  overall: {
+    score: number;
+    feedback: string;
+    suggestions: string[];
+  };
 }
 
 interface SpeakingRolePlayTabProps {
@@ -39,8 +63,11 @@ export function SpeakingRolePlayTab({
   onSendMessage,
   onComplete,
 }: SpeakingRolePlayTabProps) {
+  const { openModal } = useModalStore();
   const [sessionStartTime] = useState<Date>(new Date());
   const [usedTargetWords, setUsedTargetWords] = useState<Set<string>>(new Set());
+  const [isAnalyzingMessage, setIsAnalyzingMessage] = useState(false);
+  const [isAnalyzingLesson, setIsAnalyzingLesson] = useState(false);
   const lastSpokenMessageRef = useRef<string | null>(null);
 
   // Голосовое распознавание
@@ -129,6 +156,222 @@ export function SpeakingRolePlayTab({
     return highlightedText;
   }, [targetWords, usedTargetWords]);
 
+  // Анализ одного сообщения
+  const analyzeMessage = useCallback(async (messageContent: string) => {
+    setIsAnalyzingMessage(true);
+    try {
+      const response = await fetch('/api/ai/analyze-voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transcription: messageContent,
+          targetWords,
+          level: 'B1', // Можно сделать динамическим
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze message');
+      }
+
+      const feedback: VoiceFeedback = await response.json();
+      return feedback;
+    } catch (error) {
+      console.error('Failed to analyze message:', error);
+      throw error;
+    } finally {
+      setIsAnalyzingMessage(false);
+    }
+  }, [targetWords, userId]);
+
+  // Анализ всей беседы
+  const analyzeLesson = useCallback(async () => {
+    const userMessages = messages.filter(m => m.role === 'user');
+    if (userMessages.length === 0) return;
+
+    setIsAnalyzingLesson(true);
+    try {
+      const conversationText = userMessages.map(m => m.content).join(' ');
+
+      const response = await fetch('/api/ai/analyze-voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transcription: conversationText,
+          targetWords,
+          level: 'B1',
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze lesson');
+      }
+
+      const feedback: VoiceFeedback = await response.json();
+      return feedback;
+    } catch (error) {
+      console.error('Failed to analyze lesson:', error);
+      throw error;
+    } finally {
+      setIsAnalyzingLesson(false);
+    }
+  }, [messages, targetWords, userId]);
+
+  // Компонент модального окна для показа анализа
+  const VoiceAnalysisModal = ({ feedback }: { feedback: VoiceFeedback }) => (
+    <div className="max-w-2xl max-h-[80vh] overflow-y-auto p-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Анализ речи</h3>
+
+      {/* Общая оценка */}
+      <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-lg font-semibold text-blue-900">Общая оценка</h4>
+          <span className="text-2xl font-bold text-blue-600">{feedback.overall.score}/10</span>
+        </div>
+        <p className="text-sm text-blue-700 mb-3">{feedback.overall.feedback}</p>
+        {feedback.overall.suggestions.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-blue-800 mb-2">Рекомендации:</p>
+            <ul className="text-xs text-blue-700 space-y-1">
+              {feedback.overall.suggestions.map((suggestion, idx) => (
+                <li key={idx} className="flex items-start">
+                  <span className="text-blue-500 mr-2">•</span>
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      {/* Произношение */}
+      <div className="mb-4 p-4 rounded-lg bg-green-50 border border-green-200">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="font-semibold text-green-900">Произношение</h4>
+          <span className="font-bold text-green-600">{feedback.pronunciation.score}/10</span>
+        </div>
+        <p className="text-sm text-green-700 mb-2">{feedback.pronunciation.feedback}</p>
+        {feedback.pronunciation.issues.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-green-800 mb-1">Проблемы:</p>
+            <ul className="text-xs text-green-700 space-y-1">
+              {feedback.pronunciation.issues.map((issue, idx) => (
+                <li key={idx} className="flex items-start">
+                  <span className="text-green-500 mr-2">•</span>
+                  {issue}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      {/* Словарь */}
+      <div className="mb-4 p-4 rounded-lg bg-purple-50 border border-purple-200">
+        <h4 className="font-semibold text-purple-900 mb-2">Словарь</h4>
+        <p className="text-sm text-purple-700 mb-3">{feedback.vocabulary.feedback}</p>
+
+        {feedback.vocabulary.targetWordsUsed.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-purple-800 mb-1">Использованные целевые слова:</p>
+            <div className="flex flex-wrap gap-1">
+              {feedback.vocabulary.targetWordsUsed.map((word) => (
+                <span key={word} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {feedback.vocabulary.missingWords.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-purple-800 mb-1">Пропущенные слова:</p>
+            <div className="flex flex-wrap gap-1">
+              {feedback.vocabulary.missingWords.map((word) => (
+                <span key={word} className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {feedback.vocabulary.suggestions.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-purple-800 mb-1">Предложения:</p>
+            <div className="space-y-2">
+              {feedback.vocabulary.suggestions.map((suggestion, idx) => (
+                <div key={idx} className="text-xs text-purple-700 bg-purple-100 p-2 rounded">
+                  <strong>{suggestion.word}:</strong> {suggestion.example}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Грамматика */}
+      <div className="mb-4 p-4 rounded-lg bg-orange-50 border border-orange-200">
+        <h4 className="font-semibold text-orange-900 mb-2">Грамматика</h4>
+        <p className="text-sm text-orange-700 mb-3">{feedback.grammar.feedback}</p>
+
+        {feedback.grammar.errors.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-orange-800 mb-2">Ошибки:</p>
+            <div className="space-y-3">
+              {feedback.grammar.errors.map((error, idx) => (
+                <div key={idx} className="text-xs bg-orange-100 p-3 rounded">
+                  <div className="mb-1">
+                    <span className="font-medium text-red-700">Неправильно:</span> {error.text}
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-medium text-green-700">Исправлено:</span> {error.correction}
+                  </div>
+                  <div>
+                    <span className="font-medium text-orange-800">Объяснение:</span> {error.explanation}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Обработчик анализа сообщения
+  const handleAnalyzeMessage = useCallback(async (messageContent: string) => {
+    try {
+      const feedback = await analyzeMessage(messageContent);
+      openModal({
+        component: <VoiceAnalysisModal feedback={feedback} />,
+        closeOnOverlayClick: true,
+      });
+    } catch (error) {
+      console.error('Failed to analyze message:', error);
+      alert('Не удалось проанализировать сообщение');
+    }
+  }, [analyzeMessage, openModal]);
+
+  // Обработчик оценки урока
+  const handleAnalyzeLesson = useCallback(async () => {
+    try {
+      const feedback = await analyzeLesson();
+      if (feedback) {
+        openModal({
+          component: <VoiceAnalysisModal feedback={feedback} />,
+          closeOnOverlayClick: true,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to analyze lesson:', error);
+      alert('Не удалось оценить урок');
+    }
+  }, [analyzeLesson, openModal]);
+
   // Завершение урока
   const handleCompleteLesson = useCallback(async () => {
     if (!taskId || !userId) {
@@ -194,7 +437,7 @@ export function SpeakingRolePlayTab({
   ]);
 
   return (
-    <div className="flex h-[520px] flex-col rounded-3xl bg-white p-6 shadow-sm">
+    <div className="flex h-auto flex-col rounded-3xl bg-white p-6 shadow-sm">
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -248,19 +491,48 @@ export function SpeakingRolePlayTab({
       <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-100 bg-gray-50 p-4">
         <div className="flex flex-col gap-3">
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
-                message.role === 'assistant'
-                  ? 'self-start bg-white text-gray-700 shadow-sm'
-                  : 'self-end bg-primary-deep text-white shadow-sm'
-              }`}
-            >
-              {message.role === 'user' ? (
-                <div dangerouslySetInnerHTML={{ __html: highlightTargetWords(message.content) }} />
-              ) : (
-                message.content
-              )}
+            <div key={index} className={`relative group ${message.role === 'user' ? 'self-end' : 'self-start'}`}>
+              <div
+                className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                  message.role === 'assistant'
+                    ? 'bg-white text-gray-700 shadow-sm'
+                    : 'bg-primary-deep text-white shadow-sm justify-self-end relative'
+                }`}
+              >
+                {message.role === 'user' && (
+                  <div className="absolute -top-2 -left-16 opacity-90 group-hover:opacity-100 transition-opacity z-10">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAnalyzeMessage(message.content)}
+                      disabled={isAnalyzingMessage}
+                      className="h-6 px-2 text-xs bg-white border-gray-300 hover:bg-gray-50 shadow-sm whitespace-nowrap"
+                      leftIcon={<BarChart3 className="size-3" />}
+                    >
+                      {isAnalyzingMessage ? '...' : 'Анализ'}
+                    </Button>
+                  </div>
+                )}
+                {message.role === 'user' ? (
+                  <div dangerouslySetInnerHTML={{ __html: highlightTargetWords(message.content) }} />
+                ) : (
+                  message.content
+                )}
+              </div>
+              {/* {message.role === 'user' && (
+                <div className="absolute -top-2 -left-16 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAnalyzeMessage(message.content)}
+                    disabled={isAnalyzingMessage}
+                    className="h-6 px-2 text-xs bg-white border-gray-300 hover:bg-gray-50 shadow-sm whitespace-nowrap"
+                    leftIcon={<BarChart3 className="size-3" />}
+                  >
+                    {isAnalyzingMessage ? '...' : 'Анализ'}
+                  </Button>
+                </div>
+              )} */}
             </div>
           ))}
           {isLoading && (
@@ -322,16 +594,27 @@ export function SpeakingRolePlayTab({
           </div>
         )}
 
-        {taskId && userId && (
+        <div className="flex gap-3">
           <Button
-            variant="default"
-            onClick={handleCompleteLesson}
-            disabled={isLoading || isRecording || isProcessing}
-            className="w-full bg-green-500 hover:bg-green-600"
+            variant="outline"
+            onClick={handleAnalyzeLesson}
+            disabled={isLoading || isRecording || isProcessing || isAnalyzingLesson || messages.filter(m => m.role === 'user').length === 0}
+            className="flex-1"
+            leftIcon={<MessageSquare className="size-4" />}
           >
-            Завершить урок
+            {isAnalyzingLesson ? 'Оцениваю...' : 'Оценить урок'}
           </Button>
-        )}
+          {taskId && userId && (
+            <Button
+              variant="default"
+              onClick={handleCompleteLesson}
+              disabled={isLoading || isRecording || isProcessing || isAnalyzingLesson}
+              className="flex-1 bg-green-500 hover:bg-green-600"
+            >
+              Завершить урок
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

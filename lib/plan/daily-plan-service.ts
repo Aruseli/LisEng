@@ -19,10 +19,11 @@ import { StageProgressionService, RequirementCheck } from '@/lib/stage-progressi
 import { generateJSON } from '@/lib/ai/llm';
 import { DailyPlanAiSummary } from '@/types/daily-plan';
 import {
-  SnapshotInsightsService,
+  ProgressInsightsService,
   MethodologyAdvisor,
   type SnapshotInsights,
 } from '@/lib/lesson-snapshots';
+import type { SnapshotInsights as OldSnapshotInsights } from '@/lib/lesson-snapshots/methodology-advisor';
 import { VocabularyGenerationService } from '@/lib/vocabulary/vocabulary-generation-service';
 
 type DailyTaskRecord = Awaited<ReturnType<typeof getDailyTasks>> extends (infer T)[]
@@ -77,9 +78,50 @@ export interface DailyPlanResult {
 export class DailyPlanService {
   constructor(
     private readonly hasyx: Hasyx,
-    private readonly snapshotInsightsService: SnapshotInsightsService = new SnapshotInsightsService(hasyx),
+    private readonly progressInsightsService: ProgressInsightsService,
     private readonly vocabularyGenerationService: VocabularyGenerationService = new VocabularyGenerationService(hasyx)
   ) {}
+
+  /**
+   * Адаптирует новый SnapshotInsights к старому формату для MethodologyAdvisor
+   */
+  private adaptSnapshotInsights(newInsights: SnapshotInsights): OldSnapshotInsights {
+    return {
+      referenceDate: new Date().toISOString(),
+      problemAreas: newInsights.problemAreas.map(area => ({
+        type: area.content.includes('unknown') ? 'unknown_word' : 'error',
+        content: area.content,
+        severity: area.severity,
+        frequency: area.frequency,
+        context: '',
+        timestamp: new Date().toISOString(),
+        lessonTypes: ['reading', 'writing', 'speaking', 'listening'], // Обобщенные типы уроков
+        lastSeen: new Date().toISOString() // Текущее время как последнее появление
+      })),
+      kaizenMomentum: {
+        accuracyDeltaAvg: newInsights.kaizenMomentum.accuracyDelta,
+        speedDeltaAvg: newInsights.kaizenMomentum.speedDelta,
+        mistakesReducedTotal: 0, // Не доступно в новом интерфейсе
+        trend: newInsights.kaizenMomentum.overall === 'positive' ? 'improving' as const :
+               newInsights.kaizenMomentum.overall === 'negative' ? 'regressing' as const : 'stable' as const
+      },
+      masteryDistribution: {}, // Пустой объект, так как новый интерфейс не имеет этого
+      shuHaRi: newInsights.shuHaRi ? {
+        dominantStage: newInsights.shuHaRi.stage,
+        skills: [], // Пустой массив, так как новый интерфейс не имеет детальной информации по навыкам
+        recommendations: [], // Пустой массив рекомендаций
+        pendingTestRecommended: newInsights.shuHaRi.readinessForNext > 80 // Рекомендовать тест если готовность > 80%
+      } : null,
+      shuHaRiStages: {}, // Пустой объект
+      sm2Schedule: {
+        dueTodayCount: newInsights.sm2Schedule.dueToday,
+        upcomingCount: newInsights.sm2Schedule.dueThisWeek,
+        dueToday: [], // Пустой массив, так как новый интерфейс не имеет деталей
+        upcoming: [] // Пустой массив, так как новый интерфейс не имеет деталей
+      },
+      methodologyHighlights: newInsights.methodologyHighlights
+    };
+  }
 
   /**
    * Проверяет, есть ли уже урок с произношением в списке задач
@@ -135,8 +177,8 @@ export class DailyPlanService {
       throw new Error('userId is required to generate the daily plan');
     }
 
-    const snapshotInsightsPromise = this.snapshotInsightsService
-      .getInsights(userId, { referenceDate: targetDate })
+    const snapshotInsightsPromise = this.progressInsightsService
+      .getSnapshotInsights(userId, 30) // последние 30 дней
       .catch((error) => {
         console.warn('[DailyPlanService] Failed to build snapshot insights', error);
         return null;
@@ -219,7 +261,9 @@ export class DailyPlanService {
         vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
       }
     }
-    const methodologyAdvisor = snapshotInsights ? new MethodologyAdvisor(snapshotInsights) : null;
+    // Адаптируем новый SnapshotInsights к старому формату для MethodologyAdvisor
+    const adaptedInsights = snapshotInsights ? this.adaptSnapshotInsights(snapshotInsights) : null;
+    const methodologyAdvisor = adaptedInsights ? new MethodologyAdvisor(adaptedInsights) : null;
     const methodologyFocus =
       methodologyAdvisor?.buildFocusTags({
         userLevel: user?.current_level ?? null,
@@ -254,6 +298,12 @@ export class DailyPlanService {
     const readiness = StageProgressionService.isReadyForTest(requirementChecks);
     const completionPercentage = StageProgressionService.getCompletionPercentage(requirementChecks);
 
+    // Получаем Kumon уровни пользователя
+    const kumonLevels = await this.getUserKumonLevels(userId);
+
+    // Получаем Shu-Ha-Ri стадии пользователя
+    const shuHaRiStages = await this.getUserShuHaRiStages(userId);
+
     const aiSummary = await this.buildAiSummary({
       user,
       stageProgress: activeStageProgress,
@@ -265,6 +315,8 @@ export class DailyPlanService {
       targetDate,
       forceAi: options.forceAi ?? false,
       snapshotInsights,
+      kumonLevels,
+      shuHaRiStages,
     });
     const planFocus = aiSummary.focus.length > 0 ? aiSummary.focus : methodologyFocus;
 
@@ -278,12 +330,12 @@ export class DailyPlanService {
       methodology_highlights: snapshotInsights?.methodologyHighlights ?? [],
       snapshot_insights: snapshotInsights
         ? {
-            dominant_stage: snapshotInsights.shuHaRi?.dominantStage ?? null,
+            dominant_stage: snapshotInsights.shuHaRi?.stage ?? null,
             problem_areas: snapshotInsights.problemAreas,
             kaizen_momentum: snapshotInsights.kaizenMomentum,
             sm2_schedule: {
-              due_today: snapshotInsights.sm2Schedule.dueTodayCount,
-              upcoming: snapshotInsights.sm2Schedule.upcomingCount,
+              due_today: snapshotInsights.sm2Schedule.dueToday,
+              upcoming: snapshotInsights.sm2Schedule.dueThisWeek,
             },
           }
         : undefined,
@@ -360,8 +412,8 @@ export class DailyPlanService {
     targetDate?: string
   ): Promise<DailyPlanResult> {
     const date = targetDate ?? this.formatDate(new Date());
-    const snapshotInsightsPromise = this.snapshotInsightsService
-      .getInsights(userId, { referenceDate: date })
+    const snapshotInsightsPromise = this.progressInsightsService
+      .getSnapshotInsights(userId, 30) // последние 30 дней
       .catch((error) => {
         console.warn('[DailyPlanService] Failed to load snapshot insights (getDailyPlan):', error);
         return null;
@@ -574,6 +626,160 @@ export class DailyPlanService {
     );
   }
 
+  /**
+   * Получение специализированных инструкций по сложности заданий
+   */
+  private getComplexityInstructions(
+    kumonLevels: Record<string, number> | undefined,
+    shuHaRiStages: Record<string, 'shu' | 'ha' | 'ri'> | undefined
+  ): string {
+    const instructions: string[] = [];
+
+    // Анализ Kumon уровней для определения общей сложности
+    const levels = kumonLevels ? Object.values(kumonLevels) : [];
+    const avgLevel = levels.length > 0 ? levels.reduce((a, b) => a + b, 0) / levels.length : 3.5;
+    const maxLevel = levels.length > 0 ? Math.max(...levels) : 3;
+
+    // Определяем общий уровень сложности
+    let overallComplexity: 'beginner' | 'intermediate' | 'advanced';
+    if (avgLevel < 2.5) overallComplexity = 'beginner';
+    else if (avgLevel < 5) overallComplexity = 'intermediate';
+    else overallComplexity = 'advanced';
+
+    // Специализированные инструкции по типам заданий
+    const complexityInstructions = {
+      beginner: {
+        vocabulary: 'Используй базовую лексику (A1-A2 уровень): цвета, числа, семья, еда, животные. Избегай сложных идиом.',
+        grammar: 'Фокус на Present Simple, Present Continuous, базовые времена. Используй простые предложения.',
+        reading: 'Короткие тексты (50-100 слов) с большими картинками. Темы: повседневная жизнь, хобби.',
+        listening: 'Медленная речь, четкое произношение. Короткие диалоги (30 сек).',
+        speaking: 'Простые вопросы: "What is your name?", "How are you?". Много подсказок и примеров.',
+        writing: 'Короткие предложения (5-10 слов). Темы: описать себя, семью, хобби.'
+      },
+      intermediate: {
+        vocabulary: 'Средний уровень лексики (B1-B2): работа, путешествия, технологии. Включай распространенные идиомы.',
+        grammar: 'Все основные времена, условные предложения, пассивный залог. Разнообразные структуры.',
+        reading: 'Средней длины тексты (200-400 слов). Темы: новости, биографии, описания процессов.',
+        listening: 'Нормальная скорость речи. Диалоги и монологи (1-2 мин). Различные акценты.',
+        speaking: 'Свободные разговоры на повседневные темы. Описание картинок, мнения.',
+        writing: 'Абзацы (5-8 предложений). Темы: письма, описания, аргументация.'
+      },
+      advanced: {
+        vocabulary: 'Продвинутый словарь (C1-C2): академическая лексика, редкие слова, сложные идиомы.',
+        grammar: 'Сложные конструкции: инверсия, сложные времена, стилистические приемы.',
+        reading: 'Длинные тексты (500+ слов). Темы: академические, литературные, технические.',
+        listening: 'Быстрая речь, различные акценты. Длинные монологи, лекции.',
+        speaking: 'Дискуссии, дебаты, презентации. Анализ сложных тем.',
+        writing: 'Эссе, статьи (200+ слов). Темы: анализ, критика, творческое письмо.'
+      }
+    };
+
+    instructions.push(`ОБЩИЙ УРОВЕНЬ СЛОЖНОСТИ: ${overallComplexity.toUpperCase()} (средний Kumon уровень: ${avgLevel.toFixed(1)}, максимальный: ${maxLevel})`);
+
+    instructions.push(`СПЕЦИАЛИЗИРОВАННЫЕ ИНСТРУКЦИИ ПО ТИПАМ ЗАДАНИЙ:`);
+    instructions.push(`• Словарь: ${complexityInstructions[overallComplexity].vocabulary}`);
+    instructions.push(`• Грамматика: ${complexityInstructions[overallComplexity].grammar}`);
+    instructions.push(`• Чтение: ${complexityInstructions[overallComplexity].reading}`);
+    instructions.push(`• Аудирование: ${complexityInstructions[overallComplexity].listening}`);
+    instructions.push(`• Говорение: ${complexityInstructions[overallComplexity].speaking}`);
+    instructions.push(`• Письмо: ${complexityInstructions[overallComplexity].writing}`);
+
+    // Инструкции по прогрессии сложности
+    instructions.push(`ПРОГРЕССИЯ СЛОЖНОСТИ ВНУТРИ СЕССИИ:`);
+    instructions.push(`• Начни с заданий на 1 уровень ниже текущего Kumon уровня`);
+    instructions.push(`• Постепенно повышай сложность на 0.5-1 уровень`);
+    instructions.push(`• Закончи заданиями соответствующего текущему уровню`);
+
+    // Особые инструкции для высоких уровней Kumon
+    if (maxLevel >= 6) {
+      instructions.push(`ОСОБЫЕ ИНСТРУКЦИИ ДЛЯ ПРОДВИНУТЫХ УЧАЩИХСЯ:`);
+      instructions.push(`• Добавляй творческие элементы и вариации`);
+      instructions.push(`• Фокус на нюансах и точности`);
+      instructions.push(`• Включай культурный контекст и идиомы`);
+      instructions.push(`• Предлагай альтернативные подходы к решению`);
+    }
+
+    return instructions.join('\n');
+  }
+
+  /**
+   * Генерация вариативных заданий для разнообразия
+   */
+  private generateTaskVariations(baseTask: any, count: number = 3): any[] {
+    const variations: any[] = [baseTask]; // Всегда включаем оригинал
+
+    // Создаем вариации на основе типа задания
+    const taskType = baseTask.type;
+
+    const variationStrategies = {
+      ai_practice: [
+        { prompt: `${baseTask.prompt} (вариант: используй диалог)`, context: `${baseTask.context} - диалоговая форма` },
+        { prompt: `${baseTask.prompt} (вариант: используй ролевую игру)`, context: `${baseTask.context} - ролевая игра` },
+        { prompt: `${baseTask.prompt} (вариант: добавь творческий элемент)`, context: `${baseTask.context} - творческое задание` }
+      ],
+      speaking: [
+        { prompt: `${baseTask.prompt} (вариант: запись видео)`, context: `${baseTask.context} - видеозапись ответа` },
+        { prompt: `${baseTask.prompt} (вариант: групповой разговор)`, context: `${baseTask.context} - обсуждение в группе` },
+        { prompt: `${baseTask.prompt} (вариант: презентация)`, context: `${baseTask.context} - подготовка презентации` }
+      ],
+      reading: [
+        { prompt: `${baseTask.prompt} (вариант: с таймером)`, context: `${baseTask.context} - чтение на время` },
+        { prompt: `${baseTask.prompt} (вариант: вслух)`, context: `${baseTask.context} - чтение вслух с записью` },
+        { prompt: `${baseTask.prompt} (вариант: анализ)`, context: `${baseTask.context} - детальный анализ текста` }
+      ],
+      writing: [
+        { prompt: `${baseTask.prompt} (вариант: email)`, context: `${baseTask.context} - написать email` },
+        { prompt: `${baseTask.prompt} (вариант: рассказ)`, context: `${baseTask.context} - написать короткий рассказ` },
+        { prompt: `${baseTask.prompt} (вариант: отзыв)`, context: `${baseTask.context} - написать отзыв` }
+      ]
+    };
+
+    const availableVariations = variationStrategies[taskType] || [];
+    const variationsToAdd = Math.min(count - 1, availableVariations.length);
+
+    for (let i = 0; i < variationsToAdd; i++) {
+      const variation = availableVariations[i];
+      if (variation) {
+        variations.push({
+          type: taskType,
+          prompt: variation.prompt,
+          context: variation.context
+        });
+      }
+    }
+
+    return variations;
+  }
+
+  /**
+   * Оптимизация AI промпта для лучшей генерации
+   */
+  private optimizeAiPrompt(basePrompt: string, context: any): string {
+    let optimizedPrompt = basePrompt;
+
+    // Добавляем контекст недавних ошибок
+    if (context.recentErrors && context.recentErrors.length > 0) {
+      optimizedPrompt += `\n\nКОНТЕКСТ ОШИБОК: Ученик недавно допускал ошибки в: ${context.recentErrors.join(', ')}.`;
+      optimizedPrompt += ` Избегай подобных тем или добавь дополнительную практику по этим областям.`;
+    }
+
+    // Добавляем информацию о предпочтениях
+    if (context.userPreferences) {
+      optimizedPrompt += `\n\nПРЕДПОЧТЕНИЯ УЧЕНИКА: ${context.userPreferences}`;
+    }
+
+    // Добавляем информацию о времени
+    if (context.sessionTime) {
+      optimizedPrompt += `\n\nВРЕМЯ НА СЕССИЮ: ${context.sessionTime} минут. Адаптируй сложность заданий под доступное время.`;
+    }
+
+    // Добавляем инструкции по разнообразию
+    optimizedPrompt += `\n\nРАЗНООБРАЗИЕ ЗАДАНИЙ: Создавай разные типы упражнений. Не повторяй одни и те же форматы.`;
+    optimizedPrompt += ` Включай как структурированные задания (с инструкциями), так и свободные (креативные).`;
+
+    return optimizedPrompt;
+  }
+
   private async buildAiSummary(params: {
     user: Awaited<ReturnType<typeof getUserProfile>>;
     stageProgress: StageProgressRecord;
@@ -587,6 +793,8 @@ export class DailyPlanService {
     targetDate: string;
     forceAi: boolean;
     snapshotInsights?: SnapshotInsights | null;
+    kumonLevels?: Record<string, number>;
+    shuHaRiStages?: Record<string, 'shu' | 'ha' | 'ri'>;
   }): Promise<DailyPlanAiSummary> {
     const taskPayload = (params.tasks as DailyTaskRecord[]).map((task) => ({
       id: task.id,
@@ -670,6 +878,49 @@ ${instructionLanguage === 'ru'
         promptParts.push('Инсайты snapshot недоступны — сгенерируй общий план с учетом требований.');
       }
 
+      // Добавляем Kumon уровни
+      if (params.kumonLevels && Object.keys(params.kumonLevels).length > 0) {
+        const kumonDescriptions = Object.entries(params.kumonLevels).map(([skill, level]) => {
+          let difficulty = 'неизвестная';
+          if (level <= 2) difficulty = 'базовая (начальный уровень)';
+          else if (level <= 4) difficulty = 'средняя (применение)';
+          else if (level <= 7) difficulty = 'продвинутая (мастерство)';
+          return `${skill}: уровень ${level} (${difficulty})`;
+        });
+
+        promptParts.push(`Kumon уровни навыков: ${kumonDescriptions.join(', ')}`);
+        promptParts.push(
+          'ВАЖНО: Адаптируй сложность заданий под Kumon уровни! Для низких уровней (1-2) используй простые конструкции, много подсказок. Для средних (3-4) - применение в контексте. Для высоких (5-7) - свободное использование без подсказок.'
+        );
+      } else {
+        promptParts.push('Kumon уровни неизвестны — используй стандартную сложность.');
+      }
+
+      // Добавляем Shu-Ha-Ri стадии
+      if (params.shuHaRiStages && Object.keys(params.shuHaRiStages).length > 0) {
+        const stageDescriptions = Object.entries(params.shuHaRiStages).map(([skill, stage]) => {
+          const descriptions = {
+            shu: 'строгое следование правилам, повторение основ',
+            ha: 'отход от формы, понимание сути, применение в новых ситуациях',
+            ri: 'трансценденция, свободное владение, творческое использование'
+          };
+          return `${skill}: стадия ${stage} (${descriptions[stage]})`;
+        });
+
+        promptParts.push(`Шу-Ха-Ри стадии навыков: ${stageDescriptions.join(', ')}`);
+        promptParts.push(
+          'ВАЖНО: Адаптируй ТИПЫ заданий под Shu-Ha-Ri стадии! ' +
+          'Для навыков в стадии ШУ: задания на повторение основ, drill упражнения, много подсказок. ' +
+          'Для навыков в стадии ХА: задания на применение в новых контекстах, понимание сути, средняя поддержка. ' +
+          'Для навыков в стадии РИ: свободные творческие задания, минимум подсказок, фокус на fluency.'
+        );
+      } else {
+        promptParts.push('Shu-Ha-Ri стадии неизвестны — используй сбалансированные типы заданий.');
+      }
+
+      // Специализированные инструкции по сложности
+      promptParts.push(this.getComplexityInstructions(params.kumonLevels, params.shuHaRiStages));
+
       promptParts.push(
         '',
         'ВАЖНО: Учитывай японские методики. Привяжи задания к проблемным областям и напомни про SM-2 повторения, если они есть.',
@@ -694,15 +945,35 @@ ${instructionLanguage === 'ru'
 }`
       );
 
-      const prompt = promptParts.join('\n');
+      // Оптимизируем промпт перед отправкой
+      const basePrompt = promptParts.join('\n');
+      const optimizedPrompt = this.optimizeAiPrompt(basePrompt, {
+        recentErrors: params.snapshotInsights?.problemAreas?.slice(0, 3).map(p => p.content) || [],
+        userPreferences: params.user?.preferences || null,
+        sessionTime: params.stageProgress?.expected_duration_minutes || 60
+      });
+
+      const prompt = optimizedPrompt;
 
       const response = await generateJSON<DailyPlanAiSummary>(prompt, { systemPrompt });
+
+      // Добавляем вариативность к заданиям
+      let aiTasks = response.aiTasks ?? [];
+      if (aiTasks.length > 0) {
+        const variedTasks: any[] = [];
+        for (const task of aiTasks) {
+          // Для каждого задания создаем 2-3 вариации
+          const variations = this.generateTaskVariations(task, 2);
+          variedTasks.push(...variations);
+        }
+        aiTasks = variedTasks.slice(0, Math.min(6, variedTasks.length)); // Ограничиваем до 6 заданий
+      }
 
       return {
         summary: response.summary,
         focus: response.focus ?? [],
         motivation: response.motivation,
-        aiTasks: response.aiTasks ?? [],
+        aiTasks,
         reviewReminders: response.reviewReminders ?? [],
         fallbackUsed: false,
       };
@@ -737,7 +1008,7 @@ ${instructionLanguage === 'ru'
       'Держи ритм и помни про маленькие улучшения каждый день — так работает Кайдзен. Ты справишься!';
 
     if (snapshotInsights?.shuHaRi) {
-      const stage = snapshotInsights.shuHaRi.dominantStage;
+      const stage = snapshotInsights.shuHaRi.stage;
       if (stage === 'shu') {
         focus.unshift('Shu: повтори правила без импровизации.');
         motivation = 'Сохраняй дисциплину: точные повторения сейчас важнее скорости.';
@@ -750,9 +1021,10 @@ ${instructionLanguage === 'ru'
       }
     }
 
-    const reviewReminders =
-      snapshotInsights?.sm2Schedule.dueToday.slice(0, 3).map((recall) => `Active Recall: ${recall.contextPrompt}`) ||
-      [];
+    const reviewReminders: string[] = [];
+    if (snapshotInsights?.sm2Schedule.dueToday && snapshotInsights.sm2Schedule.dueToday > 0) {
+      reviewReminders.push(`Active Recall: ${snapshotInsights.sm2Schedule.dueToday} карточек ждут повторения`);
+    }
 
     return {
       summary,
@@ -999,7 +1271,9 @@ ${instructionLanguage === 'ru'
       }
     }
 
-    const advisor = new MethodologyAdvisor(params.insights);
+    // Адаптируем новый SnapshotInsights к старому формату для MethodologyAdvisor
+    const adaptedInsights = this.adaptSnapshotInsights(params.insights);
+    const advisor = new MethodologyAdvisor(adaptedInsights);
     const descriptors = advisor.buildTaskBlueprints({
       targetDate: params.targetDate,
       existingInsightRefs,
@@ -1058,6 +1332,53 @@ ${instructionLanguage === 'ru'
     );
 
     return true;
+  }
+
+  /**
+   * Получает текущие Shu-Ha-Ri стадии пользователя для всех навыков
+   */
+  private async getUserShuHaRiStages(userId: string): Promise<Record<string, 'shu' | 'ha' | 'ri'>> {
+    try {
+      const { ShuHaRiService } = await import('@/lib/lesson-snapshots');
+      const shuHaRiService = new ShuHaRiService(this.hasyx);
+
+      return await shuHaRiService.getUserShuHaRiStages(userId);
+    } catch (error) {
+      console.warn(`⚠️ Failed to get Shu-Ha-Ri stages for user ${userId}:`, error);
+      return {};
+    }
+  }
+
+  /**
+   * Получает текущие Kumon уровни пользователя для всех навыков
+   */
+  private async getUserKumonLevels(userId: string): Promise<Record<string, number>> {
+    try {
+      const kumonProgress = await this.hasyx.select({
+        table: 'kumon_progress',
+        where: { user_id: { _eq: userId } },
+        returning: ['skill_category', 'skill_subcategory', 'current_level'],
+        order_by: [{ last_practiced_at: 'desc' }]
+      });
+
+      const levels: Record<string, number> = {};
+      const progressList = Array.isArray(kumonProgress) ? kumonProgress : kumonProgress ? [kumonProgress] : [];
+
+      for (const progress of progressList) {
+        const skillKey = progress.skill_subcategory
+          ? `${progress.skill_category}_${progress.skill_subcategory}`
+          : progress.skill_category;
+
+        levels[skillKey] = progress.current_level || 1;
+      }
+
+      console.log(`📊 Kumon levels for user ${userId}:`, levels);
+      return levels;
+
+    } catch (error) {
+      console.warn(`⚠️ Failed to get Kumon levels for user ${userId}:`, error);
+      return {};
+    }
   }
 }
 

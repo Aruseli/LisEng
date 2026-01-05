@@ -1,61 +1,45 @@
-import { NextResponse } from 'next/server';
-import { hasyxEvent, HasuraEventPayload } from 'hasyx/lib/events';
-import { createApolloClient, HasyxApolloClient } from 'hasyx/lib/apollo/apollo';
-import { Hasyx } from 'hasyx/lib/hasyx/hasyx';
-import { Generator } from 'hasyx/lib/generator';
-import { onEventRowChange } from 'hasyx/lib/schedule';
-import Debug from 'hasyx/lib/debug';
-import schema from '@/public/hasura-schema.json';
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import { onEventRowChange } from '@/lib/schedule/schedule-handlers';
 
-const debug = Debug('api:events:events');
-const generate = Generator(schema as any);
+const HASURA_EVENT_SECRET = process.env.HASURA_EVENT_SECRET;
 
-export const POST = hasyxEvent(async (payload: HasuraEventPayload) => {
-  const HASURA_URL = process.env.NEXT_PUBLIC_HASURA_GRAPHQL_URL!;
-  const ADMIN_SECRET = process.env.HASURA_ADMIN_SECRET!;
-  
-  if (!HASURA_URL || !ADMIN_SECRET) {
-    debug('Missing Hasura admin env');
-    return { success: false, error: 'server_misconfigured' };
-  }
-
-  const apolloClient = createApolloClient({
-    url: HASURA_URL,
-    secret: ADMIN_SECRET,
-    ws: false
-  }) as HasyxApolloClient;
-  
-  const hasyx = new Hasyx(apolloClient, generate);
-
+export async function POST(request: NextRequest) {
   try {
-    // Callback для записи в debug (в реальных условиях заменяется на бизнес логику)
-    const debugCallback = async (event: any, schedule?: any) => {
-      try {
-        await hasyx.insert({
-          table: 'debug',
-          object: {
-            value: {
-              action: 'event_executed',
-              timestamp: new Date().toISOString(),
-              event: event,
-              schedule: schedule,
-              source: 'api/events/events'
-            }
-          }
-        });
-      } catch (error) {
-        debug('Error writing to debug:', error);
-      }
-    };
+    // Валидация Hasura Event Secret
+    const headersList = await headers();
+    const eventSecret = headersList.get('x-hasura-event-secret');
 
-    // Делегируем основную логику в библиотеку
-    await onEventRowChange(hasyx, payload, debugCallback);
+    if (!HASURA_EVENT_SECRET || eventSecret !== HASURA_EVENT_SECRET) {
+      console.error('❌ Invalid Hasura Event Secret for /api/events/events');
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
 
-    return { success: true };
-  } catch (error: any) {
-    debug('Error processing event row change:', error);
-    return { success: false, error: error?.message || 'unknown error' };
-  } finally {
-    (apolloClient as any)?.terminate?.();
+    // Парсинг Hasura event payload
+    const payload = await request.json();
+    console.log('📨 Events table event received:', {
+      operation: payload.event.op,
+      table: payload.table.name,
+      id: payload.event.data.new?.id || payload.event.data.old?.id,
+      status: payload.event.data.new?.status || payload.event.data.old?.status
+    });
+
+    // Вызвать обработчик изменений событий
+    await onEventRowChange(payload);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Events table event processed successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Error processing events table event:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
-});
+}
