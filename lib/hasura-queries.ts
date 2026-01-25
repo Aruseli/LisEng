@@ -480,36 +480,56 @@ export async function upsertDailyTaskFromStructure(
   hasyx: Hasyx,
   input: UpsertDailyTaskInput
 ) {
-  return await hasyx.upsert({
-    table: 'daily_tasks',
-    object: {
-      user_id: input.userId,
-      stage_id: input.stageId ?? null,
-      task_date: input.taskDate,
+  try {
+    console.log('[upsertDailyTask] Создание задания:', {
+      userId: input.userId,
+      taskDate: input.taskDate,
       type: input.type,
       title: input.title,
-      description: input.description,
-      duration_minutes: input.duration,
-      ai_enabled: input.aiEnabled ?? false,
-      ai_context: input.aiContext,
-      suggested_prompt: input.suggestedPrompt,
-      type_specific_payload: input.typeSpecificPayload,
-    },
-    on_conflict: {
-      constraint: 'daily_tasks_user_id_task_date_type_key',
-      update_columns: [
-        'stage_id',
-        'title',
-        'description',
-        'duration_minutes',
-        'ai_enabled',
-        'ai_context',
-        'suggested_prompt',
-        'type_specific_payload',
-      ],
-    },
-    returning: ['id'],
-  });
+    });
+    
+    const result = await hasyx.upsert({
+      table: 'daily_tasks',
+      object: {
+        user_id: input.userId,
+        stage_id: input.stageId ?? null,
+        task_date: input.taskDate,
+        type: input.type,
+        title: input.title,
+        description: input.description,
+        duration_minutes: input.duration,
+        ai_enabled: input.aiEnabled ?? false,
+        ai_context: input.aiContext,
+        suggested_prompt: input.suggestedPrompt,
+        type_specific_payload: input.typeSpecificPayload,
+      },
+      on_conflict: {
+        constraint: 'daily_tasks_user_id_task_date_type_key',
+        update_columns: [
+          'stage_id',
+          'title',
+          'description',
+          'duration_minutes',
+          'ai_enabled',
+          'ai_context',
+          'suggested_prompt',
+          'type_specific_payload',
+        ],
+      },
+      returning: ['id'],
+    });
+    
+    console.log('[upsertDailyTask] Успешно создано:', { type: input.type, result });
+    return result;
+  } catch (error) {
+    console.error('[upsertDailyTask] ОШИБКА при создании задания:', {
+      type: input.type,
+      title: input.title,
+      taskDate: input.taskDate,
+      error: error instanceof Error ? error.message : error,
+    });
+    throw error;
+  }
 }
 
 /**
@@ -668,10 +688,24 @@ export async function updateStreak(hasyx: Hasyx, userId: string, date: string) {
   const tasks = await getDailyTasks(hasyx, userId, date);
   const allTasks = Array.isArray(tasks) ? tasks : [];
   
+  // Детальное логирование для диагностики
+  const completedTasks = allTasks.filter((task: any) => task.status === 'completed');
+  const incompleteTasks = allTasks.filter((task: any) => task.status !== 'completed');
+  
+  console.log('[updateStreak] Диагностика:', {
+    userId,
+    date,
+    totalTasks: allTasks.length,
+    completedCount: completedTasks.length,
+    incompleteCount: incompleteTasks.length,
+    incompleteTasks: incompleteTasks.map((t: any) => ({ id: t.id, title: t.title, status: t.status, type: t.type })),
+  });
+  
   // Проверяем, все ли задания выполнены
   const allCompleted = allTasks.length > 0 && allTasks.every((task: any) => task.status === 'completed');
   
   if (!allCompleted) {
+    console.log('[updateStreak] Не все задания выполнены, стрик не обновляется');
     return null; // Не обновляем стрик, если не все задания выполнены
   }
 
@@ -686,34 +720,69 @@ export async function updateStreak(hasyx: Hasyx, userId: string, date: string) {
   });
 
   const streak = Array.isArray(streakResult) ? streakResult[0] : streakResult;
-  const today = new Date(date);
-  const todayStr = today.toISOString().split('T')[0];
-  const lastActivity = streak?.last_activity_date ? new Date(streak.last_activity_date) : null;
-  const lastActivityStr = lastActivity ? lastActivity.toISOString().split('T')[0] : null;
+  
+  // Безопасное извлечение даты - избегаем проблем с парсингом Date объектов
+  // PostgreSQL DATE может приходить в разных форматах
+  const todayStr = date.split('T')[0]; // date уже строка формата YYYY-MM-DD
+  
+  // Извлекаем дату последней активности как строку, избегая new Date()
+  let lastActivityStr: string | null = null;
+  if (streak?.last_activity_date) {
+    const rawDate = streak.last_activity_date;
+    if (typeof rawDate === 'string') {
+      // Если строка, берём первые 10 символов (YYYY-MM-DD)
+      lastActivityStr = rawDate.substring(0, 10);
+    } else if (rawDate instanceof Date) {
+      // Если Date объект, конвертируем в ISO и берём дату
+      lastActivityStr = rawDate.toISOString().split('T')[0];
+    } else {
+      // Fallback - пробуем через String
+      lastActivityStr = String(rawDate).substring(0, 10);
+    }
+  }
+  
+  console.log('[updateStreak] Данные стрика:', {
+    currentStreak: streak?.current_streak,
+    lastActivityDate: streak?.last_activity_date,
+    lastActivityStr,
+    todayStr,
+    rawLastActivity: streak?.last_activity_date,
+    typeOfLastActivity: typeof streak?.last_activity_date,
+  });
   
   let newCurrentStreak = streak?.current_streak || 0;
   const longestStreak = streak?.longest_streak || 0;
 
   // Если уже обновляли сегодня - не увеличиваем стрик повторно
   if (lastActivityStr === todayStr) {
-    // Уже обновляли сегодня, возвращаем текущий стрик без изменений
+    console.log('[updateStreak] Уже обновляли сегодня, пропускаем');
     return streak;
   }
 
-  // Проверяем, был ли вчера активность
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  // Вычисляем вчерашнюю дату через UTC чтобы избежать проблем с таймзонами
+  const todayDate = new Date(todayStr + 'T12:00:00Z'); // Используем полдень UTC чтобы избежать проблем с переходом дня
+  const yesterdayDate = new Date(todayDate);
+  yesterdayDate.setUTCDate(yesterdayDate.getUTCDate() - 1);
+  const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
   const wasActiveYesterday = lastActivityStr === yesterdayStr;
+
+  console.log('[updateStreak] Проверка вчерашней активности:', {
+    yesterdayStr,
+    lastActivityStr,
+    wasActiveYesterday,
+  });
 
   if (wasActiveYesterday) {
     // Продолжаем стрик - увеличиваем на 1
     newCurrentStreak = (streak?.current_streak || 0) + 1;
-  } else if (!lastActivity) {
+    console.log('[updateStreak] Продолжаем стрик:', newCurrentStreak);
+  } else if (!lastActivityStr) {
     // Первый день - начинаем стрик с 1
     newCurrentStreak = 1;
+    console.log('[updateStreak] Первый день стрика');
   } else {
     // Пропустили день(и) - сбрасываем стрик и начинаем с 1
+    console.log('[updateStreak] Сброс стрика! lastActivityStr:', lastActivityStr, 'yesterdayStr:', yesterdayStr);
     newCurrentStreak = 1;
   }
 
@@ -757,8 +826,8 @@ export async function updateStreak(hasyx: Hasyx, userId: string, date: string) {
       const shuHaRiService = new ShuHaRiService(hasyx, scheduleService);
       
       // Рассчитываем дату начала недели стрика (7 дней назад от текущей даты)
-      const weekStartDate = new Date(today);
-      weekStartDate.setDate(weekStartDate.getDate() - 6); // 7 дней назад (включая сегодня)
+      const weekStartDate = new Date(todayDate);
+      weekStartDate.setUTCDate(weekStartDate.getUTCDate() - 6); // 7 дней назад (включая сегодня)
       
       // Проверяем, был ли уже создан тест на этот стрик-день
       const testExists = await shuHaRiService.shouldCreateWeeklyTest(userId, weekStartDate);

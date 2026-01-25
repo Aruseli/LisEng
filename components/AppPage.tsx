@@ -1,26 +1,26 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useSession, useSubscription, useHasyx } from 'hasyx';
 import { useModalStore } from '@/store/modalStore';
 import { useRitualStore } from '@/store/ritualStore';
-import { ModalContainer } from './app/Modal/Modal';
+import { useSession, useSubscription } from 'hasyx';
+import { useEffect, useMemo, useState } from 'react';
 import { LevelTestModal } from './app/LevelTestModal';
+import { ModalContainer } from './app/Modal/Modal';
 
+import { useAISession } from '@/hooks/useAISession';
+import { useDashboardData } from '@/hooks/useDashboardData';
 import { OAuthButtons } from 'hasyx/components/auth/oauth-buttons';
-import { RitualScreen } from './app/RitualScreen';
 import { Header } from './app/Header';
 import { Navigation } from './app/Navigation';
-import { DashboardTab } from './app/dashboard/DashboardTab';
-import type { TaskView as DashboardTask } from './app/dashboard/DashboardTab';
-import { VocabularyTab } from './app/vocabulary/VocabularyTab';
+import { RitualScreen } from './app/RitualScreen';
 import { AIPracticeTab } from './app/ai/AIPracticeTab';
 import { SpeakingRolePlayTab } from './app/ai/SpeakingRolePlayTab';
 import { VoiceMessagesTab } from './app/ai/VoiceMessagesTab';
+import type { TaskView as DashboardTask } from './app/dashboard/DashboardTab';
+import { DashboardTab } from './app/dashboard/DashboardTab';
 import { ProgressTab } from './app/progress/ProgressTab';
 import { IrregularVerbsScreen } from './app/verbs/IrregularVerbsScreen';
-import { useDashboardData } from '@/hooks/useDashboardData';
-import { useAISession } from '@/hooks/useAISession';
+import { VocabularyTab } from './app/vocabulary/VocabularyTab';
 
 type VocabularyCardRaw = {
   id: string;
@@ -108,7 +108,6 @@ export default function EnglishLearningApp() {
   const targetLevel = dashboard?.user?.target_level ?? 'B2';
   
   // Подписка на стрик через useSubscription для автоматического обновления
-  const hasyx = useHasyx();
   const { data: streakData } = useSubscription({
     table: 'streaks',
     where: userId ? { user_id: { _eq: userId } } : undefined,

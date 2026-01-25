@@ -283,8 +283,8 @@ export class ProgressInsightsService {
     const progress = await this.hasyx.select({
       table: 'shu_ha_ri_progress',
       where: { user_id: { _eq: userId } },
-      returning: ['stage', 'started_at', 'last_test_date', 'test_scores'],
-      order_by: [{ started_at: 'desc' }],
+      returning: ['stage', 'shu_started_at', 'ha_started_at', 'ri_achieved_at', 'updated_at', 'shu_accuracy', 'shu_mastery_count', 'ha_understanding_score', 'ha_creative_applications'],
+      order_by: [{ updated_at: 'desc' }],
       limit: 1
     });
 
@@ -299,8 +299,19 @@ export class ProgressInsightsService {
 
     const currentProgress = progress[0];
     const currentStage = currentProgress.stage || 'shu';
-    const stageStart = new Date(currentProgress.started_at);
-    const stageDuration = Math.floor((Date.now() - stageStart.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Определяем дату начала текущей стадии
+    let stageStartDate: Date;
+    if (currentStage === 'shu' && currentProgress.shu_started_at) {
+      stageStartDate = new Date(currentProgress.shu_started_at);
+    } else if (currentStage === 'ha' && currentProgress.ha_started_at) {
+      stageStartDate = new Date(currentProgress.ha_started_at);
+    } else if (currentStage === 'ri' && currentProgress.ri_achieved_at) {
+      stageStartDate = new Date(currentProgress.ri_achieved_at);
+    } else {
+      stageStartDate = new Date(currentProgress.updated_at || Date.now());
+    }
+    const stageDuration = Math.floor((Date.now() - stageStartDate.getTime()) / (1000 * 60 * 60 * 24));
 
     // Расчет прогресса к следующей стадии
     const progressToNext = this.calculateProgressToNextStage(currentProgress);
@@ -466,8 +477,8 @@ export class ProgressInsightsService {
     const progress = await this.hasyx.select({
       table: 'shu_ha_ri_progress',
       where: { user_id: { _eq: userId } },
-      returning: ['stage', 'test_scores'],
-      order_by: [{ started_at: 'desc' }],
+      returning: ['stage', 'updated_at', 'shu_accuracy', 'shu_mastery_count', 'ha_understanding_score', 'ha_creative_applications'],
+      order_by: [{ updated_at: 'desc' }],
       limit: 1
     });
 
@@ -569,11 +580,33 @@ export class ProgressInsightsService {
   }
 
   private calculateProgressToNextStage(progress: any): number {
-    const scores = progress.test_scores || [];
-    if (scores.length === 0) return 0;
-
-    const avgScore = scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length;
-    return Math.min(100, Math.max(0, avgScore));
+    const stage = progress.stage || 'shu';
+    
+    // Расчёт прогресса на основе метрик для каждой стадии
+    if (stage === 'shu') {
+      const accuracy = progress.shu_accuracy ?? 0;
+      const masteryCount = progress.shu_mastery_count ?? 0;
+      // Прогресс к Ha: нужна точность >= 80% и минимум 10 освоенных элементов
+      const accuracyProgress = Math.min(100, (accuracy / 0.8) * 50);
+      const masteryProgress = Math.min(50, (masteryCount / 10) * 50);
+      return Math.min(100, accuracyProgress + masteryProgress);
+    }
+    
+    if (stage === 'ha') {
+      const understanding = progress.ha_understanding_score ?? 0;
+      const creative = progress.ha_creative_applications ?? 0;
+      // Прогресс к Ri: понимание >= 85% и креативное применение >= 5
+      const understandingProgress = Math.min(50, (understanding / 0.85) * 50);
+      const creativeProgress = Math.min(50, (creative / 5) * 50);
+      return Math.min(100, understandingProgress + creativeProgress);
+    }
+    
+    if (stage === 'ri') {
+      // На стадии Ri прогресс уже 100%
+      return 100;
+    }
+    
+    return 0;
   }
 
   private async getNextShuHaRiTestDate(userId: string): Promise<string | undefined> {
