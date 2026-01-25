@@ -211,10 +211,12 @@ export class DailyPlanService {
       ? await getWeeklyStructureForStage(this.hasyx, stageId, dayOfWeek)
       : [];
 
+    console.log(`[DailyPlanService] Initial weeklyStructure for day ${dayOfWeek}:`, weeklyStructure.length, 'items');
+
     // Если нет структуры для текущего дня, пробуем получить любую структуру для этапа
     if (stageId && weeklyStructure.length === 0) {
       weeklyStructure = await getWeeklyStructureForStage(this.hasyx, stageId);
-      console.log(`[DailyPlanService] No structure for day ${dayOfWeek}, using any structure for stage ${stageId}`);
+      console.log(`[DailyPlanService] No structure for day ${dayOfWeek}, using any structure for stage ${stageId}:`, weeklyStructure.length, 'items');
     }
 
     // Если все еще нет структуры, создаем базовые задания
@@ -228,6 +230,7 @@ export class DailyPlanService {
         regenerate: options.regenerate ?? false,
       });
     } else if (weeklyStructure.length > 0) {
+      console.log(`[DailyPlanService] Using weeklyStructure:`, weeklyStructure.map((s: any) => ({ type: s.activity_type, day: s.day_of_week })));
       if (activeStageProgress?.id) {
         const tasksTotal = Math.max(activeStageProgress.tasks_total ?? 0, weeklyStructure.length);
         if (tasksTotal !== activeStageProgress.tasks_total) {
@@ -565,6 +568,8 @@ export class DailyPlanService {
     weeklyStructure: WeeklyStructureRecord[];
     regenerate: boolean;
   }) {
+    console.log(`[ensureTasksFromStructure] Creating tasks from ${params.weeklyStructure.length} structure items`);
+    
     const titleFallback = (activityType: string) => {
       switch (activityType) {
         case 'grammar':
