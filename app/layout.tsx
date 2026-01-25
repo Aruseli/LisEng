@@ -72,7 +72,7 @@ export default function RootLayout({
       <html lang={defaultLocale} suppressHydrationWarning>
         <head />
         <body>
-          <AppClientLayout defaultLocale={defaultLocale} schema={schema} defaultTheme={'system'} pwa={false}>
+          <AppClientLayout defaultLocale={defaultLocale} schema={schema} defaultTheme={'system'}>
             <div id="modal-root"></div>
             <ModalContainer />
             {children}
