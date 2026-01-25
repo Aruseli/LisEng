@@ -184,16 +184,18 @@ export class LessonCompletionService {
     await completeTask(this.hasyx, options.taskId);
 
     // Обновляем метрики прогресса, стрик и прогресс этапа
-    const today = new Date().toISOString().split('T')[0];
+    // Используем task_date из задания, а не серверное UTC время,
+    // чтобы избежать проблем с таймзонами (пользователь в UTC+3, сервер в UTC)
+    const taskDate = task.task_date ?? new Date().toISOString().split('T')[0];
     
     // Обновляем метрики прогресса
-    await updateProgressMetrics(this.hasyx, options.userId, today, {
+    await updateProgressMetrics(this.hasyx, options.userId, taskDate, {
       tasksCompleted: 1,
       studyMinutes: task.duration_minutes || 0,
     });
 
     // Обновляем стрик (только если все задания дня выполнены)
-    await updateStreak(this.hasyx, options.userId, today);
+    await updateStreak(this.hasyx, options.userId, taskDate);
 
     // Обновляем прогресс этапа
     if (task.stage_id) {
