@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import {
   HeadContent,
   Scripts,
@@ -64,6 +65,18 @@ function HasuraAuthBridge() {
   return null
 }
 
+/** Регистрация service worker (только прод) */
+function ServiceWorkerRegistration() {
+  useEffect(() => {
+    if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.warn('SW registration failed:', err)
+      })
+    }
+  }, [])
+  return null
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" suppressHydrationWarning>
@@ -72,6 +85,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <HasuraAuthBridge />
+        <ServiceWorkerRegistration />
         <div id="modal-root"></div>
         <ModalContainer />
         {children}

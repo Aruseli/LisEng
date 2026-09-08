@@ -4,6 +4,8 @@
  * public.accounts сохраняется по решению пользователя.
  */
 
+export {}
+
 const endpoint = process.env.HASURA_GRAPHQL_URL!.replace(/\/v1\/graphql$/, '')
 const secret = process.env.HASURA_ADMIN_SECRET!
 

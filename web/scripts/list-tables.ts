@@ -3,6 +3,8 @@
  * Только чтение. Запуск: npx tsx --env-file=.env scripts/list-tables.ts
  */
 
+export {}
+
 const endpoint = process.env.HASURA_GRAPHQL_URL!.replace(/\/v1\/graphql$/, '')
 const secret = process.env.HASURA_ADMIN_SECRET!
 
