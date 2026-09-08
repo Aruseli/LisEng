@@ -36,7 +36,15 @@ export const auth = betterAuth({
       create: {
         after: async (user) => {
           try {
-            await getAdminClient().insert({
+            const db = getAdminClient()
+            // Устаревший профиль с тем же email, но другим id (например, от прежней
+            // NextAuth-регистрации) удаляем — иначе упрёмся в users_email_key.
+            await db.delete({
+              table: 'users',
+              where: { email: { _eq: user.email }, id: { _neq: user.id } },
+              returning: ['id'],
+            })
+            await db.insert({
               table: 'users',
               object: {
                 id: user.id,
