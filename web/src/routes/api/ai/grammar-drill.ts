@@ -13,7 +13,7 @@ export const Route = createFileRoute('/api/ai/grammar-drill')({
             Topic: ${topic}
             Level: ${level}
             Return a JSON object with an "exercises" array.
-        `)
+        `, { task: 'lesson' })
           return Response.json({ exercises })
         } catch (error) {
           console.error('Error in grammar-drill API:', error)

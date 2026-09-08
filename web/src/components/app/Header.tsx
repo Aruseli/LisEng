@@ -1,5 +1,6 @@
 
 import { signOut } from "@/lib/auth-client";
+import { useNavigate } from "@tanstack/react-router";
 import { IconButton } from "./Buttons/IconButton";
 import { SignOut } from "../icons/SignOut";
 import { Notifications } from "../icons/Notifications";
@@ -17,6 +18,7 @@ interface HeaderProps {
 
 export const Header = ({ userName, streak }: HeaderProps) => {
   const { togglePopover, closePopover } = usePopoverStore();
+  const navigate = useNavigate();
   const handleLogout = () => {
     signOut({
       fetchOptions: {
@@ -29,12 +31,12 @@ export const Header = ({ userName, streak }: HeaderProps) => {
 
   const handleSettingsClick = () => {
     closePopover('header-menu');
-    // TODO: Добавить обработчик настроек
+    navigate({ to: '/settings' });
   };
 
   const handleNotificationsClick = () => {
     closePopover('header-menu');
-    // TODO: Добавить обработчик уведомлений
+    navigate({ to: '/settings' });
   };
 
   const handleLogoutClick = () => {
@@ -55,10 +57,10 @@ export const Header = ({ userName, streak }: HeaderProps) => {
           {/* Десктопная версия - показываем на sm и выше */}
           <div className="hidden sm:flex items-center space-x-2">
             <Tooltip message="Настройки уведомлений">
-              <IconButton icon={<Settings className="size-10" />} ariaLabel="Настройки уведомлений" onClick={() => {}} variant="ghost" />
+              <IconButton icon={<Settings className="size-10" />} ariaLabel="Настройки уведомлений" onClick={() => navigate({ to: '/settings' })} variant="ghost" />
             </Tooltip>
             <Tooltip message="Уведомления">
-              <IconButton icon={<Notifications className="size-10" />} ariaLabel="Уведомления" onClick={() => {}} variant="ghost" />
+              <IconButton icon={<Notifications className="size-10" />} ariaLabel="Уведомления" onClick={() => navigate({ to: '/settings' })} variant="ghost" />
             </Tooltip>
             <div className="rounded-2xl bg-emerald-50 px-4 py-2 text-center">
               <p className="text-xs uppercase tracking-wide text-primary">Стрик</p>

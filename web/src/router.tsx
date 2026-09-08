@@ -13,6 +13,9 @@ export function getRouter() {
     scrollRestoration: true,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
+    defaultNotFoundComponent: () => (
+      <p className="p-8 text-center text-gray-600">Страница не найдена</p>
+    ),
   })
 
   setupRouterSsrQueryIntegration({ router, queryClient: context.queryClient })

@@ -1,4 +1,6 @@
 
+import { useAppData } from '@/lib/app-data';
+
 import { SwipeCard, type Flashcard } from './SwipeCard';
 
 interface VocabularyCardView {
@@ -21,7 +23,7 @@ export function VocabularyTab({
   cards,
   dueToday,
 }: VocabularyTabProps) {
-  // Преобразуем формат карточек для SwipeCard
+  const { refreshVocabulary } = useAppData();
   const flashcardFormat: Flashcard[] = cards.map((card) => ({
     id: card.id,
     word: card.word,
@@ -48,7 +50,11 @@ export function VocabularyTab({
           На сегодня нет карточек к повторению. Повтори свежие слова или изучи новые.
         </p>
       ) : (
-        <SwipeCard cards={flashcardFormat} title="Слова для повторения" />
+        <SwipeCard
+          cards={flashcardFormat}
+          title="Слова для повторения"
+          onCardUpdated={() => void refreshVocabulary()}
+        />
       )}
     </div>
   );

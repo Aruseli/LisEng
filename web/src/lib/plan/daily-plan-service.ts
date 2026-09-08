@@ -10,6 +10,7 @@ import {
   getUserProfile,
   getUserInstructionLanguage,
   getVocabularyCardsForReview,
+  hasAnyVocabularyCards,
   getWeeklyStructureForStage,
   updateDailyTaskMetadata,
   updateStageProgressStats,
@@ -219,6 +220,8 @@ export class DailyPlanService {
       console.log(`[DailyPlanService] No structure for day ${dayOfWeek}, using any structure for stage ${stageId}:`, weeklyStructure.length, 'items');
     }
 
+    const hasVocabBase = await hasAnyVocabularyCards(this.hasyx, userId)
+
     // Если все еще нет структуры, создаем базовые задания
     if (weeklyStructure.length === 0 && stageId) {
       console.log(`[DailyPlanService] No weekly structure found, creating default tasks for stage ${stageId}`);
@@ -228,6 +231,7 @@ export class DailyPlanService {
         targetDate,
         userLevel: user?.current_level || 'A2',
         regenerate: options.regenerate ?? false,
+        skipVocabularyReview: !hasVocabBase,
       });
     } else if (weeklyStructure.length > 0) {
       console.log(`[DailyPlanService] Using weeklyStructure:`, weeklyStructure.map((s: any) => ({ type: s.activity_type, day: s.day_of_week })));
@@ -247,23 +251,13 @@ export class DailyPlanService {
         targetDate,
         weeklyStructure,
         regenerate: options.regenerate ?? false,
+        skipVocabularyReview: !hasVocabBase,
       });
     }
 
     let dailyTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
     const snapshotInsights = await snapshotInsightsPromise;
     let vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
-
-    if ((Array.isArray(vocabularyDue) ? vocabularyDue.length : 0) === 0) {
-      const generatedCards = await this.vocabularyGenerationService.generateCardsForUser({
-        userId,
-        level: user?.current_level || 'A2',
-        snapshotInsights,
-      });
-      if ((generatedCards?.length ?? 0) > 0) {
-        vocabularyDue = await getVocabularyCardsForReview(this.hasyx, userId, targetDate);
-      }
-    }
     // Адаптируем новый SnapshotInsights к старому формату для MethodologyAdvisor
     const adaptedInsights = snapshotInsights ? this.adaptSnapshotInsights(snapshotInsights) : null;
     const methodologyAdvisor = adaptedInsights ? new MethodologyAdvisor(adaptedInsights) : null;
@@ -281,6 +275,7 @@ export class DailyPlanService {
         insights: snapshotInsights,
         regenerate: options.regenerate ?? false,
         existingTasks: Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [],
+        skipVocabularyReview: !hasVocabBase,
       });
 
       if (augmented) {
@@ -567,6 +562,7 @@ export class DailyPlanService {
     targetDate: string;
     weeklyStructure: WeeklyStructureRecord[];
     regenerate: boolean;
+    skipVocabularyReview?: boolean;
   }) {
     console.log(`[ensureTasksFromStructure] Creating tasks from ${params.weeklyStructure.length} structure items`);
     
@@ -597,6 +593,9 @@ export class DailyPlanService {
 
     await Promise.all(
       (params.weeklyStructure as WeeklyStructureRecord[]).map((slot) => {
+        if (params.skipVocabularyReview && slot.activity_type === 'vocabulary') {
+          return Promise.resolve();
+        }
         // Проверяем, не создаем ли мы дубликат урока с произношением
         const isPronunciationTask =
           slot.activity_type === 'speaking' ||
@@ -961,7 +960,7 @@ ${instructionLanguage === 'ru'
 
       const prompt = optimizedPrompt;
 
-      const response = await generateJSON<DailyPlanAiSummary>(prompt, { systemPrompt });
+      const response = await generateJSON<DailyPlanAiSummary>(prompt, { task: 'vocab', systemPrompt });
 
       // Добавляем вариативность к заданиям
       let aiTasks = response.aiTasks ?? [];
@@ -1198,6 +1197,7 @@ ${instructionLanguage === 'ru'
     targetDate: string;
     userLevel: string;
     regenerate: boolean;
+    skipVocabularyReview?: boolean;
   }) {
     // Получаем существующие задачи для проверки дубликатов
     const existingTasks = await getDailyTasks(this.hasyx, params.userId, params.targetDate);
@@ -1229,6 +1229,9 @@ ${instructionLanguage === 'ru'
 
     // Фильтруем задачи, чтобы не создавать дубликаты уроков с произношением
     const filteredTasks = defaultTasks.filter((task) => {
+      if (params.skipVocabularyReview && task.type === 'vocabulary') {
+        return false;
+      }
       const isPronunciationTask = task.type === 'speaking' ||
         (task.type === 'ai_practice' && (task.title.toLowerCase().includes('голос') || task.description.toLowerCase().includes('голос'))) ||
         (task.type === 'vocabulary' && (task as any).requiresPronunciation);
@@ -1268,6 +1271,7 @@ ${instructionLanguage === 'ru'
     insights: SnapshotInsights;
     existingTasks: DailyTaskRecord[];
     regenerate: boolean;
+    skipVocabularyReview?: boolean;
   }): Promise<boolean> {
     const existingInsightRefs = new Set<string>();
     for (const task of params.existingTasks) {
@@ -1291,6 +1295,9 @@ ${instructionLanguage === 'ru'
 
     // Фильтруем дескрипторы, чтобы не создавать дубликаты уроков с произношением
     const filteredDescriptors = descriptors.filter((descriptor) => {
+      if (params.skipVocabularyReview && (descriptor.insightType === 'sm2_due' || descriptor.type === 'vocabulary')) {
+        return false;
+      }
       // Проверяем, является ли этот дескриптор уроком с произношением
       const isPronunciationTask =
         descriptor.type === 'speaking' ||

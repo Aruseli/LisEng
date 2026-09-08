@@ -8,6 +8,7 @@
 - "!include public_lesson_snapshots.yaml"
 - "!include public_lesson_vocabulary_extractions.yaml"
 - "!include public_progress_metrics.yaml"
+- "!include public_push_subscriptions.yaml"
 - "!include public_review_history.yaml"
 - "!include public_shu_ha_ri_progress.yaml"
 - "!include public_shu_ha_ri_tests.yaml"

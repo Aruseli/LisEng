@@ -1,6 +1,6 @@
-import { groq } from '@ai-sdk/groq'
 import { createFileRoute } from '@tanstack/react-router'
-import { experimental_transcribe as transcribe } from 'ai'
+
+import { transcribeAudio } from '#/lib/ai/speech'
 
 export const Route = createFileRoute('/api/listening/transcribe')({
   server: {
@@ -30,31 +30,9 @@ export const Route = createFileRoute('/api/listening/transcribe')({
             )
           }
 
-          // Используем AI SDK согласно документации:
-          // https://ai-sdk.dev/providers/ai-sdk-providers/groq#transcription-models
           const arrayBuffer = await audioFile.arrayBuffer()
-          const result = await transcribe({
-            // @ts-ignore - groq.transcription returns V2 but experimental_transcribe expects V1, runtime works correctly
-            model: groq.transcription('whisper-large-v3'),
-            audio: new Uint8Array(arrayBuffer),
-            providerOptions: {
-              groq: {
-                language: 'en',
-                // Groq API не поддерживает timestamp_granularities (этот параметр используется в OpenAI Whisper API),
-                // поэтому не передаём его, чтобы избежать ошибки "unknown param `timestamp_granularities`".
-                temperature: 0,
-              },
-            },
-          })
-
-          return Response.json({
-            text: result.text,
-            segments: result.segments,
-            language: result.language,
-            duration: result.durationInSeconds,
-            warnings: result.warnings,
-            confidence: result.warnings.length === 0 ? 0.96 : 0.88,
-          })
+          const result = await transcribeAudio(new Uint8Array(arrayBuffer))
+          return Response.json(result)
         } catch (error: any) {
           console.error('[listening/transcribe] Error:', error)
           return Response.json(

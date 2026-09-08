@@ -55,6 +55,30 @@ interface GenerateLessonOptions {
   task: TaskRow;
 }
 
+const PLACEHOLDER_MARKERS = [
+  'example sentence demonstrating',
+  'изучи материал внимательно',
+  'новая грамматическая структура',
+  'пример правильного ответа',
+  'изучи грамматическое правило, которое описывает эту структуру',
+  'контент временно недоступен',
+  'контент для урока',
+];
+
+function isGenericGrammarTitle(topic: string): boolean {
+  const t = (topic || '').trim().toLowerCase();
+  return !t || t.length < 3 || t.includes('новая грамматическая структура') || t.includes('микро-урок');
+}
+
+function looksLikeTemplateText(value: string): boolean {
+  const blob = value.toLowerCase();
+  return PLACEHOLDER_MARKERS.some((marker) => blob.includes(marker));
+}
+
+function isPlaceholderLesson(lesson: LessonMaterials): boolean {
+  return looksLikeTemplateText(JSON.stringify(lesson));
+}
+
 export class LessonContentService {
   constructor(private readonly hasyx: Hasyx) {}
 
@@ -74,6 +98,10 @@ export class LessonContentService {
       targetLevel,
       userId: options.userId,
     });
+
+    if (isPlaceholderLesson(lesson)) {
+      throw new Error('Не удалось собрать урок');
+    }
 
     const mergedPayload = {
       ...(options.task.type_specific_payload ?? {}),
@@ -117,9 +145,8 @@ export class LessonContentService {
       .replace(/\s+/g, ' ')
       .trim();
 
-    // Если тема пустая, используем весь заголовок
-    if (!topic || topic.length < 3) {
-      topic = title;
+    if (!topic || topic.length < 3 || isGenericGrammarTitle(topic)) {
+      topic = '';
     }
 
     return { topic, level, wordCount };
@@ -130,11 +157,14 @@ export class LessonContentService {
     if (!raw || typeof raw !== 'object') {
       return null;
     }
-    const lesson = raw.lesson_materials;
-    if (!lesson) {
+    const lesson = raw.lesson_materials as LessonMaterials | undefined;
+    if (!lesson || typeof lesson !== 'object') {
       return null;
     }
-    return lesson as LessonMaterials;
+    if (isPlaceholderLesson(lesson)) {
+      return null;
+    }
+    return lesson;
   }
 
   private async generateLessonFromAI(params: {
@@ -235,8 +265,7 @@ export class LessonContentService {
         }
 
         if (attempt === maxAttempts - 1) {
-          // Последняя попытка - используем fallback с улучшенным контентом
-          return this.buildEnhancedFallbackLesson(params, lastValidLesson);
+          throw new Error('Не удалось собрать урок: ответ модели не прошёл проверку');
         }
       } catch (error) {
         console.warn(
@@ -244,15 +273,17 @@ export class LessonContentService {
           error
         );
         if (attempt === maxAttempts - 1) {
-          return this.buildEnhancedFallbackLesson(params, lastValidLesson ?? undefined);
+          throw error instanceof Error
+            ? error
+            : new Error('Не удалось собрать урок');
         }
       }
 
       attempt++;
     }
 
-    // Fallback на случай, если все попытки провалились
-    return this.buildEnhancedFallbackLesson(params, lastValidLesson ?? undefined);
+    void lastValidLesson;
+    throw new Error('Не удалось собрать урок');
   }
 
   /**
@@ -308,6 +339,7 @@ Return ONLY the text, nothing else.`;
       const simpleResponse = await generateJSON<string>(
         `${prompt}\n\nReturn the text/dialogue directly as a string.`,
         {
+          task: 'lesson',
           maxTokens: 2000,
           systemPrompt: isDialogue
             ? 'You create dialogues for English lessons. Always create real, natural dialogues with character lines. Return only the dialogue text.'
@@ -327,6 +359,7 @@ Return ONLY the text, nothing else.`;
       const jsonResponse = await generateJSON<{ text: string }>(
         `${prompt}\n\nReturn in JSON format: {"text": "your text or dialogue here"}`,
         {
+          task: 'lesson',
           maxTokens: 2000,
           systemPrompt: isDialogue
             ? 'You create dialogues for English lessons. Always create real, natural dialogues with character lines.'
@@ -388,6 +421,9 @@ Return ONLY the text, nothing else.`;
     const errors: string[] = [];
 
     if (taskType === 'grammar') {
+      if (!lesson.overview?.trim()) {
+        errors.push('Grammar lesson must have a concrete topic in overview');
+      }
       if (lesson.examples.length === 0) {
         errors.push('Grammar lesson must have at least 3 examples');
       }
@@ -396,6 +432,18 @@ Return ONLY the text, nothing else.`;
       }
       if (lesson.exercise.questions.length === 0) {
         errors.push('Grammar lesson must have at least 2 practice questions');
+      }
+      if (isPlaceholderLesson(lesson) || looksLikeTemplateText(lesson.overview)) {
+        errors.push('Grammar lesson must not use a template or task-title placeholder');
+      }
+      const hasTemplateAnswer = lesson.exercise.questions.some((q) =>
+        looksLikeTemplateText(`${q.prompt} ${q.expectedAnswer}`),
+      );
+      const hasTemplateExample = lesson.examples.some((ex) =>
+        looksLikeTemplateText(`${ex.prompt} ${ex.explanation}`),
+      );
+      if (hasTemplateAnswer || hasTemplateExample) {
+        errors.push('Grammar lesson must not contain template prompts or answers');
       }
     }
 
@@ -485,8 +533,12 @@ Return ONLY the text, nothing else.`;
 Включи блок "readingPassages" с полным текстом. Также создай минимум 3-5 вопросов на понимание в exercise.questions.`;
         case 'vocabulary':
           return 'ВАЖНО: Для уроков vocabulary (Active Recall) НЕ создавай questions в exercise. Вместо этого создай только overview и explanation о методе Active Recall. Карточки будут загружены автоматически из базы данных. Exercise должен содержать только title и steps с инструкциями по работе с карточками.';
-        case 'grammar':
-          return `КРИТИЧНО ВАЖНО: Тема грамматики: "${parsedTitle.topic}". Уровень: ${effectiveLevel}. Создай ПОДРОБНОЕ грамматическое правило с объяснением КАК ИСПОЛЬЗОВАТЬ эту структуру. Объяснение должно включать минимум 5-7 пунктов, каждый пункт - полное предложение или абзац. Используй жизненные примеры из повседневной жизни подростка: школа, друзья, хобби, игры, литература, соцсети, музыка. Объясняй не только правило, но и КОГДА и ПОЧЕМУ его используют. Добавляй контекст использования и типичные ошибки. Создай минимум 3-5 КОНКРЕТНЫХ примеров предложений в examples (каждый пример должен демонстрировать правило). Создай минимум 3 практических задания в exercise.questions.`;
+        case 'grammar': {
+          const topicLine = isGenericGrammarTitle(parsedTitle.topic)
+            ? `Заголовок задачи — заглушка. НЕ цитируй его. Сам выбери одну конкретную грамматическую структуру уровня ${effectiveLevel} (например Present Simple vs Present Continuous, comparatives, countable/uncountable, Past Simple irregular, going to vs will). Назови выбранную тему в overview.`
+            : `Тема грамматики: "${parsedTitle.topic}".`;
+          return `КРИТИЧНО ВАЖНО: ${topicLine} Уровень: ${effectiveLevel}. Создай ПОДРОБНОЕ грамматическое правило с объяснением КАК ИСПОЛЬЗОВАТЬ эту структуру. Объяснение должно включать минимум 5-7 пунктов, каждый пункт - полное предложение или абзац. Используй жизненные примеры из повседневной жизни подростка: школа, друзья, хобби, игры, литература, соцсети, музыка. Объясняй не только правило, но и КОГДА и ПОЧЕМУ его используют. Добавляй контекст использования и типичные ошибки. Создай минимум 3-5 КОНКРЕТНЫХ примеров предложений в examples (каждый пример должен демонстрировать правило). Создай минимум 3 практических задания в exercise.questions. В expectedAnswer — живой английский ответ, не фразу «Пример правильного ответа».`;
+        }
         default:
           return '';
       }
@@ -508,7 +560,7 @@ Return ONLY the text, nothing else.`;
     const basePrompt = [
       `Ты — наставник японских методик (Кайдзен, Кумон, Shu-Ha-Ri, Active Recall).`,
       `Создай учебный мини-урок для подростка, который учит английский.`,
-      `Тип задания: ${task.type}. Заголовок: ${task.title}.`,
+      `Тип задания: ${task.type}.${isGenericGrammarTitle(parsedTitle.topic) ? ' Заголовок задачи не цитируй — это служебная заглушка.' : ` Заголовок: ${task.title}.`}`,
       languageNote,
       task.description ? `Описание задания: ${task.description}` : '',
       `Текущий уровень ученика: ${currentLevel}. Цель: ${targetLevel}.`,
@@ -519,7 +571,7 @@ Return ONLY the text, nothing else.`;
       task.type === 'grammar'
         ? `{
   "lesson": {
-    "overview": "Короткое описание грамматической темы '${parsedTitle.topic}' (1-2 предложения)",
+    "overview": "Название конкретной грамматической структуры и 1-2 предложения, зачем она нужна. Не цитируй служебный заголовок задачи.",
     "explanation": [
       "ПЕРВЫЙ ПУНКТ: Что это за грамматическая структура и как она формируется (полное предложение с примером)",
       "ВТОРОЙ ПУНКТ: Когда и в каких ситуациях используется эта структура (конкретные примеры из жизни подростка)",
@@ -683,7 +735,8 @@ Return ONLY the text, nothing else.`;
     })();
 
     return await generateJSON<any>(basePrompt, {
-      maxTokens: 3000, // Увеличиваем лимит для более подробных уроков
+      task: 'lesson',
+      maxTokens: 3000,
       systemPrompt,
     });
   }
@@ -720,60 +773,23 @@ Return ONLY the text, nothing else.`;
       .filter((item) => Boolean(item) && item.length > 0)
       .slice(0, 8);
 
-    // Если explanation пустой, используем fallback
-    // Для грамматических уроков особенно важно иметь объяснение
-    let finalExplanation = cleanExplanation;
-    if (finalExplanation.length === 0) {
-      console.warn('[LessonContentService] Empty explanation, using fallback for task type:', params.task.type);
-      // Для грамматических уроков создаем подробное объяснение
-      if (params.task.type === 'grammar') {
-        finalExplanation = [
-          'Изучи грамматическое правило, которое описывает эту структуру.',
-          'Обрати внимание на форму и порядок слов в предложении.',
-          'Посмотри на примеры использования этой структуры в разных контекстах.',
-          'Попробуй понять, когда и почему используется именно такая форма.',
-          'Составь собственные примеры, используя изученную структуру.',
-          'Проверь правильность использования структуры в своих предложениях.',
-        ];
-      } else {
-        // Для других типов уроков используем базовый fallback
-        const fallbackLesson = this.buildEnhancedFallbackLesson(params);
-        finalExplanation = fallbackLesson.explanation;
-      }
-    }
-    
-    // Дополнительная проверка: если после всех проверок explanation все еще пустой, принудительно добавляем fallback
-    if (finalExplanation.length === 0) {
-      console.error('[LessonContentService] Explanation still empty after fallback, forcing default');
-      finalExplanation = params.task.type === 'grammar' 
-        ? [
-            'Изучи грамматическое правило, которое описывает эту структуру.',
-            'Обрати внимание на форму и порядок слов в предложении.',
-            'Посмотри на примеры использования этой структуры в разных контекстах.',
-            'Попробуй понять, когда и почему используется именно такая форма.',
-            'Составь собственные примеры, используя изученную структуру.',
-            'Проверь правильность использования структуры в своих предложениях.',
-          ]
-        : ['Прочитай правило или описание темы.', 'Обрати внимание на примеры.', 'Попробуй составить собственные предложения.'];
-    }
+    const finalExplanation = cleanExplanation;
 
     return {
-      overview: lesson.overview || `Разберём тему: ${params.task.title}`,
+      overview: lesson.overview || '',
       explanation: finalExplanation,
-      keyPoints: (() => {
-        const keyPoints = safeArray<string>(lesson.keyPoints);
-        if (keyPoints.length === 0) {
-          const fallbackLesson = this.buildEnhancedFallbackLesson(params);
-          return fallbackLesson.keyPoints;
-        }
-        return keyPoints;
-      })().slice(0, 8),
+      keyPoints: safeArray<string>(lesson.keyPoints).slice(0, 8),
       examples: safeArray(lesson.examples)
         .map((item: any) => ({
           prompt: item?.prompt ?? '',
           explanation: item?.explanation ?? '',
         }))
-        .filter((item) => item.prompt && item.explanation)
+        .filter(
+          (item) =>
+            item.prompt &&
+            item.explanation &&
+            !looksLikeTemplateText(`${item.prompt} ${item.explanation}`),
+        )
         .slice(0, 5),
       readingPassages: ensuredReadingPassages,
       pronunciationScript:
@@ -793,7 +809,12 @@ Return ONLY the text, nothing else.`;
             hint: question?.hint ?? null,
             evaluationCriteria: safeArray<string>(question?.evaluationCriteria).slice(0, 5),
           }))
-          .filter((question) => question.prompt && question.expectedAnswer)
+          .filter(
+            (question) =>
+              question.prompt &&
+              question.expectedAnswer &&
+              !looksLikeTemplateText(`${question.prompt} ${question.expectedAnswer}`),
+          )
           .slice(0, 8),
       },
       meta: {

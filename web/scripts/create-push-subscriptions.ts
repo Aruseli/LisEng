@@ -1,0 +1,27 @@
+/**
+ * Создаёт таблицу push_subscriptions.
+ * npx tsx --env-file=.env scripts/create-push-subscriptions.ts
+ */
+export {}
+
+import { runSql } from '../src/lib/hasura/run-sql'
+
+async function main() {
+  await runSql(`
+    CREATE TABLE IF NOT EXISTS public.push_subscriptions (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+      endpoint text NOT NULL UNIQUE,
+      p256dh text NOT NULL,
+      auth text NOT NULL,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      updated_at timestamptz NOT NULL DEFAULT now()
+    );
+  `)
+  console.log('таблица push_subscriptions готова')
+}
+
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

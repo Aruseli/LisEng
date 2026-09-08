@@ -1,73 +1,68 @@
+import { useNavigate, useRouterState } from '@tanstack/react-router'
 
-import { IconButton } from "./Buttons/IconButton";
-import { Tooltip } from "./Tooltip";
-import { Button } from "./Buttons/Button";
-import { Dictionary } from "../icons/Dictionary";
-import { Calendar } from "../icons/Calendar";
-import { AIPractice } from "../icons/AIPractice";
-import { Verbs } from "../icons/Verbs";
-import { LevelTest } from "../icons/LevelTest";
-import { Progress } from "../icons/Progress";
+import { IconButton } from './Buttons/IconButton'
+import { Tooltip } from './Tooltip'
+import { Button } from './Buttons/Button'
+import { Dictionary } from '../icons/Dictionary'
+import { Calendar } from '../icons/Calendar'
+import { AIPractice } from '../icons/AIPractice'
+import { Verbs } from '../icons/Verbs'
+import { LevelTest } from '../icons/LevelTest'
+import { Progress } from '../icons/Progress'
 
 const tabs = [
-  { id: 'dashboard', label: 'План на день', icon: Calendar },
-  { id: 'vocabulary', label: 'Словарь', icon: Dictionary },
-  { id: 'verbs', label: 'Неправильные глаголы', icon: Verbs },
-  { id: 'ai', label: 'AI практика', icon: AIPractice },
-  { id: 'progress', label: 'Прогресс', icon: Progress },
-  { id: 'level-test', label: 'Тест уровня', icon: LevelTest },
-] as const;
+  { id: 'dashboard', label: 'План на день', icon: Calendar, to: '/' as const },
+  { id: 'vocabulary', label: 'Словарь', icon: Dictionary, to: '/vocabulary' as const },
+  { id: 'verbs', label: 'Неправильные глаголы', icon: Verbs, to: '/verbs' as const },
+  { id: 'ai', label: 'AI практика', icon: AIPractice, to: '/ai' as const },
+  { id: 'progress', label: 'Прогресс', icon: Progress, to: '/progress' as const },
+  { id: 'level-test', label: 'Тест уровня', icon: LevelTest, to: '/level-test' as const },
+]
 
-interface NavigationProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  onRefresh: () => void;
-  onLevelTest?: () => void;
-  isLoading?: boolean;
+function activeIdFromPath(pathname: string) {
+  if (pathname.startsWith('/vocabulary')) return 'vocabulary'
+  if (pathname.startsWith('/verbs')) return 'verbs'
+  if (pathname.startsWith('/ai')) return 'ai'
+  if (pathname.startsWith('/progress')) return 'progress'
+  if (pathname.startsWith('/level-test')) return 'level-test'
+  return 'dashboard'
 }
 
-export const Navigation = ({ activeTab, onTabChange, onRefresh, onLevelTest, isLoading }: NavigationProps) => {
-  const handleTabClick = (tabId: string) => {
-    if (tabId === 'level-test' && onLevelTest) {
-      onLevelTest();
-    } else {
-      onTabChange(tabId);
-    }
-  };
+interface NavigationProps {
+  onRefresh: () => void
+  isLoading?: boolean
+}
+
+export const Navigation = ({ onRefresh, isLoading }: NavigationProps) => {
+  const navigate = useNavigate()
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const activeTab = activeIdFromPath(pathname)
 
   return (
     <nav className="border-b border-gray-200 bg-background">
-      <div className="mx-auto flex flex-col-reverse max-w-6xl items-center justify-between px-4 py-2 sm:flex-row sm:space-y-0">
+      <div className="mx-auto flex max-w-6xl flex-col-reverse items-center justify-between px-4 py-2 sm:flex-row sm:space-y-0">
         <div className="flex space-x-2">
           {tabs.map((tab) => {
-            const IconComponent = tab.icon;
-            const isActive = activeTab === tab.id;
+            const IconComponent = tab.icon
+            const isActive = activeTab === tab.id
             return (
               <Tooltip key={tab.id} message={tab.label}>
                 <IconButton
-                  key={tab.id}
                   icon={<IconComponent className="size-10" />}
                   ariaLabel={tab.label}
-                  variant={isActive ? "outline" : "ghost"}
-                  className={isActive ? "bg-accent/10 border-accent text-accent" : ""}
-                  onClick={() => handleTabClick(tab.id)}
+                  variant={isActive ? 'outline' : 'ghost'}
+                  className={isActive ? 'border-accent bg-accent/10 text-accent' : ''}
+                  onClick={() => navigate({ to: tab.to })}
                 />
               </Tooltip>
-            );
+            )
           })}
         </div>
 
-        <Button
-          onClick={onRefresh}
-          disabled={isLoading}
-          variant="outline"
-          className="w-full sm:w-auto mb-6 sm:mb-0"
-        >
+        <Button onClick={onRefresh} disabled={isLoading} variant="outline" className="mb-6 w-full sm:mb-0 sm:w-auto">
           {isLoading ? 'Обновляем...' : 'Задачи на сегодня'}
         </Button>
       </div>
     </nav>
-  );
+  )
 }
-
-

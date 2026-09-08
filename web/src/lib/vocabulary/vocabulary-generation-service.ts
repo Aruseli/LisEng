@@ -35,6 +35,8 @@ interface RawCardSpec {
 interface StoredCard {
   id: string;
   word: string;
+  translation?: string;
+  example_sentence?: string | null;
 }
 
 export class VocabularyGenerationService {
@@ -215,35 +217,32 @@ export class VocabularyGenerationService {
     }
 
     const response = await generateJSON<{ cards: RawCardSpec[] }>(prompt, {
+      task: 'vocab',
       maxTokens: 1200,
       systemPrompt: hasContexts
         ? `Ты создаёшь карточки слов для подростка с учётом контекста: дай точный перевод, пример и краткую подсказку, учитывая значение слова в предложении. ${instructionLanguage === 'ru' ? 'Все переводы и подсказки на русском языке.' : `Все переводы и подсказки на языке: ${instructionLanguage}.`}`
         : `Ты создаёшь карточки слов для подростка: дай точный перевод, пример и краткую подсказку. ${instructionLanguage === 'ru' ? 'Все переводы и подсказки на русском языке.' : `Все переводы и подсказки на языке: ${instructionLanguage}.`}`,
-    }).catch((error) => {
-      console.warn('[VocabularyGenerationService] AI generation failed, using fallback', error);
-      return {
-        cards: words.map((word) => ({
-          word,
-          translation: word,
-          example: `Use the word "${word}" in a sentence.`,
-          hint: `Повтори слово "${word}" несколько раз.`,
-        })),
-      };
     });
 
-    return response.cards
+    const cards = (response.cards ?? [])
       .filter((card) => typeof card.word === 'string' && typeof card.translation === 'string')
       .map((card) => {
-        // Нормализуем слово сразу после получения от AI
         const normalizedWord = card.word.toLowerCase().trim();
         return {
           ...card,
-          word: normalizedWord, // Сохраняем нормализованное слово
+          word: normalizedWord,
           translation: card.translation.trim(),
           example: card.example?.trim() ?? `Use the word "${normalizedWord}" in your own sentence.`,
           hint: card.hint?.trim(),
         };
-      });
+      })
+      .filter((card) => card.translation.length > 0 && card.translation.toLowerCase() !== card.word);
+
+    if (cards.length === 0) {
+      throw new Error('Не удалось сгенерировать перевод');
+    }
+
+    return cards;
   }
 
   /**
@@ -320,7 +319,12 @@ export class VocabularyGenerationService {
           },
         });
 
-        saved.push({ id: normalizedExisting.id, word: normalizedWord });
+        saved.push({
+          id: normalizedExisting.id,
+          word: normalizedWord,
+          translation: normalizedExisting.translation || card.translation,
+          example_sentence: mergedExample,
+        });
         continue;
       }
 
@@ -384,7 +388,12 @@ export class VocabularyGenerationService {
         });
       }
 
-      saved.push({ id: cardId, word: normalizedWord });
+      saved.push({
+        id: cardId,
+        word: normalizedWord,
+        translation: card.translation.trim(),
+        example_sentence: card.example.trim(),
+      });
     }
 
     return saved;

@@ -117,6 +117,7 @@ export class LevelTestGenerator {
       const response = await generateJSON<{
         questions: GrammarQuestion[]
       }>(prompt, {
+        task: 'lesson',
         maxTokens: 2000,
         systemPrompt: 'Ты - опытный преподаватель английского языка. Создавай качественные тестовые вопросы.',
       });
@@ -193,6 +194,7 @@ export class LevelTestGenerator {
           correctAnswer: number;
         }>
       }>(prompt, {
+        task: 'lesson',
         maxTokens: 2000,
       });
 
@@ -269,6 +271,7 @@ export class LevelTestGenerator {
           correctAnswer: number;
         }>
       }>(prompt, {
+        task: 'lesson',
         maxTokens: 2500,
       });
 
@@ -341,6 +344,7 @@ export class LevelTestGenerator {
           correctAnswer: number;
         }>
       }>(prompt, {
+        task: 'lesson',
         maxTokens: 2000,
       });
 
@@ -407,7 +411,7 @@ export class LevelTestGenerator {
         prompt: string;
         wordLimit: number;
         criteria: string[];
-      }>(prompt);
+      }>(prompt, { task: 'lesson' });
 
       if (!response || !response.prompt) {
         throw new Error('Invalid response format: task prompt is missing');

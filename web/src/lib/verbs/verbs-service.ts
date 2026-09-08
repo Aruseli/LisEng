@@ -89,6 +89,7 @@ export class VerbsService {
         { group_number: 'asc' },
         { infinitive: 'asc' },
       ],
+      limit: 500,
       returning: [
         'id',
         'infinitive',

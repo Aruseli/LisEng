@@ -9,7 +9,7 @@ import type { LessonMaterials } from '@/lib/lesson/lesson-content-service';
 import { PronunciationPractice } from './PronunciationPractice';
 import { ListeningPlayer } from '@/components/app/listening/ListeningPlayer';
 import { FlashcardPractice, type Flashcard } from '@/components/app/vocabulary/FlashcardPractice';
-import { useHasyx } from '@/lib/compat/hasyx';
+import { useAppData } from '@/lib/app-data';
 import { BackArrow } from '@/components/icons/BackArrow';
 import { IconButton } from '../Buttons/IconButton';
 import { SwipeCard } from '../vocabulary/SwipeCard';
@@ -45,44 +45,49 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [flashcardResults, setFlashcardResults] = useState<Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
-  const [userLevel, setUserLevel] = useState<string>('A2');
+  const [canGenerateLevelPack, setCanGenerateLevelPack] = useState(false);
+  const [isGeneratingPack, setIsGeneratingPack] = useState(false);
   const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
   const [questionResults, setQuestionResults] = useState<Record<number, boolean | null>>({});
   const [shownSuccessModals, setShownSuccessModals] = useState<Set<number>>(new Set());
   const [errorMessages, setErrorMessages] = useState<Record<number, string>>({});
-  const hasyx = useHasyx();
+  const { currentLevel } = useAppData();
+  const userLevel = currentLevel || 'A2';
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
 
-  const loadLesson = useCallback(async () => {
+  const loadLesson = useCallback(async (signal?: AbortSignal) => {
     if (!userId) {
       return;
     }
-    
-    // Не загружаем урок, если вкладка не видна
+
     if (typeof document !== 'undefined' && document.hidden) {
       return;
     }
-    
+
     setState({ status: 'loading' });
     try {
       const response = await fetch('/api/lesson/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, taskId }),
+        signal,
       });
+
+      if (signal?.aborted) return;
 
       if (!response.ok) {
         const errorBody = await response.json().catch(() => ({}));
-        throw new Error(errorBody.error || 'Не удалось загрузить урок');
+        throw new Error(errorBody.error || 'Не удалось собрать урок');
       }
 
       const payload = await response.json();
       setState({ status: 'ready', lesson: payload.lesson as LessonMaterials });
     } catch (error: any) {
+      if (error?.name === 'AbortError') return;
       setState({
         status: 'error',
-        message: error?.message ?? 'Не удалось загрузить урок',
+        message: error?.message ?? 'Не удалось собрать урок',
       });
     }
   }, [taskId, userId]);
@@ -91,50 +96,32 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     if (!userId) {
       return;
     }
-    
-    // Загружаем урок только если вкладка видна
-    if (typeof document !== 'undefined' && document.hidden) {
-      // Если вкладка скрыта, ждем когда она станет видимой
-      const handleVisibilityChange = () => {
-        if (!document.hidden && userId) {
-          loadLesson();
-        }
-      };
-      
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      return () => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      };
-    }
-    
-    loadLesson();
-  }, [userId, loadLesson]);
 
-  // Загрузка уровня пользователя
-  useEffect(() => {
-    if (!userId || !hasyx) {
-      return;
-    }
+    const ac = new AbortController();
 
-    const loadUserLevel = async () => {
-      try {
-        const userProfile = await hasyx.select({
-          table: 'users',
-          pk_columns: { id: userId },
-          returning: ['current_level'],
-        });
-
-        const user = Array.isArray(userProfile) ? userProfile[0] : userProfile;
-        if (user?.current_level) {
-          setUserLevel(user.current_level);
-        }
-      } catch (error) {
-        console.error('Failed to load user level:', error);
+    const start = () => {
+      if (typeof document === 'undefined' || !document.hidden) {
+        void loadLesson(ac.signal);
       }
     };
 
-    loadUserLevel();
-  }, [userId, hasyx]);
+    const handleVisibilityChange = () => {
+      if (!document.hidden && userId) {
+        void loadLesson(ac.signal);
+      }
+    };
+
+    if (typeof document !== 'undefined' && document.hidden) {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        ac.abort();
+      };
+    }
+
+    start();
+    return () => ac.abort();
+  }, [userId, loadLesson]);
 
   const handleBack = () => {
     router.push('/');
@@ -173,274 +160,52 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const isReadingLesson = lesson?.meta?.taskType === 'reading';
   const hasReadingText = Boolean(lesson?.readingPassages && lesson.readingPassages.length > 0 && lesson.readingPassages[0]?.text);
 
-  // Загрузка карточек для урока
   useEffect(() => {
-    if (!userId || !lesson || !hasyx) {
+    if (!userId || !lesson || lesson.meta?.taskType !== 'vocabulary') {
       return;
     }
 
     const loadCards = async () => {
       setIsLoadingCards(true);
       try {
-        // Загружаем данные задания для получения type_specific_payload через API
-        let taskData: { type_specific_payload?: Record<string, any> } | null = null;
-        try {
-          const taskResponse = await fetch(`/api/lesson/task?taskId=${taskId}`);
-          if (taskResponse.ok) {
-            taskData = await taskResponse.json();
-          }
-        } catch (error) {
-          console.warn('Failed to load task data:', error);
+        const res = await fetch(`/api/lesson/cards?taskId=${encodeURIComponent(taskId)}`);
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(body.error || 'Не удалось загрузить карточки');
         }
-
-        const payload = (taskData?.type_specific_payload ?? {}) as Record<string, any>;
-        const insightType = payload.insight_type;
-        const insightReference = payload.insight_reference;
-
-        // Для заданий Active Recall (sm2_due) загружаем карточки из active_recall_sessions
-        if (insightType === 'sm2_due' && insightReference) {
-          const recallSession = await hasyx.select({
-            table: 'active_recall_sessions',
-            pk_columns: { id: insightReference },
-            returning: ['recall_item_id', 'recall_type'],
-          });
-
-          const recallData = Array.isArray(recallSession) ? recallSession[0] : recallSession;
-          if (recallData && recallData.recall_type === 'vocabulary' && recallData.recall_item_id) {
-            const card = await hasyx.select({
-              table: 'vocabulary_cards',
-              pk_columns: { id: recallData.recall_item_id },
-              returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-            });
-
-            const cardData = Array.isArray(card) ? card[0] : card;
-            if (cardData) {
-              setFlashcards([
-                {
-                  id: cardData.id,
-                  word: cardData.word,
-                  translation: cardData.translation,
-                  exampleSentence: cardData.example_sentence,
-                  difficulty: cardData.difficulty,
-                },
-              ]);
-              return;
-            }
-          }
-        }
-
-        // Если есть targetWords в уроке, создаем карточки из них
-        if (lesson.targetWords && lesson.targetWords.length > 0) {
-          // Пытаемся найти существующие карточки для этих слов
-          const cards = await hasyx.select({
-            table: 'vocabulary_cards',
-            where: {
-              user_id: { _eq: userId },
-              word: { _in: lesson.targetWords },
-            },
-            returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-            limit: 20,
-          });
-
-          if (Array.isArray(cards) && cards.length > 0) {
-            setFlashcards(
-              cards.map((card) => ({
-                id: card.id,
-                word: card.word,
-                translation: card.translation,
-                exampleSentence: card.example_sentence,
-                difficulty: card.difficulty,
-              }))
-            );
-            return;
-          }
-        }
-
-        // Если карточек нет, загружаем новые/плохо освоенные слова
-        const today = new Date().toISOString().split('T')[0];
-        const reviewCards = await hasyx.select({
-          table: 'vocabulary_cards',
-          where: {
-            user_id: { _eq: userId },
-            next_review_date: { _lte: today },
-          },
-          order_by: [{ next_review_date: 'asc' }],
-          returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-          limit: 10,
-        });
-
-        if (Array.isArray(reviewCards) && reviewCards.length > 0) {
-          setFlashcards(
-            reviewCards.map((card) => ({
-              id: card.id,
-              word: card.word,
-              translation: card.translation,
-              exampleSentence: card.example_sentence,
-              difficulty: card.difficulty,
-            }))
-          );
-          return;
-        }
-
-        // Если карточек нет вообще (новый пользователь или урок vocabulary), генерируем на основе уровня
-        // Особенно важно для уроков типа vocabulary - ОБЯЗАТЕЛЬНО должны быть карточки
-        const isVocabularyLesson = lesson.meta?.taskType === 'vocabulary';
-        if (isVocabularyLesson) {
-          // Сначала пытаемся создать карточки из questions, если они есть
-          if (lesson.exercise.questions && lesson.exercise.questions.length > 0) {
-            const wordsFromQuestions = lesson.exercise.questions
-              .map((q) => {
-                // Извлекаем слово из prompt (например, "versatile (карточка 1)" -> "versatile")
-                const wordMatch = q.prompt.match(/^([a-zA-Z]+)/);
-                return wordMatch ? wordMatch[1].toLowerCase() : null;
-              })
-              .filter(Boolean) as string[];
-
-            if (wordsFromQuestions.length > 0) {
-              // Проверяем, есть ли уже карточки для этих слов
-              const existingCards = await hasyx.select({
-                table: 'vocabulary_cards',
-                where: {
-                  user_id: { _eq: userId },
-                  word: { _in: wordsFromQuestions },
-                },
-                returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-                limit: 20,
-              });
-
-              if (Array.isArray(existingCards) && existingCards.length > 0) {
-                setFlashcards(
-                  existingCards.map((card) => ({
-                    id: card.id,
-                    word: card.word,
-                    translation: card.translation,
-                    exampleSentence: card.example_sentence,
-                    difficulty: card.difficulty,
-                  }))
-                );
-                return;
-              }
-
-              // Если карточек нет, создаем их из questions через API
-              try {
-                  const userProfile = await hasyx.select({
-                  table: 'users',
-                  pk_columns: { id: userId },
-                  returning: ['current_level'],
-                });
-
-                const user = Array.isArray(userProfile) ? userProfile[0] : userProfile;
-                const userLevel = user?.current_level || 'A2';
-
-                const generateResponse = await fetch('/api/vocabulary/generate-cards', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    userId,
-                    level: userLevel,
-                    words: wordsFromQuestions,
-                  }),
-                });
-
-                if (generateResponse.ok) {
-                  const generateResult = await generateResponse.json();
-                  if (generateResult.cards && generateResult.cards.length > 0) {
-                    const cardIds = generateResult.cards.map((c: { id: string }) => c.id).filter(Boolean);
-                    if (cardIds.length > 0) {
-                      const newCards = await hasyx.select({
-                        table: 'vocabulary_cards',
-                        where: {
-                          user_id: { _eq: userId },
-                          id: { _in: cardIds },
-                        },
-                        returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-                        limit: 10,
-                      });
-
-                      if (Array.isArray(newCards) && newCards.length > 0) {
-                        setFlashcards(
-                          newCards.map((card) => ({
-                            id: card.id,
-                            word: card.word,
-                            translation: card.translation,
-                            exampleSentence: card.example_sentence,
-                            difficulty: card.difficulty,
-                          }))
-                        );
-                        return;
-                      }
-                    }
-                  }
-                }
-              } catch (generateError) {
-                console.error('Failed to generate cards from questions:', generateError);
-              }
-            }
-          }
-
-          // Если не получилось создать из questions, генерируем на основе уровня
-          const userProfile = await hasyx.select({
-            table: 'users',
-            pk_columns: { id: userId },
-            returning: ['current_level'],
-          });
-
-          const user = Array.isArray(userProfile) ? userProfile[0] : userProfile;
-          const userLevel = user?.current_level || 'A2';
-
-          try {
-            const generateResponse = await fetch('/api/vocabulary/generate-cards', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId,
-                level: userLevel,
-              }),
-            });
-
-            if (generateResponse.ok) {
-              const generateResult = await generateResponse.json();
-              if (generateResult.cards && generateResult.cards.length > 0) {
-                const cardIds = generateResult.cards.map((c: { id: string }) => c.id).filter(Boolean);
-                if (cardIds.length > 0) {
-                  const newCards = await hasyx.select({
-                    table: 'vocabulary_cards',
-                    where: {
-                      user_id: { _eq: userId },
-                      id: { _in: cardIds },
-                    },
-                    returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
-                    limit: 10,
-                  });
-
-                  if (Array.isArray(newCards) && newCards.length > 0) {
-                    setFlashcards(
-                      newCards.map((card) => ({
-                        id: card.id,
-                        word: card.word,
-                        translation: card.translation,
-                        exampleSentence: card.example_sentence,
-                        difficulty: card.difficulty,
-                      }))
-                    );
-                    return;
-                  }
-                }
-              }
-            }
-          } catch (generateError) {
-            console.error('Failed to generate cards for vocabulary lesson:', generateError);
-          }
-        }
+        const cards = Array.isArray(body.cards) ? body.cards : [];
+        setFlashcards(cards);
+        setCanGenerateLevelPack(Boolean(body.canGenerateLevelPack) && cards.length === 0);
       } catch (error) {
         console.error('Failed to load flashcards:', error);
+        setFlashcards([]);
+        setCanGenerateLevelPack(lesson.meta?.taskType === 'vocabulary');
       } finally {
         setIsLoadingCards(false);
       }
     };
 
     loadCards();
-  }, [userId, lesson, hasyx, taskId]);
+  }, [userId, lesson, taskId]);
+
+  const generateLevelPack = async () => {
+    setIsGeneratingPack(true);
+    try {
+      const generateResponse = await fetch('/api/vocabulary/generate-cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, level: userLevel }),
+      });
+      if (generateResponse.ok) {
+        const res = await fetch(`/api/lesson/cards?taskId=${encodeURIComponent(taskId)}`);
+        const body = await res.json().catch(() => ({}));
+        setFlashcards(Array.isArray(body.cards) ? body.cards : []);
+        setCanGenerateLevelPack(false);
+      }
+    } finally {
+      setIsGeneratingPack(false);
+    }
+  };
 
   const handleFlashcardResults = useCallback(
     (results: Array<{ cardId: string; wasCorrect: boolean; responseTime?: number; userSentence?: string }>) => {
@@ -522,7 +287,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     return (
       <div className="mx-auto mt-16 max-w-3xl rounded-3xl border border-red-100 bg-red-50 p-6 text-red-700">
         <p>{state.message}</p>
-        <Button className="mt-4" variant="outline" onClick={loadLesson}>
+        <Button className="mt-4" variant="outline" onClick={() => void loadLesson()}>
           Попробовать снова
         </Button>
       </div>
@@ -651,6 +416,9 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
             <SwipeCard
               cards={flashcards}
               onResult={handleFlashcardResults}
+              onCardUpdated={(card) => {
+                setFlashcards((prev) => prev.map((item) => (item.id === card.id ? card : item)));
+              }}
               title="Карточки для повторения"
             />
           ) : isLoadingCards ? (
@@ -658,8 +426,13 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
               <p className="text-sm text-gray-500">Загружаем карточки...</p>
             </section>
           ) : (
-            <section className="rounded-3xl border border-amber-100 bg-amber-50 p-6 shadow-sm">
-              <p className="text-sm text-amber-700">Карточки загружаются. Если они не появились, попробуйте обновить страницу.</p>
+            <section className="space-y-3 rounded-3xl border border-amber-100 bg-amber-50 p-6 shadow-sm">
+              <p className="text-sm text-amber-800">Нечего повторять — в словаре пока нет карточек на сегодня.</p>
+              {canGenerateLevelPack && (
+                <Button onClick={generateLevelPack} disabled={isGeneratingPack}>
+                  {isGeneratingPack ? 'Генерируем…' : 'Сгенерировать набор под мой уровень'}
+                </Button>
+              )}
             </section>
           )}
         </>

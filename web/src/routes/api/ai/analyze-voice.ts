@@ -148,6 +148,7 @@ ${languageInstruction}
 `
 
           const feedback = await generateJSON<VoiceFeedback>(prompt, {
+            task: 'score',
             maxTokens: 2000,
             systemPrompt:
               'Ты — эксперт по анализу произношения и речи на английском языке. Ты даешь конструктивный и полезный фидбек для улучшения навыков речи.',

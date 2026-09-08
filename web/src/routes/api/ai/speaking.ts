@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { getProvider } from '#/lib/ai/llm'
+import { OpenRouterProvider } from '#/lib/ai/llm'
+import { getModelForTask, getOpenRouterToken } from '#/lib/ai/models'
+import { buildTutorPrompt } from '#/lib/ai/tutor-prompt'
 import { jsonError, requireUserId } from '#/lib/server/route-utils'
 
 export const Route = createFileRoute('/api/ai/speaking')({
@@ -11,14 +13,21 @@ export const Route = createFileRoute('/api/ai/speaking')({
         if (who instanceof Response) return who
 
         try {
-          const { messages } = await request.json()
+          const { messages, level } = await request.json()
 
           if (!messages || !Array.isArray(messages) || messages.length === 0) {
             return jsonError('Invalid request body', 400)
           }
 
-          const provider = getProvider()
-          const response = await provider.query(messages)
+          const provider = new OpenRouterProvider({
+            token: getOpenRouterToken(),
+            model: getModelForTask('tutor'),
+          })
+          const withSystem =
+            messages[0]?.role === 'system'
+              ? messages
+              : [{ role: 'system', content: buildTutorPrompt(level || 'A2') }, ...messages]
+          const response = await provider.query(withSystem)
 
           return new Response(response.content, {
             headers: {

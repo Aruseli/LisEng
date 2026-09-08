@@ -1,11 +1,10 @@
 /**
  * Связывает сессию better-auth с Hasura-токеном:
- * при активной сессии запрашивает /api/auth/hasura-jwt и кладёт токен в token store,
- * откуда его берёт HasuraClient пользователя. Обновляет токен до истечения TTL.
+ * при активной сессии запрашивает /api/auth/hasura-jwt и кладёт токен в token store.
  */
 import { useEffect } from 'react'
 
-import { useSession } from '#/lib/auth-client'
+import { signOut, useSession } from '#/lib/auth-client'
 import { setHasuraToken } from './token'
 
 export function useHasuraAuth() {
@@ -23,6 +22,11 @@ export function useHasuraAuth() {
     const fetchToken = async () => {
       try {
         const res = await fetch('/api/auth/hasura-jwt')
+        if (res.status === 401) {
+          setHasuraToken(null)
+          await signOut()
+          return
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const { token, expiresIn } = (await res.json()) as {
           token: string
@@ -30,7 +34,6 @@ export function useHasuraAuth() {
         }
         if (cancelled) return
         setHasuraToken(token)
-        // Обновляем за 5 минут до истечения
         timer = setTimeout(fetchToken, Math.max((expiresIn - 300) * 1000, 60_000))
       } catch (e) {
         console.error('Не удалось получить Hasura JWT:', e)

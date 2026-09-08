@@ -36,7 +36,8 @@ interface DashboardTabProps {
   goalMinutes: number;
   tasks: TaskView[];
   onCompleteTask: (taskId: string | number) => void;
-  onStartAITask: (task?: TaskView) => void;
+  onStartTask: (task: TaskView) => void;
+  onStartAICoach: () => void;
   planSummary: string;
   planFocus: string[];
   requirementChecks: RequirementCheckView[];
@@ -61,7 +62,8 @@ export const DashboardTab = ({
   goalMinutes,
   tasks,
   onCompleteTask,
-  onStartAITask,
+  onStartTask,
+  onStartAICoach,
   planSummary,
   planFocus,
   requirementChecks,
@@ -84,7 +86,8 @@ export const DashboardTab = ({
             closeModal(modalId);
           }}
           onStartLesson={() => {
-            window.open(`/lesson/${task.id}`, '_blank', 'noopener,noreferrer');
+            closeModal(modalId);
+            onStartTask(task);
           }}
         />
       ),
@@ -145,7 +148,7 @@ export const DashboardTab = ({
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-base font-semibold text-gray-900">Задания на сегодня</h3>
           <Button
-            onClick={() => onStartAITask()}
+            onClick={() => onStartAICoach()}
             variant="default"
             leftIcon={<Sparkles className="size-5" strokeWidth={1} />}
           >
@@ -245,7 +248,7 @@ export const DashboardTab = ({
                         variant="default"
                         onClick={(e) => {
                           if (task.ai_enabled) {
-                            onStartAITask(task);
+                            onStartTask(task);
                           } else {
                             handleOpenTaskModal(task, e);
                           }

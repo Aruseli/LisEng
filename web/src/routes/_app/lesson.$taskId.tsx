@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { LessonScreen } from '@/components/app/lesson/LessonScreen'
 
-export const Route = createFileRoute('/lesson/$taskId')({
+export const Route = createFileRoute('/_app/lesson/$taskId')({
   component: LessonPage,
 })
 

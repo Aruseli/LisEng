@@ -23,7 +23,7 @@ export const Route = createFileRoute('/api/ai/task-text')({
       Topic: ${topic}
       Context: ${JSON.stringify(context)}
       Return a JSON object with the task details.
-    `)
+    `, { task: 'lesson' })
 
           return Response.json(result)
         } catch (error: any) {

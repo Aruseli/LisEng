@@ -191,6 +191,17 @@ export async function getUserProfile(hasyx: Hasyx, userId: string) {
 /**
  * Get vocabulary cards for review
  */
+export async function hasAnyVocabularyCards(hasyx: Hasyx, userId: string): Promise<boolean> {
+  const rows = await hasyx.select({
+    table: 'vocabulary_cards',
+    where: { user_id: { _eq: userId } },
+    limit: 1,
+    returning: ['id'],
+  })
+  if (Array.isArray(rows)) return rows.length > 0
+  return Boolean(rows)
+}
+
 export async function getVocabularyCardsForReview(
   hasyx: Hasyx,
   userId: string,

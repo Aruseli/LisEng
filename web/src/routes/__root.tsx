@@ -57,6 +57,23 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: () => (
+    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-2 p-8 text-center">
+      <p className="text-lg font-semibold text-gray-900">Страница не найдена</p>
+      <a href="/" className="text-sm text-accent underline">
+        На главную
+      </a>
+    </div>
+  ),
+  errorComponent: ({ error }) => (
+    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-2 p-8 text-center">
+      <p className="text-lg font-semibold text-gray-900">Что-то пошло не так</p>
+      <p className="text-sm text-gray-500">{error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>
+      <a href="/" className="text-sm text-accent underline">
+        На главную
+      </a>
+    </div>
+  ),
 })
 
 /** Поддерживает актуальный Hasura JWT при активной сессии */

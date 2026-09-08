@@ -1,6 +1,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useHasyx } from '@/lib/compat/hasyx';
+import { useHasuraReady } from '@/lib/hasura/useHasuraToken';
 
 import type { DailyPlanResult } from '@/lib/plan/daily-plan-service';
 
@@ -28,6 +29,7 @@ export const useDashboardData = (
   options: UseDashboardDataOptions = {}
 ) => {
   const hasyx = useHasyx();
+  const hasuraReady = useHasuraReady();
   // Используем sessionStorage для сохранения данных между навигациями
   const storageKey = userId ? `dashboard_data_${userId}` : null;
   const [state, setState] = useState<DashboardState>(() => {
@@ -71,7 +73,7 @@ export const useDashboardData = (
   }, [options.date]);
 
   const fetchDashboard = useCallback(async () => {
-    if (!hasyx || !userId) {
+    if (!hasyx || !userId || !hasuraReady) {
       return;
     }
 
@@ -174,7 +176,7 @@ export const useDashboardData = (
         error: error?.message ?? 'Не удалось обновить данные дашборда',
       }));
     }
-  }, [hasyx, targetDate, userId]);
+  }, [hasyx, targetDate, userId, hasuraReady]);
 
   const scheduleAutoRefresh = useCallback(() => {
     if (!options.autoRefresh) {
@@ -205,7 +207,27 @@ export const useDashboardData = (
   }, [state.data, userId, targetDate]);
   
   useEffect(() => {
-    if (!hasyx || !userId) {
+    if (!userId) {
+      setState({ data: null, isLoading: false, error: null });
+      return;
+    }
+    if (hasuraReady) return;
+    const timer = setTimeout(() => {
+      setState((prev) =>
+        prev.data
+          ? prev
+          : {
+              ...prev,
+              isLoading: false,
+              error: 'Не удалось получить доступ к данным. Войдите ещё раз.',
+            },
+      );
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [userId, hasuraReady]);
+
+  useEffect(() => {
+    if (!hasyx || !userId || !hasuraReady) {
       return;
     }
     
@@ -241,7 +263,7 @@ export const useDashboardData = (
         clearTimeout(refreshTimerRef.current);
       }
     };
-  }, [hasyx, userId, targetDate, fetchDashboard, state.data]);
+  }, [hasyx, userId, hasuraReady, targetDate, fetchDashboard, state.data]);
 
   const regeneratePlan = useCallback(
     async (params?: { forceAi?: boolean }) => {
@@ -326,6 +348,54 @@ export const useDashboardData = (
       console.warn('Failed to refresh requirement checks:', error);
     }
   }, [hasyx, userId, state.data?.plan?.stage?.id, saveToStorage]);
+
+  const refreshVocabulary = useCallback(async () => {
+    if (!hasyx || !userId || !hasuraReady) {
+      return;
+    }
+
+    try {
+      const vocabularyCards = await hasyx.select({
+        table: 'vocabulary_cards',
+        where: {
+          user_id: { _eq: userId },
+          next_review_date: { _lte: targetDate },
+        },
+        order_by: [{ next_review_date: 'asc' }],
+        limit: 20,
+        returning: [
+          'id',
+          'word',
+          'translation',
+          'example_sentence',
+          'next_review_date',
+          'difficulty',
+        ],
+      });
+
+      setState((prev) => {
+        const base = prev.data ?? {
+          plan: null,
+          user: null,
+          vocabularyCards: [],
+          progressMetrics: [],
+          lastUpdatedAt: null,
+        };
+        const newData = {
+          ...base,
+          vocabularyCards: Array.isArray(vocabularyCards) ? vocabularyCards : [],
+          lastUpdatedAt: new Date().toISOString(),
+        };
+        saveToStorage(newData);
+        return {
+          ...prev,
+          data: newData,
+        };
+      });
+    } catch (error) {
+      console.warn('Failed to refresh vocabulary cards:', error);
+    }
+  }, [hasyx, userId, hasuraReady, targetDate, saveToStorage]);
 
   const refreshProgressMetrics = useCallback(async () => {
     if (!hasyx || !userId) {
@@ -428,6 +498,7 @@ export const useDashboardData = (
     completeTask,
     refreshRequirementChecks,
     refreshProgressMetrics,
+    refreshVocabulary,
     targetDate,
   };
 }

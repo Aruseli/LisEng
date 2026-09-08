@@ -9,11 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppAiRouteImport } from './routes/_app/ai'
+import { Route as AppLevelTestRouteImport } from './routes/_app/level-test'
+import { Route as AppProgressRouteImport } from './routes/_app/progress'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
+import { Route as AppVerbsRouteImport } from './routes/_app/verbs'
+import { Route as AppVocabularyRouteImport } from './routes/_app/vocabulary'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiVersionRouteImport } from './routes/api/version'
-import { Route as LessonTaskIdRouteImport } from './routes/lesson.$taskId'
+import { Route as AppAiIndexRouteImport } from './routes/_app/ai/index'
+import { Route as AppLessonTaskIdRouteImport } from './routes/_app/lesson.$taskId'
 import { Route as ApiAiAnalyzeVoiceRouteImport } from './routes/api/ai/analyze-voice'
 import { Route as ApiAiCheckWritingRouteImport } from './routes/api/ai/check-writing'
 import { Route as ApiAiGenerateReadingRouteImport } from './routes/api/ai/generate-reading'
@@ -23,13 +31,21 @@ import { Route as ApiAiSpeakingRouteImport } from './routes/api/ai/speaking'
 import { Route as ApiAiTaskTextRouteImport } from './routes/api/ai/task-text'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAuthHasuraJwtRouteImport } from './routes/api/auth/hasura-jwt'
+import { Route as ApiLessonCardsRouteImport } from './routes/api/lesson/cards'
 import { Route as ApiLessonCompleteRouteImport } from './routes/api/lesson/complete'
 import { Route as ApiLessonGenerateRouteImport } from './routes/api/lesson/generate'
 import { Route as ApiLessonTaskRouteImport } from './routes/api/lesson/task'
 import { Route as ApiLevelTestEvaluateRouteImport } from './routes/api/level-test/evaluate'
 import { Route as ApiLevelTestGenerateRouteImport } from './routes/api/level-test/generate'
 import { Route as ApiListeningTranscribeRouteImport } from './routes/api/listening/transcribe'
+import { Route as ApiLlmHealthRouteImport } from './routes/api/llm/health'
+import { Route as ApiLlmRunRouteImport } from './routes/api/llm/run'
 import { Route as ApiMonitorEventsRouteImport } from './routes/api/monitor/events'
+import { Route as ApiNotificationsDailyRouteImport } from './routes/api/notifications/daily'
+import { Route as ApiNotificationsSubscribeRouteImport } from './routes/api/notifications/subscribe'
+import { Route as ApiNotificationsTestRouteImport } from './routes/api/notifications/test'
+import { Route as ApiNotificationsUnsubscribeRouteImport } from './routes/api/notifications/unsubscribe'
+import { Route as ApiNotificationsVapidRouteImport } from './routes/api/notifications/vapid'
 import { Route as ApiPlanGenerateRouteImport } from './routes/api/plan/generate'
 import { Route as ApiPlanRequirementChecksRouteImport } from './routes/api/plan/requirement-checks'
 import { Route as ApiPlanTodayRouteImport } from './routes/api/plan/today'
@@ -45,18 +61,56 @@ import { Route as ApiVerbsPracticeRouteImport } from './routes/api/verbs/practic
 import { Route as ApiVerbsPracticeSessionRouteImport } from './routes/api/verbs/practice-session'
 import { Route as ApiVerbsProgressRouteImport } from './routes/api/verbs/progress'
 import { Route as ApiVerbsReviewRouteImport } from './routes/api/verbs/review'
+import { Route as ApiVocabularyAddWordRouteImport } from './routes/api/vocabulary/add-word'
 import { Route as ApiVocabularyGenerateCardsRouteImport } from './routes/api/vocabulary/generate-cards'
 import { Route as ApiVocabularyReviewRouteImport } from './routes/api/vocabulary/review'
+import { Route as ApiVocabularyUpdateCardRouteImport } from './routes/api/vocabulary/update-card'
+import { Route as AppAiSpeakingTaskIdRouteImport } from './routes/_app/ai/speaking.$taskId'
+import { Route as AppAiVoiceTaskIdRouteImport } from './routes/_app/ai/voice.$taskId'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAiRoute = AppAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLevelTestRoute = AppLevelTestRouteImport.update({
+  id: '/level-test',
+  path: '/level-test',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProgressRoute = AppProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVerbsRoute = AppVerbsRouteImport.update({
+  id: '/verbs',
+  path: '/verbs',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVocabularyRoute = AppVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => AppRoute,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
@@ -68,10 +122,15 @@ const ApiVersionRoute = ApiVersionRouteImport.update({
   path: '/api/version',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LessonTaskIdRoute = LessonTaskIdRouteImport.update({
+const AppAiIndexRoute = AppAiIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAiRoute,
+} as any)
+const AppLessonTaskIdRoute = AppLessonTaskIdRouteImport.update({
   id: '/lesson/$taskId',
   path: '/lesson/$taskId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const ApiAiAnalyzeVoiceRoute = ApiAiAnalyzeVoiceRouteImport.update({
   id: '/api/ai/analyze-voice',
@@ -118,6 +177,11 @@ const ApiAuthHasuraJwtRoute = ApiAuthHasuraJwtRouteImport.update({
   path: '/api/auth/hasura-jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLessonCardsRoute = ApiLessonCardsRouteImport.update({
+  id: '/api/lesson/cards',
+  path: '/api/lesson/cards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiLessonCompleteRoute = ApiLessonCompleteRouteImport.update({
   id: '/api/lesson/complete',
   path: '/api/lesson/complete',
@@ -148,9 +212,46 @@ const ApiListeningTranscribeRoute = ApiListeningTranscribeRouteImport.update({
   path: '/api/listening/transcribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLlmHealthRoute = ApiLlmHealthRouteImport.update({
+  id: '/api/llm/health',
+  path: '/api/llm/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiLlmRunRoute = ApiLlmRunRouteImport.update({
+  id: '/api/llm/run',
+  path: '/api/llm/run',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMonitorEventsRoute = ApiMonitorEventsRouteImport.update({
   id: '/api/monitor/events',
   path: '/api/monitor/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiNotificationsDailyRoute = ApiNotificationsDailyRouteImport.update({
+  id: '/api/notifications/daily',
+  path: '/api/notifications/daily',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiNotificationsSubscribeRoute =
+  ApiNotificationsSubscribeRouteImport.update({
+    id: '/api/notifications/subscribe',
+    path: '/api/notifications/subscribe',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiNotificationsTestRoute = ApiNotificationsTestRouteImport.update({
+  id: '/api/notifications/test',
+  path: '/api/notifications/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiNotificationsUnsubscribeRoute =
+  ApiNotificationsUnsubscribeRouteImport.update({
+    id: '/api/notifications/unsubscribe',
+    path: '/api/notifications/unsubscribe',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiNotificationsVapidRoute = ApiNotificationsVapidRouteImport.update({
+  id: '/api/notifications/vapid',
+  path: '/api/notifications/vapid',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPlanGenerateRoute = ApiPlanGenerateRouteImport.update({
@@ -229,6 +330,11 @@ const ApiVerbsReviewRoute = ApiVerbsReviewRouteImport.update({
   path: '/api/verbs/review',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVocabularyAddWordRoute = ApiVocabularyAddWordRouteImport.update({
+  id: '/api/vocabulary/add-word',
+  path: '/api/vocabulary/add-word',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVocabularyGenerateCardsRoute =
   ApiVocabularyGenerateCardsRouteImport.update({
     id: '/api/vocabulary/generate-cards',
@@ -240,13 +346,34 @@ const ApiVocabularyReviewRoute = ApiVocabularyReviewRouteImport.update({
   path: '/api/vocabulary/review',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVocabularyUpdateCardRoute = ApiVocabularyUpdateCardRouteImport.update({
+  id: '/api/vocabulary/update-card',
+  path: '/api/vocabulary/update-card',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppAiSpeakingTaskIdRoute = AppAiSpeakingTaskIdRouteImport.update({
+  id: '/speaking/$taskId',
+  path: '/speaking/$taskId',
+  getParentRoute: () => AppAiRoute,
+} as any)
+const AppAiVoiceTaskIdRoute = AppAiVoiceTaskIdRouteImport.update({
+  id: '/voice/$taskId',
+  path: '/voice/$taskId',
+  getParentRoute: () => AppAiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/ai': typeof AppAiRouteWithChildren
+  '/level-test': typeof AppLevelTestRoute
+  '/progress': typeof AppProgressRoute
+  '/settings': typeof AppSettingsRoute
+  '/verbs': typeof AppVerbsRoute
+  '/vocabulary': typeof AppVocabularyRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
-  '/lesson/$taskId': typeof LessonTaskIdRoute
+  '/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -256,13 +383,21 @@ export interface FileRoutesByFullPath {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
   '/api/lesson/task': typeof ApiLessonTaskRoute
   '/api/level-test/evaluate': typeof ApiLevelTestEvaluateRoute
   '/api/level-test/generate': typeof ApiLevelTestGenerateRoute
   '/api/listening/transcribe': typeof ApiListeningTranscribeRoute
+  '/api/llm/health': typeof ApiLlmHealthRoute
+  '/api/llm/run': typeof ApiLlmRunRoute
   '/api/monitor/events': typeof ApiMonitorEventsRoute
+  '/api/notifications/daily': typeof ApiNotificationsDailyRoute
+  '/api/notifications/subscribe': typeof ApiNotificationsSubscribeRoute
+  '/api/notifications/test': typeof ApiNotificationsTestRoute
+  '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
+  '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -277,16 +412,26 @@ export interface FileRoutesByFullPath {
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
   '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/vocabulary/add-word': typeof ApiVocabularyAddWordRoute
   '/api/vocabulary/generate-cards': typeof ApiVocabularyGenerateCardsRoute
   '/api/vocabulary/review': typeof ApiVocabularyReviewRoute
+  '/api/vocabulary/update-card': typeof ApiVocabularyUpdateCardRoute
+  '/ai/': typeof AppAiIndexRoute
   '/api/verbs/': typeof ApiVerbsIndexRoute
+  '/ai/speaking/$taskId': typeof AppAiSpeakingTaskIdRoute
+  '/ai/voice/$taskId': typeof AppAiVoiceTaskIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/level-test': typeof AppLevelTestRoute
+  '/progress': typeof AppProgressRoute
+  '/settings': typeof AppSettingsRoute
+  '/verbs': typeof AppVerbsRoute
+  '/vocabulary': typeof AppVocabularyRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
-  '/lesson/$taskId': typeof LessonTaskIdRoute
+  '/': typeof AppIndexRoute
+  '/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -296,13 +441,21 @@ export interface FileRoutesByTo {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
   '/api/lesson/task': typeof ApiLessonTaskRoute
   '/api/level-test/evaluate': typeof ApiLevelTestEvaluateRoute
   '/api/level-test/generate': typeof ApiLevelTestGenerateRoute
   '/api/listening/transcribe': typeof ApiListeningTranscribeRoute
+  '/api/llm/health': typeof ApiLlmHealthRoute
+  '/api/llm/run': typeof ApiLlmRunRoute
   '/api/monitor/events': typeof ApiMonitorEventsRoute
+  '/api/notifications/daily': typeof ApiNotificationsDailyRoute
+  '/api/notifications/subscribe': typeof ApiNotificationsSubscribeRoute
+  '/api/notifications/test': typeof ApiNotificationsTestRoute
+  '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
+  '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -317,17 +470,29 @@ export interface FileRoutesByTo {
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
   '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/vocabulary/add-word': typeof ApiVocabularyAddWordRoute
   '/api/vocabulary/generate-cards': typeof ApiVocabularyGenerateCardsRoute
   '/api/vocabulary/review': typeof ApiVocabularyReviewRoute
+  '/api/vocabulary/update-card': typeof ApiVocabularyUpdateCardRoute
+  '/ai': typeof AppAiIndexRoute
   '/api/verbs': typeof ApiVerbsIndexRoute
+  '/ai/speaking/$taskId': typeof AppAiSpeakingTaskIdRoute
+  '/ai/voice/$taskId': typeof AppAiVoiceTaskIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/ai': typeof AppAiRouteWithChildren
+  '/_app/level-test': typeof AppLevelTestRoute
+  '/_app/progress': typeof AppProgressRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/verbs': typeof AppVerbsRoute
+  '/_app/vocabulary': typeof AppVocabularyRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
-  '/lesson/$taskId': typeof LessonTaskIdRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -337,13 +502,21 @@ export interface FileRoutesById {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
   '/api/lesson/task': typeof ApiLessonTaskRoute
   '/api/level-test/evaluate': typeof ApiLevelTestEvaluateRoute
   '/api/level-test/generate': typeof ApiLevelTestGenerateRoute
   '/api/listening/transcribe': typeof ApiListeningTranscribeRoute
+  '/api/llm/health': typeof ApiLlmHealthRoute
+  '/api/llm/run': typeof ApiLlmRunRoute
   '/api/monitor/events': typeof ApiMonitorEventsRoute
+  '/api/notifications/daily': typeof ApiNotificationsDailyRoute
+  '/api/notifications/subscribe': typeof ApiNotificationsSubscribeRoute
+  '/api/notifications/test': typeof ApiNotificationsTestRoute
+  '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
+  '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -358,15 +531,26 @@ export interface FileRoutesById {
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
   '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/vocabulary/add-word': typeof ApiVocabularyAddWordRoute
   '/api/vocabulary/generate-cards': typeof ApiVocabularyGenerateCardsRoute
   '/api/vocabulary/review': typeof ApiVocabularyReviewRoute
+  '/api/vocabulary/update-card': typeof ApiVocabularyUpdateCardRoute
+  '/_app/ai/': typeof AppAiIndexRoute
   '/api/verbs/': typeof ApiVerbsIndexRoute
+  '/_app/ai/speaking/$taskId': typeof AppAiSpeakingTaskIdRoute
+  '/_app/ai/voice/$taskId': typeof AppAiVoiceTaskIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
+    | '/ai'
+    | '/level-test'
+    | '/progress'
+    | '/settings'
+    | '/verbs'
+    | '/vocabulary'
     | '/api/health'
     | '/api/version'
     | '/lesson/$taskId'
@@ -379,13 +563,21 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
     | '/api/lesson/task'
     | '/api/level-test/evaluate'
     | '/api/level-test/generate'
     | '/api/listening/transcribe'
+    | '/api/llm/health'
+    | '/api/llm/run'
     | '/api/monitor/events'
+    | '/api/notifications/daily'
+    | '/api/notifications/subscribe'
+    | '/api/notifications/test'
+    | '/api/notifications/unsubscribe'
+    | '/api/notifications/vapid'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -400,15 +592,25 @@ export interface FileRouteTypes {
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
     | '/api/verbs/review'
+    | '/api/vocabulary/add-word'
     | '/api/vocabulary/generate-cards'
     | '/api/vocabulary/review'
+    | '/api/vocabulary/update-card'
+    | '/ai/'
     | '/api/verbs/'
+    | '/ai/speaking/$taskId'
+    | '/ai/voice/$taskId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/login'
+    | '/level-test'
+    | '/progress'
+    | '/settings'
+    | '/verbs'
+    | '/vocabulary'
     | '/api/health'
     | '/api/version'
+    | '/'
     | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
     | '/api/ai/check-writing'
@@ -419,13 +621,21 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
     | '/api/lesson/task'
     | '/api/level-test/evaluate'
     | '/api/level-test/generate'
     | '/api/listening/transcribe'
+    | '/api/llm/health'
+    | '/api/llm/run'
     | '/api/monitor/events'
+    | '/api/notifications/daily'
+    | '/api/notifications/subscribe'
+    | '/api/notifications/test'
+    | '/api/notifications/unsubscribe'
+    | '/api/notifications/vapid'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -440,16 +650,28 @@ export interface FileRouteTypes {
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
     | '/api/verbs/review'
+    | '/api/vocabulary/add-word'
     | '/api/vocabulary/generate-cards'
     | '/api/vocabulary/review'
+    | '/api/vocabulary/update-card'
+    | '/ai'
     | '/api/verbs'
+    | '/ai/speaking/$taskId'
+    | '/ai/voice/$taskId'
   id:
     | '__root__'
-    | '/'
+    | '/_app'
     | '/login'
+    | '/_app/ai'
+    | '/_app/level-test'
+    | '/_app/progress'
+    | '/_app/settings'
+    | '/_app/verbs'
+    | '/_app/vocabulary'
     | '/api/health'
     | '/api/version'
-    | '/lesson/$taskId'
+    | '/_app/'
+    | '/_app/lesson/$taskId'
     | '/api/ai/analyze-voice'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
@@ -459,13 +681,21 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
     | '/api/lesson/task'
     | '/api/level-test/evaluate'
     | '/api/level-test/generate'
     | '/api/listening/transcribe'
+    | '/api/llm/health'
+    | '/api/llm/run'
     | '/api/monitor/events'
+    | '/api/notifications/daily'
+    | '/api/notifications/subscribe'
+    | '/api/notifications/test'
+    | '/api/notifications/unsubscribe'
+    | '/api/notifications/vapid'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -480,17 +710,21 @@ export interface FileRouteTypes {
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
     | '/api/verbs/review'
+    | '/api/vocabulary/add-word'
     | '/api/vocabulary/generate-cards'
     | '/api/vocabulary/review'
+    | '/api/vocabulary/update-card'
+    | '/_app/ai/'
     | '/api/verbs/'
+    | '/_app/ai/speaking/$taskId'
+    | '/_app/ai/voice/$taskId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiVersionRoute: typeof ApiVersionRoute
-  LessonTaskIdRoute: typeof LessonTaskIdRoute
   ApiAiAnalyzeVoiceRoute: typeof ApiAiAnalyzeVoiceRoute
   ApiAiCheckWritingRoute: typeof ApiAiCheckWritingRoute
   ApiAiGenerateReadingRoute: typeof ApiAiGenerateReadingRoute
@@ -500,13 +734,21 @@ export interface RootRouteChildren {
   ApiAiTaskTextRoute: typeof ApiAiTaskTextRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiAuthHasuraJwtRoute: typeof ApiAuthHasuraJwtRoute
+  ApiLessonCardsRoute: typeof ApiLessonCardsRoute
   ApiLessonCompleteRoute: typeof ApiLessonCompleteRoute
   ApiLessonGenerateRoute: typeof ApiLessonGenerateRoute
   ApiLessonTaskRoute: typeof ApiLessonTaskRoute
   ApiLevelTestEvaluateRoute: typeof ApiLevelTestEvaluateRoute
   ApiLevelTestGenerateRoute: typeof ApiLevelTestGenerateRoute
   ApiListeningTranscribeRoute: typeof ApiListeningTranscribeRoute
+  ApiLlmHealthRoute: typeof ApiLlmHealthRoute
+  ApiLlmRunRoute: typeof ApiLlmRunRoute
   ApiMonitorEventsRoute: typeof ApiMonitorEventsRoute
+  ApiNotificationsDailyRoute: typeof ApiNotificationsDailyRoute
+  ApiNotificationsSubscribeRoute: typeof ApiNotificationsSubscribeRoute
+  ApiNotificationsTestRoute: typeof ApiNotificationsTestRoute
+  ApiNotificationsUnsubscribeRoute: typeof ApiNotificationsUnsubscribeRoute
+  ApiNotificationsVapidRoute: typeof ApiNotificationsVapidRoute
   ApiPlanGenerateRoute: typeof ApiPlanGenerateRoute
   ApiPlanRequirementChecksRoute: typeof ApiPlanRequirementChecksRoute
   ApiPlanTodayRoute: typeof ApiPlanTodayRoute
@@ -521,18 +763,20 @@ export interface RootRouteChildren {
   ApiVerbsPracticeSessionRoute: typeof ApiVerbsPracticeSessionRoute
   ApiVerbsProgressRoute: typeof ApiVerbsProgressRoute
   ApiVerbsReviewRoute: typeof ApiVerbsReviewRoute
+  ApiVocabularyAddWordRoute: typeof ApiVocabularyAddWordRoute
   ApiVocabularyGenerateCardsRoute: typeof ApiVocabularyGenerateCardsRoute
   ApiVocabularyReviewRoute: typeof ApiVocabularyReviewRoute
+  ApiVocabularyUpdateCardRoute: typeof ApiVocabularyUpdateCardRoute
   ApiVerbsIndexRoute: typeof ApiVerbsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -541,6 +785,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ai': {
+      id: '/_app/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AppAiRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/level-test': {
+      id: '/_app/level-test'
+      path: '/level-test'
+      fullPath: '/level-test'
+      preLoaderRoute: typeof AppLevelTestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/progress': {
+      id: '/_app/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AppProgressRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/verbs': {
+      id: '/_app/verbs'
+      path: '/verbs'
+      fullPath: '/verbs'
+      preLoaderRoute: typeof AppVerbsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/vocabulary': {
+      id: '/_app/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/vocabulary'
+      preLoaderRoute: typeof AppVocabularyRouteImport
+      parentRoute: typeof AppRoute
     }
     '/api/health': {
       id: '/api/health'
@@ -556,12 +849,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVersionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lesson/$taskId': {
-      id: '/lesson/$taskId'
+    '/_app/ai/': {
+      id: '/_app/ai/'
+      path: '/'
+      fullPath: '/ai/'
+      preLoaderRoute: typeof AppAiIndexRouteImport
+      parentRoute: typeof AppAiRoute
+    }
+    '/_app/lesson/$taskId': {
+      id: '/_app/lesson/$taskId'
       path: '/lesson/$taskId'
       fullPath: '/lesson/$taskId'
-      preLoaderRoute: typeof LessonTaskIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppLessonTaskIdRouteImport
+      parentRoute: typeof AppRoute
     }
     '/api/ai/analyze-voice': {
       id: '/api/ai/analyze-voice'
@@ -626,6 +926,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthHasuraJwtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/lesson/cards': {
+      id: '/api/lesson/cards'
+      path: '/api/lesson/cards'
+      fullPath: '/api/lesson/cards'
+      preLoaderRoute: typeof ApiLessonCardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/lesson/complete': {
       id: '/api/lesson/complete'
       path: '/api/lesson/complete'
@@ -668,11 +975,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiListeningTranscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/llm/health': {
+      id: '/api/llm/health'
+      path: '/api/llm/health'
+      fullPath: '/api/llm/health'
+      preLoaderRoute: typeof ApiLlmHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/llm/run': {
+      id: '/api/llm/run'
+      path: '/api/llm/run'
+      fullPath: '/api/llm/run'
+      preLoaderRoute: typeof ApiLlmRunRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/monitor/events': {
       id: '/api/monitor/events'
       path: '/api/monitor/events'
       fullPath: '/api/monitor/events'
       preLoaderRoute: typeof ApiMonitorEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notifications/daily': {
+      id: '/api/notifications/daily'
+      path: '/api/notifications/daily'
+      fullPath: '/api/notifications/daily'
+      preLoaderRoute: typeof ApiNotificationsDailyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notifications/subscribe': {
+      id: '/api/notifications/subscribe'
+      path: '/api/notifications/subscribe'
+      fullPath: '/api/notifications/subscribe'
+      preLoaderRoute: typeof ApiNotificationsSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notifications/test': {
+      id: '/api/notifications/test'
+      path: '/api/notifications/test'
+      fullPath: '/api/notifications/test'
+      preLoaderRoute: typeof ApiNotificationsTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notifications/unsubscribe': {
+      id: '/api/notifications/unsubscribe'
+      path: '/api/notifications/unsubscribe'
+      fullPath: '/api/notifications/unsubscribe'
+      preLoaderRoute: typeof ApiNotificationsUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/notifications/vapid': {
+      id: '/api/notifications/vapid'
+      path: '/api/notifications/vapid'
+      fullPath: '/api/notifications/vapid'
+      preLoaderRoute: typeof ApiNotificationsVapidRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/plan/generate': {
@@ -780,6 +1136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVerbsReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/vocabulary/add-word': {
+      id: '/api/vocabulary/add-word'
+      path: '/api/vocabulary/add-word'
+      fullPath: '/api/vocabulary/add-word'
+      preLoaderRoute: typeof ApiVocabularyAddWordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/vocabulary/generate-cards': {
       id: '/api/vocabulary/generate-cards'
       path: '/api/vocabulary/generate-cards'
@@ -794,15 +1157,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVocabularyReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/vocabulary/update-card': {
+      id: '/api/vocabulary/update-card'
+      path: '/api/vocabulary/update-card'
+      fullPath: '/api/vocabulary/update-card'
+      preLoaderRoute: typeof ApiVocabularyUpdateCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/ai/speaking/$taskId': {
+      id: '/_app/ai/speaking/$taskId'
+      path: '/speaking/$taskId'
+      fullPath: '/ai/speaking/$taskId'
+      preLoaderRoute: typeof AppAiSpeakingTaskIdRouteImport
+      parentRoute: typeof AppAiRoute
+    }
+    '/_app/ai/voice/$taskId': {
+      id: '/_app/ai/voice/$taskId'
+      path: '/voice/$taskId'
+      fullPath: '/ai/voice/$taskId'
+      preLoaderRoute: typeof AppAiVoiceTaskIdRouteImport
+      parentRoute: typeof AppAiRoute
+    }
   }
 }
 
+interface AppAiRouteChildren {
+  AppAiIndexRoute: typeof AppAiIndexRoute
+  AppAiSpeakingTaskIdRoute: typeof AppAiSpeakingTaskIdRoute
+  AppAiVoiceTaskIdRoute: typeof AppAiVoiceTaskIdRoute
+}
+
+const AppAiRouteChildren: AppAiRouteChildren = {
+  AppAiIndexRoute: AppAiIndexRoute,
+  AppAiSpeakingTaskIdRoute: AppAiSpeakingTaskIdRoute,
+  AppAiVoiceTaskIdRoute: AppAiVoiceTaskIdRoute,
+}
+
+const AppAiRouteWithChildren = AppAiRoute._addFileChildren(AppAiRouteChildren)
+
+interface AppRouteChildren {
+  AppAiRoute: typeof AppAiRouteWithChildren
+  AppLevelTestRoute: typeof AppLevelTestRoute
+  AppProgressRoute: typeof AppProgressRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppVerbsRoute: typeof AppVerbsRoute
+  AppVocabularyRoute: typeof AppVocabularyRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppLessonTaskIdRoute: typeof AppLessonTaskIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAiRoute: AppAiRouteWithChildren,
+  AppLevelTestRoute: AppLevelTestRoute,
+  AppProgressRoute: AppProgressRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppVerbsRoute: AppVerbsRoute,
+  AppVocabularyRoute: AppVocabularyRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppLessonTaskIdRoute: AppLessonTaskIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiVersionRoute: ApiVersionRoute,
-  LessonTaskIdRoute: LessonTaskIdRoute,
   ApiAiAnalyzeVoiceRoute: ApiAiAnalyzeVoiceRoute,
   ApiAiCheckWritingRoute: ApiAiCheckWritingRoute,
   ApiAiGenerateReadingRoute: ApiAiGenerateReadingRoute,
@@ -812,13 +1233,21 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiTaskTextRoute: ApiAiTaskTextRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiAuthHasuraJwtRoute: ApiAuthHasuraJwtRoute,
+  ApiLessonCardsRoute: ApiLessonCardsRoute,
   ApiLessonCompleteRoute: ApiLessonCompleteRoute,
   ApiLessonGenerateRoute: ApiLessonGenerateRoute,
   ApiLessonTaskRoute: ApiLessonTaskRoute,
   ApiLevelTestEvaluateRoute: ApiLevelTestEvaluateRoute,
   ApiLevelTestGenerateRoute: ApiLevelTestGenerateRoute,
   ApiListeningTranscribeRoute: ApiListeningTranscribeRoute,
+  ApiLlmHealthRoute: ApiLlmHealthRoute,
+  ApiLlmRunRoute: ApiLlmRunRoute,
   ApiMonitorEventsRoute: ApiMonitorEventsRoute,
+  ApiNotificationsDailyRoute: ApiNotificationsDailyRoute,
+  ApiNotificationsSubscribeRoute: ApiNotificationsSubscribeRoute,
+  ApiNotificationsTestRoute: ApiNotificationsTestRoute,
+  ApiNotificationsUnsubscribeRoute: ApiNotificationsUnsubscribeRoute,
+  ApiNotificationsVapidRoute: ApiNotificationsVapidRoute,
   ApiPlanGenerateRoute: ApiPlanGenerateRoute,
   ApiPlanRequirementChecksRoute: ApiPlanRequirementChecksRoute,
   ApiPlanTodayRoute: ApiPlanTodayRoute,
@@ -833,8 +1262,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVerbsPracticeSessionRoute: ApiVerbsPracticeSessionRoute,
   ApiVerbsProgressRoute: ApiVerbsProgressRoute,
   ApiVerbsReviewRoute: ApiVerbsReviewRoute,
+  ApiVocabularyAddWordRoute: ApiVocabularyAddWordRoute,
   ApiVocabularyGenerateCardsRoute: ApiVocabularyGenerateCardsRoute,
   ApiVocabularyReviewRoute: ApiVocabularyReviewRoute,
+  ApiVocabularyUpdateCardRoute: ApiVocabularyUpdateCardRoute,
   ApiVerbsIndexRoute: ApiVerbsIndexRoute,
 }
 export const routeTree = rootRouteImport

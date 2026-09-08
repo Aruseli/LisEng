@@ -20,6 +20,8 @@ async function getTask(hasyx: Hasyx, taskId: string) {
   } | null
 }
 
+const inflight = new Map<string, Promise<{ lesson: unknown }>>()
+
 export const Route = createFileRoute('/api/lesson/generate')({
   server: {
     handlers: {
@@ -30,37 +32,33 @@ export const Route = createFileRoute('/api/lesson/generate')({
           const taskId: string | undefined = body.taskId
 
           if (!userId || !taskId) {
-            return Response.json(
-              { error: 'userId and taskId are required' },
-              { status: 400 },
-            )
+            return Response.json({ error: 'userId and taskId are required' }, { status: 400 })
           }
 
-          const hasyx = getAdminClient()
+          const existing = inflight.get(taskId)
+          const work =
+            existing ??
+            (async () => {
+              const hasyx = getAdminClient()
+              const task = await getTask(hasyx, taskId)
+              if (!task) throw Object.assign(new Error('Task not found'), { status: 404 })
+              if (task.user_id !== userId) {
+                throw Object.assign(new Error('Task does not belong to user'), { status: 403 })
+              }
+              const lessonService = new LessonContentService(hasyx)
+              const lesson = await lessonService.getOrGenerateLesson({ userId, task })
+              return { lesson }
+            })().finally(() => inflight.delete(taskId))
 
-          const task = await getTask(hasyx, taskId)
-          if (!task) {
-            return Response.json({ error: 'Task not found' }, { status: 404 })
-          }
-          if (task.user_id !== userId) {
-            return Response.json(
-              { error: 'Task does not belong to user' },
-              { status: 403 },
-            )
-          }
+          if (!existing) inflight.set(taskId, work)
 
-          const lessonService = new LessonContentService(hasyx)
-          const lesson = await lessonService.getOrGenerateLesson({
-            userId,
-            task,
-          })
-
-          return Response.json({ lesson })
+          const payload = await work
+          return Response.json(payload)
         } catch (error: any) {
           console.error('[lesson/generate] Error:', error)
           return Response.json(
             { error: error?.message ?? 'Failed to generate lesson' },
-            { status: 500 },
+            { status: error?.status ?? 500 },
           )
         }
       },

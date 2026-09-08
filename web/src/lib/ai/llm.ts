@@ -1,9 +1,9 @@
 /**
  * LLM-хелперы поверх OpenRouter (прямой fetch, без hasyx).
- * Сохраняет API прежнего lib/ai/llm.ts: getAI (default), getProvider,
- * generateJSON, parseJSONResponse.
  */
 import { jsonrepair } from 'jsonrepair'
+
+import { type LlmTask, getModelForTask, getOpenRouterToken, openRouterHeaders } from './models'
 
 export interface AIMessage {
   role: 'system' | 'user' | 'assistant'
@@ -23,15 +23,11 @@ export class OpenRouterProvider {
     this.opts = opts
   }
 
-  /** Возвращает { content } — совместимо с прежним provider.query(messages) */
   async query(messages: AIMessage | AIMessage[]): Promise<{ content: string }> {
     const list = Array.isArray(messages) ? messages : [messages]
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        authorization: `Bearer ${this.opts.token}`,
-        'content-type': 'application/json',
-      },
+      headers: openRouterHeaders(this.opts.token),
       body: JSON.stringify({
         model: this.opts.model,
         messages: list,
@@ -52,7 +48,6 @@ export class OpenRouterProvider {
   }
 }
 
-/** Совместимо с прежним AI из hasyx: ai.query({role, content}) → string */
 class AI {
   private readonly provider: OpenRouterProvider
   private readonly systemPrompt?: string
@@ -72,19 +67,14 @@ class AI {
   }
 }
 
-const DEFAULT_MODEL = 'anthropic/claude-3.5-sonnet'
-
 let providerInstance: OpenRouterProvider | null = null
 let aiInstance: AI | null = null
 
-export function getProvider(): OpenRouterProvider {
+export function getProvider(task: LlmTask = 'lesson'): OpenRouterProvider {
   if (!providerInstance) {
-    if (!process.env.OPENROUTER_API_KEY) {
-      throw new Error('OPENROUTER_API_KEY is not set in environment variables')
-    }
     providerInstance = new OpenRouterProvider({
-      token: process.env.OPENROUTER_API_KEY,
-      model: process.env.OPENROUTER_MODEL || DEFAULT_MODEL,
+      token: getOpenRouterToken(),
+      model: getModelForTask(task),
     })
   }
   return providerInstance
@@ -97,7 +87,6 @@ function getAI(): AI {
   return aiInstance
 }
 
-/** Достаёт JSON из текстового ответа модели (markdown-обёртки, починка через jsonrepair) */
 export function parseJSONResponse<T>(text: string): T {
   const cleanedText = text
     .replace(/```json\n?/gi, '')
@@ -129,24 +118,20 @@ export function parseJSONResponse<T>(text: string): T {
 interface GenerateJsonOptions {
   maxTokens?: number
   systemPrompt?: string
+  task?: LlmTask
 }
 
-/** Генерация JSON-объекта по промпту (совместимо с прежним generateJSON) */
 export async function generateJSON<T>(
   prompt: string,
   options: GenerateJsonOptions = {},
 ): Promise<T> {
-  let ai: AI
-  if (options.systemPrompt || options.maxTokens) {
-    const provider = new OpenRouterProvider({
-      token: process.env.OPENROUTER_API_KEY as string,
-      model: process.env.OPENROUTER_MODEL || DEFAULT_MODEL,
-      ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),
-    })
-    ai = new AI({ provider, systemPrompt: options.systemPrompt })
-  } else {
-    ai = getAI()
-  }
+  const task = options.task ?? 'lesson'
+  const provider = new OpenRouterProvider({
+    token: getOpenRouterToken(),
+    model: getModelForTask(task),
+    ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),
+  })
+  const ai = new AI({ provider, systemPrompt: options.systemPrompt })
 
   const response = await ai.query({ role: 'user', content: prompt })
   if (!response) {

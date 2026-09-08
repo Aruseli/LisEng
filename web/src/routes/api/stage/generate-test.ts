@@ -20,7 +20,7 @@ export const Route = createFileRoute('/api/stage/generate-test')({
       Return a JSON object with a "questions" array.
     `
 
-          const result = await generateJSON<{ questions: Array<any> }>(prompt)
+          const result = await generateJSON<{ questions: Array<any> }>(prompt, { task: 'lesson' })
 
           return Response.json({ questions: result.questions })
         } catch (error: any) {

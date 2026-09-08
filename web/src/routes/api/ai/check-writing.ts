@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import getAI, { parseJSONResponse } from '#/lib/ai/llm'
+import { generateJSON } from '#/lib/ai/llm'
 import { getAdminClient } from '#/lib/hasura'
 import { getUserInstructionLanguage } from '#/lib/hasura-queries'
 
@@ -52,14 +52,7 @@ export const Route = createFileRoute('/api/ai/check-writing')({
       }
     `
 
-          const ai = getAI()
-          const response = await ai.query({ role: 'user', content: prompt })
-
-          if (!response) {
-            throw new Error('AI returned an empty response.')
-          }
-
-          const feedback = parseJSONResponse<any>(response)
+          const feedback = await generateJSON<any>(prompt, { task: 'score' })
 
           return Response.json(feedback)
         } catch (error) {

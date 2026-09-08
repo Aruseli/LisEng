@@ -22,7 +22,7 @@ export const Route = createFileRoute('/api/ai/plan-summary')({
             Return a JSON object with 'summary', 'recommendations', and 'focus'.
         `
 
-          const summary = await generateJSON<DailyPlanAiSummary>(prompt)
+          const summary = await generateJSON<DailyPlanAiSummary>(prompt, { task: 'vocab' })
 
           return Response.json(summary)
         } catch (error: any) {

@@ -25,6 +25,7 @@ interface FlashcardResult {
 interface SwipeCardProps {
   cards: Flashcard[];
   onResult?: (results: FlashcardResult[]) => void;
+  onCardUpdated?: (card: Flashcard) => void;
   title?: string;
 }
 
@@ -37,19 +38,13 @@ interface CardPosition {
   scale: number;
 }
 
-export function SwipeCard({ cards, onResult, title = 'Слова для повторения' }: SwipeCardProps) {
+export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова для повторения' }: SwipeCardProps) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id ?? null;
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const modalShownRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
-  
-  // Если сессия еще загружается, не показываем компонент
-  if (status === 'loading') {
-    return null;
-  }
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [results, setResults] = useState<FlashcardResult[]>([]);
@@ -58,7 +53,11 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
   const [cardStack, setCardStack] = useState<Flashcard[]>(cards);
   const [isHovered, setIsHovered] = useState(false);
   const [isAddingToDictionary, setIsAddingToDictionary] = useState(false);
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTranslation, setEditTranslation] = useState('');
+  const [editExample, setEditExample] = useState('');
+  const [editBusy, setEditBusy] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
   const [isSwipeAway, setIsSwipeAway] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -121,6 +120,53 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
     console.log('isDragging', isDragging, 'isFlipped', isFlipped);
     console.log('currentCard', currentCard);
   }, [isDragging]);
+
+  const startEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!currentCard) return;
+    setEditTranslation(currentCard.translation ?? '');
+    setEditExample(currentCard.exampleSentence ?? '');
+    setEditError(null);
+    setIsEditing(true);
+  };
+
+  const saveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!currentCard) return;
+    const nextTranslation = editTranslation.trim();
+    if (!nextTranslation) {
+      setEditError('Укажите перевод');
+      return;
+    }
+    setEditBusy(true);
+    setEditError(null);
+    try {
+      const res = await fetch('/api/vocabulary/update-card', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cardId: currentCard.id,
+          translation: nextTranslation,
+          example: editExample.trim() || undefined,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || 'Не удалось сохранить');
+      const updated: Flashcard = {
+        ...currentCard,
+        translation: body.card?.translation ?? nextTranslation,
+        exampleSentence: body.card?.example_sentence ?? editExample.trim() ?? null,
+      };
+      setCardStack((prev) => prev.map((card) => (card.id === updated.id ? updated : card)));
+      onCardUpdated?.(updated);
+      setIsEditing(false);
+    } catch (err: any) {
+      setEditError(err?.message ?? 'Ошибка сохранения');
+    } finally {
+      setEditBusy(false);
+    }
+  };
 
   const handleAnswer = useCallback(
     async (wasCorrect: boolean) => {
@@ -269,6 +315,7 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
       setCardStack(cards);
       setCurrentIndex(0);
       setIsFlipped(false);
+      setIsEditing(false);
       setResults([]);
       setStartTime(Date.now());
       setIsSwipeAway(false);
@@ -491,17 +538,65 @@ export function SwipeCard({ cards, onResult, title = 'Слова для повт
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (!isDragging && !isSwipeAway) {
+                        if (!isDragging && !isSwipeAway && !isEditing) {
                           setIsFlipped(false);
                         }
                       }}
                     >
                       <div className="text-center w-full">
-                        <p className="text-2xl font-semibold text-green-900 mb-3">{card.translation}</p>
-                        {card.exampleSentence && (
-                          <p className="text-sm text-gray-700 italic mb-4">"{card.exampleSentence}"</p>
+                        {isEditing ? (
+                          <form onSubmit={saveEdit} className="space-y-2 text-left" onClick={(e) => e.stopPropagation()}>
+                            <label className="block space-y-1">
+                              <span className="text-xs font-medium text-gray-600">Перевод</span>
+                              <input
+                                value={editTranslation}
+                                onChange={(e) => setEditTranslation(e.target.value)}
+                                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                                required
+                              />
+                            </label>
+                            <label className="block space-y-1">
+                              <span className="text-xs font-medium text-gray-600">Пример</span>
+                              <input
+                                value={editExample}
+                                onChange={(e) => setEditExample(e.target.value)}
+                                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                              />
+                            </label>
+                            {editError && <p className="text-xs text-red-600">{editError}</p>}
+                            <div className="flex gap-2">
+                              <Button type="submit" disabled={editBusy} className="flex-1">
+                                {editBusy ? 'Сохраняем…' : 'Сохранить'}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                disabled={editBusy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setIsEditing(false);
+                                }}
+                              >
+                                Отмена
+                              </Button>
+                            </div>
+                          </form>
+                        ) : (
+                          <>
+                            <p className="text-2xl font-semibold text-green-900 mb-3">{card.translation}</p>
+                            {card.exampleSentence && (
+                              <p className="text-sm text-gray-700 italic mb-4">"{card.exampleSentence}"</p>
+                            )}
+                            <button
+                              type="button"
+                              onClick={startEdit}
+                              className="mb-2 text-xs font-medium text-green-800 underline"
+                            >
+                              Исправить
+                            </button>
+                            <p className="text-xs text-gray-500">Нажми, чтобы вернуться</p>
+                          </>
                         )}
-                        <p className="text-xs text-gray-500">Нажми, чтобы вернуться</p>
                       </div>
                     </div>
                   )}

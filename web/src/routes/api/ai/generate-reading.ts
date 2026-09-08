@@ -13,7 +13,7 @@ export const Route = createFileRoute('/api/ai/generate-reading')({
             Topic: ${topic}
             Level: ${level}
             Return a JSON object with the reading task details.
-        `)
+        `, { task: 'lesson' })
           return Response.json({ task })
         } catch (error) {
           console.error('Error generating reading task:', error)

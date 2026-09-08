@@ -118,6 +118,7 @@ export function useAISession({
                 role: m.role,
                 content: m.content,
               })),
+              level: level || 'A2',
             }
           : {
               userId: userId || '',

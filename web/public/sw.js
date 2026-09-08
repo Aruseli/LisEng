@@ -77,3 +77,40 @@ self.addEventListener('fetch', (event) => {
     );
   }
 });
+
+self.addEventListener('push', (event) => {
+  let title = 'LisEng';
+  let body = 'Сегодня есть план занятий';
+  try {
+    const data = event.data ? event.data.json() : {};
+    title = data.title || title;
+    body = data.body || body;
+  } catch {
+    if (event.data) body = event.data.text();
+  }
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: '/icons/android-chrome-192x192.png',
+      badge: '/icons/android-chrome-192x192.png',
+      data: { url: '/' },
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if ('focus' in client) {
+          client.navigate(url);
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
+});
+

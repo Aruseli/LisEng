@@ -1,0 +1,8 @@
+table:
+  name: push_subscriptions
+  schema: public
+object_relationships: []
+insert_permissions: []
+select_permissions: []
+update_permissions: []
+delete_permissions: []
