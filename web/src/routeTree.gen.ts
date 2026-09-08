@@ -15,6 +15,13 @@ import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiVersionRouteImport } from './routes/api/version'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAuthHasuraJwtRouteImport } from './routes/api/auth/hasura-jwt'
+import { Route as ApiVerbsIndexRouteImport } from './routes/api/verbs/index'
+import { Route as ApiVerbsVerbIdRouteImport } from './routes/api/verbs/$verbId'
+import { Route as ApiVerbsAddToQueueRouteImport } from './routes/api/verbs/add-to-queue'
+import { Route as ApiVerbsPracticeRouteImport } from './routes/api/verbs/practice'
+import { Route as ApiVerbsPracticeSessionRouteImport } from './routes/api/verbs/practice-session'
+import { Route as ApiVerbsProgressRouteImport } from './routes/api/verbs/progress'
+import { Route as ApiVerbsReviewRouteImport } from './routes/api/verbs/review'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +53,41 @@ const ApiAuthHasuraJwtRoute = ApiAuthHasuraJwtRouteImport.update({
   path: '/api/auth/hasura-jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVerbsIndexRoute = ApiVerbsIndexRouteImport.update({
+  id: '/api/verbs/',
+  path: '/api/verbs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsVerbIdRoute = ApiVerbsVerbIdRouteImport.update({
+  id: '/api/verbs/$verbId',
+  path: '/api/verbs/$verbId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsAddToQueueRoute = ApiVerbsAddToQueueRouteImport.update({
+  id: '/api/verbs/add-to-queue',
+  path: '/api/verbs/add-to-queue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsPracticeRoute = ApiVerbsPracticeRouteImport.update({
+  id: '/api/verbs/practice',
+  path: '/api/verbs/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsPracticeSessionRoute = ApiVerbsPracticeSessionRouteImport.update({
+  id: '/api/verbs/practice-session',
+  path: '/api/verbs/practice-session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsProgressRoute = ApiVerbsProgressRouteImport.update({
+  id: '/api/verbs/progress',
+  path: '/api/verbs/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVerbsReviewRoute = ApiVerbsReviewRouteImport.update({
+  id: '/api/verbs/review',
+  path: '/api/verbs/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +96,13 @@ export interface FileRoutesByFullPath {
   '/api/version': typeof ApiVersionRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
+  '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/practice': typeof ApiVerbsPracticeRoute
+  '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
+  '/api/verbs/progress': typeof ApiVerbsProgressRoute
+  '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/verbs/': typeof ApiVerbsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +111,13 @@ export interface FileRoutesByTo {
   '/api/version': typeof ApiVersionRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
+  '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/practice': typeof ApiVerbsPracticeRoute
+  '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
+  '/api/verbs/progress': typeof ApiVerbsProgressRoute
+  '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/verbs': typeof ApiVerbsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +127,13 @@ export interface FileRoutesById {
   '/api/version': typeof ApiVersionRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
+  '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/practice': typeof ApiVerbsPracticeRoute
+  '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
+  '/api/verbs/progress': typeof ApiVerbsProgressRoute
+  '/api/verbs/review': typeof ApiVerbsReviewRoute
+  '/api/verbs/': typeof ApiVerbsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +144,13 @@ export interface FileRouteTypes {
     | '/api/version'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/verbs/$verbId'
+    | '/api/verbs/add-to-queue'
+    | '/api/verbs/practice'
+    | '/api/verbs/practice-session'
+    | '/api/verbs/progress'
+    | '/api/verbs/review'
+    | '/api/verbs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +159,13 @@ export interface FileRouteTypes {
     | '/api/version'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/verbs/$verbId'
+    | '/api/verbs/add-to-queue'
+    | '/api/verbs/practice'
+    | '/api/verbs/practice-session'
+    | '/api/verbs/progress'
+    | '/api/verbs/review'
+    | '/api/verbs'
   id:
     | '__root__'
     | '/'
@@ -97,6 +174,13 @@ export interface FileRouteTypes {
     | '/api/version'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/verbs/$verbId'
+    | '/api/verbs/add-to-queue'
+    | '/api/verbs/practice'
+    | '/api/verbs/practice-session'
+    | '/api/verbs/progress'
+    | '/api/verbs/review'
+    | '/api/verbs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +190,13 @@ export interface RootRouteChildren {
   ApiVersionRoute: typeof ApiVersionRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiAuthHasuraJwtRoute: typeof ApiAuthHasuraJwtRoute
+  ApiVerbsVerbIdRoute: typeof ApiVerbsVerbIdRoute
+  ApiVerbsAddToQueueRoute: typeof ApiVerbsAddToQueueRoute
+  ApiVerbsPracticeRoute: typeof ApiVerbsPracticeRoute
+  ApiVerbsPracticeSessionRoute: typeof ApiVerbsPracticeSessionRoute
+  ApiVerbsProgressRoute: typeof ApiVerbsProgressRoute
+  ApiVerbsReviewRoute: typeof ApiVerbsReviewRoute
+  ApiVerbsIndexRoute: typeof ApiVerbsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +243,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthHasuraJwtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/verbs/': {
+      id: '/api/verbs/'
+      path: '/api/verbs'
+      fullPath: '/api/verbs/'
+      preLoaderRoute: typeof ApiVerbsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/$verbId': {
+      id: '/api/verbs/$verbId'
+      path: '/api/verbs/$verbId'
+      fullPath: '/api/verbs/$verbId'
+      preLoaderRoute: typeof ApiVerbsVerbIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/add-to-queue': {
+      id: '/api/verbs/add-to-queue'
+      path: '/api/verbs/add-to-queue'
+      fullPath: '/api/verbs/add-to-queue'
+      preLoaderRoute: typeof ApiVerbsAddToQueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/practice': {
+      id: '/api/verbs/practice'
+      path: '/api/verbs/practice'
+      fullPath: '/api/verbs/practice'
+      preLoaderRoute: typeof ApiVerbsPracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/practice-session': {
+      id: '/api/verbs/practice-session'
+      path: '/api/verbs/practice-session'
+      fullPath: '/api/verbs/practice-session'
+      preLoaderRoute: typeof ApiVerbsPracticeSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/progress': {
+      id: '/api/verbs/progress'
+      path: '/api/verbs/progress'
+      fullPath: '/api/verbs/progress'
+      preLoaderRoute: typeof ApiVerbsProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/verbs/review': {
+      id: '/api/verbs/review'
+      path: '/api/verbs/review'
+      fullPath: '/api/verbs/review'
+      preLoaderRoute: typeof ApiVerbsReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +302,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVersionRoute: ApiVersionRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiAuthHasuraJwtRoute: ApiAuthHasuraJwtRoute,
+  ApiVerbsVerbIdRoute: ApiVerbsVerbIdRoute,
+  ApiVerbsAddToQueueRoute: ApiVerbsAddToQueueRoute,
+  ApiVerbsPracticeRoute: ApiVerbsPracticeRoute,
+  ApiVerbsPracticeSessionRoute: ApiVerbsPracticeSessionRoute,
+  ApiVerbsProgressRoute: ApiVerbsProgressRoute,
+  ApiVerbsReviewRoute: ApiVerbsReviewRoute,
+  ApiVerbsIndexRoute: ApiVerbsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
