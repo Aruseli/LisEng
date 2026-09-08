@@ -56,7 +56,7 @@ export function AIPracticeTab({ topic, messages, isLoading, suggestedPrompt, onS
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-100 bg-gray-50 p-4">
+      <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-100 bg-gray-50 p-4 min-h-[50vmin]">
         <div className="flex flex-col gap-3">
           {messages.map((message, index) => (
             <div
