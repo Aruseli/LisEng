@@ -1,0 +1,13 @@
+- name: schedule-cron
+  webhook: http://localhost:3003/api/events/schedule-cron
+  schedule: '* * * * *'
+  include_in_metadata: true
+  payload: {}
+- name: subscription_billing_cron
+  webhook: http://localhost:3003/api/events/subscription-billing
+  schedule: '*/10 * * * *'
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: X-Hasura-Event-Secret
+      value: e6f5dc71dcce31cfd9e18def5efc95fbb6fe42ad408bfb913fe60e1448a519b2

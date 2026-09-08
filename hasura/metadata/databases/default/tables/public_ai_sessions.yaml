@@ -1,0 +1,70 @@
+table:
+  name: ai_sessions
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+array_relationships:
+  - name: kumon_progresses
+    using:
+      foreign_key_constraint_on:
+        column: session_id
+        table:
+          name: kumon_progress
+          schema: public
+  - name: lesson_snapshots
+    using:
+      foreign_key_constraint_on:
+        column: session_id
+        table:
+          name: lesson_snapshots
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: X-Hasura-User-Id
+      columns:
+        - conversation
+        - duration_minutes
+        - ended_at
+        - feedback
+        - started_at
+        - topic
+        - type
+        - user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - topic
+        - type
+        - session_date
+        - duration_minutes
+        - conversation
+        - feedback
+        - ended_at
+        - started_at
+        - id
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - conversation
+        - duration_minutes
+        - ended_at
+        - feedback
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""

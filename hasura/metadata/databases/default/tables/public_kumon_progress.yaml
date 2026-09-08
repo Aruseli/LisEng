@@ -1,0 +1,13 @@
+table:
+  name: kumon_progress
+  schema: public
+object_relationships:
+  - name: ai_session
+    using:
+      foreign_key_constraint_on: session_id
+  - name: lesson_snapshot
+    using:
+      foreign_key_constraint_on: last_practiced_snapshot_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id

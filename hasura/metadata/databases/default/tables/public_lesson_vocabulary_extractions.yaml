@@ -1,0 +1,10 @@
+table:
+  name: lesson_vocabulary_extractions
+  schema: public
+object_relationships:
+  - name: lesson_snapshot
+    using:
+      foreign_key_constraint_on: lesson_snapshot_id
+  - name: vocabulary_card
+    using:
+      foreign_key_constraint_on: vocabulary_card_id

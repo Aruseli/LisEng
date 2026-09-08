@@ -1,0 +1,38 @@
+table:
+  name: verb_review_history
+  schema: public
+object_relationships:
+  - name: irregular_verb
+    using:
+      foreign_key_constraint_on: verb_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: X-Hasura-User-Id
+      columns:
+        - verb_id
+        - was_correct
+        - response_time_seconds
+        - practice_mode
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - verb_id
+        - user_id
+        - reviewed_at
+        - was_correct
+        - response_time_seconds
+        - practice_mode
+        - created_at
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

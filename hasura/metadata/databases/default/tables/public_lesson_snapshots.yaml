@@ -1,0 +1,45 @@
+table:
+  name: lesson_snapshots
+  schema: public
+object_relationships:
+  - name: ai_session
+    using:
+      foreign_key_constraint_on: session_id
+  - name: daily_task
+    using:
+      foreign_key_constraint_on: task_id
+  - name: lesson_snapshot
+    using:
+      foreign_key_constraint_on: parent_snapshot_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+array_relationships:
+  - name: active_recall_sessions
+    using:
+      foreign_key_constraint_on:
+        column: lesson_snapshot_id
+        table:
+          name: active_recall_sessions
+          schema: public
+  - name: kumon_progresses
+    using:
+      foreign_key_constraint_on:
+        column: last_practiced_snapshot_id
+        table:
+          name: kumon_progress
+          schema: public
+  - name: lesson_snapshots
+    using:
+      foreign_key_constraint_on:
+        column: parent_snapshot_id
+        table:
+          name: lesson_snapshots
+          schema: public
+  - name: lesson_vocabulary_extractions
+    using:
+      foreign_key_constraint_on:
+        column: lesson_snapshot_id
+        table:
+          name: lesson_vocabulary_extractions
+          schema: public

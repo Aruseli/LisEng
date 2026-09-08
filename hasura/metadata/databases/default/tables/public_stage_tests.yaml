@@ -1,0 +1,10 @@
+table:
+  name: stage_tests
+  schema: public
+object_relationships:
+  - name: study_stage
+    using:
+      foreign_key_constraint_on: stage_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id

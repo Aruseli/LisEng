@@ -1,0 +1,39 @@
+table:
+  name: study_stages
+  schema: public
+array_relationships:
+  - name: daily_tasks
+    using:
+      foreign_key_constraint_on:
+        column: stage_id
+        table:
+          name: daily_tasks
+          schema: public
+  - name: stage_progresses
+    using:
+      foreign_key_constraint_on:
+        column: stage_id
+        table:
+          name: stage_progress
+          schema: public
+  - name: stage_requirements
+    using:
+      foreign_key_constraint_on:
+        column: stage_id
+        table:
+          name: stage_requirements
+          schema: public
+  - name: stage_tests
+    using:
+      foreign_key_constraint_on:
+        column: stage_id
+        table:
+          name: stage_tests
+          schema: public
+  - name: weekly_structures
+    using:
+      foreign_key_constraint_on:
+        column: stage_id
+        table:
+          name: weekly_structure
+          schema: public

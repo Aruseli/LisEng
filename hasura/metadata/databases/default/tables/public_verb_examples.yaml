@@ -1,0 +1,19 @@
+table:
+  name: verb_examples
+  schema: public
+object_relationships:
+  - name: irregular_verb
+    using:
+      foreign_key_constraint_on: verb_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - verb_id
+        - form_type
+        - sentence_en
+        - sentence_ru
+        - context
+        - created_at
+      filter: {}

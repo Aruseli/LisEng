@@ -1,0 +1,7 @@
+table:
+  name: stage_requirements
+  schema: public
+object_relationships:
+  - name: study_stage
+    using:
+      foreign_key_constraint_on: stage_id

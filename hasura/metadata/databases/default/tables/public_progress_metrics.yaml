@@ -1,0 +1,27 @@
+table:
+  name: progress_metrics
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - date
+        - study_minutes
+        - tasks_completed
+        - words_learned
+        - accuracy_grammar
+        - accuracy_listening
+        - accuracy_reading
+        - accuracy_vocabulary
+        - accuracy_writing
+        - created_at
+        - id
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""

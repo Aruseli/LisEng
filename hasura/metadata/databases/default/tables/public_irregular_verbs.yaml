@@ -1,0 +1,40 @@
+table:
+  name: irregular_verbs
+  schema: public
+array_relationships:
+  - name: verb_examples
+    using:
+      foreign_key_constraint_on:
+        column: verb_id
+        table:
+          name: verb_examples
+          schema: public
+  - name: verb_learning_progresses
+    using:
+      foreign_key_constraint_on:
+        column: verb_id
+        table:
+          name: verb_learning_progress
+          schema: public
+  - name: verb_review_histories
+    using:
+      foreign_key_constraint_on:
+        column: verb_id
+        table:
+          name: verb_review_history
+          schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - infinitive
+        - past_simple
+        - past_participle
+        - group_number
+        - frequency
+        - difficulty
+        - mnemonic_tip
+        - related_verbs
+        - created_at
+      filter: {}

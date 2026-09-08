@@ -1,0 +1,221 @@
+table:
+  name: users
+  schema: public
+object_relationships:
+  - name: streak
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: streaks
+          schema: public
+array_relationships:
+  - name: accounts
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: accounts
+          schema: public
+  - name: achievements
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: achievements
+          schema: public
+  - name: active_recall_sessions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: active_recall_sessions
+          schema: public
+  - name: ai_sessions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: ai_sessions
+          schema: public
+  - name: daily_tasks
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: daily_tasks
+          schema: public
+  - name: kumon_progresses
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: kumon_progress
+          schema: public
+  - name: lesson_snapshots
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: lesson_snapshots
+          schema: public
+  - name: progress_metrics
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: progress_metrics
+          schema: public
+  - name: review_histories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: review_history
+          schema: public
+  - name: shu_ha_ri_progresses
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: shu_ha_ri_progress
+          schema: public
+  - name: shu_ha_ri_tests
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: shu_ha_ri_tests
+          schema: public
+  - name: stage_progresses
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: stage_progress
+          schema: public
+  - name: stage_tests
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: stage_tests
+          schema: public
+  - name: verb_learning_progresses
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: verb_learning_progress
+          schema: public
+  - name: verb_practice_sessions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: verb_practice_sessions
+          schema: public
+  - name: verb_review_histories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: verb_review_history
+          schema: public
+  - name: vocabulary_cards
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: vocabulary_cards
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - current_level
+        - daily_goal_minutes
+        - email
+        - email_verified
+        - exam_date
+        - id
+        - image
+        - instruction_language
+        - is_admin
+        - name
+        - reminder_enabled
+        - start_date
+        - study_place
+        - study_time
+        - target_level
+    comment: ""
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - name
+        - image
+        - created_at
+        - updated_at
+        - hasura_role
+      filter: {}
+  - role: me
+    permission:
+      columns:
+        - id
+        - name
+        - email
+        - email_verified
+        - image
+        - created_at
+        - updated_at
+        - is_admin
+        - hasura_role
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - email
+        - image
+        - created_at
+        - updated_at
+        - current_level
+        - target_level
+        - exam_date
+        - start_date
+        - study_time
+        - study_place
+        - daily_goal_minutes
+        - reminder_enabled
+        - instruction_language
+        - hasura_role
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - current_level
+        - daily_goal_minutes
+        - exam_date
+        - image
+        - instruction_language
+        - name
+        - reminder_enabled
+        - start_date
+        - study_place
+        - study_time
+        - target_level
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
