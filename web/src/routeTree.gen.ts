@@ -10,12 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiVersionRouteImport } from './routes/api/version'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiAuthHasuraJwtRouteImport } from './routes/api/auth/hasura-jwt'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
@@ -28,35 +36,76 @@ const ApiVersionRoute = ApiVersionRouteImport.update({
   path: '/api/version',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthHasuraJwtRoute = ApiAuthHasuraJwtRouteImport.update({
+  id: '/api/auth/hasura-jwt',
+  path: '/api/auth/hasura-jwt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/health' | '/api/version'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/api/health'
+    | '/api/version'
+    | '/api/auth/$'
+    | '/api/auth/hasura-jwt'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/health' | '/api/version'
-  id: '__root__' | '/' | '/api/health' | '/api/version'
+  to:
+    | '/'
+    | '/login'
+    | '/api/health'
+    | '/api/version'
+    | '/api/auth/$'
+    | '/api/auth/hasura-jwt'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/api/health'
+    | '/api/version'
+    | '/api/auth/$'
+    | '/api/auth/hasura-jwt'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiVersionRoute: typeof ApiVersionRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiAuthHasuraJwtRoute: typeof ApiAuthHasuraJwtRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/health': {
@@ -82,13 +138,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVersionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/hasura-jwt': {
+      id: '/api/auth/hasura-jwt'
+      path: '/api/auth/hasura-jwt'
+      fullPath: '/api/auth/hasura-jwt'
+      preLoaderRoute: typeof ApiAuthHasuraJwtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiVersionRoute: ApiVersionRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiAuthHasuraJwtRoute: ApiAuthHasuraJwtRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
