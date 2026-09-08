@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiVersionRouteImport } from './routes/api/version'
+import { Route as LessonTaskIdRouteImport } from './routes/lesson.$taskId'
 import { Route as ApiAiAnalyzeVoiceRouteImport } from './routes/api/ai/analyze-voice'
 import { Route as ApiAiCheckWritingRouteImport } from './routes/api/ai/check-writing'
 import { Route as ApiAiGenerateReadingRouteImport } from './routes/api/ai/generate-reading'
@@ -65,6 +66,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
 const ApiVersionRoute = ApiVersionRouteImport.update({
   id: '/api/version',
   path: '/api/version',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LessonTaskIdRoute = LessonTaskIdRouteImport.update({
+  id: '/lesson/$taskId',
+  path: '/lesson/$taskId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAiAnalyzeVoiceRoute = ApiAiAnalyzeVoiceRouteImport.update({
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/lesson/$taskId': typeof LessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/lesson/$taskId': typeof LessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/api/health': typeof ApiHealthRoute
   '/api/version': typeof ApiVersionRoute
+  '/lesson/$taskId': typeof LessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/health'
     | '/api/version'
+    | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/health'
     | '/api/version'
+    | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/health'
     | '/api/version'
+    | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
@@ -478,6 +490,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiVersionRoute: typeof ApiVersionRoute
+  LessonTaskIdRoute: typeof LessonTaskIdRoute
   ApiAiAnalyzeVoiceRoute: typeof ApiAiAnalyzeVoiceRoute
   ApiAiCheckWritingRoute: typeof ApiAiCheckWritingRoute
   ApiAiGenerateReadingRoute: typeof ApiAiGenerateReadingRoute
@@ -541,6 +554,13 @@ declare module '@tanstack/react-router' {
       path: '/api/version'
       fullPath: '/api/version'
       preLoaderRoute: typeof ApiVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lesson/$taskId': {
+      id: '/lesson/$taskId'
+      path: '/lesson/$taskId'
+      fullPath: '/lesson/$taskId'
+      preLoaderRoute: typeof LessonTaskIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ai/analyze-voice': {
@@ -782,6 +802,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiVersionRoute: ApiVersionRoute,
+  LessonTaskIdRoute: LessonTaskIdRoute,
   ApiAiAnalyzeVoiceRoute: ApiAiAnalyzeVoiceRoute,
   ApiAiCheckWritingRoute: ApiAiCheckWritingRoute,
   ApiAiGenerateReadingRoute: ApiAiGenerateReadingRoute,
