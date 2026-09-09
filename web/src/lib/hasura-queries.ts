@@ -202,6 +202,24 @@ export async function hasAnyVocabularyCards(hasyx: Hasyx, userId: string): Promi
   return Boolean(rows)
 }
 
+export async function countPendingErrorCards(
+  hasyx: Hasyx,
+  userId: string,
+  date: string
+) {
+  const rows = await hasyx.select({
+    table: 'vocabulary_cards',
+    where: {
+      user_id: { _eq: userId },
+      next_review_date: { _lte: date },
+      incorrect_count: { _gt: 0 },
+    },
+    returning: ['id'],
+  });
+  if (Array.isArray(rows)) return rows.length;
+  return rows ? 1 : 0;
+}
+
 export async function getVocabularyCardsForReview(
   hasyx: Hasyx,
   userId: string,
@@ -638,6 +656,11 @@ export async function updateProgressMetrics(
     tasksCompleted?: number;
     studyMinutes?: number;
     wordsLearned?: number;
+    accuracyGrammar?: number;
+    accuracyVocabulary?: number;
+    accuracyListening?: number;
+    accuracyReading?: number;
+    accuracyWriting?: number;
   }
 ) {
   // Получаем текущие метрики
@@ -648,7 +671,17 @@ export async function updateProgressMetrics(
       date: { _eq: date },
     },
     limit: 1,
-    returning: ['id', 'tasks_completed', 'study_minutes', 'words_learned'],
+    returning: [
+      'id',
+      'tasks_completed',
+      'study_minutes',
+      'words_learned',
+      'accuracy_grammar',
+      'accuracy_vocabulary',
+      'accuracy_listening',
+      'accuracy_reading',
+      'accuracy_writing',
+    ],
   });
 
   const existingMetric = Array.isArray(existing) ? existing[0] : existing;
@@ -668,6 +701,21 @@ export async function updateProgressMetrics(
     updates.words_learned = existingMetric
       ? (existingMetric.words_learned || 0) + data.wordsLearned
       : data.wordsLearned;
+  }
+  if (typeof data.accuracyGrammar === 'number') {
+    updates.accuracy_grammar = data.accuracyGrammar;
+  }
+  if (typeof data.accuracyVocabulary === 'number') {
+    updates.accuracy_vocabulary = data.accuracyVocabulary;
+  }
+  if (typeof data.accuracyListening === 'number') {
+    updates.accuracy_listening = data.accuracyListening;
+  }
+  if (typeof data.accuracyReading === 'number') {
+    updates.accuracy_reading = data.accuracyReading;
+  }
+  if (typeof data.accuracyWriting === 'number') {
+    updates.accuracy_writing = data.accuracyWriting;
   }
 
   if (existingMetric?.id) {
@@ -907,14 +955,8 @@ export async function updateStageProgressFromTask(
     return null;
   }
 
-  // Получаем прогресс этапа
-  const progressResult = await hasyx.select({
-    table: 'stage_progress',
-    pk_columns: { id: taskData.stage_id },
-    returning: ['id', 'tasks_completed', 'tasks_total'],
-  });
-
-  const progress = Array.isArray(progressResult) ? progressResult[0] : progressResult;
+  const progressRows = await getStageProgress(hasyx, userId, taskData.stage_id);
+  const progress = Array.isArray(progressRows) ? progressRows[0] : progressRows;
   if (!progress?.id) {
     return null;
   }

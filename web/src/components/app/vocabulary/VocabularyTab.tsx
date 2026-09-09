@@ -1,4 +1,6 @@
 
+import { useMemo } from 'react';
+
 import { useAppData } from '@/lib/app-data';
 
 import { SwipeCard, type Flashcard } from './SwipeCard';
@@ -24,13 +26,17 @@ export function VocabularyTab({
   dueToday,
 }: VocabularyTabProps) {
   const { refreshVocabulary } = useAppData();
-  const flashcardFormat: Flashcard[] = cards.map((card) => ({
-    id: card.id,
-    word: card.word,
-    translation: card.translation,
-    exampleSentence: card.exampleSentence ?? undefined,
-    difficulty: card.difficulty ?? undefined,
-  }));
+  const flashcardFormat: Flashcard[] = useMemo(
+    () =>
+      cards.map((card) => ({
+        id: card.id,
+        word: card.word,
+        translation: card.translation,
+        exampleSentence: card.exampleSentence ?? undefined,
+        difficulty: card.difficulty ?? undefined,
+      })),
+    [cards],
+  );
 
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">

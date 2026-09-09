@@ -9,11 +9,15 @@ import {
   updateProgressMetrics,
   updateStreak,
   updateStageProgressFromTask,
+  getStageProgress,
+  getLatestProgressMetric,
+  updateStageProgressStats,
   getAISession,
   updateAISession,
   createAISession,
 } from '@/lib/hasura-queries';
 import { calculateSM2, getQualityScore, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
+import { StageProgressionService } from '@/lib/stage-progression';
 
 interface PronunciationResultPayload {
   accuracy: number | null;
@@ -189,10 +193,35 @@ export class LessonCompletionService {
     const taskDate = task.task_date ?? new Date().toISOString().split('T')[0];
     
     // Обновляем метрики прогресса
+    const accuracyByType: Record<string, number | undefined> = {}
+    if (options.pronunciation?.accuracy != null) {
+      const value = options.pronunciation.accuracy > 1
+        ? options.pronunciation.accuracy / 100
+        : options.pronunciation.accuracy
+      if (task.type === 'listening') accuracyByType.accuracyListening = value
+      else if (task.type === 'reading') accuracyByType.accuracyReading = value
+      else if (task.type === 'speaking') accuracyByType.accuracyWriting = value
+    }
+    if (options.flashcardResults && options.flashcardResults.length > 0) {
+      const correct = options.flashcardResults.filter((item) => item.wasCorrect).length
+      accuracyByType.accuracyVocabulary = correct / options.flashcardResults.length
+    }
+
     await updateProgressMetrics(this.hasyx, options.userId, taskDate, {
       tasksCompleted: 1,
       studyMinutes: task.duration_minutes || 0,
+      ...accuracyByType,
     });
+
+    if (task.stage_id) {
+      const progressRows = await getStageProgress(this.hasyx, options.userId, task.stage_id)
+      const progress = Array.isArray(progressRows) ? progressRows[0] : progressRows
+      const latest = await getLatestProgressMetric(this.hasyx, options.userId)
+      const averageAccuracy = StageProgressionService.calculateAverageAccuracy(latest ?? {})
+      if (progress?.id && averageAccuracy > 0) {
+        await updateStageProgressStats(this.hasyx, progress.id, { averageAccuracy })
+      }
+    }
 
     // Обновляем стрик (только если все задания дня выполнены)
     await updateStreak(this.hasyx, options.userId, taskDate);

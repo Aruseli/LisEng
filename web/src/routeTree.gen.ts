@@ -57,6 +57,7 @@ import { Route as ApiStageGenerateTestRouteImport } from './routes/api/stage/gen
 import { Route as ApiVerbsIndexRouteImport } from './routes/api/verbs/index'
 import { Route as ApiVerbsVerbIdRouteImport } from './routes/api/verbs/$verbId'
 import { Route as ApiVerbsAddToQueueRouteImport } from './routes/api/verbs/add-to-queue'
+import { Route as ApiVerbsDailyPackRouteImport } from './routes/api/verbs/daily-pack'
 import { Route as ApiVerbsPracticeRouteImport } from './routes/api/verbs/practice'
 import { Route as ApiVerbsPracticeSessionRouteImport } from './routes/api/verbs/practice-session'
 import { Route as ApiVerbsProgressRouteImport } from './routes/api/verbs/progress'
@@ -310,6 +311,11 @@ const ApiVerbsAddToQueueRoute = ApiVerbsAddToQueueRouteImport.update({
   path: '/api/verbs/add-to-queue',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVerbsDailyPackRoute = ApiVerbsDailyPackRouteImport.update({
+  id: '/api/verbs/daily-pack',
+  path: '/api/verbs/daily-pack',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVerbsPracticeRoute = ApiVerbsPracticeRouteImport.update({
   id: '/api/verbs/practice',
   path: '/api/verbs/practice',
@@ -408,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/api/stage/generate-test': typeof ApiStageGenerateTestRoute
   '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
   '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/daily-pack': typeof ApiVerbsDailyPackRoute
   '/api/verbs/practice': typeof ApiVerbsPracticeRoute
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
@@ -466,6 +473,7 @@ export interface FileRoutesByTo {
   '/api/stage/generate-test': typeof ApiStageGenerateTestRoute
   '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
   '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/daily-pack': typeof ApiVerbsDailyPackRoute
   '/api/verbs/practice': typeof ApiVerbsPracticeRoute
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
@@ -527,6 +535,7 @@ export interface FileRoutesById {
   '/api/stage/generate-test': typeof ApiStageGenerateTestRoute
   '/api/verbs/$verbId': typeof ApiVerbsVerbIdRoute
   '/api/verbs/add-to-queue': typeof ApiVerbsAddToQueueRoute
+  '/api/verbs/daily-pack': typeof ApiVerbsDailyPackRoute
   '/api/verbs/practice': typeof ApiVerbsPracticeRoute
   '/api/verbs/practice-session': typeof ApiVerbsPracticeSessionRoute
   '/api/verbs/progress': typeof ApiVerbsProgressRoute
@@ -588,6 +597,7 @@ export interface FileRouteTypes {
     | '/api/stage/generate-test'
     | '/api/verbs/$verbId'
     | '/api/verbs/add-to-queue'
+    | '/api/verbs/daily-pack'
     | '/api/verbs/practice'
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
@@ -646,6 +656,7 @@ export interface FileRouteTypes {
     | '/api/stage/generate-test'
     | '/api/verbs/$verbId'
     | '/api/verbs/add-to-queue'
+    | '/api/verbs/daily-pack'
     | '/api/verbs/practice'
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
@@ -706,6 +717,7 @@ export interface FileRouteTypes {
     | '/api/stage/generate-test'
     | '/api/verbs/$verbId'
     | '/api/verbs/add-to-queue'
+    | '/api/verbs/daily-pack'
     | '/api/verbs/practice'
     | '/api/verbs/practice-session'
     | '/api/verbs/progress'
@@ -759,6 +771,7 @@ export interface RootRouteChildren {
   ApiStageGenerateTestRoute: typeof ApiStageGenerateTestRoute
   ApiVerbsVerbIdRoute: typeof ApiVerbsVerbIdRoute
   ApiVerbsAddToQueueRoute: typeof ApiVerbsAddToQueueRoute
+  ApiVerbsDailyPackRoute: typeof ApiVerbsDailyPackRoute
   ApiVerbsPracticeRoute: typeof ApiVerbsPracticeRoute
   ApiVerbsPracticeSessionRoute: typeof ApiVerbsPracticeSessionRoute
   ApiVerbsProgressRoute: typeof ApiVerbsProgressRoute
@@ -1108,6 +1121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVerbsAddToQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/verbs/daily-pack': {
+      id: '/api/verbs/daily-pack'
+      path: '/api/verbs/daily-pack'
+      fullPath: '/api/verbs/daily-pack'
+      preLoaderRoute: typeof ApiVerbsDailyPackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/verbs/practice': {
       id: '/api/verbs/practice'
       path: '/api/verbs/practice'
@@ -1258,6 +1278,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiStageGenerateTestRoute: ApiStageGenerateTestRoute,
   ApiVerbsVerbIdRoute: ApiVerbsVerbIdRoute,
   ApiVerbsAddToQueueRoute: ApiVerbsAddToQueueRoute,
+  ApiVerbsDailyPackRoute: ApiVerbsDailyPackRoute,
   ApiVerbsPracticeRoute: ApiVerbsPracticeRoute,
   ApiVerbsPracticeSessionRoute: ApiVerbsPracticeSessionRoute,
   ApiVerbsProgressRoute: ApiVerbsProgressRoute,

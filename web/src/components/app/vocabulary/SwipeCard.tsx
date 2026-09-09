@@ -1,11 +1,13 @@
-
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSession } from '@/lib/compat/hasyx';
-import { motion } from 'motion/react';
-import { Heart, Volume2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { motion, useMotionValue, useTransform } from 'motion/react';
+import { Volume2 } from 'lucide-react';
 import { Button } from '@/components/app/Buttons/Button';
 import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
 import { useModalStore } from '@/store/modalStore';
+import { useVocabularySessionStore } from '@/store/vocabularySessionStore';
+import { queryKeys } from '@/lib/query-keys';
 
 export interface Flashcard {
   id: string;
@@ -25,6 +27,7 @@ interface FlashcardResult {
 interface SwipeCardProps {
   cards: Flashcard[];
   onResult?: (results: FlashcardResult[]) => void;
+  onProgress?: (answeredUnique: number, total: number) => void;
   onCardUpdated?: (card: Flashcard) => void;
   title?: string;
 }
@@ -38,21 +41,44 @@ interface CardPosition {
   scale: number;
 }
 
-export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова для повторения' }: SwipeCardProps) {
-  const { data: session, status } = useSession();
+// Позиция карточки в визуальной стопке по месту в очереди (0 — текущая)
+function getStackPosition(queueIndex: number): CardPosition {
+  if (queueIndex === 0) {
+    return { x: 0, y: 0, rotation: 0, zIndex: 100, opacity: 1, scale: 1 };
+  }
+  const rotation = ((queueIndex % 5) - 2) * 2.5;
+  return {
+    x: 0,
+    y: queueIndex * 4,
+    rotation,
+    zIndex: 100 - queueIndex,
+    opacity: Math.max(0.3, 1 - queueIndex * 0.1),
+    scale: Math.max(0.85, 1 - queueIndex * 0.02),
+  };
+}
+
+export function SwipeCard({ cards, onResult, onProgress, onCardUpdated, title = 'Слова для повторения' }: SwipeCardProps) {
+  const { data: session } = useSession();
   const userId = session?.user?.id ?? null;
+  const queryClient = useQueryClient();
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const modalShownRef = useRef(false);
+
+  // Сессия single-pass живёт в store — переживает переходы между роутами
+  const deckKey = useVocabularySessionStore((state) => state.deckKey);
+  const remainingIds = useVocabularySessionStore((state) => state.remainingIds);
+  const knownIds = useVocabularySessionStore((state) => state.knownIds);
+  const repeatIds = useVocabularySessionStore((state) => state.repeatIds);
+  const startSession = useVocabularySessionStore((state) => state.startSession);
+  const answerCard = useVocabularySessionStore((state) => state.answer);
+
+  // Локальный UI-стейт (не нужен между роутами)
   const [isDragging, setIsDragging] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [results, setResults] = useState<FlashcardResult[]>([]);
   const [userSentence, setUserSentence] = useState('');
   const [startTime, setStartTime] = useState(Date.now());
-  const [cardStack, setCardStack] = useState<Flashcard[]>(cards);
   const [isHovered, setIsHovered] = useState(false);
-  const [isAddingToDictionary, setIsAddingToDictionary] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTranslation, setEditTranslation] = useState('');
   const [editExample, setEditExample] = useState('');
@@ -60,6 +86,9 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
   const [editError, setEditError] = useState<string | null>(null);
   const [isSwipeAway, setIsSwipeAway] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [isAnswering, setIsAnswering] = useState(false);
+  // Локальные правки карточек (после saveEdit), поверх props
+  const [overrides, setOverrides] = useState<Record<string, Flashcard>>({});
   const cardRef = useRef<HTMLDivElement>(null);
 
   const { speak, cancel, isSpeaking } = useSpeechSynthesis({
@@ -68,57 +97,50 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
     pitch: 1,
   });
 
-  const currentCard = cardStack[currentIndex];
-  const isLastCard = currentIndex === cardStack.length - 1;
-  const allCardsCompleted = currentIndex >= cardStack.length;
+  // Индикация направления свайпа во время drag
+  const dragX = useMotionValue(0);
+  const knowHintOpacity = useTransform(dragX, [20, 100], [0, 1]);
+  const repeatHintOpacity = useTransform(dragX, [-20, -100], [0, 1]);
 
-  // Вычисляем позиции для стопки карт
-  const getCardPosition = (index: number, total: number): CardPosition => {
-    const stackIndex = index - currentIndex;
-    
-    if (stackIndex < 0) {
-      return {
-        x: 0,
-        y: 0,
-        rotation: 0,
-        zIndex: total - index,
-        opacity: 0,
-        scale: 0.8,
-      };
+  const cardsKey = cards.map((c) => c.id).join('|');
+  const cardById = useMemo(() => new Map(cards.map((c) => [c.id, c])), [cards]);
+
+  const resolveCard = useCallback(
+    (id: string): Flashcard | undefined => {
+      const base = cardById.get(id);
+      if (!base) return undefined;
+      return overrides[id] ?? base;
+    },
+    [cardById, overrides],
+  );
+
+  // До старта сессии (первый рендер) показываем колоду целиком
+  const sessionActive = deckKey === cardsKey;
+  const queueIds = sessionActive ? remainingIds : cards.map((c) => c.id);
+  const currentCard = queueIds.length > 0 ? resolveCard(queueIds[0]) : undefined;
+  const totalCount = knownIds.length + repeatIds.length + queueIds.length;
+  const allCardsCompleted = sessionActive && cards.length > 0 && remainingIds.length === 0;
+
+  // Старт/восстановление сессии: no-op, если состав колоды не изменился
+  useEffect(() => {
+    if (cards.length === 0) return;
+    if (useVocabularySessionStore.getState().deckKey !== cardsKey) {
+      modalShownRef.current = false;
+      setIsFlipped(false);
+      setIsEditing(false);
+      setStartTime(Date.now());
+      setIsSwipeAway(false);
+      setSwipeDirection(null);
+      startSession(cardsKey, cards.map((c) => c.id));
     }
-  
-    if (stackIndex === 0) {
-      return {
-        x: 0,
-        y: 0,
-        rotation: 0,
-        zIndex: total,
-        opacity: 1,
-        scale: 1,
-      };
-    }
-  
-    const offset = stackIndex * 4;
-    const rotation = ((index % 5) - 2) * 2.5;
-    return {
-      x: 0,
-      y: offset,
-      rotation,
-      zIndex: total - stackIndex,
-      opacity: Math.max(0.3, 1 - stackIndex * 0.1),
-      scale: Math.max(0.85, 1 - stackIndex * 0.02),
-    };
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardsKey]);
 
   const handleFlip = useCallback(() => {
-    console.log('isDragging111', isDragging, 'isFlipped111', isFlipped);
-    console.log('currentCard111', currentCard);
     if (!isDragging) {
       setIsFlipped(true);
       setIsHovered(false); // Сбрасываем hover при переворачивании
     }
-    console.log('isDragging', isDragging, 'isFlipped', isFlipped);
-    console.log('currentCard', currentCard);
   }, [isDragging]);
 
   const startEdit = (e: React.MouseEvent) => {
@@ -158,7 +180,7 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
         translation: body.card?.translation ?? nextTranslation,
         exampleSentence: body.card?.example_sentence ?? editExample.trim() ?? null,
       };
-      setCardStack((prev) => prev.map((card) => (card.id === updated.id ? updated : card)));
+      setOverrides((prev) => ({ ...prev, [updated.id]: updated }));
       onCardUpdated?.(updated);
       setIsEditing(false);
     } catch (err: any) {
@@ -170,87 +192,55 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
 
   const handleAnswer = useCallback(
     async (wasCorrect: boolean) => {
-      if (!currentCard || !userId) return;
+      if (!currentCard || !userId || isAnswering) return;
+      setIsAnswering(true);
 
+      const answeredCard = currentCard;
       const responseTime = Math.round((Date.now() - startTime) / 1000);
-      setStartTime(Date.now());
       const result: FlashcardResult = {
-        cardId: currentCard.id,
+        cardId: answeredCard.id,
         wasCorrect,
         responseTime,
         userSentence: userSentence.trim() || undefined,
       };
 
-      // Обновляем карточку в БД через API
+      // Single-pass: оба ответа просто убирают карточку из очереди.
+      // «Повторить» вернётся завтра по SM-2 (next_review_date уже ставит API).
+      answerCard(answeredCard.id, wasCorrect, result);
+      setUserSentence('');
+      setIsFlipped(false);
+      setStartTime(Date.now());
+
+      const state = useVocabularySessionStore.getState();
+      const answered = state.knownIds.length + state.repeatIds.length;
+      onProgress?.(answered, answered + state.remainingIds.length);
+
+      if (state.remainingIds.length === 0) {
+        onResult?.(state.results);
+        // Инвалидируем vocabulary один раз в конце сессии, а не после каждого ответа —
+        // иначе рефетч сбрасывал колоду посреди сессии
+        void queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary(userId) });
+      }
+
       try {
-        const response = await fetch('/api/vocabulary/review', {
+        await fetch('/api/vocabulary/review', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            cardId: currentCard.id,
+            cardId: answeredCard.id,
             userId,
             wasCorrect,
             responseTimeSeconds: responseTime,
           }),
         });
-
-        if (!response.ok) {
-          const errorBody = await response.json().catch(() => ({}));
-          throw new Error(errorBody.error || 'Failed to update card');
-        }
       } catch (error) {
         console.error('Failed to update vocabulary card:', error);
-        // Продолжаем работу даже при ошибке, чтобы не блокировать UI
-      }
-
-      const newResults = [...results, result];
-      setResults(newResults);
-      setUserSentence('');
-      setIsFlipped(false);
-
-      if (wasCorrect) {
-        // Увеличиваем currentIndex даже для последней карточки, чтобы allCardsCompleted стал true
-        setCurrentIndex((prev) => prev + 1);
-        if (isLastCard) {
-          onResult?.(newResults);
-        }
-      } else {
-        setCardStack((prevStack) => {
-          const updated = [...prevStack];
-          const wrongCard = updated.splice(currentIndex, 1)[0];
-          updated.push(wrongCard);
-          return updated;
-        });
-
-        // Увеличиваем currentIndex даже для последней карточки
-        setCurrentIndex((prev) => prev + 1);
-        if (isLastCard) {
-          onResult?.(newResults);
-        }
+      } finally {
+        setIsAnswering(false);
       }
     },
-    [currentCard, results, userSentence, startTime, isLastCard, onResult, userId]
+    [currentCard, userId, isAnswering, startTime, userSentence, answerCard, onProgress, onResult, queryClient]
   );
-
-  const handleAddToDictionary = useCallback(async () => {
-    if (!currentCard || !userId || isAddingToDictionary) return;
-
-    try {
-      setIsAddingToDictionary(true);
-      await fetch('/api/vocabulary/generate-cards', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          words: [currentCard.word],
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to add word to dictionary:', error);
-    } finally {
-      setIsAddingToDictionary(false);
-    }
-  }, [currentCard, userId, isAddingToDictionary]);
 
   const handlePlayPronunciation = useCallback(() => {
     if (currentCard) {
@@ -262,21 +252,14 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
     }
   }, [currentCard, isSpeaking, speak, cancel]);
 
-  // Замените handleDragEnd на:
+  // Свайп = ответ: вправо — «знаю», влево — «повторить»
   const handleDragEndMotion = useCallback(
     (event: any, info: { offset: { x: number; y: number } }) => {
       const threshold = 100;
       const absX = Math.abs(info.offset.x);
-      const absY = Math.abs(info.offset.y);
-      console.log('absX111', absX, 'absY111', absY);
-      console.log('currentCard', currentCard);
 
-      if (absX > threshold || absY > threshold) {
+      if (absX > threshold) {
         const direction = info.offset.x < 0 ? 'left' : 'right';
-
-        // Сохраняем текущую карточку ДО изменения индекса
-        const swipedCard = cardStack[currentIndex];
-        const wasLastCard = currentIndex === cardStack.length - 1;
 
         setSwipeDirection(direction);
         setIsSwipeAway(true);
@@ -284,68 +267,33 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
         setTimeout(() => {
           setSwipeDirection(null);
           setIsSwipeAway(false);
-          
-          setCurrentIndex((prev) => prev + 1);
-          
-          if (isFlipped) {
-            setIsFlipped(false);
-            setUserSentence('');
-          }
-          
-          if (wasLastCard && swipedCard) {
-            const responseTime = Math.round((Date.now() - startTime) / 1000);
-            const result: FlashcardResult = {
-              cardId: swipedCard.id,
-              wasCorrect: direction === 'right',
-              responseTime,
-            };
-            const newResults = [...results, result];
-            setResults(newResults);
-            onResult?.(newResults);
-          }
+          void handleAnswer(direction === 'right');
         }, 300);
       }
     },
-    [isFlipped, isLastCard, currentCard, results, startTime, onResult, userSentence]
+    [handleAnswer]
   );
-
-  // 1. Инициализация при загрузке новых карточек
-  useEffect(() => {
-    if (cards.length > 0) {
-      setCardStack(cards);
-      setCurrentIndex(0);
-      setIsFlipped(false);
-      setIsEditing(false);
-      setResults([]);
-      setStartTime(Date.now());
-      setIsSwipeAway(false);
-      setSwipeDirection(null);
-    }
-  }, [cards]); 
 
   // Определяем touch device
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
-
-  if (cardStack.length === 0) {
-    return (
-      <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500">Нет карточек для повторения.</p>
-      </section>
-    );
-  }
 
   // Показываем модалку при завершении всех карточек
   useEffect(() => {
     if (allCardsCompleted && !modalShownRef.current) {
       modalShownRef.current = true;
+      const known = knownIds.length;
+      const repeat = repeatIds.length;
       const modalId = openModal({
         component: (
           <div className="p-6 text-center">
             <h3 className="text-2xl font-semibold text-green-900 mb-4">
-              🎉 Все слова выучены!
+              Сессия завершена!
             </h3>
             <p className="text-gray-700 mb-6">
-              Ты повторил {cardStack.length} {cardStack.length === 1 ? 'слово' : 'слов'} на сегодня.
+              Знаю: {known}.
+              {repeat > 0
+                ? ` На повторении: ${repeat} — ${repeat === 1 ? 'вернётся' : 'вернутся'} завтра.`
+                : ' Все карточки отвечены правильно.'}
             </p>
             <Button
               onClick={() => {
@@ -360,14 +308,23 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
         closeOnOverlayClick: true,
       });
     }
-  }, [allCardsCompleted, cardStack.length, openModal, closeModal]);
+  }, [allCardsCompleted, knownIds.length, repeatIds.length, openModal, closeModal]);
+
+  if (cards.length === 0) {
+    return (
+      <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+        <p className="text-sm text-gray-500">Нет карточек для повторения.</p>
+      </section>
+    );
+  }
 
   if (allCardsCompleted) {
     return (
       <section className="rounded-3xl border border-green-100 bg-green-50 p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-green-900 mb-2">Все карточки пройдены!</h3>
+        <h3 className="text-lg font-semibold text-green-900 mb-2">Сессия завершена!</h3>
         <p className="text-sm text-green-700">
-          Ты повторил {cardStack.length} {cardStack.length === 1 ? 'слово' : 'слов'}.
+          Знаю: {knownIds.length} · На повторении: {repeatIds.length}
+          {repeatIds.length > 0 ? ' — вернутся завтра.' : '.'}
         </p>
       </section>
     );
@@ -378,7 +335,7 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
       <header className="space-y-2">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         <p className="text-sm text-gray-500">
-          Карточка {currentIndex + 1} из {cardStack.length}. Нажми на карточку, чтобы перевернуть.
+          Осталось {queueIds.length} из {totalCount}. Нажми, чтобы перевернуть. Смахни вправо — помню, влево — нужно повторить.
         </p>
       </header>
 
@@ -386,14 +343,6 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
         {/* Touch devices: иконки над карточкой */}
         {isTouchDevice && !isFlipped && (
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 z-50">
-            <button
-              onClick={handleAddToDictionary}
-              disabled={isAddingToDictionary}
-              className="p-2 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-              aria-label="Добавить в словарь"
-            >
-              <Heart className="w-5 h-5 text-red-500" />
-            </button>
             <button
               onClick={handlePlayPronunciation}
               className="p-2 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
@@ -406,25 +355,22 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
 
         {/* Стопка карт */}
         <div className="relative h-full w-full">
-          {cardStack.map((card, index) => {
-            const position = getCardPosition(index, cardStack.length);
-            const isCurrent = index === currentIndex;
-
-            if (index < currentIndex) {
-              return null; // Пропускаем пройденные карточки
-            }
+          {queueIds.slice(0, 5).map((cardId, queueIndex) => {
+            const card = resolveCard(cardId);
+            if (!card) return null;
+            const position = getStackPosition(queueIndex);
+            const isCurrent = queueIndex === 0;
 
             let motionStyle: any;
-  
+
             if (isCurrent) {
               if (isSwipeAway && swipeDirection) {
-                const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
-                const exitX = swipeDirection === 'left' ? -screenWidth * 1.5 : screenWidth * 1.5;
+                // Карточка «падает» в свою стопку: влево — повторить, вправо — знаю
                 motionStyle = {
-                  x: exitX,
-                  y: screenWidth,
-                  rotate: swipeDirection === 'left' ? -45 : 45,
-                  scale: 0.3,
+                  x: swipeDirection === 'left' ? -220 : 220,
+                  y: 200,
+                  rotate: swipeDirection === 'left' ? -20 : 20,
+                  scale: 0.25,
                   opacity: 0,
                   zIndex: position.zIndex,
                 };
@@ -451,24 +397,43 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
 
             return (
               <motion.div
-                key={`${card.id}-${currentIndex}`}
-                ref={index === currentIndex ? cardRef : null}
+                key={card.id}
+                ref={isCurrent ? cardRef : null}
                 className={`absolute inset-0 cursor-pointer ${isCurrent ? 'touch-none' : 'touch-auto'}`}
-                drag={isCurrent && !isFlipped && !isSwipeAway}
+                drag={isCurrent && !isSwipeAway}
                 dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
                 dragElastic={1}
-                onDragStart={() => setIsDragging(true)} // ← Добавили
+                onDragStart={() => setIsDragging(true)}
+                onDrag={isCurrent ? (_event, info) => dragX.set(info.offset.x) : undefined}
                 onDragEnd={isCurrent ? (event, info) => {
-                  setIsDragging(false); // ← Сбрасываем
+                  setIsDragging(false);
+                  dragX.set(0);
                   handleDragEndMotion(event, info);
                 } : undefined}
                 whileDrag={isCurrent ? { scale: 1.05 } : undefined}
                 animate={motionStyle}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                onClick={isCurrent && !isSwipeAway && !isDragging ? handleFlip : undefined} // ← Используем state
-                onMouseEnter={isCurrent && !isTouchDevice && !isFlipped && !isDragging ? () => setIsHovered(true) : undefined} // ← Используем state
+                onClick={isCurrent && !isSwipeAway && !isDragging ? handleFlip : undefined}
+                onMouseEnter={isCurrent && !isTouchDevice && !isFlipped && !isDragging ? () => setIsHovered(true) : undefined}
                 onMouseLeave={isCurrent && !isTouchDevice ? () => setIsHovered(false) : undefined}
               >
+                {/* Индикаторы направления свайпа */}
+                {isCurrent && (
+                  <>
+                    <motion.div
+                      style={{ opacity: repeatHintOpacity }}
+                      className="absolute left-3 top-3 z-20 rounded-full bg-amber-600 px-3 py-1 text-sm font-semibold text-white shadow-md"
+                    >
+                      ← Повторить
+                    </motion.div>
+                    <motion.div
+                      style={{ opacity: knowHintOpacity }}
+                      className="absolute right-3 top-3 z-20 rounded-full bg-green-600 px-3 py-1 text-sm font-semibold text-white shadow-md"
+                    >
+                      Знаю →
+                    </motion.div>
+                  </>
+                )}
                 <div
                   className="relative h-full w-full perspective-1000"
                   style={{
@@ -479,7 +444,7 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
                 >
                   {/* Лицевая сторона */}
                   <div
-                    className="absolute inset-0 flex items-center justify-center rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50 p-6 shadow-lg"
+                    className="absolute inset-0 flex items-center justify-center rounded-2xl border-2 border-indigo-200 bg-linear-to-br from-indigo-50 to-blue-50 p-6 shadow-lg"
                     style={{
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
@@ -494,43 +459,13 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
                           </span>
                         )}
                       </div>
-
-                      {/* Hover overlay для desktop */}
-                      {isCurrent && !isTouchDevice && isHovered && !isFlipped && !isDragging && (
-                        <div className="absolute inset-0 bg-black/40 rounded-2xl flex flex-col items-center justify-center gap-4 z-10">
-                          <div className="flex items-center gap-4">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleAddToDictionary();
-                              }}
-                              disabled={isAddingToDictionary}
-                              className="p-3 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-                              aria-label="Добавить в словарь"
-                            >
-                              <Heart className="w-6 h-6 text-red-500" />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handlePlayPronunciation();
-                              }}
-                              className="p-3 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors"
-                              aria-label="Произнести слово"
-                            >
-                              <Volume2 className={`w-6 h-6 ${isSpeaking ? 'text-blue-600' : 'text-gray-600'}`} />
-                            </button>
-                          </div>
-                          <p className="text-white font-semibold text-lg">Перевернуть</p>
-                        </div>
-                      )}
                     </div>
                   </div>
 
                   {/* Обратная сторона */}
                   {isCurrent && (
                     <div
-                      className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-6 shadow-lg"
+                      className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-2 border-green-200 bg-linear-to-br from-green-50 to-emerald-50 p-6 shadow-lg"
                       style={{
                         backfaceVisibility: 'hidden',
                         WebkitBackfaceVisibility: 'hidden',
@@ -594,21 +529,61 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
                             >
                               Исправить
                             </button>
-                            <p className="text-xs text-gray-500">Нажми, чтобы вернуться</p>
+                            <p className="text-xs text-gray-500">← повторить · помню →</p>
                           </>
                         )}
                       </div>
                     </div>
                   )}
                 </div>
+
+                {/* Hover overlay для desktop: blur на всю площадь карточки.
+                    Вынесен из preserve-3d контейнера — внутри него backdrop-filter не работает */}
+                {isCurrent && !isTouchDevice && isHovered && !isFlipped && !isDragging && (
+                  <div className="absolute inset-0 rounded-2xl bg-white/40 backdrop-blur-lg flex flex-col items-center justify-center gap-4 z-10">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayPronunciation();
+                      }}
+                      className="p-3 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors"
+                      aria-label="Произнести слово"
+                    >
+                      <Volume2 className={`w-6 h-6 ${isSpeaking ? 'text-green-600' : 'text-gray-600'}`} />
+                    </button>
+                    <p className="text-gray-800 font-semibold text-lg">Перевернуть</p>
+                  </div>
+                )}
               </motion.div>
             );
           })}
         </div>
       </div>
 
+      {/* Стопки результатов: слева «Повторить», справа «Знаю» (на мобильных — только pill-счётчики) */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="relative hidden h-10 w-8 sm:block" aria-hidden="true">
+            <div className="absolute inset-0 -rotate-6 rounded-md border-2 border-amber-300 bg-amber-100" />
+            <div className="absolute inset-0 rotate-3 rounded-md border-2 border-amber-400 bg-amber-200" />
+          </div>
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 z-50">
+            ← Повторить: {repeatIds.length} · вернутся завтра
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800 z-50">
+            Знаю: {knownIds.length} →
+          </span>
+          <div className="relative hidden h-10 w-8 sm:block" aria-hidden="true">
+            <div className="absolute inset-0 rotate-6 rounded-md border-2 border-green-300 bg-green-100" />
+            <div className="absolute inset-0 -rotate-3 rounded-md border-2 border-green-400 bg-green-200" />
+          </div>
+        </div>
+      </div>
+
       {/* Блок с формой (сохраняем из FlashcardPractice строки 196-226) */}
-      {isFlipped && (
+      {isFlipped && currentCard && (
         <div className="space-y-4">
           <div className="rounded-2xl bg-gray-50 p-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -627,6 +602,7 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
             <Button
               variant="default"
               onClick={() => handleAnswer(true)}
+              disabled={isAnswering}
               className="flex-1"
             >
               ✓ Правильно
@@ -634,6 +610,7 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
             <Button
               variant="default"
               onClick={() => handleAnswer(false)}
+              disabled={isAnswering}
               className="flex-1 bg-amber-600 hover:bg-amber-500"
             >
               ✗ Нужно повторить
@@ -644,4 +621,3 @@ export function SwipeCard({ cards, onResult, onCardUpdated, title = 'Слова 
     </section>
   );
 }
-

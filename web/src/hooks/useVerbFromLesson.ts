@@ -1,7 +1,9 @@
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSession } from '@/lib/compat/hasyx';
 import type { VerbWithProgress } from '@/lib/verbs/verbs-service';
+import { invalidateVerbQueries } from '@/lib/query-keys';
 
 interface UseVerbFromLessonReturn {
   addToReviewQueue: (verbId: string) => Promise<void>;
@@ -12,6 +14,7 @@ interface UseVerbFromLessonReturn {
 
 export function useVerbFromLesson(): UseVerbFromLessonReturn {
   const { data: session, status } = useSession();
+  const queryClient = useQueryClient();
   const [isAdding, setIsAdding] = useState(false);
   const [currentVerb, setCurrentVerb] = useState<VerbWithProgress | null>(null);
 
@@ -30,6 +33,7 @@ export function useVerbFromLesson(): UseVerbFromLessonReturn {
         if (!response.ok) {
           throw new Error('Failed to add verb to queue');
         }
+        await invalidateVerbQueries(queryClient, session?.user?.id);
       } catch (error) {
         console.error('[useVerbFromLesson] Error adding to queue:', error);
         throw error;
@@ -37,7 +41,7 @@ export function useVerbFromLesson(): UseVerbFromLessonReturn {
         setIsAdding(false);
       }
     },
-    [status, session?.user?.id, isAdding]
+    [status, session?.user?.id, isAdding, queryClient]
   );
 
   const showVerbCard = useCallback(

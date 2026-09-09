@@ -51,6 +51,9 @@ export function VerbCard({ verb, onRequestClose, onAddToQueue }: VerbCardProps) 
         <p className="text-xl text-gray-700 mb-2">
           {verb.past_simple} — {verb.past_participle}
         </p>
+        {verb.meaning_ru && (
+          <p className="text-base text-gray-600 mb-2">{verb.meaning_ru}</p>
+        )}
         {verb.group_number && (
           <p className="text-sm text-gray-500">{groupNames[verb.group_number]}</p>
         )}

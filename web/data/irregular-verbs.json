@@ -7,24 +7,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "be — was/were — been",
+    "meaning_ru": "быть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I be every day.",
-        "sentence_ru": "Я делаю это (be) каждый день.",
+        "sentence_en": "I am happy today.",
+        "sentence_ru": "Я сегодня счастлив.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I was/were.",
-        "sentence_ru": "Вчера я (was/were).",
+        "sentence_en": "She was tired after work.",
+        "sentence_ru": "Она устала после работы.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have been before.",
-        "sentence_ru": "Я уже (been) раньше.",
+        "sentence_en": "I have been to London.",
+        "sentence_ru": "Я бывал в Лондоне.",
         "context": "Present Perfect"
       }
     ]
@@ -37,24 +38,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "have — had — had",
+    "meaning_ru": "иметь",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I have every day.",
-        "sentence_ru": "Я делаю это (have) каждый день.",
+        "sentence_en": "I have a small dog.",
+        "sentence_ru": "У меня есть маленькая собака.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I had.",
-        "sentence_ru": "Вчера я (had).",
+        "sentence_en": "We had dinner at six.",
+        "sentence_ru": "Мы ужинали в шесть.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have had before.",
-        "sentence_ru": "Я уже (had) раньше.",
+        "sentence_en": "I have had this book for years.",
+        "sentence_ru": "Эта книга у меня уже много лет.",
         "context": "Present Perfect"
       }
     ]
@@ -67,24 +69,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "do — did — done",
+    "meaning_ru": "делать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I do every day.",
-        "sentence_ru": "Я делаю это (do) каждый день.",
+        "sentence_en": "I do my homework after school.",
+        "sentence_ru": "Я делаю домашнее задание после школы.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I did.",
-        "sentence_ru": "Вчера я (did).",
+        "sentence_en": "He did his best.",
+        "sentence_ru": "Он сделал всё, что мог.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have done before.",
-        "sentence_ru": "Я уже (done) раньше.",
+        "sentence_en": "I have done this exercise before.",
+        "sentence_ru": "Я уже делал это упражнение.",
         "context": "Present Perfect"
       }
     ]
@@ -97,24 +100,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "say — said — said",
+    "meaning_ru": "говорить, сказать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I say every day.",
-        "sentence_ru": "Я делаю это (say) каждый день.",
+        "sentence_ru": "Я говорить, сказать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I said.",
-        "sentence_ru": "Вчера я (said).",
+        "sentence_ru": "Вчера я говорить, сказать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have said before.",
-        "sentence_ru": "Я уже (said) раньше.",
+        "sentence_ru": "Я уже говорить, сказать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -127,24 +131,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "go — went — gone",
+    "meaning_ru": "идти, ехать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I go every day.",
-        "sentence_ru": "Я делаю это (go) каждый день.",
+        "sentence_en": "I go to school every morning.",
+        "sentence_ru": "Я хожу в школу каждое утро.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I went.",
-        "sentence_ru": "Вчера я (went).",
+        "sentence_en": "Yesterday I went home early.",
+        "sentence_ru": "Вчера я пошёл домой рано.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have gone before.",
-        "sentence_ru": "Я уже (gone) раньше.",
+        "sentence_en": "I have gone there before.",
+        "sentence_ru": "Я уже ходил туда раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -157,24 +162,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "get — got — got",
+    "meaning_ru": "получать, становиться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I get every day.",
-        "sentence_ru": "Я делаю это (get) каждый день.",
+        "sentence_ru": "Я получать, становиться каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I got.",
-        "sentence_ru": "Вчера я (got).",
+        "sentence_ru": "Вчера я получать, становиться.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have got before.",
-        "sentence_ru": "Я уже (got) раньше.",
+        "sentence_ru": "Я уже получать, становиться раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -187,24 +193,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "make — made — made",
+    "meaning_ru": "делать, создавать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I make every day.",
-        "sentence_ru": "Я делаю это (make) каждый день.",
+        "sentence_ru": "Я делать, создавать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I made.",
-        "sentence_ru": "Вчера я (made).",
+        "sentence_ru": "Вчера я делать, создавать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have made before.",
-        "sentence_ru": "Я уже (made) раньше.",
+        "sentence_ru": "Я уже делать, создавать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -217,24 +224,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "know — knew — known",
+    "meaning_ru": "знать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I know every day.",
-        "sentence_ru": "Я делаю это (know) каждый день.",
+        "sentence_ru": "Я знать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I knew.",
-        "sentence_ru": "Вчера я (knew).",
+        "sentence_ru": "Вчера я знать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have known before.",
-        "sentence_ru": "Я уже (known) раньше.",
+        "sentence_ru": "Я уже знать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -247,24 +255,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "think — thought — thought",
+    "meaning_ru": "думать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I think every day.",
-        "sentence_ru": "Я делаю это (think) каждый день.",
+        "sentence_ru": "Я думать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I thought.",
-        "sentence_ru": "Вчера я (thought).",
+        "sentence_ru": "Вчера я думать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have thought before.",
-        "sentence_ru": "Я уже (thought) раньше.",
+        "sentence_ru": "Я уже думать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -277,24 +286,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "take — took — taken",
+    "meaning_ru": "брать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I take every day.",
-        "sentence_ru": "Я делаю это (take) каждый день.",
+        "sentence_ru": "Я брать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I took.",
-        "sentence_ru": "Вчера я (took).",
+        "sentence_ru": "Вчера я брать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have taken before.",
-        "sentence_ru": "Я уже (taken) раньше.",
+        "sentence_ru": "Я уже брать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -307,24 +317,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "see — saw — seen",
+    "meaning_ru": "видеть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I see every day.",
-        "sentence_ru": "Я делаю это (see) каждый день.",
+        "sentence_ru": "Я видеть каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I saw.",
-        "sentence_ru": "Вчера я (saw).",
+        "sentence_ru": "Вчера я видеть.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have seen before.",
-        "sentence_ru": "Я уже (seen) раньше.",
+        "sentence_ru": "Я уже видеть раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -337,24 +348,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "come — came — come",
+    "meaning_ru": "приходить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I come every day.",
-        "sentence_ru": "Я делаю это (come) каждый день.",
+        "sentence_ru": "Я приходить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I came.",
-        "sentence_ru": "Вчера я (came).",
+        "sentence_ru": "Вчера я приходить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have come before.",
-        "sentence_ru": "Я уже (come) раньше.",
+        "sentence_ru": "Я уже приходить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -367,24 +379,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "find — found — found",
+    "meaning_ru": "находить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I find every day.",
-        "sentence_ru": "Я делаю это (find) каждый день.",
+        "sentence_ru": "Я находить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I found.",
-        "sentence_ru": "Вчера я (found).",
+        "sentence_ru": "Вчера я находить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have found before.",
-        "sentence_ru": "Я уже (found) раньше.",
+        "sentence_ru": "Я уже находить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -397,24 +410,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "give — gave — given",
+    "meaning_ru": "давать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I give every day.",
-        "sentence_ru": "Я делаю это (give) каждый день.",
+        "sentence_ru": "Я давать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I gave.",
-        "sentence_ru": "Вчера я (gave).",
+        "sentence_ru": "Вчера я давать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have given before.",
-        "sentence_ru": "Я уже (given) раньше.",
+        "sentence_ru": "Я уже давать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -427,24 +441,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "tell — told — told",
+    "meaning_ru": "рассказывать, велеть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I tell every day.",
-        "sentence_ru": "Я делаю это (tell) каждый день.",
+        "sentence_ru": "Я рассказывать, велеть каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I told.",
-        "sentence_ru": "Вчера я (told).",
+        "sentence_ru": "Вчера я рассказывать, велеть.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have told before.",
-        "sentence_ru": "Я уже (told) раньше.",
+        "sentence_ru": "Я уже рассказывать, велеть раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -457,24 +472,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "become — became — become",
+    "meaning_ru": "становиться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I become every day.",
-        "sentence_ru": "Я делаю это (become) каждый день.",
+        "sentence_en": "It becomes cold after sunset.",
+        "sentence_ru": "После заката становится холодно.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I became.",
-        "sentence_ru": "Вчера я (became).",
+        "sentence_en": "She became a doctor.",
+        "sentence_ru": "Она стала врачом.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have become before.",
-        "sentence_ru": "Я уже (become) раньше.",
+        "sentence_en": "He has become more confident.",
+        "sentence_ru": "Он стал увереннее.",
         "context": "Present Perfect"
       }
     ]
@@ -487,24 +503,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "leave — left — left",
+    "meaning_ru": "уходить, оставлять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I leave every day.",
-        "sentence_ru": "Я делаю это (leave) каждый день.",
+        "sentence_en": "I leave home at seven.",
+        "sentence_ru": "Я ухожу из дома в семь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I left.",
-        "sentence_ru": "Вчера я (left).",
+        "sentence_en": "He left his keys on the table.",
+        "sentence_ru": "Он оставил ключи на столе.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have left before.",
-        "sentence_ru": "Я уже (left) раньше.",
+        "sentence_en": "She has left the office already.",
+        "sentence_ru": "Она уже ушла из офиса.",
         "context": "Present Perfect"
       }
     ]
@@ -517,24 +534,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "feel — felt — felt",
+    "meaning_ru": "чувствовать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I feel every day.",
-        "sentence_ru": "Я делаю это (feel) каждый день.",
+        "sentence_ru": "Я чувствовать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I felt.",
-        "sentence_ru": "Вчера я (felt).",
+        "sentence_ru": "Вчера я чувствовать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have felt before.",
-        "sentence_ru": "Я уже (felt) раньше.",
+        "sentence_ru": "Я уже чувствовать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -547,24 +565,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "put — put — put",
+    "meaning_ru": "класть, ставить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I put every day.",
-        "sentence_ru": "Я делаю это (put) каждый день.",
+        "sentence_ru": "Я класть, ставить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I put.",
-        "sentence_ru": "Вчера я (put).",
+        "sentence_ru": "Вчера я класть, ставить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have put before.",
-        "sentence_ru": "Я уже (put) раньше.",
+        "sentence_ru": "Я уже класть, ставить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -577,24 +596,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "bring — brought — brought",
+    "meaning_ru": "приносить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I bring every day.",
-        "sentence_ru": "Я делаю это (bring) каждый день.",
+        "sentence_ru": "Я приносить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I brought.",
-        "sentence_ru": "Вчера я (brought).",
+        "sentence_ru": "Вчера я приносить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have brought before.",
-        "sentence_ru": "Я уже (brought) раньше.",
+        "sentence_ru": "Я уже приносить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -607,24 +627,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "begin — began — begun",
+    "meaning_ru": "начинать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I begin every day.",
-        "sentence_ru": "Я делаю это (begin) каждый день.",
+        "sentence_ru": "Я начинать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I began.",
-        "sentence_ru": "Вчера я (began).",
+        "sentence_ru": "Вчера я начинать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have begun before.",
-        "sentence_ru": "Я уже (begun) раньше.",
+        "sentence_ru": "Я уже начинать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -637,24 +658,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "keep — kept — kept",
+    "meaning_ru": "хранить, продолжать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I keep every day.",
-        "sentence_ru": "Я делаю это (keep) каждый день.",
+        "sentence_en": "I keep my keys in this bowl.",
+        "sentence_ru": "Я храню ключи в этой миске.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I kept.",
-        "sentence_ru": "Вчера я (kept).",
+        "sentence_en": "She kept the secret for years.",
+        "sentence_ru": "Она хранила секрет годами.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have kept before.",
-        "sentence_ru": "Я уже (kept) раньше.",
+        "sentence_en": "We have kept in touch since school.",
+        "sentence_ru": "Мы поддерживаем связь со школы.",
         "context": "Present Perfect"
       }
     ]
@@ -667,24 +689,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "hold — held — held",
+    "meaning_ru": "держать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I hold every day.",
-        "sentence_ru": "Я делаю это (hold) каждый день.",
+        "sentence_en": "Please hold my bag for a second.",
+        "sentence_ru": "Подержи мою сумку секунду.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I held.",
-        "sentence_ru": "Вчера я (held).",
+        "sentence_en": "He held the door open.",
+        "sentence_ru": "Он держал дверь открытой.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have held before.",
-        "sentence_ru": "Я уже (held) раньше.",
+        "sentence_en": "I have held this job for two years.",
+        "sentence_ru": "Я работаю здесь уже два года.",
         "context": "Present Perfect"
       }
     ]
@@ -697,24 +720,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "write — wrote — written",
+    "meaning_ru": "писать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I write every day.",
-        "sentence_ru": "Я делаю это (write) каждый день.",
+        "sentence_ru": "Я писать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I wrote.",
-        "sentence_ru": "Вчера я (wrote).",
+        "sentence_ru": "Вчера я писать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have written before.",
-        "sentence_ru": "Я уже (written) раньше.",
+        "sentence_ru": "Я уже писать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -727,24 +751,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "stand — stood — stood",
+    "meaning_ru": "стоять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I stand every day.",
-        "sentence_ru": "Я делаю это (stand) каждый день.",
+        "sentence_en": "Please stand in a line.",
+        "sentence_ru": "Пожалуйста, встаньте в очередь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I stood.",
-        "sentence_ru": "Вчера я (stood).",
+        "sentence_en": "He stood at the door.",
+        "sentence_ru": "Он стоял у двери.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have stood before.",
-        "sentence_ru": "Я уже (stood) раньше.",
+        "sentence_en": "I have stood here since morning.",
+        "sentence_ru": "Я стою здесь с утра.",
         "context": "Present Perfect"
       }
     ]
@@ -757,24 +782,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "hear — heard — heard",
+    "meaning_ru": "слышать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I hear every day.",
-        "sentence_ru": "Я делаю это (hear) каждый день.",
+        "sentence_en": "I hear music from the next room.",
+        "sentence_ru": "Я слышу музыку из соседней комнаты.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I heard.",
-        "sentence_ru": "Вчера я (heard).",
+        "sentence_en": "We heard a strange noise.",
+        "sentence_ru": "Мы услышали странный звук.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have heard before.",
-        "sentence_ru": "Я уже (heard) раньше.",
+        "sentence_en": "I have heard this song before.",
+        "sentence_ru": "Я уже слышал эту песню.",
         "context": "Present Perfect"
       }
     ]
@@ -787,24 +813,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "let — let — let",
+    "meaning_ru": "позволять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I let every day.",
-        "sentence_ru": "Я делаю это (let) каждый день.",
+        "sentence_en": "They let us use the kitchen.",
+        "sentence_ru": "Они разрешают нам пользоваться кухней.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I let.",
-        "sentence_ru": "Вчера я (let).",
+        "sentence_en": "Mom let me stay up late.",
+        "sentence_ru": "Мама разрешила мне не ложиться рано.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have let before.",
-        "sentence_ru": "Я уже (let) раньше.",
+        "sentence_en": "She has let the dog out.",
+        "sentence_ru": "Она уже выпустила собаку.",
         "context": "Present Perfect"
       }
     ]
@@ -817,24 +844,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "mean — meant — meant",
+    "meaning_ru": "значить, иметь в виду",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I mean every day.",
-        "sentence_ru": "Я делаю это (mean) каждый день.",
+        "sentence_en": "What does this word mean?",
+        "sentence_ru": "Что значит это слово?",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I meant.",
-        "sentence_ru": "Вчера я (meant).",
+        "sentence_en": "I meant to call you yesterday.",
+        "sentence_ru": "Я хотел тебе вчера позвонить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have meant before.",
-        "sentence_ru": "Я уже (meant) раньше.",
+        "sentence_en": "I have always meant what I said.",
+        "sentence_ru": "Я всегда говорил то, что думал.",
         "context": "Present Perfect"
       }
     ]
@@ -847,24 +875,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "set — set — set",
+    "meaning_ru": "устанавливать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I set every day.",
-        "sentence_ru": "Я делаю это (set) каждый день.",
+        "sentence_en": "I set the table before dinner.",
+        "sentence_ru": "Я накрываю на стол перед ужином.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I set.",
-        "sentence_ru": "Вчера я (set).",
+        "sentence_en": "She set the alarm for six.",
+        "sentence_ru": "Она поставила будильник на шесть.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have set before.",
-        "sentence_ru": "Я уже (set) раньше.",
+        "sentence_en": "I have set a new record.",
+        "sentence_ru": "Я поставил новый рекорд.",
         "context": "Present Perfect"
       }
     ]
@@ -877,24 +906,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "meet — met — met",
+    "meaning_ru": "встречать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I meet every day.",
-        "sentence_ru": "Я делаю это (meet) каждый день.",
+        "sentence_en": "We meet after class on Fridays.",
+        "sentence_ru": "По пятницам мы встречаемся после уроков.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I met.",
-        "sentence_ru": "Вчера я (met).",
+        "sentence_en": "I met her at the station.",
+        "sentence_ru": "Я встретил её на вокзале.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have met before.",
-        "sentence_ru": "Я уже (met) раньше.",
+        "sentence_en": "Have you met my brother?",
+        "sentence_ru": "Ты уже знаком с моим братом?",
         "context": "Present Perfect"
       }
     ]
@@ -907,24 +937,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "run — ran — run",
+    "meaning_ru": "бегать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I run every day.",
-        "sentence_ru": "Я делаю это (run) каждый день.",
+        "sentence_en": "I run in the park on Sundays.",
+        "sentence_ru": "По воскресеньям я бегаю в парке.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I ran.",
-        "sentence_ru": "Вчера я (ran).",
+        "sentence_en": "She ran to catch the train.",
+        "sentence_ru": "Она побежала, чтобы успеть на поезд.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have run before.",
-        "sentence_ru": "Я уже (run) раньше.",
+        "sentence_en": "I have run five kilometres today.",
+        "sentence_ru": "Сегодня я пробежал пять километров.",
         "context": "Present Perfect"
       }
     ]
@@ -937,24 +968,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "pay — paid — paid",
+    "meaning_ru": "платить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I pay every day.",
-        "sentence_ru": "Я делаю это (pay) каждый день.",
+        "sentence_en": "I pay the rent on the first day.",
+        "sentence_ru": "Я плачу аренду первого числа.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I paid.",
-        "sentence_ru": "Вчера я (paid).",
+        "sentence_en": "She paid for the tickets.",
+        "sentence_ru": "Она оплатила билеты.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have paid before.",
-        "sentence_ru": "Я уже (paid) раньше.",
+        "sentence_en": "I have paid the bill already.",
+        "sentence_ru": "Я уже оплатил счёт.",
         "context": "Present Perfect"
       }
     ]
@@ -967,24 +999,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "sit — sat — sat",
+    "meaning_ru": "сидеть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sit every day.",
-        "sentence_ru": "Я делаю это (sit) каждый день.",
+        "sentence_en": "I sit by the window.",
+        "sentence_ru": "Я сижу у окна.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sat.",
-        "sentence_ru": "Вчера я (sat).",
+        "sentence_en": "She sat next to me.",
+        "sentence_ru": "Она села рядом со мной.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sat before.",
-        "sentence_ru": "Я уже (sat) раньше.",
+        "sentence_en": "I have sat here for an hour.",
+        "sentence_ru": "Я сижу здесь уже час.",
         "context": "Present Perfect"
       }
     ]
@@ -997,24 +1030,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "speak — spoke — spoken",
+    "meaning_ru": "говорить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I speak every day.",
-        "sentence_ru": "Я делаю это (speak) каждый день.",
+        "sentence_ru": "Я говорить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I spoke.",
-        "sentence_ru": "Вчера я (spoke).",
+        "sentence_ru": "Вчера я говорить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have spoken before.",
-        "sentence_ru": "Я уже (spoken) раньше.",
+        "sentence_ru": "Я уже говорить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1027,24 +1061,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "lie — lay — lain",
+    "meaning_ru": "лежать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lie every day.",
-        "sentence_ru": "Я делаю это (lie) каждый день.",
+        "sentence_en": "I lie on the sofa after work.",
+        "sentence_ru": "После работы я лежу на диване.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I lay.",
-        "sentence_ru": "Вчера я (lay).",
+        "sentence_en": "The cat lay in the sun.",
+        "sentence_ru": "Кот лежал на солнце.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have lain before.",
-        "sentence_ru": "Я уже (lain) раньше.",
+        "sentence_en": "I have lain awake for hours.",
+        "sentence_ru": "Я часами лежал без сна.",
         "context": "Present Perfect"
       }
     ]
@@ -1057,24 +1092,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "lead — led — led",
+    "meaning_ru": "вести, лидировать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lead every day.",
-        "sentence_ru": "Я делаю это (lead) каждый день.",
+        "sentence_en": "Good teachers lead by example.",
+        "sentence_ru": "Хорошие учителя ведут за собой примером.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I led.",
-        "sentence_ru": "Вчера я (led).",
+        "sentence_en": "She led the team to victory.",
+        "sentence_ru": "Она привела команду к победе.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have led before.",
-        "sentence_ru": "Я уже (led) раньше.",
+        "sentence_en": "He has led many projects.",
+        "sentence_ru": "Он руководил многими проектами.",
         "context": "Present Perfect"
       }
     ]
@@ -1087,24 +1123,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "read — read — read",
+    "meaning_ru": "читать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I read every day.",
-        "sentence_ru": "Я делаю это (read) каждый день.",
+        "sentence_ru": "Я читать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I read.",
-        "sentence_ru": "Вчера я (read).",
+        "sentence_ru": "Вчера я читать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have read before.",
-        "sentence_ru": "Я уже (read) раньше.",
+        "sentence_ru": "Я уже читать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1117,24 +1154,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "grow — grew — grown",
+    "meaning_ru": "расти",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I grow every day.",
-        "sentence_ru": "Я делаю это (grow) каждый день.",
+        "sentence_en": "Tomatoes grow well here.",
+        "sentence_ru": "Здесь хорошо растут помидоры.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I grew.",
-        "sentence_ru": "Вчера я (grew).",
+        "sentence_en": "The city grew quickly.",
+        "sentence_ru": "Город быстро вырос.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have grown before.",
-        "sentence_ru": "Я уже (grown) раньше.",
+        "sentence_en": "She has grown so tall.",
+        "sentence_ru": "Она так выросла.",
         "context": "Present Perfect"
       }
     ]
@@ -1147,24 +1185,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "lose — lost — lost",
+    "meaning_ru": "терять, проигрывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lose every day.",
-        "sentence_ru": "Я делаю это (lose) каждый день.",
+        "sentence_en": "I often lose my gloves.",
+        "sentence_ru": "Я часто теряю перчатки.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I lost.",
-        "sentence_ru": "Вчера я (lost).",
+        "sentence_en": "We lost the match 2–1.",
+        "sentence_ru": "Мы проиграли матч со счётом 2:1.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have lost before.",
-        "sentence_ru": "Я уже (lost) раньше.",
+        "sentence_en": "I have lost my ticket.",
+        "sentence_ru": "Я потерял билет.",
         "context": "Present Perfect"
       }
     ]
@@ -1177,24 +1216,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "fall — fell — fallen",
+    "meaning_ru": "падать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I fall every day.",
-        "sentence_ru": "Я делаю это (fall) каждый день.",
+        "sentence_en": "Leaves fall in October.",
+        "sentence_ru": "В октябре опадают листья.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I fell.",
-        "sentence_ru": "Вчера я (fell).",
+        "sentence_en": "He fell off the bike.",
+        "sentence_ru": "Он упал с велосипеда.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have fallen before.",
-        "sentence_ru": "Я уже (fallen) раньше.",
+        "sentence_en": "The price has fallen again.",
+        "sentence_ru": "Цена снова упала.",
         "context": "Present Perfect"
       }
     ]
@@ -1207,24 +1247,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "send — sent — sent",
+    "meaning_ru": "отправлять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I send every day.",
-        "sentence_ru": "Я делаю это (send) каждый день.",
+        "sentence_ru": "Я отправлять каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I sent.",
-        "sentence_ru": "Вчера я (sent).",
+        "sentence_ru": "Вчера я отправлять.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have sent before.",
-        "sentence_ru": "Я уже (sent) раньше.",
+        "sentence_ru": "Я уже отправлять раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1237,24 +1278,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "build — built — built",
+    "meaning_ru": "строить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I build every day.",
-        "sentence_ru": "Я делаю это (build) каждый день.",
+        "sentence_ru": "Я строить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I built.",
-        "sentence_ru": "Вчера я (built).",
+        "sentence_ru": "Вчера я строить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have built before.",
-        "sentence_ru": "Я уже (built) раньше.",
+        "sentence_ru": "Я уже строить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1267,24 +1309,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "understand — understood — understood",
+    "meaning_ru": "понимать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I understand every day.",
-        "sentence_ru": "Я делаю это (understand) каждый день.",
+        "sentence_en": "I understand the question now.",
+        "sentence_ru": "Теперь я понимаю вопрос.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I understood.",
-        "sentence_ru": "Вчера я (understood).",
+        "sentence_en": "She understood him perfectly.",
+        "sentence_ru": "Она отлично его поняла.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have understood before.",
-        "sentence_ru": "Я уже (understood) раньше.",
+        "sentence_en": "I have never understood this rule.",
+        "sentence_ru": "Я так и не понял это правило.",
         "context": "Present Perfect"
       }
     ]
@@ -1297,24 +1340,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "draw — drew — drawn",
+    "meaning_ru": "рисовать, тянуть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I draw every day.",
-        "sentence_ru": "Я делаю это (draw) каждый день.",
+        "sentence_en": "I draw maps in my notebook.",
+        "sentence_ru": "Я рисую карты в тетради.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I drew.",
-        "sentence_ru": "Вчера я (drew).",
+        "sentence_en": "She drew a cat on the board.",
+        "sentence_ru": "Она нарисовала кота на доске.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have drawn before.",
-        "sentence_ru": "Я уже (drawn) раньше.",
+        "sentence_en": "I have drawn this street before.",
+        "sentence_ru": "Я уже рисовал эту улицу.",
         "context": "Present Perfect"
       }
     ]
@@ -1327,24 +1371,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "break — broke — broken",
+    "meaning_ru": "ломать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I break every day.",
-        "sentence_ru": "Я делаю это (break) каждый день.",
+        "sentence_ru": "Я ломать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I broke.",
-        "sentence_ru": "Вчера я (broke).",
+        "sentence_ru": "Вчера я ломать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have broken before.",
-        "sentence_ru": "Я уже (broken) раньше.",
+        "sentence_ru": "Я уже ломать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1357,24 +1402,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "spend — spent — spent",
+    "meaning_ru": "тратить, проводить время",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spend every day.",
-        "sentence_ru": "Я делаю это (spend) каждый день.",
+        "sentence_en": "I spend weekends with my family.",
+        "sentence_ru": "Я провожу выходные с семьёй.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spent.",
-        "sentence_ru": "Вчера я (spent).",
+        "sentence_en": "We spent all the money.",
+        "sentence_ru": "Мы потратили все деньги.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spent before.",
-        "sentence_ru": "Я уже (spent) раньше.",
+        "sentence_en": "I have spent too much time on this.",
+        "sentence_ru": "Я потратил на это слишком много времени.",
         "context": "Present Perfect"
       }
     ]
@@ -1387,24 +1433,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "cut — cut — cut",
+    "meaning_ru": "резать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I cut every day.",
-        "sentence_ru": "Я делаю это (cut) каждый день.",
+        "sentence_ru": "Я резать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I cut.",
-        "sentence_ru": "Вчера я (cut).",
+        "sentence_ru": "Вчера я резать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have cut before.",
-        "sentence_ru": "Я уже (cut) раньше.",
+        "sentence_ru": "Я уже резать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1417,24 +1464,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "rise — rose — risen",
+    "meaning_ru": "подниматься",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I rise every day.",
-        "sentence_ru": "Я делаю это (rise) каждый день.",
+        "sentence_en": "The sun rises early in June.",
+        "sentence_ru": "В июне солнце встаёт рано.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rose.",
-        "sentence_ru": "Вчера я (rose).",
+        "sentence_en": "Prices rose last month.",
+        "sentence_ru": "В прошлом месяце цены выросли.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have risen before.",
-        "sentence_ru": "Я уже (risen) раньше.",
+        "sentence_en": "The river has risen after the rain.",
+        "sentence_ru": "После дождя река поднялась.",
         "context": "Present Perfect"
       }
     ]
@@ -1447,24 +1495,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "drive — drove — driven",
+    "meaning_ru": "водить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I drive every day.",
-        "sentence_ru": "Я делаю это (drive) каждый день.",
+        "sentence_en": "I drive to work on weekdays.",
+        "sentence_ru": "По будням я езжу на работу на машине.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I drove.",
-        "sentence_ru": "Вчера я (drove).",
+        "sentence_en": "She drove us to the airport.",
+        "sentence_ru": "Она отвезла нас в аэропорт.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have driven before.",
-        "sentence_ru": "Я уже (driven) раньше.",
+        "sentence_en": "I have driven this road many times.",
+        "sentence_ru": "Я много раз ездил по этой дороге.",
         "context": "Present Perfect"
       }
     ]
@@ -1477,24 +1526,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "buy — bought — bought",
+    "meaning_ru": "покупать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I buy every day.",
-        "sentence_ru": "Я делаю это (buy) каждый день.",
+        "sentence_ru": "Я покупать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I bought.",
-        "sentence_ru": "Вчера я (bought).",
+        "sentence_ru": "Вчера я покупать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have bought before.",
-        "sentence_ru": "Я уже (bought) раньше.",
+        "sentence_ru": "Я уже покупать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1507,24 +1557,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "wear — wore — worn",
+    "meaning_ru": "носить (одежду)",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wear every day.",
-        "sentence_ru": "Я делаю это (wear) каждый день.",
+        "sentence_en": "I wear a jacket in autumn.",
+        "sentence_ru": "Осенью я ношу куртку.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wore.",
-        "sentence_ru": "Вчера я (wore).",
+        "sentence_en": "She wore a red dress.",
+        "sentence_ru": "На ней было красное платье.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have worn before.",
-        "sentence_ru": "Я уже (worn) раньше.",
+        "sentence_en": "I have worn these shoes all week.",
+        "sentence_ru": "Я ношу эти туфли всю неделю.",
         "context": "Present Perfect"
       }
     ]
@@ -1537,24 +1588,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "choose — chose — chosen",
+    "meaning_ru": "выбирать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I choose every day.",
-        "sentence_ru": "Я делаю это (choose) каждый день.",
+        "sentence_ru": "Я выбирать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I chose.",
-        "sentence_ru": "Вчера я (chose).",
+        "sentence_ru": "Вчера я выбирать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have chosen before.",
-        "sentence_ru": "Я уже (chosen) раньше.",
+        "sentence_ru": "Я уже выбирать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1567,24 +1619,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "seek — sought — sought",
+    "meaning_ru": "искать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I seek every day.",
-        "sentence_ru": "Я делаю это (seek) каждый день.",
+        "sentence_en": "We seek a quiet place to work.",
+        "sentence_ru": "Мы ищем тихое место для работы.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sought.",
-        "sentence_ru": "Вчера я (sought).",
+        "sentence_en": "She sought help from a teacher.",
+        "sentence_ru": "Она обратилась за помощью к учителю.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sought before.",
-        "sentence_ru": "Я уже (sought) раньше.",
+        "sentence_en": "I have sought an answer all day.",
+        "sentence_ru": "Я весь день искал ответ.",
         "context": "Present Perfect"
       }
     ]
@@ -1597,24 +1650,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "throw — threw — thrown",
+    "meaning_ru": "бросать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I throw every day.",
-        "sentence_ru": "Я делаю это (throw) каждый день.",
+        "sentence_en": "Do not throw paper on the floor.",
+        "sentence_ru": "Не бросай бумагу на пол.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I threw.",
-        "sentence_ru": "Вчера я (threw).",
+        "sentence_en": "He threw the ball to me.",
+        "sentence_ru": "Он бросил мне мяч.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have thrown before.",
-        "sentence_ru": "Я уже (thrown) раньше.",
+        "sentence_en": "I have thrown the old box away.",
+        "sentence_ru": "Я выбросил старую коробку.",
         "context": "Present Perfect"
       }
     ]
@@ -1627,24 +1681,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "catch — caught — caught",
+    "meaning_ru": "ловить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I catch every day.",
-        "sentence_ru": "Я делаю это (catch) каждый день.",
+        "sentence_en": "I catch the bus at eight.",
+        "sentence_ru": "Я сажусь на автобус в восемь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I caught.",
-        "sentence_ru": "Вчера я (caught).",
+        "sentence_en": "She caught the ball easily.",
+        "sentence_ru": "Она легко поймала мяч.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have caught before.",
-        "sentence_ru": "Я уже (caught) раньше.",
+        "sentence_en": "I have caught a cold.",
+        "sentence_ru": "Я простудился.",
         "context": "Present Perfect"
       }
     ]
@@ -1657,24 +1712,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "deal — dealt — dealt",
+    "meaning_ru": "иметь дело, раздавать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I deal every day.",
-        "sentence_ru": "Я делаю это (deal) каждый день.",
+        "sentence_en": "I deal with emails after lunch.",
+        "sentence_ru": "После обеда я разбираю письма.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I dealt.",
-        "sentence_ru": "Вчера я (dealt).",
+        "sentence_en": "She dealt the cards quickly.",
+        "sentence_ru": "Она быстро раздала карты.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have dealt before.",
-        "sentence_ru": "Я уже (dealt) раньше.",
+        "sentence_en": "We have dealt with this problem before.",
+        "sentence_ru": "Мы уже сталкивались с этой проблемой.",
         "context": "Present Perfect"
       }
     ]
@@ -1687,24 +1743,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "win — won — won",
+    "meaning_ru": "побеждать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I win every day.",
-        "sentence_ru": "Я делаю это (win) каждый день.",
+        "sentence_en": "Our team wins almost every game.",
+        "sentence_ru": "Наша команда выигрывает почти каждый матч.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I won.",
-        "sentence_ru": "Вчера я (won).",
+        "sentence_en": "They won the cup last year.",
+        "sentence_ru": "В прошлом году они выиграли кубок.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have won before.",
-        "sentence_ru": "Я уже (won) раньше.",
+        "sentence_en": "I have won twice already.",
+        "sentence_ru": "Я уже побеждал дважды.",
         "context": "Present Perfect"
       }
     ]
@@ -1717,24 +1774,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "forget — forgot — forgotten",
+    "meaning_ru": "забывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I forget every day.",
-        "sentence_ru": "Я делаю это (forget) каждый день.",
+        "sentence_en": "I never forget my password.",
+        "sentence_ru": "Я никогда не забываю пароль.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I forgot.",
-        "sentence_ru": "Вчера я (forgot).",
+        "sentence_en": "She forgot her umbrella.",
+        "sentence_ru": "Она забыла зонт.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have forgotten before.",
-        "sentence_ru": "Я уже (forgotten) раньше.",
+        "sentence_en": "I have forgotten his name.",
+        "sentence_ru": "Я забыл его имя.",
         "context": "Present Perfect"
       }
     ]
@@ -1747,24 +1805,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "lay — laid — laid",
+    "meaning_ru": "класть, положить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lay every day.",
-        "sentence_ru": "Я делаю это (lay) каждый день.",
+        "sentence_en": "I lay the book on the desk.",
+        "sentence_ru": "Я кладу книгу на стол.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I laid.",
-        "sentence_ru": "Вчера я (laid).",
+        "sentence_en": "She laid the map on the table.",
+        "sentence_ru": "Она положила карту на стол.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have laid before.",
-        "sentence_ru": "Я уже (laid) раньше.",
+        "sentence_en": "They have laid a new carpet.",
+        "sentence_ru": "Они постелили новый ковёр.",
         "context": "Present Perfect"
       }
     ]
@@ -1777,24 +1836,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "sell — sold — sold",
+    "meaning_ru": "продавать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sell every day.",
-        "sentence_ru": "Я делаю это (sell) каждый день.",
+        "sentence_en": "They sell fresh bread here.",
+        "sentence_ru": "Здесь продают свежий хлеб.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sold.",
-        "sentence_ru": "Вчера я (sold).",
+        "sentence_en": "He sold his old bike.",
+        "sentence_ru": "Он продал старый велосипед.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sold before.",
-        "sentence_ru": "Я уже (sold) раньше.",
+        "sentence_en": "We have sold the last copy.",
+        "sentence_ru": "Мы продали последний экземпляр.",
         "context": "Present Perfect"
       }
     ]
@@ -1807,24 +1867,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "fight — fought — fought",
+    "meaning_ru": "драться, бороться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I fight every day.",
-        "sentence_ru": "Я делаю это (fight) каждый день.",
+        "sentence_en": "They fight for a fair deal.",
+        "sentence_ru": "Они борются за честные условия.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I fought.",
-        "sentence_ru": "Вчера я (fought).",
+        "sentence_en": "The two teams fought hard.",
+        "sentence_ru": "Обе команды сражались упорно.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have fought before.",
-        "sentence_ru": "Я уже (fought) раньше.",
+        "sentence_en": "We have fought this battle before.",
+        "sentence_ru": "Мы уже вели эту борьбу.",
         "context": "Present Perfect"
       }
     ]
@@ -1837,24 +1898,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "bear — bore — born",
+    "meaning_ru": "нести, выносить, рожать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bear every day.",
-        "sentence_ru": "Я делаю это (bear) каждый день.",
+        "sentence_en": "I cannot bear this noise.",
+        "sentence_ru": "Я не выношу этот шум.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bore.",
-        "sentence_ru": "Вчера я (bore).",
+        "sentence_en": "She bore the news calmly.",
+        "sentence_ru": "Она спокойно приняла новость.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have born before.",
-        "sentence_ru": "Я уже (born) раньше.",
+        "sentence_en": "This plan was born last year.",
+        "sentence_ru": "Этот план родился в прошлом году.",
         "context": "Present Perfect"
       }
     ]
@@ -1867,24 +1929,25 @@
     "frequency": "must_know",
     "difficulty": "easy",
     "mnemonic_tip": "eat — ate — eaten",
+    "meaning_ru": "есть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I eat every day.",
-        "sentence_ru": "Я делаю это (eat) каждый день.",
+        "sentence_en": "I eat lunch at school.",
+        "sentence_ru": "Я обедаю в школе.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I ate.",
-        "sentence_ru": "Вчера я (ate).",
+        "sentence_en": "Yesterday I ate pasta.",
+        "sentence_ru": "Вчера я ел пасту.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have eaten before.",
-        "sentence_ru": "Я уже (eaten) раньше.",
+        "sentence_en": "I have eaten here before.",
+        "sentence_ru": "Я уже ел здесь раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1897,24 +1960,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "teach — taught — taught",
+    "meaning_ru": "учить (кого-то)",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I teach every day.",
-        "sentence_ru": "Я делаю это (teach) каждый день.",
+        "sentence_ru": "Я учить (кого-то) каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I taught.",
-        "sentence_ru": "Вчера я (taught).",
+        "sentence_ru": "Вчера я учить (кого-то).",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have taught before.",
-        "sentence_ru": "Я уже (taught) раньше.",
+        "sentence_ru": "Я уже учить (кого-то) раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1927,24 +1991,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "sing — sang — sung",
+    "meaning_ru": "петь",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I sing every day.",
-        "sentence_ru": "Я делаю это (sing) каждый день.",
+        "sentence_ru": "Я петь каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I sang.",
-        "sentence_ru": "Вчера я (sang).",
+        "sentence_ru": "Вчера я петь.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have sung before.",
-        "sentence_ru": "Я уже (sung) раньше.",
+        "sentence_ru": "Я уже петь раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -1957,24 +2022,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "strike — struck — struck",
+    "meaning_ru": "ударять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I strike every day.",
-        "sentence_ru": "Я делаю это (strike) каждый день.",
+        "sentence_en": "The clock strikes twelve.",
+        "sentence_ru": "Часы бьют двенадцать.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I struck.",
-        "sentence_ru": "Вчера я (struck).",
+        "sentence_en": "Lightning struck the tree.",
+        "sentence_ru": "Молния ударила в дерево.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have struck before.",
-        "sentence_ru": "Я уже (struck) раньше.",
+        "sentence_en": "A new idea has struck me.",
+        "sentence_ru": "Меня осенила новая мысль.",
         "context": "Present Perfect"
       }
     ]
@@ -1987,24 +2053,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "hang — hung — hung",
+    "meaning_ru": "вешать, висеть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I hang every day.",
-        "sentence_ru": "Я делаю это (hang) каждый день.",
+        "sentence_en": "I hang my coat by the door.",
+        "sentence_ru": "Я вешаю пальто у двери.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I hung.",
-        "sentence_ru": "Вчера я (hung).",
+        "sentence_en": "She hung the picture on the wall.",
+        "sentence_ru": "Она повесила картину на стену.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have hung before.",
-        "sentence_ru": "Я уже (hung) раньше.",
+        "sentence_en": "The keys have hung here for years.",
+        "sentence_ru": "Ключи висят здесь уже много лет.",
         "context": "Present Perfect"
       }
     ]
@@ -2017,24 +2084,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "shake — shook — shaken",
+    "meaning_ru": "трясти",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shake every day.",
-        "sentence_ru": "Я делаю это (shake) каждый день.",
+        "sentence_en": "Shake the bottle before you open it.",
+        "sentence_ru": "Потряси бутылку, прежде чем открывать.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shook.",
-        "sentence_ru": "Вчера я (shook).",
+        "sentence_en": "He shook my hand.",
+        "sentence_ru": "Он пожал мне руку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shaken before.",
-        "sentence_ru": "Я уже (shaken) раньше.",
+        "sentence_en": "The news has shaken everyone.",
+        "sentence_ru": "Новость всех потрясла.",
         "context": "Present Perfect"
       }
     ]
@@ -2047,24 +2115,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "ride — rode — ridden",
+    "meaning_ru": "ехать верхом",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I ride every day.",
-        "sentence_ru": "Я делаю это (ride) каждый день.",
+        "sentence_en": "I ride my bike to school.",
+        "sentence_ru": "Я езжу в школу на велосипеде.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rode.",
-        "sentence_ru": "Вчера я (rode).",
+        "sentence_en": "He rode a horse for the first time.",
+        "sentence_ru": "Он впервые прокатился на лошади.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have ridden before.",
-        "sentence_ru": "Я уже (ridden) раньше.",
+        "sentence_en": "I have ridden this trail before.",
+        "sentence_ru": "Я уже ездил по этой тропе.",
         "context": "Present Perfect"
       }
     ]
@@ -2077,24 +2146,25 @@
     "frequency": "high",
     "difficulty": "medium",
     "mnemonic_tip": "fly — flew — flown",
+    "meaning_ru": "летать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I fly every day.",
-        "sentence_ru": "Я делаю это (fly) каждый день.",
+        "sentence_en": "Birds fly south in autumn.",
+        "sentence_ru": "Осенью птицы улетают на юг.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I flew.",
-        "sentence_ru": "Вчера я (flew).",
+        "sentence_en": "We flew to Rome last May.",
+        "sentence_ru": "В мае мы летали в Рим.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have flown before.",
-        "sentence_ru": "Я уже (flown) раньше.",
+        "sentence_en": "I have flown this airline before.",
+        "sentence_ru": "Я уже летал этой авиакомпанией.",
         "context": "Present Perfect"
       }
     ]
@@ -2107,24 +2177,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "sleep — slept — slept",
+    "meaning_ru": "спать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sleep every day.",
-        "sentence_ru": "Я делаю это (sleep) каждый день.",
+        "sentence_en": "The baby sleeps after lunch.",
+        "sentence_ru": "Малыш спит после обеда.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I slept.",
-        "sentence_ru": "Вчера я (slept).",
+        "sentence_en": "I slept badly last night.",
+        "sentence_ru": "Прошлой ночью я плохо спал.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have slept before.",
-        "sentence_ru": "Я уже (slept) раньше.",
+        "sentence_en": "I have not slept enough.",
+        "sentence_ru": "Я мало спал.",
         "context": "Present Perfect"
       }
     ]
@@ -2137,24 +2208,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "drink — drank — drunk",
+    "meaning_ru": "пить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I drink every day.",
-        "sentence_ru": "Я делаю это (drink) каждый день.",
+        "sentence_ru": "Я пить каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I drank.",
-        "sentence_ru": "Вчера я (drank).",
+        "sentence_ru": "Вчера я пить.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have drunk before.",
-        "sentence_ru": "Я уже (drunk) раньше.",
+        "sentence_ru": "Я уже пить раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -2167,24 +2239,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "hit — hit — hit",
+    "meaning_ru": "ударять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I hit every day.",
-        "sentence_ru": "Я делаю это (hit) каждый день.",
+        "sentence_ru": "Я ударять каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I hit.",
-        "sentence_ru": "Вчера я (hit).",
+        "sentence_ru": "Вчера я ударять.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have hit before.",
-        "sentence_ru": "Я уже (hit) раньше.",
+        "sentence_ru": "Я уже ударять раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -2197,24 +2270,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "swim — swam — swum",
+    "meaning_ru": "плавать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
         "sentence_en": "I swim every day.",
-        "sentence_ru": "Я делаю это (swim) каждый день.",
+        "sentence_ru": "Я плавать каждый день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
         "sentence_en": "Yesterday I swam.",
-        "sentence_ru": "Вчера я (swam).",
+        "sentence_ru": "Вчера я плавать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
         "sentence_en": "I have swum before.",
-        "sentence_ru": "Я уже (swum) раньше.",
+        "sentence_ru": "Я уже плавать раньше.",
         "context": "Present Perfect"
       }
     ]
@@ -2227,24 +2301,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "cost — cost — cost",
+    "meaning_ru": "стоить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I cost every day.",
-        "sentence_ru": "Я делаю это (cost) каждый день.",
+        "sentence_en": "This ticket costs too much.",
+        "sentence_ru": "Этот билет стоит слишком дорого.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I cost.",
-        "sentence_ru": "Вчера я (cost).",
+        "sentence_en": "The repair cost us a hundred pounds.",
+        "sentence_ru": "Ремонт обошёлся нам в сто фунтов.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have cost before.",
-        "sentence_ru": "Я уже (cost) раньше.",
+        "sentence_en": "It has cost me a lot of time.",
+        "sentence_ru": "Это отняло у меня много времени.",
         "context": "Present Perfect"
       }
     ]
@@ -2257,24 +2332,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "hurt — hurt — hurt",
+    "meaning_ru": "причинять боль",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I hurt every day.",
-        "sentence_ru": "Я делаю это (hurt) каждый день.",
+        "sentence_en": "My knee hurts after running.",
+        "sentence_ru": "После пробежки болит колено.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I hurt.",
-        "sentence_ru": "Вчера я (hurt).",
+        "sentence_en": "He hurt his hand yesterday.",
+        "sentence_ru": "Вчера он ушиб руку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have hurt before.",
-        "sentence_ru": "Я уже (hurt) раньше.",
+        "sentence_en": "I have hurt myself on that nail.",
+        "sentence_ru": "Я уже поранился об этот гвоздь.",
         "context": "Present Perfect"
       }
     ]
@@ -2287,24 +2363,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "shut — shut — shut",
+    "meaning_ru": "закрывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shut every day.",
-        "sentence_ru": "Я делаю это (shut) каждый день.",
+        "sentence_en": "Please shut the window.",
+        "sentence_ru": "Закрой окно, пожалуйста.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shut.",
-        "sentence_ru": "Вчера я (shut).",
+        "sentence_en": "He shut the door behind him.",
+        "sentence_ru": "Он закрыл за собой дверь.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shut before.",
-        "sentence_ru": "Я уже (shut) раньше.",
+        "sentence_en": "The shop has shut for the day.",
+        "sentence_ru": "Магазин уже закрылся на сегодня.",
         "context": "Present Perfect"
       }
     ]
@@ -2317,24 +2394,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "spread — spread — spread",
+    "meaning_ru": "распространять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spread every day.",
-        "sentence_ru": "Я делаю это (spread) каждый день.",
+        "sentence_en": "I spread butter on the bread.",
+        "sentence_ru": "Я намазываю масло на хлеб.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spread.",
-        "sentence_ru": "Вчера я (spread).",
+        "sentence_en": "The news spread quickly.",
+        "sentence_ru": "Новость быстро разошлась.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spread before.",
-        "sentence_ru": "Я уже (spread) раньше.",
+        "sentence_en": "The stain has spread on the shirt.",
+        "sentence_ru": "Пятно расползлось по рубашке.",
         "context": "Present Perfect"
       }
     ]
@@ -2347,24 +2425,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "quit — quit — quit",
+    "meaning_ru": "бросать, увольняться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I quit every day.",
-        "sentence_ru": "Я делаю это (quit) каждый день.",
+        "sentence_en": "I quit sugar in tea.",
+        "sentence_ru": "Я бросаю сахар в чае.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I quit.",
-        "sentence_ru": "Вчера я (quit).",
+        "sentence_en": "He quit the job last month.",
+        "sentence_ru": "Он уволился в прошлом месяце.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have quit before.",
-        "sentence_ru": "Я уже (quit) раньше.",
+        "sentence_en": "She has quit smoking.",
+        "sentence_ru": "Она бросила курить.",
         "context": "Present Perfect"
       }
     ]
@@ -2377,24 +2456,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "split — split — split",
+    "meaning_ru": "разделять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I split every day.",
-        "sentence_ru": "Я делаю это (split) каждый день.",
+        "sentence_en": "We split the bill equally.",
+        "sentence_ru": "Мы делим счёт поровну.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I split.",
-        "sentence_ru": "Вчера я (split).",
+        "sentence_en": "The log split in two.",
+        "sentence_ru": "Полено раскололось надвое.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have split before.",
-        "sentence_ru": "Я уже (split) раньше.",
+        "sentence_en": "They have split the group into pairs.",
+        "sentence_ru": "Они разделили группу на пары.",
         "context": "Present Perfect"
       }
     ]
@@ -2407,24 +2487,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "fit — fit — fit",
+    "meaning_ru": "подходить по размеру",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I fit every day.",
-        "sentence_ru": "Я делаю это (fit) каждый день.",
+        "sentence_en": "These shoes fit me well.",
+        "sentence_ru": "Эти туфли мне как раз.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I fit.",
-        "sentence_ru": "Вчера я (fit).",
+        "sentence_en": "The key fit the lock.",
+        "sentence_ru": "Ключ подошёл к замку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have fit before.",
-        "sentence_ru": "Я уже (fit) раньше.",
+        "sentence_en": "Nothing has fit so well before.",
+        "sentence_ru": "Ничто раньше так не сидело.",
         "context": "Present Perfect"
       }
     ]
@@ -2437,24 +2518,25 @@
     "frequency": "low",
     "difficulty": "easy",
     "mnemonic_tip": "bet — bet — bet",
+    "meaning_ru": "держать пари",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bet every day.",
-        "sentence_ru": "Я делаю это (bet) каждый день.",
+        "sentence_en": "I never bet on sports.",
+        "sentence_ru": "Я никогда не ставлю на спорт.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bet.",
-        "sentence_ru": "Вчера я (bet).",
+        "sentence_en": "He bet ten pounds on that horse.",
+        "sentence_ru": "Он поставил десять фунтов на эту лошадь.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bet before.",
-        "sentence_ru": "Я уже (bet) раньше.",
+        "sentence_en": "I have never bet so much.",
+        "sentence_ru": "Я никогда не ставил так много.",
         "context": "Present Perfect"
       }
     ]
@@ -2467,24 +2549,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "bid — bid — bid",
+    "meaning_ru": "предлагать цену",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bid every day.",
-        "sentence_ru": "Я делаю это (bid) каждый день.",
+        "sentence_en": "Buyers bid on the painting.",
+        "sentence_ru": "Покупатели делают ставки на картину.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bid.",
-        "sentence_ru": "Вчера я (bid).",
+        "sentence_en": "She bid a high price.",
+        "sentence_ru": "Она предложила высокую цену.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bid before.",
-        "sentence_ru": "Я уже (bid) раньше.",
+        "sentence_en": "They have bid on this house twice.",
+        "sentence_ru": "Они уже дважды торговались за этот дом.",
         "context": "Present Perfect"
       }
     ]
@@ -2497,24 +2580,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "burst — burst — burst",
+    "meaning_ru": "лопнуть, разразиться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I burst every day.",
-        "sentence_ru": "Я делаю это (burst) каждый день.",
+        "sentence_en": "Balloons burst if you sit on them.",
+        "sentence_ru": "Шарики лопаются, если на них сесть.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I burst.",
-        "sentence_ru": "Вчера я (burst).",
+        "sentence_en": "The pipe burst last night.",
+        "sentence_ru": "Ночью лопнула труба.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have burst before.",
-        "sentence_ru": "Я уже (burst) раньше.",
+        "sentence_en": "The bag has burst at the seam.",
+        "sentence_ru": "Сумка лопнула по шву.",
         "context": "Present Perfect"
       }
     ]
@@ -2527,24 +2611,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "cast — cast — cast",
+    "meaning_ru": "бросать, отливать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I cast every day.",
-        "sentence_ru": "Я делаю это (cast) каждый день.",
+        "sentence_en": "Actors cast a shadow on the wall.",
+        "sentence_ru": "Актёры отбрасывают тень на стену.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I cast.",
-        "sentence_ru": "Вчера я (cast).",
+        "sentence_en": "She cast her vote yesterday.",
+        "sentence_ru": "Вчера она отдала свой голос.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have cast before.",
-        "sentence_ru": "Я уже (cast) раньше.",
+        "sentence_en": "He has cast the role already.",
+        "sentence_ru": "Он уже утвердил роль.",
         "context": "Present Perfect"
       }
     ]
@@ -2557,24 +2642,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "ring — rang — rung",
+    "meaning_ru": "звонить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I ring every day.",
-        "sentence_ru": "Я делаю это (ring) каждый день.",
+        "sentence_en": "The phone rings every morning.",
+        "sentence_ru": "Телефон звонит каждое утро.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rang.",
-        "sentence_ru": "Вчера я (rang).",
+        "sentence_en": "Someone rang the doorbell.",
+        "sentence_ru": "Кто-то позвонил в дверь.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have rung before.",
-        "sentence_ru": "Я уже (rung) раньше.",
+        "sentence_en": "I have rung you twice today.",
+        "sentence_ru": "Я звонил тебе сегодня дважды.",
         "context": "Present Perfect"
       }
     ]
@@ -2587,24 +2673,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "sink — sank — sunk",
+    "meaning_ru": "тонуть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sink every day.",
-        "sentence_ru": "Я делаю это (sink) каждый день.",
+        "sentence_en": "Heavy stones sink in water.",
+        "sentence_ru": "Тяжёлые камни тонут в воде.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sank.",
-        "sentence_ru": "Вчера я (sank).",
+        "sentence_en": "The boat sank near the shore.",
+        "sentence_ru": "Лодка затонула у берега.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sunk before.",
-        "sentence_ru": "Я уже (sunk) раньше.",
+        "sentence_en": "The sun has sunk behind the hills.",
+        "sentence_ru": "Солнце село за холмами.",
         "context": "Present Perfect"
       }
     ]
@@ -2617,24 +2704,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "spring — sprang — sprung",
+    "meaning_ru": "прыгать, возникать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spring every day.",
-        "sentence_ru": "Я делаю это (spring) каждый день.",
+        "sentence_en": "Cats spring onto the sofa.",
+        "sentence_ru": "Кошки запрыгивают на диван.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sprang.",
-        "sentence_ru": "Вчера я (sprang).",
+        "sentence_en": "He sprang out of bed.",
+        "sentence_ru": "Он вскочил с кровати.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sprung before.",
-        "sentence_ru": "Я уже (sprung) раньше.",
+        "sentence_en": "A leak has sprung in the pipe.",
+        "sentence_ru": "В трубе появилась течь.",
         "context": "Present Perfect"
       }
     ]
@@ -2647,24 +2735,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "stink — stank — stunk",
+    "meaning_ru": "вонять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I stink every day.",
-        "sentence_ru": "Я делаю это (stink) каждый день.",
+        "sentence_en": "The fridge stinks if we forget food.",
+        "sentence_ru": "Холодильник воняет, если забыть еду.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I stank.",
-        "sentence_ru": "Вчера я (stank).",
+        "sentence_en": "The kitchen stank of fish.",
+        "sentence_ru": "На кухне воняло рыбой.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have stunk before.",
-        "sentence_ru": "Я уже (stunk) раньше.",
+        "sentence_en": "The bin has stunk all day.",
+        "sentence_ru": "Ведро воняет весь день.",
         "context": "Present Perfect"
       }
     ]
@@ -2677,24 +2766,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "shrink — shrank — shrunk",
+    "meaning_ru": "садиться, сжиматься",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shrink every day.",
-        "sentence_ru": "Я делаю это (shrink) каждый день.",
+        "sentence_en": "Wool jumpers shrink in hot water.",
+        "sentence_ru": "Шерстяные свитеры садятся в горячей воде.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shrank.",
-        "sentence_ru": "Вчера я (shrank).",
+        "sentence_en": "The sweater shrank in the wash.",
+        "sentence_ru": "Свитер сел после стирки.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shrunk before.",
-        "sentence_ru": "Я уже (shrunk) раньше.",
+        "sentence_en": "The company has shrunk this year.",
+        "sentence_ru": "Компания в этом году сократилась.",
         "context": "Present Perfect"
       }
     ]
@@ -2707,24 +2797,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "blow — blew — blown",
+    "meaning_ru": "дуть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I blow every day.",
-        "sentence_ru": "Я делаю это (blow) каждый день.",
+        "sentence_en": "The wind blows from the sea.",
+        "sentence_ru": "Ветер дует с моря.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I blew.",
-        "sentence_ru": "Вчера я (blew).",
+        "sentence_en": "He blew out the candles.",
+        "sentence_ru": "Он задул свечи.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have blown before.",
-        "sentence_ru": "Я уже (blown) раньше.",
+        "sentence_en": "The storm has blown the fence down.",
+        "sentence_ru": "Шторм повалил забор.",
         "context": "Present Perfect"
       }
     ]
@@ -2737,24 +2828,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "show — showed — shown",
+    "meaning_ru": "показывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I show every day.",
-        "sentence_ru": "Я делаю это (show) каждый день.",
+        "sentence_en": "Can you show me the way?",
+        "sentence_ru": "Можешь показать мне дорогу?",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I showed.",
-        "sentence_ru": "Вчера я (showed).",
+        "sentence_en": "She showed us her photos.",
+        "sentence_ru": "Она показала нам свои фото.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shown before.",
-        "sentence_ru": "Я уже (shown) раньше.",
+        "sentence_en": "They have shown real progress.",
+        "sentence_ru": "Они показали настоящий прогресс.",
         "context": "Present Perfect"
       }
     ]
@@ -2767,24 +2859,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "freeze — froze — frozen",
+    "meaning_ru": "замерзать, замораживать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I freeze every day.",
-        "sentence_ru": "Я делаю это (freeze) каждый день.",
+        "sentence_en": "Water freezes at zero.",
+        "sentence_ru": "Вода замерзает при нуле.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I froze.",
-        "sentence_ru": "Вчера я (froze).",
+        "sentence_en": "The lake froze last night.",
+        "sentence_ru": "Озеро замёрзло прошлой ночью.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have frozen before.",
-        "sentence_ru": "Я уже (frozen) раньше.",
+        "sentence_en": "I have frozen the leftover soup.",
+        "sentence_ru": "Я заморозил оставшийся суп.",
         "context": "Present Perfect"
       }
     ]
@@ -2797,24 +2890,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "steal — stole — stolen",
+    "meaning_ru": "красть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I steal every day.",
-        "sentence_ru": "Я делаю это (steal) каждый день.",
+        "sentence_en": "Thieves steal bikes from this yard.",
+        "sentence_ru": "Из этого двора крадут велосипеды.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I stole.",
-        "sentence_ru": "Вчера я (stole).",
+        "sentence_en": "Someone stole my scarf.",
+        "sentence_ru": "Кто-то украл мой шарф.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have stolen before.",
-        "sentence_ru": "Я уже (stolen) раньше.",
+        "sentence_en": "The painting has been stolen.",
+        "sentence_ru": "Картину украли.",
         "context": "Present Perfect"
       }
     ]
@@ -2827,24 +2921,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "wake — woke — woken",
+    "meaning_ru": "просыпаться, будить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wake every day.",
-        "sentence_ru": "Я делаю это (wake) каждый день.",
+        "sentence_en": "I wake up at six.",
+        "sentence_ru": "Я просыпаюсь в шесть.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I woke.",
-        "sentence_ru": "Вчера я (woke).",
+        "sentence_en": "The noise woke the baby.",
+        "sentence_ru": "Шум разбудил малыша.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have woken before.",
-        "sentence_ru": "Я уже (woken) раньше.",
+        "sentence_en": "I have woken up twice tonight.",
+        "sentence_ru": "Сегодня ночью я просыпался дважды.",
         "context": "Present Perfect"
       }
     ]
@@ -2857,24 +2952,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "weave — wove — woven",
+    "meaning_ru": "ткать, плести",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I weave every day.",
-        "sentence_ru": "Я делаю это (weave) каждый день.",
+        "sentence_en": "She weaves baskets from straw.",
+        "sentence_ru": "Она плетёт корзины из соломы.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wove.",
-        "sentence_ru": "Вчера я (wove).",
+        "sentence_en": "They wove a colourful rug.",
+        "sentence_ru": "Они соткали яркий ковёр.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have woven before.",
-        "sentence_ru": "Я уже (woven) раньше.",
+        "sentence_en": "This cloth has been woven by hand.",
+        "sentence_ru": "Эта ткань соткана вручную.",
         "context": "Present Perfect"
       }
     ]
@@ -2887,24 +2983,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "bite — bit — bitten",
+    "meaning_ru": "кусать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bite every day.",
-        "sentence_ru": "Я делаю это (bite) каждый день.",
+        "sentence_en": "The dog never bites.",
+        "sentence_ru": "Эта собака никогда не кусается.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bit.",
-        "sentence_ru": "Вчера я (bit).",
+        "sentence_en": "She bit into the apple.",
+        "sentence_ru": "Она откусила яблоко.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bitten before.",
-        "sentence_ru": "Я уже (bitten) раньше.",
+        "sentence_en": "A mosquito has bitten my arm.",
+        "sentence_ru": "Меня укусил комар.",
         "context": "Present Perfect"
       }
     ]
@@ -2917,24 +3014,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "hide — hid — hidden",
+    "meaning_ru": "прятать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I hide every day.",
-        "sentence_ru": "Я делаю это (hide) каждый день.",
+        "sentence_en": "I hide the gifts in the closet.",
+        "sentence_ru": "Я прячу подарки в шкафу.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I hid.",
-        "sentence_ru": "Вчера я (hid).",
+        "sentence_en": "He hid behind the sofa.",
+        "sentence_ru": "Он спрятался за диваном.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have hidden before.",
-        "sentence_ru": "Я уже (hidden) раньше.",
+        "sentence_en": "She has hidden the keys again.",
+        "sentence_ru": "Она снова спрятала ключи.",
         "context": "Present Perfect"
       }
     ]
@@ -2947,24 +3045,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "forgive — forgave — forgiven",
+    "meaning_ru": "прощать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I forgive every day.",
-        "sentence_ru": "Я делаю это (forgive) каждый день.",
+        "sentence_en": "I forgive small mistakes.",
+        "sentence_ru": "Я прощаю мелкие ошибки.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I forgave.",
-        "sentence_ru": "Вчера я (forgave).",
+        "sentence_en": "She forgave him at once.",
+        "sentence_ru": "Она сразу его простила.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have forgiven before.",
-        "sentence_ru": "Я уже (forgiven) раньше.",
+        "sentence_en": "I have forgiven that remark.",
+        "sentence_ru": "Я простил то замечание.",
         "context": "Present Perfect"
       }
     ]
@@ -2977,24 +3076,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "mistake — mistook — mistaken",
+    "meaning_ru": "ошибиться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I mistake every day.",
-        "sentence_ru": "Я делаю это (mistake) каждый день.",
+        "sentence_en": "People often mistake us for twins.",
+        "sentence_ru": "Нас часто принимают за близнецов.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I mistook.",
-        "sentence_ru": "Вчера я (mistook).",
+        "sentence_en": "I mistook the date.",
+        "sentence_ru": "Я перепутал дату.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have mistaken before.",
-        "sentence_ru": "Я уже (mistaken) раньше.",
+        "sentence_en": "I have mistaken the address.",
+        "sentence_ru": "Я ошибся адресом.",
         "context": "Present Perfect"
       }
     ]
@@ -3007,24 +3107,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "undertake — undertook — undertaken",
+    "meaning_ru": "предпринимать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I undertake every day.",
-        "sentence_ru": "Я делаю это (undertake) каждый день.",
+        "sentence_en": "We undertake this work together.",
+        "sentence_ru": "Мы берёмся за эту работу вместе.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I undertook.",
-        "sentence_ru": "Вчера я (undertook).",
+        "sentence_en": "She undertook a long trip.",
+        "sentence_ru": "Она предприняла долгую поездку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have undertaken before.",
-        "sentence_ru": "Я уже (undertaken) раньше.",
+        "sentence_en": "They have undertaken a new project.",
+        "sentence_ru": "Они взялись за новый проект.",
         "context": "Present Perfect"
       }
     ]
@@ -3037,24 +3138,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "beat — beat — beaten",
+    "meaning_ru": "бить, побеждать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I beat every day.",
-        "sentence_ru": "Я делаю это (beat) каждый день.",
+        "sentence_en": "I beat the eggs with a fork.",
+        "sentence_ru": "Я взбиваю яйца вилкой.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I beat.",
-        "sentence_ru": "Вчера я (beat).",
+        "sentence_en": "Our team beat them 3–0.",
+        "sentence_ru": "Наша команда обыграла их 3:0.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have beaten before.",
-        "sentence_ru": "Я уже (beaten) раньше.",
+        "sentence_en": "He has beaten this level twice.",
+        "sentence_ru": "Он уже дважды проходил этот уровень.",
         "context": "Present Perfect"
       }
     ]
@@ -3067,24 +3169,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "swear — swore — sworn",
+    "meaning_ru": "клясться, ругаться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I swear every day.",
-        "sentence_ru": "Я делаю это (swear) каждый день.",
+        "sentence_en": "I swear I locked the door.",
+        "sentence_ru": "Клянусь, я закрыл дверь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I swore.",
-        "sentence_ru": "Вчера я (swore).",
+        "sentence_en": "He swore to tell the truth.",
+        "sentence_ru": "Он поклялся говорить правду.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sworn before.",
-        "sentence_ru": "Я уже (sworn) раньше.",
+        "sentence_en": "I have sworn never to do that.",
+        "sentence_ru": "Я поклялся больше так не делать.",
         "context": "Present Perfect"
       }
     ]
@@ -3097,24 +3200,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "tear — tore — torn",
+    "meaning_ru": "рвать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I tear every day.",
-        "sentence_ru": "Я делаю это (tear) каждый день.",
+        "sentence_en": "Do not tear the page.",
+        "sentence_ru": "Не рви страницу.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I tore.",
-        "sentence_ru": "Вчера я (tore).",
+        "sentence_en": "She tore the letter in half.",
+        "sentence_ru": "Она разорвала письмо пополам.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have torn before.",
-        "sentence_ru": "Я уже (torn) раньше.",
+        "sentence_en": "I have torn my jeans again.",
+        "sentence_ru": "Я снова порвал джинсы.",
         "context": "Present Perfect"
       }
     ]
@@ -3127,24 +3231,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "sweep — swept — swept",
+    "meaning_ru": "подметать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sweep every day.",
-        "sentence_ru": "Я делаю это (sweep) каждый день.",
+        "sentence_en": "I sweep the kitchen after dinner.",
+        "sentence_ru": "После ужина я подметаю кухню.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I swept.",
-        "sentence_ru": "Вчера я (swept).",
+        "sentence_en": "She swept the leaves off the path.",
+        "sentence_ru": "Она смела листья с дорожки.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have swept before.",
-        "sentence_ru": "Я уже (swept) раньше.",
+        "sentence_en": "He has swept the whole floor.",
+        "sentence_ru": "Он подмёл весь пол.",
         "context": "Present Perfect"
       }
     ]
@@ -3157,24 +3262,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "weep — wept — wept",
+    "meaning_ru": "плакать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I weep every day.",
-        "sentence_ru": "Я делаю это (weep) каждый день.",
+        "sentence_en": "Some people weep at sad films.",
+        "sentence_ru": "Некоторые плачут на грустных фильмах.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wept.",
-        "sentence_ru": "Вчера я (wept).",
+        "sentence_en": "She wept when she heard the news.",
+        "sentence_ru": "Она заплакала, когда услышала новость.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have wept before.",
-        "sentence_ru": "Я уже (wept) раньше.",
+        "sentence_en": "He has wept enough today.",
+        "sentence_ru": "Он сегодня уже наплакался.",
         "context": "Present Perfect"
       }
     ]
@@ -3187,24 +3293,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "dream — dreamt — dreamt",
+    "meaning_ru": "мечтать, видеть сон",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I dream every day.",
-        "sentence_ru": "Я делаю это (dream) каждый день.",
+        "sentence_en": "I often dream about the sea.",
+        "sentence_ru": "Я часто вижу во сне море.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I dreamt.",
-        "sentence_ru": "Вчера я (dreamt).",
+        "sentence_en": "She dreamt of a long trip.",
+        "sentence_ru": "Ей снилась долгая поездка.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have dreamt before.",
-        "sentence_ru": "Я уже (dreamt) раньше.",
+        "sentence_en": "I have dreamt about this house.",
+        "sentence_ru": "Мне уже снился этот дом.",
         "context": "Present Perfect"
       }
     ]
@@ -3217,24 +3324,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "lean — leant — leant",
+    "meaning_ru": "наклоняться, опираться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lean every day.",
-        "sentence_ru": "Я делаю это (lean) каждый день.",
+        "sentence_en": "Do not lean on the wet paint.",
+        "sentence_ru": "Не опирайся на свежую краску.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I leant.",
-        "sentence_ru": "Вчера я (leant).",
+        "sentence_en": "He leant against the wall.",
+        "sentence_ru": "Он прислонился к стене.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have leant before.",
-        "sentence_ru": "Я уже (leant) раньше.",
+        "sentence_en": "I have leant on you too much.",
+        "sentence_ru": "Я слишком на тебя опирался.",
         "context": "Present Perfect"
       }
     ]
@@ -3247,24 +3355,25 @@
     "frequency": "high",
     "difficulty": "easy",
     "mnemonic_tip": "learn — learnt — learnt",
+    "meaning_ru": "учить (самому)",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I learn every day.",
-        "sentence_ru": "Я делаю это (learn) каждый день.",
+        "sentence_en": "I learn new words every evening.",
+        "sentence_ru": "Я учу новые слова каждый вечер.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I learnt.",
-        "sentence_ru": "Вчера я (learnt).",
+        "sentence_en": "She learnt French at school.",
+        "sentence_ru": "Она учила французский в школе.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have learnt before.",
-        "sentence_ru": "Я уже (learnt) раньше.",
+        "sentence_en": "I have learnt a lot this month.",
+        "sentence_ru": "Я многому научился в этом месяце.",
         "context": "Present Perfect"
       }
     ]
@@ -3277,24 +3386,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "burn — burnt — burnt",
+    "meaning_ru": "жечь, гореть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I burn every day.",
-        "sentence_ru": "Я делаю это (burn) каждый день.",
+        "sentence_en": "Dry wood burns well.",
+        "sentence_ru": "Сухое дерево хорошо горит.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I burnt.",
-        "sentence_ru": "Вчера я (burnt).",
+        "sentence_en": "She burnt the toast.",
+        "sentence_ru": "Она сожгла тост.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have burnt before.",
-        "sentence_ru": "Я уже (burnt) раньше.",
+        "sentence_en": "The candle has burnt down.",
+        "sentence_ru": "Свеча догорела.",
         "context": "Present Perfect"
       }
     ]
@@ -3307,24 +3417,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "lend — lent — lent",
+    "meaning_ru": "давать взаймы",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I lend every day.",
-        "sentence_ru": "Я делаю это (lend) каждый день.",
+        "sentence_en": "Can you lend me a pen?",
+        "sentence_ru": "Можешь одолжить мне ручку?",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I lent.",
-        "sentence_ru": "Вчера я (lent).",
+        "sentence_en": "He lent me his charger.",
+        "sentence_ru": "Он одолжил мне зарядку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have lent before.",
-        "sentence_ru": "Я уже (lent) раньше.",
+        "sentence_en": "I have lent her my notes.",
+        "sentence_ru": "Я одолжил ей свои конспекты.",
         "context": "Present Perfect"
       }
     ]
@@ -3337,24 +3448,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "bend — bent — bent",
+    "meaning_ru": "гнуть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bend every day.",
-        "sentence_ru": "Я делаю это (bend) каждый день.",
+        "sentence_en": "Bend your knees a little.",
+        "sentence_ru": "Слегка согни колени.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bent.",
-        "sentence_ru": "Вчера я (bent).",
+        "sentence_en": "He bent the wire in half.",
+        "sentence_ru": "Он согнул провод пополам.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bent before.",
-        "sentence_ru": "Я уже (bent) раньше.",
+        "sentence_en": "The road has bent to the left.",
+        "sentence_ru": "Дорога завернула налево.",
         "context": "Present Perfect"
       }
     ]
@@ -3367,24 +3479,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "shoot — shot — shot",
+    "meaning_ru": "стрелять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shoot every day.",
-        "sentence_ru": "Я делаю это (shoot) каждый день.",
+        "sentence_en": "They shoot the scene at dawn.",
+        "sentence_ru": "Они снимают сцену на рассвете.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shot.",
-        "sentence_ru": "Вчера я (shot).",
+        "sentence_en": "He shot the ball into the net.",
+        "sentence_ru": "Он забросил мяч в сетку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shot before.",
-        "sentence_ru": "Я уже (shot) раньше.",
+        "sentence_en": "The team has shot three films here.",
+        "sentence_ru": "Команда сняла здесь три фильма.",
         "context": "Present Perfect"
       }
     ]
@@ -3397,24 +3510,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "shine — shone — shone",
+    "meaning_ru": "светить, сиять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shine every day.",
-        "sentence_ru": "Я делаю это (shine) каждый день.",
+        "sentence_en": "The sun shines after the rain.",
+        "sentence_ru": "После дождя светит солнце.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shone.",
-        "sentence_ru": "Вчера я (shone).",
+        "sentence_en": "Her shoes shone in the hall.",
+        "sentence_ru": "Её туфли блестели в холле.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shone before.",
-        "sentence_ru": "Я уже (shone) раньше.",
+        "sentence_en": "The stars have shone all night.",
+        "sentence_ru": "Звёзды светили всю ночь.",
         "context": "Present Perfect"
       }
     ]
@@ -3427,24 +3541,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "stick — stuck — stuck",
+    "meaning_ru": "приклеивать, засовывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I stick every day.",
-        "sentence_ru": "Я делаю это (stick) каждый день.",
+        "sentence_en": "The stamp will not stick.",
+        "sentence_ru": "Марка не клеится.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I stuck.",
-        "sentence_ru": "Вчера я (stuck).",
+        "sentence_en": "The key stuck in the lock.",
+        "sentence_ru": "Ключ застрял в замке.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have stuck before.",
-        "sentence_ru": "Я уже (stuck) раньше.",
+        "sentence_en": "Mud has stuck to my shoes.",
+        "sentence_ru": "Грязь прилипла к ботинкам.",
         "context": "Present Perfect"
       }
     ]
@@ -3457,24 +3572,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "swing — swung — swung",
+    "meaning_ru": "качать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I swing every day.",
-        "sentence_ru": "Я делаю это (swing) каждый день.",
+        "sentence_en": "Kids swing in the playground.",
+        "sentence_ru": "Дети качаются на площадке.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I swung.",
-        "sentence_ru": "Вчера я (swung).",
+        "sentence_en": "The door swung shut.",
+        "sentence_ru": "Дверь захлопнулась.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have swung before.",
-        "sentence_ru": "Я уже (swung) раньше.",
+        "sentence_en": "Moods have swung all week.",
+        "sentence_ru": "Настроение всю неделю скачет.",
         "context": "Present Perfect"
       }
     ]
@@ -3487,24 +3603,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "dig — dug — dug",
+    "meaning_ru": "копать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I dig every day.",
-        "sentence_ru": "Я делаю это (dig) каждый день.",
+        "sentence_en": "They dig a hole for the tree.",
+        "sentence_ru": "Они копают яму для дерева.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I dug.",
-        "sentence_ru": "Вчера я (dug).",
+        "sentence_en": "The dog dug under the fence.",
+        "sentence_ru": "Собака копала под забором.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have dug before.",
-        "sentence_ru": "Я уже (dug) раньше.",
+        "sentence_en": "We have dug the whole garden.",
+        "sentence_ru": "Мы перекопали весь огород.",
         "context": "Present Perfect"
       }
     ]
@@ -3517,24 +3634,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "spin — spun — spun",
+    "meaning_ru": "крутить, прясть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spin every day.",
-        "sentence_ru": "Я делаю это (spin) каждый день.",
+        "sentence_en": "The Earth spins around its axis.",
+        "sentence_ru": "Земля вращается вокруг своей оси.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spun.",
-        "sentence_ru": "Вчера я (spun).",
+        "sentence_en": "She spun around in surprise.",
+        "sentence_ru": "Она резко обернулась от удивления.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spun before.",
-        "sentence_ru": "Я уже (spun) раньше.",
+        "sentence_en": "The wheel has spun for a minute.",
+        "sentence_ru": "Колесо крутится уже минуту.",
         "context": "Present Perfect"
       }
     ]
@@ -3547,24 +3665,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "bind — bound — bound",
+    "meaning_ru": "связывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bind every day.",
-        "sentence_ru": "Я делаю это (bind) каждый день.",
+        "sentence_en": "They bind the books by hand.",
+        "sentence_ru": "Они переплетают книги вручную.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bound.",
-        "sentence_ru": "Вчера я (bound).",
+        "sentence_en": "She bound the papers with string.",
+        "sentence_ru": "Она связала бумаги верёвкой.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bound before.",
-        "sentence_ru": "Я уже (bound) раньше.",
+        "sentence_en": "The contract has bound both sides.",
+        "sentence_ru": "Договор связал обе стороны.",
         "context": "Present Perfect"
       }
     ]
@@ -3577,24 +3696,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "grind — ground — ground",
+    "meaning_ru": "молоть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I grind every day.",
-        "sentence_ru": "Я делаю это (grind) каждый день.",
+        "sentence_en": "I grind coffee every morning.",
+        "sentence_ru": "Я мелю кофе каждое утро.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I ground.",
-        "sentence_ru": "Вчера я (ground).",
+        "sentence_en": "She ground the spices by hand.",
+        "sentence_ru": "Она смолола специи вручную.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have ground before.",
-        "sentence_ru": "Я уже (ground) раньше.",
+        "sentence_en": "I have ground enough pepper.",
+        "sentence_ru": "Я уже намолол достаточно перца.",
         "context": "Present Perfect"
       }
     ]
@@ -3607,24 +3727,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "wind — wound — wound",
+    "meaning_ru": "заводить, виться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wind every day.",
-        "sentence_ru": "Я делаю это (wind) каждый день.",
+        "sentence_en": "I wind the clock every Sunday.",
+        "sentence_ru": "Каждое воскресенье я завожу часы.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wound.",
-        "sentence_ru": "Вчера я (wound).",
+        "sentence_en": "She wound the scarf around her neck.",
+        "sentence_ru": "Она обмотала шарф вокруг шеи.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have wound before.",
-        "sentence_ru": "Я уже (wound) раньше.",
+        "sentence_en": "I have wound the cable neatly.",
+        "sentence_ru": "Я аккуратно смотал кабель.",
         "context": "Present Perfect"
       }
     ]
@@ -3637,24 +3758,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "feed — fed — fed",
+    "meaning_ru": "кормить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I feed every day.",
-        "sentence_ru": "Я делаю это (feed) каждый день.",
+        "sentence_en": "I feed the cat twice a day.",
+        "sentence_ru": "Я кормлю кота дважды в день.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I fed.",
-        "sentence_ru": "Вчера я (fed).",
+        "sentence_en": "He fed the ducks in the park.",
+        "sentence_ru": "Он покормил уток в парке.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have fed before.",
-        "sentence_ru": "Я уже (fed) раньше.",
+        "sentence_en": "I have fed the baby already.",
+        "sentence_ru": "Я уже покормил малыша.",
         "context": "Present Perfect"
       }
     ]
@@ -3667,24 +3789,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "bleed — bled — bled",
+    "meaning_ru": "кровоточить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I bleed every day.",
-        "sentence_ru": "Я делаю это (bleed) каждый день.",
+        "sentence_en": "My finger bleeds a little.",
+        "sentence_ru": "Палец немного кровит.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bled.",
-        "sentence_ru": "Вчера я (bled).",
+        "sentence_en": "His nose bled after the fall.",
+        "sentence_ru": "После падения у него пошла кровь из носа.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bled before.",
-        "sentence_ru": "Я уже (bled) раньше.",
+        "sentence_en": "The cut has bled for an hour.",
+        "sentence_ru": "Рана кровит уже час.",
         "context": "Present Perfect"
       }
     ]
@@ -3697,24 +3820,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "breed — bred — bred",
+    "meaning_ru": "разводить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I breed every day.",
-        "sentence_ru": "Я делаю это (breed) каждый день.",
+        "sentence_en": "They breed horses on this farm.",
+        "sentence_ru": "На этой ферме разводят лошадей.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I bred.",
-        "sentence_ru": "Вчера я (bred).",
+        "sentence_en": "The zoo bred two cubs last year.",
+        "sentence_ru": "В прошлом году в зоопарке родились два детёныша.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have bred before.",
-        "sentence_ru": "Я уже (bred) раньше.",
+        "sentence_en": "They have bred this type for years.",
+        "sentence_ru": "Они разводят эту породу много лет.",
         "context": "Present Perfect"
       }
     ]
@@ -3727,24 +3851,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "speed — sped — sped",
+    "meaning_ru": "мчаться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I speed every day.",
-        "sentence_ru": "Я делаю это (speed) каждый день.",
+        "sentence_en": "Cars speed down this road.",
+        "sentence_ru": "По этой дороге машины мчатся.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I sped.",
-        "sentence_ru": "Вчера я (sped).",
+        "sentence_en": "The ambulance sped to the hospital.",
+        "sentence_ru": "Скорая помчалась в больницу.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have sped before.",
-        "sentence_ru": "Я уже (sped) раньше.",
+        "sentence_en": "Time has sped by this week.",
+        "sentence_ru": "На этой неделе время пролетело.",
         "context": "Present Perfect"
       }
     ]
@@ -3757,24 +3882,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "light — lit — lit",
+    "meaning_ru": "зажигать, освещать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I light every day.",
-        "sentence_ru": "Я делаю это (light) каждый день.",
+        "sentence_en": "I light a candle in the evening.",
+        "sentence_ru": "Вечером я зажигаю свечу.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I lit.",
-        "sentence_ru": "Вчера я (lit).",
+        "sentence_en": "She lit the stove.",
+        "sentence_ru": "Она зажгла плиту.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have lit before.",
-        "sentence_ru": "Я уже (lit) раньше.",
+        "sentence_en": "Someone has lit a fire outside.",
+        "sentence_ru": "Снаружи уже разожгли костёр.",
         "context": "Present Perfect"
       }
     ]
@@ -3787,24 +3913,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "slide — slid — slid",
+    "meaning_ru": "скользить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I slide every day.",
-        "sentence_ru": "Я делаю это (slide) каждый день.",
+        "sentence_en": "Kids slide down the hill.",
+        "sentence_ru": "Дети съезжают с горки.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I slid.",
-        "sentence_ru": "Вчера я (slid).",
+        "sentence_en": "The glass slid off the table.",
+        "sentence_ru": "Стакан соскользнул со стола.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have slid before.",
-        "sentence_ru": "Я уже (slid) раньше.",
+        "sentence_en": "The door has slid open.",
+        "sentence_ru": "Дверь уже отодвинулась.",
         "context": "Present Perfect"
       }
     ]
@@ -3817,24 +3944,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "spit — spat — spat",
+    "meaning_ru": "плевать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spit every day.",
-        "sentence_ru": "Я делаю это (spit) каждый день.",
+        "sentence_en": "Please do not spit on the ground.",
+        "sentence_ru": "Пожалуйста, не плюй на землю.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spat.",
-        "sentence_ru": "Вчера я (spat).",
+        "sentence_en": "The camel spat at the tourist.",
+        "sentence_ru": "Верблюд плюнул в туриста.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spat before.",
-        "sentence_ru": "Я уже (spat) раньше.",
+        "sentence_en": "The kettle has spat hot water.",
+        "sentence_ru": "Чайник брызнул кипятком.",
         "context": "Present Perfect"
       }
     ]
@@ -3847,24 +3975,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "awake — awoke — awoken",
+    "meaning_ru": "просыпаться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I awake every day.",
-        "sentence_ru": "Я делаю это (awake) каждый день.",
+        "sentence_en": "I awake at the first light.",
+        "sentence_ru": "Я просыпаюсь с первым светом.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I awoke.",
-        "sentence_ru": "Вчера я (awoke).",
+        "sentence_en": "She awoke to the alarm.",
+        "sentence_ru": "Она проснулась от будильника.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have awoken before.",
-        "sentence_ru": "Я уже (awoken) раньше.",
+        "sentence_en": "I have awoken with a headache.",
+        "sentence_ru": "Я проснулся с головной болью.",
         "context": "Present Perfect"
       }
     ]
@@ -3877,24 +4006,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "arise — arose — arisen",
+    "meaning_ru": "возникать, вставать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I arise every day.",
-        "sentence_ru": "Я делаю это (arise) каждый день.",
+        "sentence_en": "Problems arise when we rush.",
+        "sentence_ru": "Проблемы возникают, когда мы спешим.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I arose.",
-        "sentence_ru": "Вчера я (arose).",
+        "sentence_en": "A new issue arose yesterday.",
+        "sentence_ru": "Вчера возник новый вопрос.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have arisen before.",
-        "sentence_ru": "Я уже (arisen) раньше.",
+        "sentence_en": "Several doubts have arisen.",
+        "sentence_ru": "Появилось несколько сомнений.",
         "context": "Present Perfect"
       }
     ]
@@ -3907,24 +4037,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "broadcast — broadcast — broadcast",
+    "meaning_ru": "транслировать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I broadcast every day.",
-        "sentence_ru": "Я делаю это (broadcast) каждый день.",
+        "sentence_en": "They broadcast the news at six.",
+        "sentence_ru": "Они передают новости в шесть.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I broadcast.",
-        "sentence_ru": "Вчера я (broadcast).",
+        "sentence_en": "The radio broadcast the match live.",
+        "sentence_ru": "Радио транслировало матч в прямом эфире.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have broadcast before.",
-        "sentence_ru": "Я уже (broadcast) раньше.",
+        "sentence_en": "The show has been broadcast twice.",
+        "sentence_ru": "Шоу уже транслировали дважды.",
         "context": "Present Perfect"
       }
     ]
@@ -3937,24 +4068,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "forecast — forecast — forecast",
+    "meaning_ru": "прогнозировать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I forecast every day.",
-        "sentence_ru": "Я делаю это (forecast) каждый день.",
+        "sentence_en": "They forecast rain for Friday.",
+        "sentence_ru": "На пятницу обещают дождь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I forecast.",
-        "sentence_ru": "Вчера я (forecast).",
+        "sentence_en": "The radio forecast a storm.",
+        "sentence_ru": "По радио обещали шторм.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have forecast before.",
-        "sentence_ru": "Я уже (forecast) раньше.",
+        "sentence_en": "They have forecast a cold winter.",
+        "sentence_ru": "Они прогнозируют холодную зиму.",
         "context": "Present Perfect"
       }
     ]
@@ -3967,24 +4099,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "overcome — overcame — overcome",
+    "meaning_ru": "преодолевать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I overcome every day.",
-        "sentence_ru": "Я делаю это (overcome) каждый день.",
+        "sentence_en": "We overcome fear step by step.",
+        "sentence_ru": "Мы преодолеваем страх шаг за шагом.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I overcame.",
-        "sentence_ru": "Вчера я (overcame).",
+        "sentence_en": "She overcame her shyness.",
+        "sentence_ru": "Она преодолела стеснительность.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have overcome before.",
-        "sentence_ru": "Я уже (overcome) раньше.",
+        "sentence_en": "They have overcome many problems.",
+        "sentence_ru": "Они преодолели много проблем.",
         "context": "Present Perfect"
       }
     ]
@@ -3997,24 +4130,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "overtake — overtook — overtaken",
+    "meaning_ru": "обгонять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I overtake every day.",
-        "sentence_ru": "Я делаю это (overtake) каждый день.",
+        "sentence_en": "Do not overtake on this bend.",
+        "sentence_ru": "Не обгоняй на этом повороте.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I overtook.",
-        "sentence_ru": "Вчера я (overtook).",
+        "sentence_en": "A lorry overtook us on the motorway.",
+        "sentence_ru": "Грузовик обогнал нас на трассе.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have overtaken before.",
-        "sentence_ru": "Я уже (overtaken) раньше.",
+        "sentence_en": "She has overtaken the leader.",
+        "sentence_ru": "Она обогнала лидера.",
         "context": "Present Perfect"
       }
     ]
@@ -4027,24 +4161,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "undergo — underwent — undergone",
+    "meaning_ru": "подвергаться, переживать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I undergo every day.",
-        "sentence_ru": "Я делаю это (undergo) каждый день.",
+        "sentence_en": "Patients undergo tests in the morning.",
+        "sentence_ru": "Пациенты проходят анализы утром.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I underwent.",
-        "sentence_ru": "Вчера я (underwent).",
+        "sentence_en": "He underwent surgery last year.",
+        "sentence_ru": "В прошлом году он перенёс операцию.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have undergone before.",
-        "sentence_ru": "Я уже (undergone) раньше.",
+        "sentence_en": "The office has undergone a renovation.",
+        "sentence_ru": "Офис прошёл ремонт.",
         "context": "Present Perfect"
       }
     ]
@@ -4057,24 +4192,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "upset — upset — upset",
+    "meaning_ru": "расстраивать, опрокидывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I upset every day.",
-        "sentence_ru": "Я делаю это (upset) каждый день.",
+        "sentence_en": "Loud noise upsets the dog.",
+        "sentence_ru": "Громкий шум расстраивает собаку.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I upset.",
-        "sentence_ru": "Вчера я (upset).",
+        "sentence_en": "The news upset everyone.",
+        "sentence_ru": "Новость всех расстроила.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have upset before.",
-        "sentence_ru": "Я уже (upset) раньше.",
+        "sentence_en": "I have upset the glass again.",
+        "sentence_ru": "Я снова опрокинул стакан.",
         "context": "Present Perfect"
       }
     ]
@@ -4087,24 +4223,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "rewind — rewound — rewound",
+    "meaning_ru": "перематывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I rewind every day.",
-        "sentence_ru": "Я делаю это (rewind) каждый день.",
+        "sentence_en": "Please rewind the tape.",
+        "sentence_ru": "Перемотай кассету, пожалуйста.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rewound.",
-        "sentence_ru": "Вчера я (rewound).",
+        "sentence_en": "He rewound the film to the start.",
+        "sentence_ru": "Он перемотал фильм на начало.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have rewound before.",
-        "sentence_ru": "Я уже (rewound) раньше.",
+        "sentence_en": "I have rewound it twice.",
+        "sentence_ru": "Я уже дважды перематывал.",
         "context": "Present Perfect"
       }
     ]
@@ -4117,24 +4254,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "rewrite — rewrote — rewritten",
+    "meaning_ru": "переписывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I rewrite every day.",
-        "sentence_ru": "Я делаю это (rewrite) каждый день.",
+        "sentence_en": "I rewrite the draft in the evening.",
+        "sentence_ru": "Вечером я переписываю черновик.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rewrote.",
-        "sentence_ru": "Вчера я (rewrote).",
+        "sentence_en": "She rewrote the first paragraph.",
+        "sentence_ru": "Она переписала первый абзац.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have rewritten before.",
-        "sentence_ru": "Я уже (rewritten) раньше.",
+        "sentence_en": "I have rewritten the whole essay.",
+        "sentence_ru": "Я переписал всё сочинение.",
         "context": "Present Perfect"
       }
     ]
@@ -4147,24 +4285,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "withdraw — withdrew — withdrawn",
+    "meaning_ru": "снимать, отступать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I withdraw every day.",
-        "sentence_ru": "Я делаю это (withdraw) каждый день.",
+        "sentence_en": "I withdraw cash from this ATM.",
+        "sentence_ru": "Я снимаю наличные в этом банкомате.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I withdrew.",
-        "sentence_ru": "Вчера я (withdrew).",
+        "sentence_en": "She withdrew from the contest.",
+        "sentence_ru": "Она снялась с конкурса.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have withdrawn before.",
-        "sentence_ru": "Я уже (withdrawn) раньше.",
+        "sentence_en": "He has withdrawn all his savings.",
+        "sentence_ru": "Он снял все сбережения.",
         "context": "Present Perfect"
       }
     ]
@@ -4177,24 +4316,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "withstand — withstood — withstood",
+    "meaning_ru": "выдерживать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I withstand every day.",
-        "sentence_ru": "Я делаю это (withstand) каждый день.",
+        "sentence_en": "This coat withstands heavy rain.",
+        "sentence_ru": "Это пальто выдерживает сильный дождь.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I withstood.",
-        "sentence_ru": "Вчера я (withstood).",
+        "sentence_en": "The bridge withstood the storm.",
+        "sentence_ru": "Мост выдержал шторм.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have withstood before.",
-        "sentence_ru": "Я уже (withstood) раньше.",
+        "sentence_en": "The team has withstood a lot of pressure.",
+        "sentence_ru": "Команда выдержала большое давление.",
         "context": "Present Perfect"
       }
     ]
@@ -4207,24 +4347,25 @@
     "frequency": "medium",
     "difficulty": "hard",
     "mnemonic_tip": "forbid — forbade — forbidden",
+    "meaning_ru": "запрещать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I forbid every day.",
-        "sentence_ru": "Я делаю это (forbid) каждый день.",
+        "sentence_en": "The rules forbid phones in class.",
+        "sentence_ru": "Правила запрещают телефоны на уроке.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I forbade.",
-        "sentence_ru": "Вчера я (forbade).",
+        "sentence_en": "Dad forbade us to swim there.",
+        "sentence_ru": "Папа запретил нам там плавать.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have forbidden before.",
-        "sentence_ru": "Я уже (forbidden) раньше.",
+        "sentence_en": "Smoking has been forbidden here.",
+        "sentence_ru": "Курить здесь запрещено.",
         "context": "Present Perfect"
       }
     ]
@@ -4237,24 +4378,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "input — input — input",
+    "meaning_ru": "вводить данные",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I input every day.",
-        "sentence_ru": "Я делаю это (input) каждый день.",
+        "sentence_en": "Please input your password.",
+        "sentence_ru": "Введите пароль.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I input.",
-        "sentence_ru": "Вчера я (input).",
+        "sentence_en": "She input the data yesterday.",
+        "sentence_ru": "Она ввела данные вчера.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have input before.",
-        "sentence_ru": "Я уже (input) раньше.",
+        "sentence_en": "I have input all the names.",
+        "sentence_ru": "Я ввёл все имена.",
         "context": "Present Perfect"
       }
     ]
@@ -4267,24 +4409,25 @@
     "frequency": "low",
     "difficulty": "easy",
     "mnemonic_tip": "output — output — output",
+    "meaning_ru": "выводить данные",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I output every day.",
-        "sentence_ru": "Я делаю это (output) каждый день.",
+        "sentence_en": "The printer outputs ten pages a minute.",
+        "sentence_ru": "Принтер выдаёт десять страниц в минуту.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I output.",
-        "sentence_ru": "Вчера я (output).",
+        "sentence_en": "The factory output more parts last week.",
+        "sentence_ru": "На прошлой неделе завод выпустил больше деталей.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have output before.",
-        "sentence_ru": "Я уже (output) раньше.",
+        "sentence_en": "The system has output the report.",
+        "sentence_ru": "Система уже вывела отчёт.",
         "context": "Present Perfect"
       }
     ]
@@ -4297,24 +4440,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "offset — offset — offset",
+    "meaning_ru": "компенсировать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I offset every day.",
-        "sentence_ru": "Я делаю это (offset) каждый день.",
+        "sentence_en": "Trees offset some of the carbon.",
+        "sentence_ru": "Деревья компенсируют часть углерода.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I offset.",
-        "sentence_ru": "Вчера я (offset).",
+        "sentence_en": "The bonus offset the extra costs.",
+        "sentence_ru": "Премия покрыла лишние расходы.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have offset before.",
-        "sentence_ru": "Я уже (offset) раньше.",
+        "sentence_en": "We have offset the delay.",
+        "sentence_ru": "Мы уже компенсировали задержку.",
         "context": "Present Perfect"
       }
     ]
@@ -4327,24 +4471,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "proofread — proofread — proofread",
+    "meaning_ru": "вычитывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I proofread every day.",
-        "sentence_ru": "Я делаю это (proofread) каждый день.",
+        "sentence_en": "I proofread every email twice.",
+        "sentence_ru": "Я дважды вычитываю каждое письмо.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I proofread.",
-        "sentence_ru": "Вчера я (proofread).",
+        "sentence_en": "She proofread the article last night.",
+        "sentence_ru": "Она вычитала статью прошлой ночью.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have proofread before.",
-        "sentence_ru": "Я уже (proofread) раньше.",
+        "sentence_en": "I have proofread the whole chapter.",
+        "sentence_ru": "Я вычитал всю главу.",
         "context": "Present Perfect"
       }
     ]
@@ -4357,24 +4502,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "rid — rid — rid",
+    "meaning_ru": "избавлять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I rid every day.",
-        "sentence_ru": "Я делаю это (rid) каждый день.",
+        "sentence_en": "I want to rid the kitchen of ants.",
+        "sentence_ru": "Хочу избавить кухню от муравьёв.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I rid.",
-        "sentence_ru": "Вчера я (rid).",
+        "sentence_en": "They rid the garden of weeds.",
+        "sentence_ru": "Они избавили сад от сорняков.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have rid before.",
-        "sentence_ru": "Я уже (rid) раньше.",
+        "sentence_en": "We have rid the house of mice.",
+        "sentence_ru": "Мы избавили дом от мышей.",
         "context": "Present Perfect"
       }
     ]
@@ -4387,24 +4533,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "shed — shed — shed",
+    "meaning_ru": "сбрасывать, проливать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shed every day.",
-        "sentence_ru": "Я делаю это (shed) каждый день.",
+        "sentence_en": "Snakes shed their skin.",
+        "sentence_ru": "Змеи сбрасывают кожу.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shed.",
-        "sentence_ru": "Вчера я (shed).",
+        "sentence_en": "The tree shed its leaves.",
+        "sentence_ru": "Дерево сбросило листья.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shed before.",
-        "sentence_ru": "Я уже (shed) раньше.",
+        "sentence_en": "He has shed a few tears.",
+        "sentence_ru": "Он пролил несколько слёз.",
         "context": "Present Perfect"
       }
     ]
@@ -4417,24 +4564,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "slit — slit — slit",
+    "meaning_ru": "разрезать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I slit every day.",
-        "sentence_ru": "Я делаю это (slit) каждый день.",
+        "sentence_en": "I slit the envelope with a knife.",
+        "sentence_ru": "Я вскрываю конверт ножом.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I slit.",
-        "sentence_ru": "Вчера я (slit).",
+        "sentence_en": "She slit the fabric carefully.",
+        "sentence_ru": "Она аккуратно разрезала ткань.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have slit before.",
-        "sentence_ru": "Я уже (slit) раньше.",
+        "sentence_en": "He has slit the bag open.",
+        "sentence_ru": "Он уже разрезал пакет.",
         "context": "Present Perfect"
       }
     ]
@@ -4447,24 +4595,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "thrust — thrust — thrust",
+    "meaning_ru": "вонзать, толкать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I thrust every day.",
-        "sentence_ru": "Я делаю это (thrust) каждый день.",
+        "sentence_en": "Do not thrust the box at me.",
+        "sentence_ru": "Не пихай мне коробку.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I thrust.",
-        "sentence_ru": "Вчера я (thrust).",
+        "sentence_en": "He thrust the key into the lock.",
+        "sentence_ru": "Он вставил ключ в замок.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have thrust before.",
-        "sentence_ru": "Я уже (thrust) раньше.",
+        "sentence_en": "She has thrust the papers into the bag.",
+        "sentence_ru": "Она запихнула бумаги в сумку.",
         "context": "Present Perfect"
       }
     ]
@@ -4477,24 +4626,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "wed — wed — wed",
+    "meaning_ru": "жениться, выходить замуж",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wed every day.",
-        "sentence_ru": "Я делаю это (wed) каждый день.",
+        "sentence_en": "They wed in a small church.",
+        "sentence_ru": "Они венчаются в маленькой церкви.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wed.",
-        "sentence_ru": "Вчера я (wed).",
+        "sentence_en": "They wed last June.",
+        "sentence_ru": "Они поженились в июне.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have wed before.",
-        "sentence_ru": "Я уже (wed) раньше.",
+        "sentence_en": "The couple has wed in secret.",
+        "sentence_ru": "Пара тайно поженилась.",
         "context": "Present Perfect"
       }
     ]
@@ -4507,24 +4657,25 @@
     "frequency": "low",
     "difficulty": "easy",
     "mnemonic_tip": "wet — wet — wet",
+    "meaning_ru": "мочить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wet every day.",
-        "sentence_ru": "Я делаю это (wet) каждый день.",
+        "sentence_en": "Rain wets the streets quickly.",
+        "sentence_ru": "Дождь быстро мочит улицы.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wet.",
-        "sentence_ru": "Вчера я (wet).",
+        "sentence_en": "He wet the cloth under the tap.",
+        "sentence_ru": "Он намочил тряпку под краном.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have wet before.",
-        "sentence_ru": "Я уже (wet) раньше.",
+        "sentence_en": "I have wet my sleeves again.",
+        "sentence_ru": "Я снова намочил рукава.",
         "context": "Present Perfect"
       }
     ]
@@ -4537,24 +4688,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "knit — knit — knit",
+    "meaning_ru": "вязать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I knit every day.",
-        "sentence_ru": "Я делаю это (knit) каждый день.",
+        "sentence_en": "Grandma knits warm socks.",
+        "sentence_ru": "Бабушка вяжет тёплые носки.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I knit.",
-        "sentence_ru": "Вчера я (knit).",
+        "sentence_en": "She knit a scarf last winter.",
+        "sentence_ru": "Прошлой зимой она связала шарф.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have knit before.",
-        "sentence_ru": "Я уже (knit) раньше.",
+        "sentence_en": "I have knit two hats this year.",
+        "sentence_ru": "В этом году я связала две шапки.",
         "context": "Present Perfect"
       }
     ]
@@ -4567,24 +4719,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "creep — crept — crept",
+    "meaning_ru": "ползти",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I creep every day.",
-        "sentence_ru": "Я делаю это (creep) каждый день.",
+        "sentence_en": "Fog creeps over the fields.",
+        "sentence_ru": "Туман ползёт по полям.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I crept.",
-        "sentence_ru": "Вчера я (crept).",
+        "sentence_en": "He crept into the room.",
+        "sentence_ru": "Он прокрался в комнату.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have crept before.",
-        "sentence_ru": "Я уже (crept) раньше.",
+        "sentence_en": "Doubt has crept into my mind.",
+        "sentence_ru": "В голову закралось сомнение.",
         "context": "Present Perfect"
       }
     ]
@@ -4597,24 +4750,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "leap — leapt — leapt",
+    "meaning_ru": "прыгать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I leap every day.",
-        "sentence_ru": "Я делаю это (leap) каждый день.",
+        "sentence_en": "Deer leap over the fence.",
+        "sentence_ru": "Олени перепрыгивают через забор.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I leapt.",
-        "sentence_ru": "Вчера я (leapt).",
+        "sentence_en": "She leapt onto the platform.",
+        "sentence_ru": "Она вспрыгнула на платформу.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have leapt before.",
-        "sentence_ru": "Я уже (leapt) раньше.",
+        "sentence_en": "Prices have leapt this month.",
+        "sentence_ru": "Цены в этом месяце резко подскочили.",
         "context": "Present Perfect"
       }
     ]
@@ -4627,24 +4781,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "kneel — knelt — knelt",
+    "meaning_ru": "становиться на колени",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I kneel every day.",
-        "sentence_ru": "Я делаю это (kneel) каждый день.",
+        "sentence_en": "People kneel to tie their shoes.",
+        "sentence_ru": "Люди становятся на колени, чтобы завязать шнурки.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I knelt.",
-        "sentence_ru": "Вчера я (knelt).",
+        "sentence_en": "He knelt beside the box.",
+        "sentence_ru": "Он опустился на колени рядом с коробкой.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have knelt before.",
-        "sentence_ru": "Я уже (knelt) раньше.",
+        "sentence_en": "She has knelt on the cold floor.",
+        "sentence_ru": "Она стояла на коленях на холодном полу.",
         "context": "Present Perfect"
       }
     ]
@@ -4657,24 +4812,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "smell — smelt — smelt",
+    "meaning_ru": "нюхать, пахнуть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I smell every day.",
-        "sentence_ru": "Я делаю это (smell) каждый день.",
+        "sentence_en": "I smell coffee from the kitchen.",
+        "sentence_ru": "Я чувствую запах кофе с кухни.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I smelt.",
-        "sentence_ru": "Вчера я (smelt).",
+        "sentence_en": "The soup smelt wonderful.",
+        "sentence_ru": "Суп пах замечательно.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have smelt before.",
-        "sentence_ru": "Я уже (smelt) раньше.",
+        "sentence_en": "I have smelt this perfume before.",
+        "sentence_ru": "Я уже чувствовал эти духи.",
         "context": "Present Perfect"
       }
     ]
@@ -4687,24 +4843,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "spell — spelt — spelt",
+    "meaning_ru": "произносить по буквам",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spell every day.",
-        "sentence_ru": "Я делаю это (spell) каждый день.",
+        "sentence_en": "How do you spell your name?",
+        "sentence_ru": "Как пишется твоё имя?",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spelt.",
-        "sentence_ru": "Вчера я (spelt).",
+        "sentence_en": "She spelt the word correctly.",
+        "sentence_ru": "Она правильно написала слово по буквам.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spelt before.",
-        "sentence_ru": "Я уже (spelt) раньше.",
+        "sentence_en": "I have spelt it wrong again.",
+        "sentence_ru": "Я снова написал его неправильно.",
         "context": "Present Perfect"
       }
     ]
@@ -4717,24 +4874,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "spill — spilt — spilt",
+    "meaning_ru": "проливать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spill every day.",
-        "sentence_ru": "Я делаю это (spill) каждый день.",
+        "sentence_en": "Do not spill the tea.",
+        "sentence_ru": "Не пролей чай.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spilt.",
-        "sentence_ru": "Вчера я (spilt).",
+        "sentence_en": "He spilt juice on the sofa.",
+        "sentence_ru": "Он пролил сок на диван.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spilt before.",
-        "sentence_ru": "Я уже (spilt) раньше.",
+        "sentence_en": "Someone has spilt milk here.",
+        "sentence_ru": "Кто-то пролил здесь молоко.",
         "context": "Present Perfect"
       }
     ]
@@ -4747,24 +4905,25 @@
     "frequency": "medium",
     "difficulty": "easy",
     "mnemonic_tip": "spoil — spoilt — spoilt",
+    "meaning_ru": "портить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I spoil every day.",
-        "sentence_ru": "Я делаю это (spoil) каждый день.",
+        "sentence_en": "Heat spoils the milk.",
+        "sentence_ru": "Жара портит молоко.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I spoilt.",
-        "sentence_ru": "Вчера я (spoilt).",
+        "sentence_en": "The rain spoilt our picnic.",
+        "sentence_ru": "Дождь испортил пикник.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have spoilt before.",
-        "sentence_ru": "Я уже (spoilt) раньше.",
+        "sentence_en": "The fruit has spoilt in the bag.",
+        "sentence_ru": "Фрукты в сумке испортились.",
         "context": "Present Perfect"
       }
     ]
@@ -4777,24 +4936,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "dwell — dwelt — dwelt",
+    "meaning_ru": "обитать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I dwell every day.",
-        "sentence_ru": "Я делаю это (dwell) каждый день.",
+        "sentence_en": "They dwell in a small village.",
+        "sentence_ru": "Они живут в маленькой деревне.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I dwelt.",
-        "sentence_ru": "Вчера я (dwelt).",
+        "sentence_en": "He dwelt on the mistake too long.",
+        "sentence_ru": "Он слишком долго зацикливался на ошибке.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have dwelt before.",
-        "sentence_ru": "Я уже (dwelt) раньше.",
+        "sentence_en": "She has dwelt here all her life.",
+        "sentence_ru": "Она прожила здесь всю жизнь.",
         "context": "Present Perfect"
       }
     ]
@@ -4807,24 +4967,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "cling — clung — clung",
+    "meaning_ru": "цепляться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I cling every day.",
-        "sentence_ru": "Я делаю это (cling) каждый день.",
+        "sentence_en": "The child clings to her mother.",
+        "sentence_ru": "Ребёнок цепляется за маму.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I clung.",
-        "sentence_ru": "Вчера я (clung).",
+        "sentence_en": "Wet clothes clung to my skin.",
+        "sentence_ru": "Мокрая одежда прилипла к коже.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have clung before.",
-        "sentence_ru": "Я уже (clung) раньше.",
+        "sentence_en": "Ivy has clung to the wall.",
+        "sentence_ru": "Плющ обхватил стену.",
         "context": "Present Perfect"
       }
     ]
@@ -4837,24 +4998,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "fling — flung — flung",
+    "meaning_ru": "швырять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I fling every day.",
-        "sentence_ru": "Я делаю это (fling) каждый день.",
+        "sentence_en": "Do not fling your bag on the floor.",
+        "sentence_ru": "Не швыряй сумку на пол.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I flung.",
-        "sentence_ru": "Вчера я (flung).",
+        "sentence_en": "He flung the window open.",
+        "sentence_ru": "Он распахнул окно.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have flung before.",
-        "sentence_ru": "Я уже (flung) раньше.",
+        "sentence_en": "She has flung the letter away.",
+        "sentence_ru": "Она выбросила письмо.",
         "context": "Present Perfect"
       }
     ]
@@ -4867,24 +5029,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "sling — slung — slung",
+    "meaning_ru": "вешать через плечо, швырять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sling every day.",
-        "sentence_ru": "Я делаю это (sling) каждый день.",
+        "sentence_en": "He slings the bag over his shoulder.",
+        "sentence_ru": "Он вешает сумку через плечо.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I slung.",
-        "sentence_ru": "Вчера я (slung).",
+        "sentence_en": "She slung her coat on the chair.",
+        "sentence_ru": "Она бросила пальто на стул.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have slung before.",
-        "sentence_ru": "Я уже (slung) раньше.",
+        "sentence_en": "He has slung the rope across the gap.",
+        "sentence_ru": "Он перекинул верёвку через проём.",
         "context": "Present Perfect"
       }
     ]
@@ -4897,24 +5060,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "sting — stung — stung",
+    "meaning_ru": "жалить",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sting every day.",
-        "sentence_ru": "Я делаю это (sting) каждый день.",
+        "sentence_en": "Bees sting if you disturb them.",
+        "sentence_ru": "Пчёлы жалят, если их потревожить.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I stung.",
-        "sentence_ru": "Вчера я (stung).",
+        "sentence_en": "A wasp stung my arm.",
+        "sentence_ru": "Оса ужалила меня в руку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have stung before.",
-        "sentence_ru": "Я уже (stung) раньше.",
+        "sentence_en": "The smoke has stung my eyes.",
+        "sentence_ru": "Дым защипал глаза.",
         "context": "Present Perfect"
       }
     ]
@@ -4927,24 +5091,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "string — strung — strung",
+    "meaning_ru": "нанизывать, натягивать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I string every day.",
-        "sentence_ru": "Я делаю это (string) каждый день.",
+        "sentence_en": "I string the lights on the tree.",
+        "sentence_ru": "Я развешиваю гирлянду на ёлке.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I strung.",
-        "sentence_ru": "Вчера я (strung).",
+        "sentence_en": "She strung the beads on a thread.",
+        "sentence_ru": "Она нанизала бусины на нитку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have strung before.",
-        "sentence_ru": "Я уже (strung) раньше.",
+        "sentence_en": "We have strung the banners already.",
+        "sentence_ru": "Мы уже повесили флаги.",
         "context": "Present Perfect"
       }
     ]
@@ -4957,24 +5122,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "wring — wrung — wrung",
+    "meaning_ru": "выжимать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I wring every day.",
-        "sentence_ru": "Я делаю это (wring) каждый день.",
+        "sentence_en": "Wring the cloth before you wipe.",
+        "sentence_ru": "Выжми тряпку, прежде чем протирать.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I wrung.",
-        "sentence_ru": "Вчера я (wrung).",
+        "sentence_en": "She wrung the wet shirt.",
+        "sentence_ru": "Она выжала мокрую рубашку.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have wrung before.",
-        "sentence_ru": "Я уже (wrung) раньше.",
+        "sentence_en": "I have wrung all the water out.",
+        "sentence_ru": "Я выжал всю воду.",
         "context": "Present Perfect"
       }
     ]
@@ -4987,24 +5153,25 @@
     "frequency": "low",
     "difficulty": "medium",
     "mnemonic_tip": "sneak — snuck — snuck",
+    "meaning_ru": "красться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I sneak every day.",
-        "sentence_ru": "Я делаю это (sneak) каждый день.",
+        "sentence_en": "The cat sneaks into the kitchen.",
+        "sentence_ru": "Кот крадётся на кухню.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I snuck.",
-        "sentence_ru": "Вчера я (snuck).",
+        "sentence_en": "He snuck out after dinner.",
+        "sentence_ru": "Он тайком вышел после ужина.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have snuck before.",
-        "sentence_ru": "Я уже (snuck) раньше.",
+        "sentence_en": "I have snuck a look at the answers.",
+        "sentence_ru": "Я украдкой глянул на ответы.",
         "context": "Present Perfect"
       }
     ]
@@ -5017,24 +5184,25 @@
     "frequency": "medium",
     "difficulty": "medium",
     "mnemonic_tip": "dive — dove — dived",
+    "meaning_ru": "нырять",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I dive every day.",
-        "sentence_ru": "Я делаю это (dive) каждый день.",
+        "sentence_en": "Kids dive into the pool.",
+        "sentence_ru": "Дети прыгают в бассейн.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I dove.",
-        "sentence_ru": "Вчера я (dove).",
+        "sentence_en": "She dove into the water.",
+        "sentence_ru": "Она нырнула в воду.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have dived before.",
-        "sentence_ru": "Я уже (dived) раньше.",
+        "sentence_en": "He has dived from this rock before.",
+        "sentence_ru": "Он уже нырял с этой скалы.",
         "context": "Present Perfect"
       }
     ]
@@ -5047,24 +5215,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "thrive — throve — thriven",
+    "meaning_ru": "процветать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I thrive every day.",
-        "sentence_ru": "Я делаю это (thrive) каждый день.",
+        "sentence_en": "Plants thrive in this light.",
+        "sentence_ru": "В этом свете растения хорошо растут.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I throve.",
-        "sentence_ru": "Вчера я (throve).",
+        "sentence_en": "The shop throve last summer.",
+        "sentence_ru": "Прошлым летом магазин процветал.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have thriven before.",
-        "sentence_ru": "Я уже (thriven) раньше.",
+        "sentence_en": "The business has thriven online.",
+        "sentence_ru": "Бизнес хорошо пошёл в сети.",
         "context": "Present Perfect"
       }
     ]
@@ -5077,24 +5246,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "strive — strove — striven",
+    "meaning_ru": "стремиться",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I strive every day.",
-        "sentence_ru": "Я делаю это (strive) каждый день.",
+        "sentence_en": "I strive to speak clearly.",
+        "sentence_ru": "Я стараюсь говорить ясно.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I strove.",
-        "sentence_ru": "Вчера я (strove).",
+        "sentence_en": "She strove to finish on time.",
+        "sentence_ru": "Она стремилась закончить вовремя.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have striven before.",
-        "sentence_ru": "Я уже (striven) раньше.",
+        "sentence_en": "We have striven for a fair result.",
+        "sentence_ru": "Мы добивались честного результата.",
         "context": "Present Perfect"
       }
     ]
@@ -5107,24 +5277,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "shear — shore — shorn",
+    "meaning_ru": "стричь",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I shear every day.",
-        "sentence_ru": "Я делаю это (shear) каждый день.",
+        "sentence_en": "Farmers shear sheep in spring.",
+        "sentence_ru": "Весной фермеры стригут овец.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I shore.",
-        "sentence_ru": "Вчера я (shore).",
+        "sentence_en": "They shore the flock yesterday.",
+        "sentence_ru": "Вчера они постригли отару.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have shorn before.",
-        "sentence_ru": "Я уже (shorn) раньше.",
+        "sentence_en": "The sheep have been shorn already.",
+        "sentence_ru": "Овец уже постригли.",
         "context": "Present Perfect"
       }
     ]
@@ -5137,24 +5308,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "behold — beheld — beheld",
+    "meaning_ru": "узреть",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I behold every day.",
-        "sentence_ru": "Я делаю это (behold) каждый день.",
+        "sentence_en": "Behold the view from here.",
+        "sentence_ru": "Взгляни на вид отсюда.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I beheld.",
-        "sentence_ru": "Вчера я (beheld).",
+        "sentence_en": "We beheld the mountains at dawn.",
+        "sentence_ru": "На рассвете мы увидели горы.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have beheld before.",
-        "sentence_ru": "Я уже (beheld) раньше.",
+        "sentence_en": "I have beheld nothing like it.",
+        "sentence_ru": "Я никогда такого не видел.",
         "context": "Present Perfect"
       }
     ]
@@ -5167,24 +5339,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "uphold — upheld — upheld",
+    "meaning_ru": "поддерживать, отстаивать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I uphold every day.",
-        "sentence_ru": "Я делаю это (uphold) каждый день.",
+        "sentence_en": "Judges uphold the law.",
+        "sentence_ru": "Судьи поддерживают закон.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I upheld.",
-        "sentence_ru": "Вчера я (upheld).",
+        "sentence_en": "The court upheld the decision.",
+        "sentence_ru": "Суд оставил решение в силе.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have upheld before.",
-        "sentence_ru": "Я уже (upheld) раньше.",
+        "sentence_en": "They have upheld this rule for years.",
+        "sentence_ru": "Они много лет держатся этого правила.",
         "context": "Present Perfect"
       }
     ]
@@ -5197,24 +5370,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "withhold — withheld — withheld",
+    "meaning_ru": "удерживать, скрывать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I withhold every day.",
-        "sentence_ru": "Я делаю это (withhold) каждый день.",
+        "sentence_en": "Do not withhold the truth.",
+        "sentence_ru": "Не скрывай правду.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I withheld.",
-        "sentence_ru": "Вчера я (withheld).",
+        "sentence_en": "They withheld the payment.",
+        "sentence_ru": "Они удержали выплату.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have withheld before.",
-        "sentence_ru": "Я уже (withheld) раньше.",
+        "sentence_en": "He has withheld important facts.",
+        "sentence_ru": "Он скрыл важные факты.",
         "context": "Present Perfect"
       }
     ]
@@ -5227,24 +5401,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "forsake — forsook — forsaken",
+    "meaning_ru": "покидать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I forsake every day.",
-        "sentence_ru": "Я делаю это (forsake) каждый день.",
+        "sentence_en": "Do not forsake your friends.",
+        "sentence_ru": "Не бросай друзей.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I forsook.",
-        "sentence_ru": "Вчера я (forsook).",
+        "sentence_en": "He forsook the old plan.",
+        "sentence_ru": "Он отказался от старого плана.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have forsaken before.",
-        "sentence_ru": "Я уже (forsaken) раньше.",
+        "sentence_en": "She has not forsaken her dream.",
+        "sentence_ru": "Она не оставила свою мечту.",
         "context": "Present Perfect"
       }
     ]
@@ -5257,24 +5432,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "partake — partook — partaken",
+    "meaning_ru": "принимать участие",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I partake every day.",
-        "sentence_ru": "Я делаю это (partake) каждый день.",
+        "sentence_en": "Guests partake in the meal.",
+        "sentence_ru": "Гости участвуют в трапезе.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I partook.",
-        "sentence_ru": "Вчера я (partook).",
+        "sentence_en": "We partook of the cake.",
+        "sentence_ru": "Мы отведали торт.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have partaken before.",
-        "sentence_ru": "Я уже (partaken) раньше.",
+        "sentence_en": "I have partaken in this tradition.",
+        "sentence_ru": "Я участвовал в этой традиции.",
         "context": "Present Perfect"
       }
     ]
@@ -5287,24 +5463,25 @@
     "frequency": "low",
     "difficulty": "hard",
     "mnemonic_tip": "retake — retook — retaken",
+    "meaning_ru": "пересдавать, отбивать",
     "related_verbs": [],
     "examples": [
       {
         "form_type": "base",
-        "sentence_en": "I retake every day.",
-        "sentence_ru": "Я делаю это (retake) каждый день.",
+        "sentence_en": "I retake the test next week.",
+        "sentence_ru": "На следующей неделе я пересдаю тест.",
         "context": "Present Simple"
       },
       {
         "form_type": "past",
-        "sentence_en": "Yesterday I retook.",
-        "sentence_ru": "Вчера я (retook).",
+        "sentence_en": "She retook the exam in June.",
+        "sentence_ru": "Она пересдала экзамен в июне.",
         "context": "Past Simple"
       },
       {
         "form_type": "participle",
-        "sentence_en": "I have retaken before.",
-        "sentence_ru": "Я уже (retaken) раньше.",
+        "sentence_en": "He has retaken the photo twice.",
+        "sentence_ru": "Он уже дважды переснимал фото.",
         "context": "Present Perfect"
       }
     ]

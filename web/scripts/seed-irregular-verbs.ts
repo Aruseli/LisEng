@@ -42,11 +42,25 @@ async function ensureExamples(
   const current = await hasyx.select({
     table: 'verb_examples',
     where: { verb_id: { _eq: verbId } },
-    returning: ['id'],
+    returning: ['id', 'form_type'],
   })
   const list = Array.isArray(current) ? current : current ? [current] : []
-  if (list.length > 0) return
+  const byType = new Map(list.map((row: { id: string; form_type: string }) => [row.form_type, row.id]))
+
   for (const example of examples || []) {
+    const existingId = byType.get(example.form_type)
+    if (existingId) {
+      await hasyx.update({
+        table: 'verb_examples',
+        pk_columns: { id: existingId },
+        _set: {
+          sentence_en: example.sentence_en,
+          sentence_ru: example.sentence_ru,
+          context: example.context || null,
+        },
+      })
+      continue
+    }
     await hasyx.insert({
       table: 'verb_examples',
       object: {

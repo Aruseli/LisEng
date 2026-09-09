@@ -1,5 +1,6 @@
 import type { Hasyx } from '@/lib/hasura/compat';
 import { calculateSM2, getQualityScore, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
+import verbsCatalog from '../../../data/irregular-verbs.json';
 
 export interface IrregularVerb {
   id: string;
@@ -10,6 +11,7 @@ export interface IrregularVerb {
   frequency: 'must_know' | 'high' | 'medium' | 'low' | null;
   difficulty: 'easy' | 'medium' | 'hard' | null;
   mnemonic_tip: string | null;
+  meaning_ru?: string | null;
   related_verbs: string[] | null;
   created_at: string;
 }
@@ -50,6 +52,17 @@ export interface GroupProgress {
   learned: number;
   mastered: number;
   percentage: number;
+}
+
+const meaningByInfinitive = new Map(
+  (verbsCatalog as Array<{ infinitive: string; meaning_ru?: string }>).map((verb) => [
+    verb.infinitive,
+    verb.meaning_ru ?? null,
+  ])
+);
+
+function withMeaning<T extends { infinitive: string }>(verb: T): T & { meaning_ru?: string | null } {
+  return { ...verb, meaning_ru: meaningByInfinitive.get(verb.infinitive) ?? null };
 }
 
 export interface PracticeResult {
@@ -152,7 +165,7 @@ export class VerbsService {
     }
 
     // Combine verbs with progress and examples
-    return normalized.map(verb => ({
+    return normalized.map(verb => withMeaning({
       ...verb,
       progress: progressMap.get(verb.id),
       examples: examplesMap.get(verb.id),
@@ -292,7 +305,11 @@ export class VerbsService {
         next_review_date: { _lte: date },
         mastered: { _eq: false },
       },
-      order_by: [{ next_review_date: 'asc' }],
+      order_by: [
+        { repetitions: 'asc' },
+        { incorrect_count: 'desc' },
+        { next_review_date: 'asc' },
+      ],
       limit,
       returning: [
         'id',
@@ -335,7 +352,7 @@ export class VerbsService {
     const verbsArray = Array.isArray(verbs) ? verbs : verbs ? [verbs] : [];
     const progressMap = new Map(normalized.map(p => [p.verb_id, p]));
 
-    return verbsArray.map(verb => ({
+    return verbsArray.map(verb => withMeaning({
       ...verb,
       progress: progressMap.get(verb.id),
     }));
@@ -490,15 +507,14 @@ export class VerbsService {
     if (!progress) {
       // Create initial progress
       const sm2Base = initializeSM2();
-      const nextReviewDate = new Date();
-      nextReviewDate.setDate(nextReviewDate.getDate() + 1);
+      const nextReviewDate = new Date().toISOString().split('T')[0];
 
       await this.hasyx.insert({
         table: 'verb_learning_progress',
         object: {
           user_id: userId,
           verb_id: verbId,
-          next_review_date: nextReviewDate.toISOString().split('T')[0],
+          next_review_date: nextReviewDate,
           ease_factor: sm2Base.easeFactor,
           interval_days: sm2Base.interval,
           repetitions: sm2Base.repetitions,
@@ -519,6 +535,8 @@ export class VerbsService {
       where: {
         user_id: { _eq: userId },
         incorrect_count: { _gt: 0 },
+        mastered: { _eq: false },
+        repetitions: { _lt: 5 },
       },
       order_by: [
         { incorrect_count: 'desc' },
@@ -565,10 +583,47 @@ export class VerbsService {
     const verbsArray = Array.isArray(verbs) ? verbs : verbs ? [verbs] : [];
     const progressMap = new Map(normalized.map(p => [p.verb_id, p]));
 
-    return verbsArray.map(verb => ({
+    return verbsArray.map(verb => withMeaning({
       ...verb,
       progress: progressMap.get(verb.id),
     }));
+  }
+
+  async pickDailyPack(userId: string, count: number = 4): Promise<VerbWithProgress[]> {
+    const today = new Date().toISOString().split('T')[0];
+    const due = await this.getVerbsForReview(userId, today, 30);
+    const picked: VerbWithProgress[] = [];
+    const seen = new Set<string>();
+
+    const take = (verb: VerbWithProgress) => {
+      if (seen.has(verb.id) || picked.length >= count) return;
+      if (verb.progress?.repetitions != null && verb.progress.repetitions >= 5) return;
+      seen.add(verb.id);
+      picked.push(verb);
+    };
+
+    due
+      .filter((verb) => (verb.progress?.repetitions ?? 0) === 0 && (verb.progress?.incorrect_count ?? 0) > 0)
+      .forEach(take);
+    due.forEach(take);
+
+    if (picked.length < 3) {
+      const catalog = await this.getVerbs({ includeProgress: true, userId });
+      const fresh = catalog
+        .filter((verb) => !verb.progress)
+        .sort((a, b) => {
+          const freqRank = (value: string | null) =>
+            value === 'must_know' ? 0 : value === 'high' ? 1 : value === 'medium' ? 2 : 3;
+          return freqRank(a.frequency) - freqRank(b.frequency) || (a.group_number ?? 9) - (b.group_number ?? 9);
+        });
+      for (const verb of fresh) {
+        if (picked.length >= count) break;
+        await this.addToReviewQueue(userId, verb.id);
+        take(verb);
+      }
+    }
+
+    return picked.slice(0, count);
   }
 }
 

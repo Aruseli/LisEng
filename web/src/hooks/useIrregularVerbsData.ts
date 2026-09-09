@@ -1,7 +1,9 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/lib/compat/hasyx';
-import type { IrregularVerb, VerbWithProgress, GroupProgress } from '@/lib/verbs/verbs-service';
+import type { VerbWithProgress, GroupProgress } from '@/lib/verbs/verbs-service';
+import { queryKeys } from '@/lib/query-keys';
 
 interface UseIrregularVerbsDataOptions {
   group?: number;
@@ -24,87 +26,68 @@ export function useIrregularVerbsData(
   options: UseIrregularVerbsDataOptions = {}
 ): UseIrregularVerbsDataReturn {
   const { data: session, status } = useSession();
-  const [verbs, setVerbs] = useState<VerbWithProgress[]>([]);
-  const [groups, setGroups] = useState<GroupProgress[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const userId = session?.user?.id;
   const [filters, setFilters] = useState<UseIrregularVerbsDataOptions>(options);
+  const enabled = status === 'authenticated' && Boolean(userId);
 
-  const fetchVerbs = useCallback(async () => {
-    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
-      setIsLoading(false);
-      return;
-    }
+  const catalogQuery = useQuery({
+    queryKey: queryKeys.verbCatalog(),
+    staleTime: Infinity,
+    enabled,
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append('includeExamples', 'true');
+      const response = await fetch(`/api/verbs?${params.toString()}`);
+      if (!response.ok) throw new Error('Failed to fetch verbs');
+      const data = await response.json();
+      return (data.verbs || []) as VerbWithProgress[];
+    },
+  });
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
+  const progressQuery = useQuery({
+    queryKey: queryKeys.verbs(userId ?? ''),
+    staleTime: 30_000,
+    enabled: enabled && Boolean(filters.includeProgress),
+    queryFn: async () => {
       const params = new URLSearchParams();
       if (filters.group) params.append('group', filters.group.toString());
       if (filters.frequency) params.append('frequency', filters.frequency);
-      if (filters.includeProgress) params.append('includeProgress', 'true');
-      if (filters.includeExamples) params.append('includeExamples', 'true');
-
+      params.append('includeProgress', 'true');
+      params.append('includeExamples', filters.includeExamples ? 'true' : 'false');
       const response = await fetch(`/api/verbs?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch verbs');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch verbs');
       const data = await response.json();
-      setVerbs(data.verbs || []);
-    } catch (err: any) {
-      setError(err?.message || 'Failed to load verbs');
-      console.error('[useIrregularVerbsData] Error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [status, session?.user?.id, filters]);
+      return (data.verbs || []) as VerbWithProgress[];
+    },
+  });
 
-  const fetchGroups = useCallback(async () => {
-    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
-      return;
-    }
-
-    try {
+  const groupsQuery = useQuery({
+    queryKey: [...queryKeys.verbs(userId ?? ''), 'groups'],
+    staleTime: 30_000,
+    enabled,
+    queryFn: async () => {
       const response = await fetch('/api/verbs/progress?type=groups');
-      if (!response.ok) {
-        throw new Error('Failed to fetch groups progress');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch groups progress');
       const data = await response.json();
-      setGroups(data.groups || []);
-    } catch (err: any) {
-      console.error('[useIrregularVerbsData] Error fetching groups:', err);
-    }
-  }, [status, session?.user?.id]);
+      return (data.groups || []) as GroupProgress[];
+    },
+  });
 
-  useEffect(() => {
-    fetchVerbs();
-    fetchGroups();
-  }, [fetchVerbs, fetchGroups]);
-
-  const filterByGroup = useCallback((group: number | undefined) => {
-    setFilters((prev) => ({ ...prev, group }));
-  }, []);
-
-  const filterByFrequency = useCallback((freq: 'must_know' | 'high' | 'medium' | 'low' | undefined) => {
-    setFilters((prev) => ({ ...prev, frequency: freq }));
-  }, []);
+  const verbs = progressQuery.data ?? catalogQuery.data ?? [];
 
   const refresh = useCallback(() => {
-    fetchVerbs();
-    fetchGroups();
-  }, [fetchVerbs, fetchGroups]);
+    void catalogQuery.refetch();
+    void progressQuery.refetch();
+    void groupsQuery.refetch();
+  }, [catalogQuery, progressQuery, groupsQuery]);
 
   return {
     verbs,
-    groups,
-    isLoading,
-    error,
+    groups: groupsQuery.data ?? [],
+    isLoading: (catalogQuery.isLoading || progressQuery.isLoading) && verbs.length === 0,
+    error: (progressQuery.error as Error | null)?.message ?? (catalogQuery.error as Error | null)?.message ?? null,
     refresh,
-    filterByGroup,
-    filterByFrequency,
+    filterByGroup: (group) => setFilters((prev) => ({ ...prev, group })),
+    filterByFrequency: (freq) => setFilters((prev) => ({ ...prev, frequency: freq })),
   };
 }
-

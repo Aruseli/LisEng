@@ -18,6 +18,7 @@ export interface StageProgress {
   errors_pending: number;
   average_accuracy: number;
   status: 'in_progress' | 'ready_for_test' | 'test_passed' | 'completed';
+  accuracy_measured?: boolean;
 }
 
 export interface RequirementCheck {
@@ -74,6 +75,13 @@ export class StageProgressionService {
           break;
 
         case 'accuracy_threshold':
+          if (!progress.accuracy_measured) {
+            current_value = undefined;
+            required_value = (req.requirement_threshold || 0) * 100;
+            met = true;
+            message = 'Точность пока не измерена';
+            break;
+          }
           current_value = progress.average_accuracy * 100;
           required_value = (req.requirement_threshold || 0) * 100;
           met = progress.average_accuracy >= (req.requirement_threshold || 0);

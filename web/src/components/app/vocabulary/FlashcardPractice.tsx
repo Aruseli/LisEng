@@ -155,7 +155,7 @@ export function FlashcardPractice({ cards, onResult, title = 'Слова для 
           >
             {/* Лицевая сторона (английское слово) */}
             <div
-              className="absolute inset-0 backface-hidden flex items-center justify-center rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50 p-6 shadow-lg"
+              className="absolute inset-0 backface-hidden flex items-center justify-center rounded-2xl border-2 border-indigo-200 bg-linear-to-br from-indigo-50 to-blue-50 p-6 shadow-lg"
               style={{ backfaceVisibility: 'hidden' }}
             >
               <div className="text-center">
@@ -173,7 +173,7 @@ export function FlashcardPractice({ cards, onResult, title = 'Слова для 
 
             {/* Обратная сторона (перевод + пример) */}
             <div
-              className="absolute inset-0 backface-hidden flex flex-col items-center justify-center rounded-2xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-6 shadow-lg rotate-y-180"
+              className="absolute inset-0 backface-hidden flex flex-col items-center justify-center rounded-2xl border-2 border-green-200 bg-linear-to-br from-green-50 to-emerald-50 p-6 shadow-lg rotate-y-180"
               style={{
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',

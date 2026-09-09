@@ -1,5 +1,6 @@
 
 import { useState, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useIrregularVerbsData } from '@/hooks/useIrregularVerbsData';
 import { useVerbProgress } from '@/hooks/useVerbProgress';
 import { VerbCard } from './VerbCard';
@@ -7,16 +8,37 @@ import { VerbTrainer } from './VerbTrainer';
 import { Button } from '../Buttons/Button';
 import { useModalStore } from '@/store/modalStore';
 import type { VerbWithProgress } from '@/lib/verbs/verbs-service';
+import { invalidateVerbQueries } from '@/lib/query-keys';
+import { useSession } from '@/lib/compat/hasyx';
 
 type ViewMode = 'list' | 'practice';
+
+function todayIso() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function isDue(verb: VerbWithProgress) {
+  if (!verb.progress || verb.progress.mastered) return false;
+  return verb.progress.next_review_date <= todayIso();
+}
+
+function isWeak(verb: VerbWithProgress) {
+  const progress = verb.progress;
+  if (!progress || progress.mastered) return false;
+  return progress.incorrect_count > 0 && progress.repetitions < 5;
+}
 
 export function IrregularVerbsScreen() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedGroup, setSelectedGroup] = useState<number | undefined>();
+  const [packBusy, setPackBusy] = useState(false);
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
-  const { verbs, groups, isLoading, error, filterByGroup } = useIrregularVerbsData({
+  const { verbs, groups, isLoading, error, refresh } = useIrregularVerbsData({
     includeProgress: true,
     includeExamples: true,
   });
@@ -31,8 +53,16 @@ export function IrregularVerbsScreen() {
   }, [verbs, selectedGroup]);
 
   const verbsForReview = useMemo(() => {
-    return verbs.filter((v) => v.progress && !v.progress.mastered);
+    const due = verbs.filter(isDue);
+    const weakDue = due.filter(isWeak);
+    const restDue = due.filter((verb) => !isWeak(verb));
+    return [...weakDue, ...restDue];
   }, [verbs]);
+
+  const handleRefresh = async () => {
+    await invalidateVerbQueries(queryClient, userId);
+    refresh();
+  };
 
   const handleOpenVerbCard = (verb: VerbWithProgress, e: React.MouseEvent<HTMLDivElement>) => {
     const clickPosition = { x: e.clientX, y: e.clientY };
@@ -44,11 +74,25 @@ export function IrregularVerbsScreen() {
           verb={verb}
           onRequestClose={() => closeModal(modalId)}
           onAddToQueue={async () => {
-            // Will be handled by VerbCard
+            await handleRefresh();
           }}
         />
       ),
     });
+  };
+
+  const addDailyPack = async () => {
+    setPackBusy(true);
+    try {
+      await fetch('/api/verbs/daily-pack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: 4 }),
+      });
+      await handleRefresh();
+    } finally {
+      setPackBusy(false);
+    }
   };
 
   if (isLoading) {
@@ -71,14 +115,16 @@ export function IrregularVerbsScreen() {
     return (
       <VerbTrainer
         verbs={verbsForReview}
-        onComplete={() => setViewMode('list')}
+        onComplete={() => {
+          setViewMode('list');
+          void handleRefresh();
+        }}
       />
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Progress by groups */}
       <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Прогресс по группам</h2>
         <div className="space-y-3">
@@ -103,17 +149,18 @@ export function IrregularVerbsScreen() {
         </div>
       </section>
 
-      {/* Overall stats */}
       {progress && (
         <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Общая статистика</h2>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
               <p className="text-2xl font-bold text-accent">{progress.learnedVerbs}</p>
-              <p className="text-sm text-gray-500">Выучено</p>
+              <p className="text-sm text-gray-500">В изучении</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{progress.masteredVerbs}</p>
+              <p className="text-2xl font-bold text-green-600" title="5 верных подряд и интервал ≥ 30 дней">
+                {progress.masteredVerbs}
+              </p>
               <p className="text-sm text-gray-500">Освоено</p>
             </div>
             <div className="text-center">
@@ -124,8 +171,7 @@ export function IrregularVerbsScreen() {
         </section>
       )}
 
-      {/* Actions */}
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <Button
           onClick={() => setViewMode('practice')}
           disabled={verbsForReview.length === 0}
@@ -133,12 +179,19 @@ export function IrregularVerbsScreen() {
           className="flex-1"
         >
           {verbsForReview.length > 0
-            ? `Тренировка (${verbsForReview.length} глаголов)`
-            : 'Нет глаголов для повторения'}
+            ? `Тренировка (${verbsForReview.length} на сегодня)`
+            : 'Нет глаголов на сегодня'}
+        </Button>
+        <Button
+          onClick={() => void addDailyPack()}
+          disabled={packBusy}
+          variant="outline"
+          className="flex-1"
+        >
+          {packBusy ? 'Добавляем…' : 'На сегодня: 3–5 глаголов'}
         </Button>
       </div>
 
-      {/* Group filters */}
       <div className="flex flex-wrap gap-2">
         <Button
           onClick={() => setSelectedGroup(undefined)}
@@ -162,7 +215,12 @@ export function IrregularVerbsScreen() {
         })}
       </div>
 
-      {/* Verbs list */}
+      {weakVerbs.length > 0 && (
+        <p className="text-sm text-amber-700">
+          Слабые сейчас: {weakVerbs.map((verb) => verb.infinitive).join(', ')}
+        </p>
+      )}
+
       <section className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">
           Список глаголов
@@ -188,14 +246,16 @@ export function IrregularVerbsScreen() {
                 <p className="text-sm text-gray-600 mb-1">
                   {verb.past_simple} — {verb.past_participle}
                 </p>
+                {verb.meaning_ru && (
+                  <p className="text-xs text-gray-500 mb-1">{verb.meaning_ru}</p>
+                )}
                 {verb.progress && (
                   <div className="mt-2 text-xs text-gray-500">
                     {verb.progress.mastered ? (
                       <span className="text-green-600">✓ Освоено</span>
                     ) : (
                       <span>
-                        Правильно: {verb.progress.correct_count} / Ошибок:{' '}
-                        {verb.progress.incorrect_count}
+                        В изучении · верно {verb.progress.correct_count} / ошибок {verb.progress.incorrect_count}
                       </span>
                     )}
                   </div>
@@ -207,4 +267,3 @@ export function IrregularVerbsScreen() {
     </div>
   );
 }
-

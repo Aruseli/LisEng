@@ -1,5 +1,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@/lib/compat/navigation';
 import { useSession } from '@/lib/compat/hasyx';
 
@@ -8,13 +9,14 @@ import { Skeleton } from '@/components/app/ui/Skeleton';
 import type { LessonMaterials } from '@/lib/lesson/lesson-content-service';
 import { PronunciationPractice } from './PronunciationPractice';
 import { ListeningPlayer } from '@/components/app/listening/ListeningPlayer';
-import { FlashcardPractice, type Flashcard } from '@/components/app/vocabulary/FlashcardPractice';
+import { type Flashcard } from '@/components/app/vocabulary/FlashcardPractice';
 import { useAppData } from '@/lib/app-data';
 import { BackArrow } from '@/components/icons/BackArrow';
 import { IconButton } from '../Buttons/IconButton';
 import { SwipeCard } from '../vocabulary/SwipeCard';
 import { ClickableText } from './ClickableText';
 import { useModalStore } from '@/store/modalStore';
+import { invalidateLessonQueries } from '@/lib/query-keys';
 
 interface LessonScreenProps {
   taskId: string;
@@ -51,8 +53,10 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [questionResults, setQuestionResults] = useState<Record<number, boolean | null>>({});
   const [shownSuccessModals, setShownSuccessModals] = useState<Set<number>>(new Set());
   const [errorMessages, setErrorMessages] = useState<Record<number, string>>({});
-  const { currentLevel } = useAppData();
+  const { currentLevel, completeTask } = useAppData();
   const userLevel = currentLevel || 'A2';
+  const queryClient = useQueryClient();
+  const [vocabAnswered, setVocabAnswered] = useState(0);
   const openModal = useModalStore((state) => state.openModal);
   const closeModal = useModalStore((state) => state.closeModal);
 
@@ -175,6 +179,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
         }
         const cards = Array.isArray(body.cards) ? body.cards : [];
         setFlashcards(cards);
+        setVocabAnswered(0);
         setCanGenerateLevelPack(Boolean(body.canGenerateLevelPack) && cards.length === 0);
       } catch (error) {
         console.error('Failed to load flashcards:', error);
@@ -242,13 +247,15 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
         throw new Error(errorBody.error || 'Не удалось завершить урок');
       }
 
+      await completeTask(taskId);
+      await invalidateLessonQueries(queryClient, userId);
       router.push('/');
     } catch (error: any) {
       setSubmitError(error?.message ?? 'Не удалось завершить урок');
     } finally {
       setIsSubmitting(false);
     }
-      }, [lesson, pronunciationResult, readingScript, flashcardResults, router, taskId, userId]);
+      }, [lesson, pronunciationResult, readingScript, flashcardResults, router, taskId, userId, completeTask, queryClient]);
 
   // Показываем загрузку, пока сессия загружается
   if (status === 'loading') {
@@ -298,6 +305,32 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     return null;
   }
 
+  const taskType = lesson.meta?.taskType;
+  const questions = lesson.exercise.questions ?? [];
+  const correctCount = questions.filter((_, index) => questionResults[index] === true).length;
+  const questionsDone = questions.length === 0 || questions.every((_, index) => questionResults[index] === true);
+  const isVocabLesson = taskType === 'vocabulary';
+  const vocabDone = !isVocabLesson || (flashcards.length > 0 && vocabAnswered >= flashcards.length);
+  const needsPronunciation =
+    taskType === 'speaking' ||
+    Boolean((lesson.meta as { requiresPronunciation?: boolean } | undefined)?.requiresPronunciation);
+  const pronunciationDone = !needsPronunciation || pronunciationResult.accuracy !== null;
+  const hasInteractive =
+    (questions.length > 0 && !isVocabLesson) ||
+    (isVocabLesson && (flashcards.length > 0 || canGenerateLevelPack)) ||
+    needsPronunciation;
+  const canComplete = !hasInteractive || (questionsDone && vocabDone && pronunciationDone);
+  let completeHint = 'Завершить урок';
+  if (isVocabLesson && flashcards.length === 0) {
+    completeHint = 'Сначала сгенерируй или дождись карточек';
+  } else if (isVocabLesson && vocabAnswered < flashcards.length) {
+    completeHint = `Ответь на все карточки (${vocabAnswered}/${flashcards.length})`;
+  } else if (questions.length > 0 && !isVocabLesson && !questionsDone) {
+    completeHint = `Ответь на все упражнения (${correctCount}/${questions.length})`;
+  } else if (needsPronunciation && pronunciationResult.accuracy === null) {
+    completeHint = 'Сделай хотя бы одну запись произношения';
+  }
+
   return (
     <div className="mx-auto mt-6 flex max-w-5xl flex-col gap-6">
       <header className="space-y-3 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
@@ -308,9 +341,6 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
           </div>
           <div className="flex space-x-3">
             <IconButton icon={<BackArrow className="size-8" />} ariaLabel="Назад" variant="ghost" onClick={handleBack} />
-            <Button onClick={handleComplete} disabled={isSubmitting}>
-              {isSubmitting ? 'Сохраняем...' : 'Завершить урок'}
-            </Button>
           </div>
         </div>
         {lesson?.meta && (
@@ -416,6 +446,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
             <SwipeCard
               cards={flashcards}
               onResult={handleFlashcardResults}
+              onProgress={(answered) => setVocabAnswered(answered)}
               onCardUpdated={(card) => {
                 setFlashcards((prev) => prev.map((item) => (item.id === card.id ? card : item)));
               }}
@@ -468,42 +499,33 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
               const isCorrect = questionResults[index];
               const isGrammarLesson = lesson.meta?.taskType === 'grammar';
               const hasMissingVerb = question.prompt?.includes('___') || question.prompt?.toLowerCase().includes('[глагол]') || question.prompt?.toLowerCase().includes('глагол');
-              
+              const ruleHint = question.hint || (Array.isArray(question.evaluationCriteria) ? question.evaluationCriteria[0] : null);
+
               const handleAnswer = () => {
-                // Более гибкое сравнение: убираем лишние пробелы, пунктуацию, приводим к нижнему регистру
                 const normalize = (text: string) => {
                   if (!text) return '';
                   return text
                     .trim()
                     .toLowerCase()
-                    .replace(/[.,!?;:'"]/g, '') // Убираем пунктуацию
-                    .replace(/\s+/g, ' '); // Нормализуем пробелы
+                    .replace(/[.,!?;:'"]/g, '')
+                    .replace(/\s+/g, ' ');
                 };
-                
+
                 const normalizedUserAnswer = normalize(userAnswer);
                 const normalizedExpected = normalize(question.expectedAnswer || '');
-                
-                // Дополнительная проверка: частичное совпадение для длинных ответов
                 const correct = normalizedUserAnswer === normalizedExpected ||
                   (normalizedExpected.length > 20 && normalizedExpected.includes(normalizedUserAnswer)) ||
                   (normalizedUserAnswer.length > 20 && normalizedUserAnswer.includes(normalizedExpected));
-                
-                console.log('Answer check:', {
-                  user: normalizedUserAnswer,
-                  expected: normalizedExpected,
-                  correct,
-                });
-                
+
                 setQuestionResults((prev) => ({ ...prev, [index]: correct }));
-                
-                // Показываем модальное окно для правильного ответа в уроках с временами
+
                 if (correct && isGrammarLesson && hasMissingVerb && !shownSuccessModals.has(index)) {
                   setShownSuccessModals((prev) => new Set(prev).add(index));
                   const modalId = openModal({
                     component: (
                       <div className="p-6 text-center">
                         <h3 className="text-2xl font-semibold text-green-900 mb-4">
-                          🎉 Правильно!
+                          Правильно!
                         </h3>
                         <p className="text-gray-700 mb-6">
                           Отличная работа! Ты правильно использовал форму глагола.
@@ -516,29 +538,28 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                     closeOnOverlayClick: true,
                   });
                 }
-                
-                // Формируем детальное сообщение об ошибке
+
                 if (!correct) {
-                  let errorMessage = 'Неверно. ';
-                  
-                  // Проверяем, есть ли информация об ошибке в evaluationCriteria
-                  if (question.evaluationCriteria && Array.isArray(question.evaluationCriteria) && question.evaluationCriteria.length > 0) {
-                    errorMessage += question.evaluationCriteria[0];
-                  } else if (isGrammarLesson && hasMissingVerb) {
-                    errorMessage += `Правильный ответ: "${question.expectedAnswer}". Проверь форму глагола и время.`;
-                  } else {
-                    errorMessage += `Правильный ответ: "${question.expectedAnswer}".`;
-                  }
-                  
-                  setErrorMessages((prev) => ({ ...prev, [index]: errorMessage }));
+                  setErrorMessages((prev) => ({
+                    ...prev,
+                    [index]: `Эталон: «${question.expectedAnswer}».${ruleHint ? ` ${ruleHint}` : ''}`,
+                  }));
                 } else {
-                  // Убираем сообщение об ошибке при правильном ответе
                   setErrorMessages((prev) => {
                     const newMessages = { ...prev };
                     delete newMessages[index];
                     return newMessages;
                   });
                 }
+              };
+
+              const handleRetry = () => {
+                setQuestionResults((prev) => ({ ...prev, [index]: null }));
+                setErrorMessages((prev) => {
+                  const next = { ...prev };
+                  delete next[index];
+                  return next;
+                });
               };
 
               return (
@@ -564,13 +585,24 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                   {isCorrect === true && (
                     <p className="text-sm text-green-600 font-medium">✓ Правильно!</p>
                   )}
-                  {isCorrect === false && errorMessages[index] && (
-                    <div className="rounded-lg bg-red-50 border border-red-200 p-3">
-                      <p className="text-sm text-red-700 font-medium">✗ {errorMessages[index]}</p>
+                  {isCorrect === false && (
+                    <div className="rounded-lg bg-red-50 border border-red-200 p-3 space-y-2">
+                      <p className="text-sm text-red-700 font-medium">
+                        ✗ {errorMessages[index] || `Эталон: «${question.expectedAnswer}».`}
+                      </p>
+                      {question.expectedAnswer && (
+                        <p className="text-sm text-red-800">
+                          Правильный ответ: <strong>{question.expectedAnswer}</strong>
+                        </p>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleRetry}
+                        className="text-sm font-medium text-red-800 underline"
+                      >
+                        Попробовать снова
+                      </button>
                     </div>
-                  )}
-                  {isCorrect === false && !errorMessages[index] && (
-                    <p className="text-sm text-red-600">✗ Неверно. Попробуйте еще раз.</p>
                   )}
                   {question.hint && <p className="text-xs text-gray-500 mt-1">Подсказка: {question.hint}</p>}
                 </div>
@@ -608,6 +640,19 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
           <p>{pronunciationResult.flaggedWords.join(', ')}</p>
         </section>
       )}
+
+      <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+        {!canComplete && (
+          <p className="mb-3 text-sm text-gray-500">{completeHint}</p>
+        )}
+        <Button
+          onClick={handleComplete}
+          disabled={isSubmitting || !canComplete}
+          className="w-full"
+        >
+          {isSubmitting ? 'Сохраняем...' : 'Завершить урок'}
+        </Button>
+      </section>
     </div>
   );
 }

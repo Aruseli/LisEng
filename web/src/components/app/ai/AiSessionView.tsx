@@ -19,7 +19,7 @@ export function AiSessionView({
   kind: 'practice' | 'speaking' | 'voice'
 }) {
   const navigate = useNavigate()
-  const { refreshRequirementChecks, refreshProgressMetrics } = useAppData()
+  const { refreshRequirementChecks, refreshProgressMetrics, instructionLanguage } = useAppData()
   const [targetWords, setTargetWords] = useState<string[]>([])
 
   const aiContextMessage = useMemo(() => {
@@ -49,6 +49,7 @@ export function AiSessionView({
     type: sessionType,
     topic,
     level: currentLevel ?? 'A2',
+    instructionLanguage,
     initialMessages: aiContextMessage ? [aiContextMessage] : [],
     suggestedPrompt: task?.suggested_prompt ?? null,
   })

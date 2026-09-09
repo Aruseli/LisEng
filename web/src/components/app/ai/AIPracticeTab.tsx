@@ -2,6 +2,7 @@
 import { FormEvent, useRef, useState } from 'react';
 import { Button } from '../Buttons/Button';
 import { Send } from 'lucide-react';
+import { AssistantMarkdown } from './AssistantMarkdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -67,12 +68,16 @@ export function AIPracticeTab({ topic, messages, isLoading, suggestedPrompt, onS
                   : 'self-end bg-primary-deep text-white shadow-sm'
               }`}
             >
-              {message.content}
+            {message.role === 'assistant' ? (
+                <AssistantMarkdown content={message.content} />
+              ) : (
+                message.content
+              )}
             </div>
           ))}
           {isLoading && (
             <div className="self-start rounded-2xl bg-white px-4 py-2 text-sm text-gray-500 shadow-sm">
-              AI думает...
+              {messages.length === 0 ? 'Печатает…' : 'AI думает...'}
             </div>
           )}
         </div>

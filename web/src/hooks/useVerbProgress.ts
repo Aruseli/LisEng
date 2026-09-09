@@ -1,7 +1,8 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/lib/compat/hasyx';
 import type { VerbWithProgress, GroupProgress } from '@/lib/verbs/verbs-service';
+import { queryKeys } from '@/lib/query-keys';
 
 interface VerbProgressStats {
   totalVerbs: number;
@@ -26,83 +27,43 @@ interface UseVerbProgressReturn {
 
 export function useVerbProgress(): UseVerbProgressReturn {
   const { data: session, status } = useSession();
-  const [progress, setProgress] = useState<VerbProgressStats | null>(null);
-  const [weakVerbs, setWeakVerbs] = useState<VerbWithProgress[]>([]);
-  const [upcomingReviews, setUpcomingReviews] = useState<ReviewSchedule[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const userId = session?.user?.id;
+  const enabled = status === 'authenticated' && Boolean(userId);
 
-  const fetchProgress = useCallback(async () => {
-    // Не загружаем данные, пока сессия загружается или пользователь не авторизован
-    if (status === 'loading' || status === 'unauthenticated' || !session?.user?.id) {
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Fetch groups progress
-      const groupsResponse = await fetch('/api/verbs/progress?type=groups');
+  const query = useQuery({
+    queryKey: [...queryKeys.verbs(userId ?? ''), 'stats'],
+    enabled,
+    queryFn: async () => {
+      const [groupsResponse, weakResponse] = await Promise.all([
+        fetch('/api/verbs/progress?type=groups'),
+        fetch('/api/verbs/progress?type=weak&limit=10'),
+      ]);
       if (!groupsResponse.ok) throw new Error('Failed to fetch groups');
-      const groupsData = await groupsResponse.json();
-      const groups: GroupProgress[] = groupsData.groups || [];
-
-      // Fetch weak verbs
-      const weakResponse = await fetch('/api/verbs/progress?type=weak&limit=10');
       if (!weakResponse.ok) throw new Error('Failed to fetch weak verbs');
+      const groupsData = await groupsResponse.json();
       const weakData = await weakResponse.json();
+      const groups: GroupProgress[] = groupsData.groups || [];
       const weak: VerbWithProgress[] = weakData.verbs || [];
-
-      // Calculate totals
-      const totalVerbs = groups.reduce((sum, g) => sum + g.total, 0);
-      const learnedVerbs = groups.reduce((sum, g) => sum + g.learned, 0);
-      const masteredVerbs = groups.reduce((sum, g) => sum + g.mastered, 0);
-
-      setProgress({
-        totalVerbs,
-        learnedVerbs,
-        masteredVerbs,
-        weakVerbs: weak.length,
-        groups,
-      });
-
-      setWeakVerbs(weak);
-
-      // Calculate upcoming reviews (next 7 days)
-      const today = new Date();
-      const reviewSchedule: ReviewSchedule[] = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(today);
-        date.setDate(date.getDate() + i);
-        const dateStr = date.toISOString().split('T')[0];
-        
-        const reviewResponse = await fetch(`/api/verbs/review?date=${dateStr}&limit=100`);
-        if (reviewResponse.ok) {
-          const reviewData = await reviewResponse.json();
-          reviewSchedule.push({
-            date: dateStr,
-            verbCount: reviewData.verbs?.length || 0,
-          });
-        }
-      }
-      setUpcomingReviews(reviewSchedule);
-    } catch (error: any) {
-      console.error('[useVerbProgress] Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [session?.user?.id, status]);
-
-  useEffect(() => {
-    fetchProgress();
-  }, [fetchProgress]);
+      return {
+        progress: {
+          totalVerbs: groups.reduce((sum, g) => sum + g.total, 0),
+          learnedVerbs: groups.reduce((sum, g) => sum + g.learned, 0),
+          masteredVerbs: groups.reduce((sum, g) => sum + g.mastered, 0),
+          weakVerbs: weak.length,
+          groups,
+        } as VerbProgressStats,
+        weakVerbs: weak,
+      };
+    },
+  });
 
   return {
-    progress,
-    weakVerbs,
-    upcomingReviews,
-    isLoading,
-    refresh: fetchProgress,
+    progress: query.data?.progress ?? null,
+    weakVerbs: query.data?.weakVerbs ?? [],
+    upcomingReviews: [] as ReviewSchedule[],
+    isLoading: query.isLoading,
+    refresh: () => {
+      void query.refetch();
+    },
   };
 }
-

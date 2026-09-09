@@ -1,9 +1,12 @@
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useHasyx } from '@/lib/compat/hasyx';
 import { useHasuraReady } from '@/lib/hasura/useHasuraToken';
+import { queryKeys } from '@/lib/query-keys';
 
 import type { DailyPlanResult } from '@/lib/plan/daily-plan-service';
+import type { RequirementCheck } from '@/lib/stage-progression';
 
 interface DashboardData {
   plan: DailyPlanResult | null;
@@ -13,15 +16,17 @@ interface DashboardData {
   lastUpdatedAt: string | null;
 }
 
-interface DashboardState {
-  data: DashboardData | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
 interface UseDashboardDataOptions {
   date?: string;
   autoRefresh?: boolean;
+}
+
+function todayIso() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export const useDashboardData = (
@@ -30,75 +35,28 @@ export const useDashboardData = (
 ) => {
   const hasyx = useHasyx();
   const hasuraReady = useHasuraReady();
-  // Используем sessionStorage для сохранения данных между навигациями
-  const storageKey = userId ? `dashboard_data_${userId}` : null;
-  const [state, setState] = useState<DashboardState>(() => {
-    // Пытаемся восстановить данные из sessionStorage
-    if (storageKey && typeof window !== 'undefined') {
-      try {
-        const saved = sessionStorage.getItem(storageKey);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          // Проверяем, что данные не устарели (не старше 5 минут)
-          if (parsed.lastUpdatedAt) {
-            const age = Date.now() - new Date(parsed.lastUpdatedAt).getTime();
-            if (age < 5 * 60 * 1000) { // 5 минут
-              return {
-                data: parsed,
-                isLoading: false,
-                error: null,
-              };
-            }
-          }
-        }
-      } catch (e) {
-        // Игнорируем ошибки парсинга
-      }
-    }
-    return {
-      data: null,
-      isLoading: Boolean(userId),
-      error: null,
-    };
-  });
-  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const queryClient = useQueryClient();
 
-  const targetDate = useMemo(() => {
-    if (options.date) return options.date;
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }, [options.date]);
+  const targetDate = useMemo(() => options.date || todayIso(), [options.date]);
+  const enabled = Boolean(hasyx && userId && hasuraReady);
 
-  const fetchDashboard = useCallback(async () => {
-    if (!hasyx || !userId || !hasuraReady) {
-      return;
-    }
-
-    // Не показываем загрузку, если данные уже есть (оптимистичное обновление)
-    const hasExistingData = state.data !== null;
-    setState((prev) => ({ ...prev, isLoading: !hasExistingData, error: null }));
-
-    try {
+  const planQuery = useQuery({
+    queryKey: queryKeys.plan(userId ?? '', targetDate),
+    enabled,
+    queryFn: async () => {
       const planResponse = await fetch(
-        `/api/plan/today?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(
-          targetDate
-        )}`
+        `/api/plan/today?userId=${encodeURIComponent(userId!)}&date=${encodeURIComponent(targetDate)}`
       );
-
       if (!planResponse.ok) {
         const errorBody = await planResponse.json().catch(() => ({}));
         throw new Error(errorBody.error || 'Не удалось получить план на сегодня');
       }
-
       const { plan } = (await planResponse.json()) as { plan: DailyPlanResult };
 
-      const [userProfile, vocabularyCards, progressMetrics] = await Promise.all([
+      const [userProfile, progressMetrics] = await Promise.all([
         hasyx.select({
           table: 'users',
-          pk_columns: { id: userId },
+          pk_columns: { id: userId! },
           returning: [
             'id',
             'name',
@@ -107,30 +65,12 @@ export const useDashboardData = (
             'daily_goal_minutes',
             'study_place',
             'study_time',
-          ],
-        }),
-        hasyx.select({
-          table: 'vocabulary_cards',
-          where: {
-            user_id: { _eq: userId },
-            next_review_date: { _lte: targetDate },
-          },
-          order_by: [{ next_review_date: 'asc' }],
-          limit: 20,
-          returning: [
-            'id',
-            'word',
-            'translation',
-            'example_sentence',
-            'next_review_date',
-            'difficulty',
+            'instruction_language',
           ],
         }),
         hasyx.select({
           table: 'progress_metrics',
-          where: {
-            user_id: { _eq: userId },
-          },
+          where: { user_id: { _eq: userId! } },
           order_by: [{ date: 'desc' }],
           limit: 8,
           returning: [
@@ -147,218 +87,23 @@ export const useDashboardData = (
         }),
       ]);
 
-      const newData = {
+      return {
         plan,
         user: userProfile,
-        vocabularyCards: Array.isArray(vocabularyCards) ? vocabularyCards : [],
         progressMetrics: Array.isArray(progressMetrics) ? progressMetrics : [],
         lastUpdatedAt: new Date().toISOString(),
       };
-
-      setState({
-        isLoading: false,
-        error: null,
-        data: newData,
-      });
-
-      // Сохраняем данные в sessionStorage для восстановления при навигации
-      if (storageKey && typeof window !== 'undefined') {
-        try {
-          sessionStorage.setItem(storageKey, JSON.stringify(newData));
-        } catch (e) {
-          // Игнорируем ошибки сохранения (например, если storage переполнен)
-        }
-      }
-    } catch (error: any) {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error?.message ?? 'Не удалось обновить данные дашборда',
-      }));
-    }
-  }, [hasyx, targetDate, userId, hasuraReady]);
-
-  const scheduleAutoRefresh = useCallback(() => {
-    if (!options.autoRefresh) {
-      return;
-    }
-    if (refreshTimerRef.current) {
-      clearTimeout(refreshTimerRef.current);
-    }
-
-    refreshTimerRef.current = setTimeout(() => {
-      fetchDashboard().catch(() => {
-        // Ошибку уже обработали в fetchDashboard
-      });
-    }, 60_000);
-  }, [fetchDashboard, options.autoRefresh]);
-
-  // Используем useRef для отслеживания последнего загруженного userId/targetDate
-  const lastFetchedRef = useRef<{ userId?: string | null; targetDate?: string }>({});
-  
-  // Устанавливаем lastFetchedRef при восстановлении данных из sessionStorage
-  useEffect(() => {
-    if (state.data && userId && !lastFetchedRef.current.userId) {
-      lastFetchedRef.current = { 
-        userId, 
-        targetDate: state.data.plan?.date || targetDate 
-      };
-    }
-  }, [state.data, userId, targetDate]);
-  
-  useEffect(() => {
-    if (!userId) {
-      setState({ data: null, isLoading: false, error: null });
-      return;
-    }
-    if (hasuraReady) return;
-    const timer = setTimeout(() => {
-      setState((prev) =>
-        prev.data
-          ? prev
-          : {
-              ...prev,
-              isLoading: false,
-              error: 'Не удалось получить доступ к данным. Войдите ещё раз.',
-            },
-      );
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, [userId, hasuraReady]);
-
-  useEffect(() => {
-    if (!hasyx || !userId || !hasuraReady) {
-      return;
-    }
-    
-    // Проверяем видимость вкладки - не обновляем данные, если вкладка не видна
-    if (typeof document !== 'undefined' && document.hidden) {
-      return;
-    }
-    
-    // Если данные уже загружены из sessionStorage и соответствуют текущему userId/targetDate,
-    // не загружаем их повторно
-    if (state.data && 
-        lastFetchedRef.current.userId === userId && 
-        lastFetchedRef.current.targetDate === targetDate) {
-      return;
-    }
-    
-    // Загружаем данные только если изменился userId или targetDate
-    // ИЛИ если данных нет вообще
-    const shouldFetch = 
-      lastFetchedRef.current.userId !== userId || 
-      lastFetchedRef.current.targetDate !== targetDate ||
-      state.data === null;
-    
-    if (shouldFetch) {
-      lastFetchedRef.current = { userId, targetDate };
-      fetchDashboard().catch(() => {
-        // Ошибку обрабатывает fetchDashboard
-      });
-    }
-
-    return () => {
-      if (refreshTimerRef.current) {
-        clearTimeout(refreshTimerRef.current);
-      }
-    };
-  }, [hasyx, userId, hasuraReady, targetDate, fetchDashboard, state.data]);
-
-  const regeneratePlan = useCallback(
-    async (params?: { forceAi?: boolean }) => {
-      if (!userId) return;
-
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
-      try {
-        const response = await fetch('/api/plan/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId,
-            date: targetDate,
-            regenerate: true,
-            forceAi: params?.forceAi ?? false,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorBody = await response.json().catch(() => ({}));
-          throw new Error(errorBody.error || 'Не удалось сгенерировать план');
-        }
-
-        await fetchDashboard();
-      } catch (error: any) {
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: error?.message ?? 'Ошибка при генерации плана',
-        }));
-      }
     },
-    [fetchDashboard, targetDate, userId]
-  );
+  });
 
-  // Функция для сохранения данных в sessionStorage
-  const saveToStorage = useCallback((data: DashboardData | null) => {
-    if (storageKey && typeof window !== 'undefined' && data) {
-      try {
-        sessionStorage.setItem(storageKey, JSON.stringify(data));
-      } catch (e) {
-        // Игнорируем ошибки сохранения
-      }
-    }
-  }, [storageKey]);
-
-  const refreshRequirementChecks = useCallback(async () => {
-    if (!hasyx || !userId || !state.data?.plan?.stage?.id) {
-      return;
-    }
-
-    try {
-      // Получаем обновленные requirementChecks через API
-      const response = await fetch(
-        `/api/plan/requirement-checks?userId=${encodeURIComponent(userId)}&stageId=${encodeURIComponent(
-          state.data.plan.stage.id
-        )}`
-      );
-
-      if (response.ok) {
-        const { requirementChecks } = await response.json();
-        setState((prev) => {
-          if (!prev.data?.plan) {
-            return prev;
-          }
-          const newData = {
-            ...prev.data,
-            plan: {
-              ...prev.data.plan,
-              requirementChecks: requirementChecks || [],
-            },
-          };
-          saveToStorage(newData);
-          return {
-            ...prev,
-            data: newData,
-          };
-        });
-      }
-    } catch (error) {
-      console.warn('Failed to refresh requirement checks:', error);
-    }
-  }, [hasyx, userId, state.data?.plan?.stage?.id, saveToStorage]);
-
-  const refreshVocabulary = useCallback(async () => {
-    if (!hasyx || !userId || !hasuraReady) {
-      return;
-    }
-
-    try {
+  const vocabQuery = useQuery({
+    queryKey: queryKeys.vocabulary(userId ?? ''),
+    enabled,
+    queryFn: async () => {
       const vocabularyCards = await hasyx.select({
         table: 'vocabulary_cards',
         where: {
-          user_id: { _eq: userId },
+          user_id: { _eq: userId! },
           next_review_date: { _lte: targetDate },
         },
         order_by: [{ next_review_date: 'asc' }],
@@ -372,98 +117,113 @@ export const useDashboardData = (
           'difficulty',
         ],
       });
+      return Array.isArray(vocabularyCards) ? vocabularyCards : [];
+    },
+  });
 
-      setState((prev) => {
-        const base = prev.data ?? {
-          plan: null,
-          user: null,
-          vocabularyCards: [],
-          progressMetrics: [],
-          lastUpdatedAt: null,
-        };
-        const newData = {
-          ...base,
-          vocabularyCards: Array.isArray(vocabularyCards) ? vocabularyCards : [],
-          lastUpdatedAt: new Date().toISOString(),
-        };
-        saveToStorage(newData);
-        return {
-          ...prev,
-          data: newData,
-        };
+  const stageId = planQuery.data?.plan?.stage?.id;
+  const requirementsQuery = useQuery({
+    queryKey: queryKeys.stageRequirements(userId ?? ''),
+    enabled: enabled && Boolean(stageId),
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/plan/requirement-checks?userId=${encodeURIComponent(userId!)}&stageId=${encodeURIComponent(stageId!)}`
+      );
+      if (!response.ok) {
+        throw new Error('Не удалось получить требования этапа');
+      }
+      const body = await response.json();
+      return (body.requirementChecks ?? []) as RequirementCheck[];
+    },
+  });
+
+  const data = useMemo<DashboardData | null>(() => {
+    if (!planQuery.data) return null;
+    const requirementChecks = requirementsQuery.data ?? planQuery.data.plan?.requirementChecks ?? [];
+    return {
+      plan: planQuery.data.plan
+        ? { ...planQuery.data.plan, requirementChecks }
+        : null,
+      user: planQuery.data.user,
+      vocabularyCards: vocabQuery.data ?? [],
+      progressMetrics: planQuery.data.progressMetrics,
+      lastUpdatedAt: planQuery.data.lastUpdatedAt,
+    };
+  }, [planQuery.data, vocabQuery.data, requirementsQuery.data]);
+
+  const regenerateMutation = useMutation({
+    mutationFn: async (params?: { forceAi?: boolean }) => {
+      const response = await fetch('/api/plan/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          date: targetDate,
+          regenerate: true,
+          forceAi: params?.forceAi ?? false,
+        }),
       });
-    } catch (error) {
-      console.warn('Failed to refresh vocabulary cards:', error);
-    }
-  }, [hasyx, userId, hasuraReady, targetDate, saveToStorage]);
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}));
+        throw new Error(errorBody.error || 'Не удалось сгенерировать план');
+      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['plan'] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.stageRequirements(userId ?? '') });
+    },
+  });
+
+  const fetchDashboard = useCallback(async () => {
+    await Promise.all([
+      planQuery.refetch(),
+      vocabQuery.refetch(),
+      requirementsQuery.refetch(),
+    ]);
+  }, [planQuery, vocabQuery, requirementsQuery]);
+
+  const regeneratePlan = useCallback(
+    async (params?: { forceAi?: boolean }) => {
+      if (!userId) return;
+      await regenerateMutation.mutateAsync(params);
+    },
+    [regenerateMutation, userId]
+  );
+
+  const refreshRequirementChecks = useCallback(async () => {
+    if (!userId) return;
+    await queryClient.invalidateQueries({ queryKey: queryKeys.stageRequirements(userId) });
+  }, [queryClient, userId]);
+
+  const refreshVocabulary = useCallback(async () => {
+    if (!userId) return;
+    await queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary(userId) });
+  }, [queryClient, userId]);
 
   const refreshProgressMetrics = useCallback(async () => {
-    if (!hasyx || !userId) {
-      return;
-    }
-
-    try {
-      const progressMetrics = await hasyx.select({
-        table: 'progress_metrics',
-        where: { user_id: { _eq: userId } },
-        order_by: [{ date: 'desc' }],
-        limit: 8,
-        returning: [
-          'date',
-          'words_learned',
-          'tasks_completed',
-          'study_minutes',
-          'accuracy_grammar',
-          'accuracy_vocabulary',
-          'accuracy_listening',
-          'accuracy_reading',
-          'accuracy_writing',
-        ],
-      });
-
-      setState((prev) => {
-        if (!prev.data) {
-          return prev;
-        }
-        const newData = {
-          ...prev.data,
-          progressMetrics: Array.isArray(progressMetrics) ? progressMetrics : [],
-        };
-        saveToStorage(newData);
-        return {
-          ...prev,
-          data: newData,
-        };
-      });
-    } catch (error) {
-      console.warn('Failed to refresh progress metrics:', error);
-    }
-  }, [hasyx, userId, saveToStorage]);
+    if (!userId) return;
+    await queryClient.invalidateQueries({ queryKey: queryKeys.plan(userId, targetDate) });
+  }, [queryClient, userId, targetDate]);
 
   const completeTask = useCallback(
     async (taskId: string) => {
-      if (!hasyx) return;
+      if (!hasyx || !userId) return;
 
-      setState((prev) => {
-        if (!prev.data?.plan) {
-          return prev;
+      queryClient.setQueryData(
+        queryKeys.plan(userId, targetDate),
+        (prev: typeof planQuery.data) => {
+          if (!prev?.plan) return prev;
+          return {
+            ...prev,
+            plan: {
+              ...prev.plan,
+              tasks: prev.plan.tasks.map((task: any) =>
+                task.id === taskId ? { ...task, status: 'completed' } : task
+              ),
+            },
+          };
         }
-        const updatedTasks = prev.data.plan.tasks.map((task: any) =>
-          task.id === taskId ? { ...task, status: 'completed' } : task
-        );
-        const newData = {
-          ...prev.data,
-          plan: {
-            ...prev.data.plan,
-            tasks: updatedTasks,
-          },
-        };
-        saveToStorage(newData);
-        return {
-          ...prev,
-          data: newData,
-        };
-      });
+      );
 
       try {
         await hasyx.update({
@@ -475,24 +235,32 @@ export const useDashboardData = (
           },
           returning: ['id'],
         });
-
-        // Обновляем только requirementChecks после завершения задания
-        await refreshRequirementChecks();
-      } catch (error: any) {
-        setState((prev) => ({
-          ...prev,
-          error: error?.message ?? 'Не удалось отметить задание выполненным',
-        }));
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.plan(userId, targetDate) }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.stageRequirements(userId) }),
+        ]);
+      } catch (error) {
+        console.error('Failed to complete task:', error);
         await fetchDashboard();
       }
     },
-    [hasyx, refreshRequirementChecks, fetchDashboard, saveToStorage]
+    [hasyx, queryClient, userId, targetDate, fetchDashboard]
   );
 
+  const isLoading =
+    enabled &&
+    (planQuery.isLoading || vocabQuery.isLoading) &&
+    !data;
+  const error =
+    (planQuery.error as Error | null)?.message ??
+    (vocabQuery.error as Error | null)?.message ??
+    (regenerateMutation.error as Error | null)?.message ??
+    null;
+
   return {
-    data: state.data,
-    isLoading: state.isLoading,
-    error: state.error,
+    data,
+    isLoading,
+    error,
     refresh: fetchDashboard,
     regeneratePlan,
     completeTask,
@@ -502,5 +270,3 @@ export const useDashboardData = (
     targetDate,
   };
 }
-
-

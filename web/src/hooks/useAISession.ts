@@ -19,6 +19,7 @@ interface UseAISessionOptions {
   type: 'speaking' | 'writing' | 'ai_practice';
   topic?: string;
   level?: string;
+  instructionLanguage?: string;
   initialMessages?: Message[];
   suggestedPrompt?: string | null;
 }
@@ -39,6 +40,7 @@ export function useAISession({
   type,
   topic,
   level = 'A2',
+  instructionLanguage = 'ru',
   initialMessages = [],
   suggestedPrompt,
 }: UseAISessionOptions) {
@@ -46,6 +48,7 @@ export function useAISession({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
+  const kickoffStartedRef = useRef(false);
   const initialMessagesRef = useRef<Message[]>(initialMessages);
   const isLoadedFromSessionRef = useRef<boolean>(false);
 
@@ -62,30 +65,28 @@ export function useAISession({
   }, [initialMessages]);
 
   const ensureSession = useCallback(async () => {
-    if (!hasyx || !userId) return null;
-    if (sessionId) return sessionId;
+    if (!hasyx || !userId) return { id: null as string | null, loadedCount: 0 };
+    if (sessionId) return { id: sessionId, loadedCount: 0 };
 
-    // Сначала проверяем существующую активную сессию
     const existingSession = await getAISession(hasyx, userId, type, topic);
     if (existingSession?.id) {
       setSessionId(existingSession.id);
-      // Загружаем сохраненные сообщения из сессии
-      if (existingSession.conversation && Array.isArray(existingSession.conversation)) {
+      if (existingSession.conversation && Array.isArray(existingSession.conversation) && existingSession.conversation.length > 0) {
         const loadedMessages = existingSession.conversation as Message[];
         setMessages(loadedMessages);
         isLoadedFromSessionRef.current = true;
         initialMessagesRef.current = loadedMessages;
+        return { id: existingSession.id, loadedCount: loadedMessages.length };
       }
-      return existingSession.id;
+      return { id: existingSession.id, loadedCount: 0 };
     }
 
-    // Если сессии нет, создаем новую
     const result = await createAISession(hasyx, userId, type, topic);
     if (result?.id) {
       setSessionId(result.id);
-      return result.id;
+      return { id: result.id as string, loadedCount: 0 };
     }
-    return null;
+    return { id: null, loadedCount: 0 };
   }, [hasyx, userId, type, topic, sessionId]);
 
   const sendMessage = useCallback(async (content: string) => {
@@ -119,6 +120,7 @@ export function useAISession({
                 content: m.content,
               })),
               level: level || 'A2',
+              instructionLanguage: instructionLanguage || 'ru',
             }
           : {
               userId: userId || '',
@@ -231,11 +233,50 @@ export function useAISession({
     } finally {
       setIsLoading(false);
     }
-  }, [type, topic, level, messages, ensureSession, hasyx, sessionId, userId]);
+  }, [type, topic, level, instructionLanguage, messages, ensureSession, hasyx, sessionId, userId]);
 
   const startSession = useCallback(async () => {
-    await ensureSession();
-  }, [ensureSession]);
+    const session = await ensureSession();
+    if (!session.id) return;
+    if (type !== 'speaking' && type !== 'ai_practice') return;
+    if (session.loadedCount > 0) return;
+    if (initialMessagesRef.current.length > 0) return;
+    if (kickoffStartedRef.current) return;
+    kickoffStartedRef.current = true;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/ai/speaking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kickoff: true,
+          messages: [],
+          level: level || 'A2',
+          instructionLanguage: instructionLanguage || 'ru',
+        }),
+      });
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}));
+        throw new Error(errorBody.error || `Ошибка сервера: ${response.status}`);
+      }
+      const aiText = await response.text();
+      const aiMessage: Message = {
+        role: 'assistant',
+        content: aiText || 'Hi! How are you today?',
+        timestamp: new Date().toISOString(),
+      };
+      setMessages([aiMessage]);
+      if (session.id && hasyx) {
+        await updateAISession(hasyx, session.id, { conversation: [aiMessage] });
+      }
+    } catch (error: any) {
+      console.error('Failed to kickoff AI session:', error);
+      kickoffStartedRef.current = false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [ensureSession, type, level, instructionLanguage, hasyx]);
 
   const endSession = useCallback(
     async (feedback?: any) => {

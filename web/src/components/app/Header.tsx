@@ -56,8 +56,8 @@ export const Header = ({ userName, streak }: HeaderProps) => {
         <div className="flex items-center space-x-2">
           {/* Десктопная версия - показываем на sm и выше */}
           <div className="hidden sm:flex items-center space-x-2">
-            <Tooltip message="Настройки уведомлений">
-              <IconButton icon={<Settings className="size-10" />} ariaLabel="Настройки уведомлений" onClick={() => navigate({ to: '/settings' })} variant="ghost" />
+            <Tooltip message="Настройки">
+              <IconButton icon={<Settings className="size-10" />} ariaLabel="Настройки" onClick={() => navigate({ to: '/settings' })} variant="ghost" />
             </Tooltip>
             <Tooltip message="Уведомления">
               <IconButton icon={<Notifications className="size-10" />} ariaLabel="Уведомления" onClick={() => navigate({ to: '/settings' })} variant="ghost" />
@@ -80,14 +80,14 @@ export const Header = ({ userName, streak }: HeaderProps) => {
             <Popover
               id="header-menu"
               content={
-                <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 min-w-[200px]">
+                <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 min-w-50">
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-2"
                     leftIcon={<Settings className="size-5" />}
                     onClick={handleSettingsClick}
                   >
-                    Настройки уведомлений
+                    Настройки
                   </Button>
                   <Button
                     variant="ghost"

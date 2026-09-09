@@ -196,7 +196,7 @@ export function KumonSkillsList({ userId }: KumonSkillsListProps) {
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
                           <div
-                            className={`h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all`}
+                            className={`h-full rounded-full bg-linear-to-r from-blue-500 to-indigo-500 transition-all`}
                             style={{ width: `${progressPercent}%` }}
                           />
                         </div>

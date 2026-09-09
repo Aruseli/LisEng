@@ -19,7 +19,7 @@
   background-color: rgb(var(--block));
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  max-width: 600px;
+  max-width: max-content;
   width: 100%;
   max-height: min(90vh, calc(100vh - 2rem));
   overflow-y: auto;

@@ -13,9 +13,10 @@ export const Route = createFileRoute('/api/ai/speaking')({
         if (who instanceof Response) return who
 
         try {
-          const { messages, level } = await request.json()
+          const { messages, level, instructionLanguage, kickoff } = await request.json()
 
-          if (!messages || !Array.isArray(messages) || messages.length === 0) {
+          const history = Array.isArray(messages) ? messages : []
+          if (!kickoff && history.length === 0) {
             return jsonError('Invalid request body', 400)
           }
 
@@ -23,10 +24,16 @@ export const Route = createFileRoute('/api/ai/speaking')({
             token: getOpenRouterToken(),
             model: getModelForTask('tutor'),
           })
+          const system = {
+            role: 'system',
+            content: buildTutorPrompt(level || 'A2', instructionLanguage || 'ru'),
+          }
           const withSystem =
-            messages[0]?.role === 'system'
-              ? messages
-              : [{ role: 'system', content: buildTutorPrompt(level || 'A2') }, ...messages]
+            history[0]?.role === 'system'
+              ? history
+              : kickoff && history.length === 0
+                ? [system, { role: 'user', content: 'Please greet me and ask the first question about the topic.' }]
+                : [system, ...history]
           const response = await provider.query(withSystem)
 
           return new Response(response.content, {

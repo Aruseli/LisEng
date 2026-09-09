@@ -1,7 +1,9 @@
 
 import { useState, useCallback, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSession } from '@/lib/compat/hasyx';
 import type { VerbWithProgress, PracticeResult } from '@/lib/verbs/verbs-service';
+import { invalidateVerbQueries } from '@/lib/query-keys';
 
 interface UseIrregularVerbsTrainerOptions {
   mode?: 'form-to-meaning' | 'sentence-to-form';
@@ -23,6 +25,7 @@ export function useIrregularVerbsTrainer(
   options: UseIrregularVerbsTrainerOptions = {}
 ): UseIrregularVerbsTrainerReturn {
   const { data: session, status } = useSession();
+  const queryClient = useQueryClient();
   const [verbs, setVerbs] = useState<VerbWithProgress[]>(options.verbs || []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mode, setMode] = useState<'form-to-meaning' | 'sentence-to-form'>(
@@ -65,6 +68,7 @@ export function useIrregularVerbsTrainer(
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(result),
         });
+        await invalidateVerbQueries(queryClient, session?.user?.id);
 
         setResults((prev) => [...prev, result]);
         setStartTime(Date.now());
@@ -74,15 +78,13 @@ export function useIrregularVerbsTrainer(
         setIsSubmitting(false);
       }
     },
-    [currentVerb, status, session?.user?.id, mode, startTime, isSubmitting]
+    [currentVerb, status, session?.user?.id, mode, startTime, isSubmitting, queryClient]
   );
 
   const nextVerb = useCallback(() => {
-    if (currentIndex < verbs.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-      setStartTime(Date.now());
-    }
-  }, [currentIndex, verbs.length]);
+    setCurrentIndex((prev) => prev + 1);
+    setStartTime(Date.now());
+  }, []);
 
   const reset = useCallback(() => {
     setCurrentIndex(0);

@@ -5,6 +5,7 @@ import { Mic, MicOff, Send, CheckCircle2, BarChart3, MessageSquare } from 'lucid
 import { useSpeechRecognition } from '@/components/speachComponents/hooks_useSpeechRecognition';
 import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeechSynthesis';
 import { useModalStore } from '@/store/modalStore';
+import { AssistantMarkdown } from './AssistantMarkdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -224,7 +225,7 @@ export function SpeakingRolePlayTab({
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Анализ речи</h3>
 
       {/* Общая оценка */}
-      <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+      <div className="mb-6 p-4 rounded-xl bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200">
         <div className="flex items-center justify-between mb-2">
           <h4 className="text-lg font-semibold text-blue-900">Общая оценка</h4>
           <span className="text-2xl font-bold text-blue-600">{feedback.overall.score}/10</span>
@@ -515,7 +516,7 @@ export function SpeakingRolePlayTab({
                 {message.role === 'user' ? (
                   <div dangerouslySetInnerHTML={{ __html: highlightTargetWords(message.content) }} />
                 ) : (
-                  message.content
+                  <AssistantMarkdown content={message.content} />
                 )}
               </div>
               {/* {message.role === 'user' && (
@@ -536,7 +537,7 @@ export function SpeakingRolePlayTab({
           ))}
           {isLoading && (
             <div className="self-start rounded-2xl bg-white px-4 py-2 text-sm text-gray-500 shadow-sm">
-              AI думает...
+              {messages.length === 0 ? 'Печатает…' : 'AI думает...'}
             </div>
           )}
           {isProcessing && (

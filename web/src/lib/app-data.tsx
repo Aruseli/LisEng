@@ -42,6 +42,7 @@ type AppDataValue = {
   userName: string
   currentLevel: string | null
   targetLevel: string
+  instructionLanguage: 'ru' | 'en'
   streak: number
   isLoading: boolean
   error: string | null
@@ -120,6 +121,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     userName: dash.data?.user?.name ?? session?.user?.name ?? 'Ученик',
     currentLevel: dash.data?.user?.current_level ?? null,
     targetLevel: dash.data?.user?.target_level ?? 'B2',
+    instructionLanguage: dash.data?.user?.instruction_language === 'en' ? 'en' : 'ru',
     streak,
     isLoading: dash.isLoading,
     error: dash.error,

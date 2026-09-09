@@ -7,6 +7,7 @@ import {
   getWeeklyStructureForStage,
   getLatestProgressMetric,
   updateStageProgressStats,
+  countPendingErrorCards,
 } from '@/lib/hasura-queries'
 import { StageProgressionService } from '@/lib/stage-progression'
 
@@ -43,6 +44,11 @@ export const Route = createFileRoute('/api/plan/requirement-checks')({
 
           const averageAccuracyFromMetrics =
             StageProgressionService.calculateAverageAccuracy(latestMetrics ?? {})
+          const hasAccuracyData =
+            averageAccuracyFromMetrics > 0 || Boolean(stageProgress.average_accuracy)
+
+          const today = new Date().toISOString().split('T')[0]
+          const errorsPending = await countPendingErrorCards(hasyx, userId, today)
 
           const stageProgressData = {
             tasks_completed: stageProgress.tasks_completed ?? 0,
@@ -50,13 +56,20 @@ export const Route = createFileRoute('/api/plan/requirement-checks')({
               stageProgress.tasks_total ??
               (Array.isArray(weeklyStructure) ? weeklyStructure.length : 0),
             words_learned: stageProgress.words_learned ?? 0,
-            errors_pending: stageProgress.errors_pending ?? 0,
+            errors_pending: errorsPending,
             average_accuracy:
               stageProgress.average_accuracy ?? averageAccuracyFromMetrics ?? 0,
+            accuracy_measured: hasAccuracyData,
             status: (stageProgress.status ??
               'in_progress') as Parameters<
               typeof StageProgressionService.checkStageRequirements
             >[0]['status'],
+          }
+
+          if (stageProgress?.id && errorsPending !== (stageProgress.errors_pending ?? 0)) {
+            await updateStageProgressStats(hasyx, stageProgress.id, {
+              errorsPending,
+            })
           }
 
           // Обновляем average_accuracy если нужно

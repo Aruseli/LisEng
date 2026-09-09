@@ -5,6 +5,7 @@ import { Button } from '../Buttons/Button';
 import { useIrregularVerbsTrainer } from '@/hooks/useIrregularVerbsTrainer';
 import { useVerbPracticeSession } from '@/hooks/useVerbPracticeSession';
 import { useVerbPronunciation } from '@/hooks/useVerbPronunciation';
+import { answersMatch, expectedSlotsForPrompt } from '@/lib/verbs/verb-answer';
 import type { VerbWithProgress } from '@/lib/verbs/verbs-service';
 
 interface VerbTrainerProps {
@@ -44,33 +45,27 @@ export function VerbTrainer({ verbs, onComplete }: VerbTrainerProps) {
     };
   }, [trainer.currentVerb]);
 
+  const expectedSlots = useMemo(() => {
+    if (!trainer.currentVerb || !currentForm) return [];
+    return expectedSlotsForPrompt(
+      currentForm.type as 'infinitive' | 'past_simple' | 'past_participle',
+      trainer.currentVerb
+    );
+  }, [trainer.currentVerb, currentForm]);
+
   const expectedAnswer = useMemo(() => {
-    if (!trainer.currentVerb) return '';
-    // For form-to-meaning mode, we show a form and ask for translation
-    // For now, we'll show the infinitive and ask for past/past participle
-    if (currentForm?.type === 'infinitive') {
-      return `${trainer.currentVerb.past_simple.split('/')[0]} / ${trainer.currentVerb.past_participle.split('/')[0]}`;
-    } else if (currentForm?.type === 'past_simple') {
-      return trainer.currentVerb.infinitive;
-    } else {
-      return trainer.currentVerb.infinitive;
+    if (!trainer.currentVerb || !currentForm) return '';
+    if (currentForm.type === 'infinitive') {
+      return `${trainer.currentVerb.past_simple} / ${trainer.currentVerb.past_participle}`;
     }
+    return trainer.currentVerb.infinitive;
   }, [trainer.currentVerb, currentForm]);
 
   const handleSubmit = async () => {
     if (!userAnswer.trim() || !trainer.currentVerb) return;
-
-    const normalizedAnswer = userAnswer.trim().toLowerCase();
-    const normalizedExpected = expectedAnswer.toLowerCase().split(' / ');
-
-    const correct =
-      normalizedExpected.some((exp) => normalizedAnswer.includes(exp.toLowerCase())) ||
-      normalizedAnswer === normalizedExpected[0] ||
-      normalizedAnswer === normalizedExpected[1];
-
+    const correct = answersMatch(userAnswer, expectedSlots);
     setIsCorrect(correct);
     setShowResult(true);
-
     await trainer.submitAnswer(userAnswer, correct);
     session.recordResult(trainer.currentVerb.id, correct);
   };
@@ -134,7 +129,7 @@ export function VerbTrainer({ verbs, onComplete }: VerbTrainerProps) {
 
       <div className="space-y-6">
         {/* Question */}
-        <div className="rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50 p-8 text-center">
+        <div className="rounded-2xl border-2 border-indigo-200 bg-linear-to-br from-indigo-50 to-blue-50 p-8 text-center">
           <p className="text-sm text-gray-500 mb-2">
             {currentForm.type === 'infinitive'
               ? 'Напиши формы прошедшего времени и причастия'
@@ -197,9 +192,21 @@ export function VerbTrainer({ verbs, onComplete }: VerbTrainerProps) {
                 </p>
               </div>
               {!isCorrect && (
-                <p className="text-sm text-red-800 mb-2">
-                  Правильный ответ: <strong>{expectedAnswer}</strong>
-                </p>
+                <div className="space-y-1 mb-2">
+                  <p className="text-sm text-red-800">
+                    Правильный ответ: <strong>{expectedAnswer}</strong>
+                  </p>
+                  {trainer.currentVerb.meaning_ru && (
+                    <p className="text-sm text-gray-700">
+                      Значение: {trainer.currentVerb.meaning_ru}
+                    </p>
+                  )}
+                  {trainer.currentVerb.examples?.[0] && (
+                    <p className="text-sm text-gray-600 italic">
+                      {trainer.currentVerb.examples[0].sentence_en} — {trainer.currentVerb.examples[0].sentence_ru}
+                    </p>
+                  )}
+                </div>
               )}
               <p className="text-sm text-gray-700">
                 {trainer.currentVerb.infinitive} — {trainer.currentVerb.past_simple} —{' '}

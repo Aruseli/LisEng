@@ -10,6 +10,7 @@ import {
   getUserProfile,
   getUserInstructionLanguage,
   getVocabularyCardsForReview,
+  countPendingErrorCards,
   hasAnyVocabularyCards,
   getWeeklyStructureForStage,
   updateDailyTaskMetadata,
@@ -506,25 +507,19 @@ export class DailyPlanService {
     const averageAccuracyFromMetrics = StageProgressionService.calculateAverageAccuracy(
       latestMetrics ?? {}
     );
+    const hasAccuracyData = averageAccuracyFromMetrics > 0 || Boolean(stageProgress.average_accuracy);
 
-    // Вычисляем errors_pending динамически
-    // Если errors_pending в БД = 0, но это может быть про слова из Active Recall
-    // Проверяем количество неповторенных слов из vocabulary_cards
-    let calculatedErrorsPending = stageProgress.errors_pending ?? 0;
-    
-    // Если errors_pending = 0, но это может быть про слова, проверяем vocabulary_cards
-    // TODO: Разобраться, что именно имеется в виду под "ошибками" в requirements
-    // Возможно, это неповторенные слова из Active Recall
-    if (calculatedErrorsPending === 0) {
-      try {
-        // Проверяем, есть ли неповторенные слова для Active Recall
-        const today = new Date().toISOString().split('T')[0];
-        const vocabularyCards = await getVocabularyCardsForReview(this.hasyx, userId, today);
-        // Если есть слова для повторения, это может быть то, что имеется в виду под "ошибками"
-        // Но пока оставляем как есть, так как нужно уточнить логику
-      } catch (error) {
-        // Игнорируем ошибку, используем значение из БД
+    let calculatedErrorsPending = 0;
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      calculatedErrorsPending = await countPendingErrorCards(this.hasyx, userId, today);
+      if (stageProgress?.id && calculatedErrorsPending !== (stageProgress.errors_pending ?? 0)) {
+        await updateStageProgressStats(this.hasyx, stageProgress.id, {
+          errorsPending: calculatedErrorsPending,
+        });
       }
+    } catch {
+      calculatedErrorsPending = stageProgress.errors_pending ?? 0;
     }
 
     const stageProgressData = {
@@ -536,6 +531,7 @@ export class DailyPlanService {
         stageProgress.average_accuracy ??
         averageAccuracyFromMetrics ??
         0,
+      accuracy_measured: hasAccuracyData,
       status: (stageProgress.status ??
         'in_progress') as Parameters<typeof StageProgressionService.checkStageRequirements>[0]['status'],
     };
@@ -543,6 +539,7 @@ export class DailyPlanService {
     if (
       stageProgress?.id &&
       typeof averageAccuracyFromMetrics === 'number' &&
+      hasAccuracyData &&
       !stageProgress.average_accuracy
     ) {
       await updateStageProgressStats(this.hasyx, stageProgress.id, {

@@ -4,12 +4,12 @@ import { useToastStore, ToastType } from '@/store/toastStore';
 import { X } from 'lucide-react';
 import styles from './Toast.module.scss';
 
-// Цветовые схемы для разных типов уведомлений
+// Цветовые схемы для разных типов уведомлений (бледные)
 const toastTypeStyles: Record<ToastType, string> = {
-  info: 'bg-green-500 text-white',
-  success: 'bg-nm-primary-deep text-white',
-  warning: 'bg-yellow-500 text-white',
-  error: 'bg-red-500 text-white',
+  info: 'bg-blue-50 text-blue-900 border border-blue-200',
+  success: 'bg-green-50 text-green-900 border border-green-200',
+  warning: 'bg-amber-50 text-amber-900 border border-amber-200',
+  error: 'bg-red-50 text-red-900 border border-red-200',
 };
 
 // Анимации для появления/исчезновения
@@ -23,7 +23,7 @@ export const Toast = () => {
   const { toasts, removeToast } = useToastStore();
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2" role="alert" aria-live="assertive">
+    <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-2" role="alert" aria-live="assertive">
       <AnimatePresence mode="wait">
         {toasts.map((toast) => (
           // @ts-ignore
@@ -35,7 +35,7 @@ export const Toast = () => {
             <p className="text-sm font-medium pr-4">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-white/80 hover:text-white transition-colors"
+              className="opacity-60 hover:opacity-100 transition-opacity"
             >
               <X className="size-5" />
             </button>
