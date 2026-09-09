@@ -9,10 +9,10 @@ import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { Pool } from 'pg'
 
 import { getAdminClient } from './hasura'
-import { getAuthBaseURL, getAuthConfigError, readEnv } from './server/env'
+import { getAuthBaseURL, getAuthConfigError, readServerEnv } from './server/env'
 
 function createPool() {
-  const connectionString = readEnv('DATABASE_URL')
+  const connectionString = readServerEnv().DATABASE_URL
   if (!connectionString) throw new Error('DATABASE_URL is not set')
   const isLocal = /localhost|127\.0\.0\.1/.test(connectionString)
   return new Pool({
@@ -26,12 +26,13 @@ function createAuth() {
   const configError = getAuthConfigError()
   if (configError) throw new Error(configError)
 
+  const env = readServerEnv()
   const baseURL = getAuthBaseURL()
 
   return betterAuth({
     database: createPool(),
     baseURL,
-    secret: readEnv('BETTER_AUTH_SECRET'),
+    secret: env.BETTER_AUTH_SECRET,
     trustedOrigins: [
       'http://localhost:3000',
       'https://lis-eng.vercel.app',
@@ -39,8 +40,8 @@ function createAuth() {
     ],
     socialProviders: {
       google: {
-        clientId: readEnv('GOOGLE_CLIENT_ID') as string,
-        clientSecret: readEnv('GOOGLE_CLIENT_SECRET') as string,
+        clientId: env.GOOGLE_CLIENT_ID as string,
+        clientSecret: env.GOOGLE_CLIENT_SECRET as string,
       },
     },
     user: { modelName: 'auth_users' },
