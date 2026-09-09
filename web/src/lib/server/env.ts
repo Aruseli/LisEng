@@ -1,49 +1,39 @@
 /**
- * Статические process.env.X — так Nitro/Vercel включают переменную в функцию.
- * process.env[name] на деплое даёт undefined, даже если ключ есть в UI.
- * Читать только из хендлера запроса, не на верхнем уровне модуля.
+ * Vite подменяет process.env.DATABASE_URL на undefined в серверном бандле
+ * (видит только VITE_*). Берём живой Node process — так Vercel отдаёт секреты.
+ * Читать только из хендлера, не на верхнем уровне модуля.
  */
-import { useRuntimeConfig } from 'nitro/runtime-config'
+import { env as nodeEnv } from 'node:process'
 
-function env(value: string | undefined) {
+function clean(value: string | undefined) {
   const v = value?.trim()
   return v ? v : undefined
 }
 
-function nitroRuntime() {
-  try {
-    return (useRuntimeConfig() as Record<string, string | undefined>) ?? {}
-  } catch {
-    return {}
-  }
+function live(name: string) {
+  return clean(nodeEnv[name] || globalThis.process?.env?.[name])
 }
 
 export function readServerEnv() {
-  const nitro = nitroRuntime()
   return {
-    DATABASE_URL: env(
-      process.env.DATABASE_URL ||
-        process.env.POSTGRES_URL ||
-        process.env.POSTGRES_PRISMA_URL ||
-        nitro.databaseUrl,
-    ),
-    BETTER_AUTH_SECRET: env(process.env.BETTER_AUTH_SECRET || nitro.betterAuthSecret),
-    BETTER_AUTH_URL: env(process.env.BETTER_AUTH_URL || nitro.betterAuthUrl),
-    GOOGLE_CLIENT_ID: env(process.env.GOOGLE_CLIENT_ID || nitro.googleClientId),
-    GOOGLE_CLIENT_SECRET: env(process.env.GOOGLE_CLIENT_SECRET || nitro.googleClientSecret),
-    HASURA_GRAPHQL_URL: env(process.env.HASURA_GRAPHQL_URL || nitro.hasuraGraphqlUrl),
-    HASURA_ADMIN_SECRET: env(process.env.HASURA_ADMIN_SECRET || nitro.hasuraAdminSecret),
-    HASURA_JWT_SECRET: env(process.env.HASURA_JWT_SECRET || nitro.hasuraJwtSecret),
-    VERCEL: env(process.env.VERCEL),
-    VERCEL_URL: env(process.env.VERCEL_URL),
-    VERCEL_ENV: env(process.env.VERCEL_ENV),
+    DATABASE_URL: live('DATABASE_URL') || live('POSTGRES_URL') || live('POSTGRES_PRISMA_URL'),
+    BETTER_AUTH_SECRET: live('BETTER_AUTH_SECRET'),
+    BETTER_AUTH_URL: live('BETTER_AUTH_URL'),
+    GOOGLE_CLIENT_ID: live('GOOGLE_CLIENT_ID'),
+    GOOGLE_CLIENT_SECRET: live('GOOGLE_CLIENT_SECRET'),
+    HASURA_GRAPHQL_URL: live('HASURA_GRAPHQL_URL'),
+    HASURA_ADMIN_SECRET: live('HASURA_ADMIN_SECRET'),
+    HASURA_JWT_SECRET: live('HASURA_JWT_SECRET'),
+    VERCEL: live('VERCEL'),
+    VERCEL_URL: live('VERCEL_URL'),
+    VERCEL_ENV: live('VERCEL_ENV'),
   }
 }
 
 export function readEnv(name: keyof ReturnType<typeof readServerEnv> | (string & {})) {
   const all = readServerEnv()
   if (name in all) return all[name as keyof typeof all]
-  return undefined
+  return live(String(name))
 }
 
 export function authEnvStatus() {
