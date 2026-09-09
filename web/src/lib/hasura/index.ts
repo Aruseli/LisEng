@@ -19,10 +19,17 @@ let adminClient: HasuraClient | null = null
  */
 export function getAdminClient(): HasuraClient {
   if (adminClient) return adminClient
-  const url = processEnv('HASURA_GRAPHQL_URL')
+  const url =
+    processEnv('HASURA_GRAPHQL_URL') ||
+    processEnv('VITE_HASURA_GRAPHQL_URL') ||
+    processEnv('NEXT_PUBLIC_HASURA_GRAPHQL_URL') ||
+    (typeof import.meta !== 'undefined' ? import.meta.env?.VITE_HASURA_GRAPHQL_URL : undefined)
   const adminSecret = processEnv('HASURA_ADMIN_SECRET')
-  if (!url || !adminSecret) {
-    throw new Error('HASURA_GRAPHQL_URL и HASURA_ADMIN_SECRET должны быть заданы в env')
+  if (!url) {
+    throw new Error('HASURA_GRAPHQL_URL is not set')
+  }
+  if (!adminSecret) {
+    throw new Error('HASURA_ADMIN_SECRET is not set')
   }
   adminClient = new HasuraClient({ url, adminSecret }, schema)
   return adminClient
@@ -35,7 +42,9 @@ export function getAdminClient(): HasuraClient {
 export function createUserClient(getToken: () => string | null | Promise<string | null>) {
   const url =
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_HASURA_GRAPHQL_URL) ||
-    processEnv('HASURA_GRAPHQL_URL')
+    processEnv('HASURA_GRAPHQL_URL') ||
+    processEnv('VITE_HASURA_GRAPHQL_URL') ||
+    processEnv('NEXT_PUBLIC_HASURA_GRAPHQL_URL')
   if (!url) throw new Error('VITE_HASURA_GRAPHQL_URL не задан')
   return new HasuraClient({ url, getToken }, schema)
 }
