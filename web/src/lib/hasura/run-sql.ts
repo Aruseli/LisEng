@@ -1,7 +1,9 @@
 /** Админский run_sql к Hasura (для таблиц вне vendored schema.json). */
 
-const endpoint = () => process.env.HASURA_GRAPHQL_URL!.replace(/\/v1\/graphql$/, '')
-const secret = () => process.env.HASURA_ADMIN_SECRET!
+import { readServerEnv } from '#/lib/server/env'
+
+const endpoint = () => readServerEnv().HASURA_GRAPHQL_URL!.replace(/\/v1\/graphql$/, '')
+const secret = () => readServerEnv().HASURA_ADMIN_SECRET!
 
 export async function runSql<T = string[][]>(sql: string, readOnly = false): Promise<T> {
   const res = await fetch(`${endpoint()}/v2/query`, {

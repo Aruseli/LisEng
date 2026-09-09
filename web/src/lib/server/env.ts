@@ -10,30 +10,33 @@ function clean(value: string | undefined) {
   return v ? v : undefined
 }
 
-function live(name: string) {
+export function readLiveEnv(name: string) {
   return clean(nodeEnv[name] || globalThis.process?.env?.[name])
 }
 
 export function readServerEnv() {
   return {
-    DATABASE_URL: live('DATABASE_URL') || live('POSTGRES_URL') || live('POSTGRES_PRISMA_URL'),
-    BETTER_AUTH_SECRET: live('BETTER_AUTH_SECRET'),
-    BETTER_AUTH_URL: live('BETTER_AUTH_URL'),
-    GOOGLE_CLIENT_ID: live('GOOGLE_CLIENT_ID'),
-    GOOGLE_CLIENT_SECRET: live('GOOGLE_CLIENT_SECRET'),
-    HASURA_GRAPHQL_URL: live('HASURA_GRAPHQL_URL'),
-    HASURA_ADMIN_SECRET: live('HASURA_ADMIN_SECRET'),
-    HASURA_JWT_SECRET: live('HASURA_JWT_SECRET'),
-    VERCEL: live('VERCEL'),
-    VERCEL_URL: live('VERCEL_URL'),
-    VERCEL_ENV: live('VERCEL_ENV'),
+    DATABASE_URL: readLiveEnv('DATABASE_URL') || readLiveEnv('POSTGRES_URL') || readLiveEnv('POSTGRES_PRISMA_URL'),
+    BETTER_AUTH_SECRET: readLiveEnv('BETTER_AUTH_SECRET'),
+    BETTER_AUTH_URL: readLiveEnv('BETTER_AUTH_URL'),
+    GOOGLE_CLIENT_ID: readLiveEnv('GOOGLE_CLIENT_ID'),
+    GOOGLE_CLIENT_SECRET: readLiveEnv('GOOGLE_CLIENT_SECRET'),
+    HASURA_GRAPHQL_URL: readLiveEnv('HASURA_GRAPHQL_URL'),
+    HASURA_ADMIN_SECRET: readLiveEnv('HASURA_ADMIN_SECRET'),
+    HASURA_JWT_SECRET: readLiveEnv('HASURA_JWT_SECRET'),
+    HASURA_EVENT_SECRET: readLiveEnv('HASURA_EVENT_SECRET'),
+    GROQ_API_KEY: readLiveEnv('GROQ_API_KEY'),
+    OPENROUTER_API_KEY: readLiveEnv('OPENROUTER_API_KEY'),
+    VERCEL: readLiveEnv('VERCEL'),
+    VERCEL_URL: readLiveEnv('VERCEL_URL'),
+    VERCEL_ENV: readLiveEnv('VERCEL_ENV'),
   }
 }
 
 export function readEnv(name: keyof ReturnType<typeof readServerEnv> | (string & {})) {
   const all = readServerEnv()
   if (name in all) return all[name as keyof typeof all]
-  return live(String(name))
+  return readLiveEnv(String(name))
 }
 
 export function authEnvStatus() {
@@ -46,6 +49,8 @@ export function authEnvStatus() {
     BETTER_AUTH_URL_LOCALHOST: /localhost|127\.0\.0\.1/.test(url),
     GOOGLE_CLIENT_ID: Boolean(e.GOOGLE_CLIENT_ID),
     GOOGLE_CLIENT_SECRET: Boolean(e.GOOGLE_CLIENT_SECRET),
+    HASURA_GRAPHQL_URL: Boolean(e.HASURA_GRAPHQL_URL),
+    HASURA_ADMIN_SECRET: Boolean(e.HASURA_ADMIN_SECRET),
     vercel: Boolean(e.VERCEL || e.VERCEL_URL),
     vercelEnv: e.VERCEL_ENV ?? null,
   }

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { readLiveEnv, readServerEnv } from '#/lib/server/env'
 import { jsonError } from '#/lib/server/route-utils'
 import { runSql, sqlRows } from '#/lib/hasura/run-sql'
 import { configureWebPush } from '#/lib/push'
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/api/notifications/daily')({
 })
 
 async function handle(request: Request) {
-  const secret = process.env.HASURA_EVENT_SECRET || process.env.NOTIFICATIONS_CRON_SECRET
+  const secret = readServerEnv().HASURA_EVENT_SECRET || readLiveEnv('NOTIFICATIONS_CRON_SECRET')
   const got = new URL(request.url).searchParams.get('secret') || request.headers.get('x-cron-secret')
   if (!secret || got !== secret) return jsonError('Unauthorized', 401)
   try {

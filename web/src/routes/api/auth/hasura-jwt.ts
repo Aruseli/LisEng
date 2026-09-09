@@ -8,6 +8,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { SignJWT } from 'jose'
 
 import { auth } from '#/lib/auth'
+import { readServerEnv } from '#/lib/server/env'
 
 const TOKEN_TTL_SECONDS = 60 * 60 // 1 час; клиент перезапрашивает по мере надобности
 
@@ -20,7 +21,11 @@ export const Route = createFileRoute('/api/auth/hasura-jwt')({
           return Response.json({ error: 'Не авторизован' }, { status: 401 })
         }
 
-        const jwtSecret = JSON.parse(process.env.HASURA_JWT_SECRET as string) as {
+        const jwtRaw = readServerEnv().HASURA_JWT_SECRET
+        if (!jwtRaw) {
+          return Response.json({ error: 'HASURA_JWT_SECRET is not set' }, { status: 500 })
+        }
+        const jwtSecret = JSON.parse(jwtRaw) as {
           type: string
           key: string
         }

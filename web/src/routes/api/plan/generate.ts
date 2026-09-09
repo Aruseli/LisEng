@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { getAdminClient } from '#/lib/hasura'
+import { readServerEnv } from '#/lib/server/env'
 import { DailyPlanService } from '@/lib/plan/daily-plan-service'
 import {
   LessonSnapshotService,
@@ -17,7 +18,7 @@ export const Route = createFileRoute('/api/plan/generate')({
           const hasuraEventSecret =
             request.headers.get('x-hasura-event-secret') ||
             request.headers.get('X-Hasura-Event-Secret')
-          const expectedSecret = process.env.HASURA_EVENT_SECRET
+          const expectedSecret = readServerEnv().HASURA_EVENT_SECRET
 
           if (hasuraEventSecret && expectedSecret && hasuraEventSecret !== expectedSecret) {
             return Response.json(

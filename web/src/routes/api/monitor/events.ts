@@ -5,20 +5,20 @@ import { createFileRoute } from '@tanstack/react-router'
  * GET /api/monitor/events?query=stats|recent|failed|pending
  */
 
-const HASURA_GRAPHQL_URL = (process.env.HASURA_GRAPHQL_URL ||
-  process.env.NEXT_PUBLIC_HASURA_GRAPHQL_URL)!
-const ADMIN_SECRET = process.env.HASURA_ADMIN_SECRET!
+import { readLiveEnv, readServerEnv } from '#/lib/server/env'
 
 async function executeSql(sql: string) {
-  if (!ADMIN_SECRET) {
+  const { HASURA_GRAPHQL_URL, HASURA_ADMIN_SECRET } = readServerEnv()
+  const url = HASURA_GRAPHQL_URL || readLiveEnv('NEXT_PUBLIC_HASURA_GRAPHQL_URL')
+  if (!HASURA_ADMIN_SECRET || !url) {
     throw new Error('HASURA_ADMIN_SECRET is not configured')
   }
 
-  const response = await fetch(`${HASURA_GRAPHQL_URL.replace('/v1/graphql', '')}/v2/query`, {
+  const response = await fetch(`${url.replace('/v1/graphql', '')}/v2/query`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Hasura-Admin-Secret': ADMIN_SECRET,
+      'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
     },
     body: JSON.stringify({
       type: 'run_sql',
