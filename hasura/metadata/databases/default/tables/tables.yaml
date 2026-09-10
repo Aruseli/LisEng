@@ -15,6 +15,7 @@
 - "!include public_stage_progress.yaml"
 - "!include public_stage_requirements.yaml"
 - "!include public_stage_tests.yaml"
+- "!include public_srs_state.yaml"
 - "!include public_streaks.yaml"
 - "!include public_study_stages.yaml"
 - "!include public_users.yaml"

@@ -44,6 +44,26 @@ export const Route = createFileRoute('/api/lesson/cards')({
           })
 
           if (insightType === 'sm2_due' && insightReference) {
+            // FSRS: reference указывает на srs_state (vocabulary), legacy — на active_recall_sessions
+            const srsState = await db.select({
+              table: 'srs_state',
+              pk_columns: { id: insightReference },
+              returning: ['item_id', 'item_type'],
+            })
+            const srsData = Array.isArray(srsState) ? srsState[0] : srsState
+            if (srsData?.item_type === 'vocabulary_card' && srsData.item_id) {
+              const card = await db.select({
+                table: 'vocabulary_cards',
+                pk_columns: { id: srsData.item_id },
+                returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
+              })
+              const cardData = Array.isArray(card) ? card[0] : card
+              if (cardData) {
+                return Response.json({ cards: [mapCard(cardData)], canGenerateLevelPack: false })
+              }
+            }
+
+            // Legacy fallback: grammar/прочие recall-записи
             const recall = await db.select({
               table: 'active_recall_sessions',
               pk_columns: { id: insightReference },
@@ -64,17 +84,32 @@ export const Route = createFileRoute('/api/lesson/cards')({
           }
 
           const today = new Date().toISOString().split('T')[0]
-          const reviewCards = await db.select({
-            table: 'vocabulary_cards',
+          // FSRS: due из srs_state (источник истины)
+          const dueStates = await db.select({
+            table: 'srs_state',
             where: {
               user_id: { _eq: who.userId },
-              next_review_date: { _lte: today },
+              item_type: { _eq: 'vocabulary_card' },
+              due: { _lte: today },
             },
-            order_by: [{ next_review_date: 'asc' }],
-            returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
+            order_by: [{ due: 'asc' }],
             limit: 10,
+            returning: ['item_id'],
           })
-          const list = Array.isArray(reviewCards) ? reviewCards : []
+          const states = Array.isArray(dueStates) ? dueStates : dueStates ? [dueStates] : []
+          const dueIds = states.map((s: any) => s.item_id)
+          const reviewCards = dueIds.length
+            ? await db.select({
+                table: 'vocabulary_cards',
+                where: {
+                  id: { _in: dueIds },
+                },
+                returning: ['id', 'word', 'translation', 'example_sentence', 'difficulty'],
+              })
+            : []
+          const cardList = Array.isArray(reviewCards) ? reviewCards : reviewCards ? [reviewCards] : []
+          const byId = new Map(cardList.map((c: any) => [c.id, c]))
+          const list = dueIds.map((id: string) => byId.get(id)).filter(Boolean)
           if (list.length > 0) {
             return Response.json({
               cards: list.map(mapCard),

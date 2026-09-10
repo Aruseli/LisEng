@@ -30,7 +30,10 @@ export interface ActiveRecallSummary {
   correctResponse: string;
   nextReviewDate: string;
   intervalDays: number;
-  easeFactor: number | null;
+  /** FSRS Difficulty (1–10); null для legacy grammar-записей */
+  difficulty: number | null;
+  /** FSRS Stability в днях; null для legacy grammar-записей */
+  stability: number | null;
   due: boolean;
 }
 
@@ -98,7 +101,8 @@ interface ActiveRecallRecord {
   correct_response: string;
   next_review_date: string;
   interval_days: number;
-  ease_factor?: number | null;
+  difficulty?: number | null;
+  stability?: number | null;
 }
 
 export class SnapshotInsightsService {
@@ -120,7 +124,7 @@ export class SnapshotInsightsService {
 
     const upcomingBoundary = this.addDays(opts.referenceDate, opts.upcomingDays);
 
-    const [snapshotRaw, shuHaRiProgressRaw, activeRecallRaw] = await Promise.all([
+    const [snapshotRaw, shuHaRiProgressRaw, srsRaw, legacyRecallRaw] = await Promise.all([
       this.hasyx.select({
         table: 'lesson_snapshots',
         where: {
@@ -146,21 +150,70 @@ export class SnapshotInsightsService {
           'updated_at',
         ],
       }),
+      // FSRS: due словаря из srs_state (источник истины)
+      this.hasyx.select({
+        table: 'srs_state',
+        where: {
+          user_id: { _eq: userId },
+          item_type: { _eq: 'vocabulary_card' },
+          due: { _lte: upcomingBoundary },
+        },
+        order_by: [{ due: 'asc' }],
+        limit: opts.recallLimit,
+        returning: ['id', 'item_id', 'due', 'scheduled_days', 'difficulty', 'stability'],
+      }),
+      // Legacy: grammar_rule / error_pattern живут в active_recall_sessions
       this.hasyx.select({
         table: 'active_recall_sessions',
         where: {
           user_id: { _eq: userId },
           next_review_date: { _lte: upcomingBoundary },
+          recall_item_type: { _neq: 'vocabulary_card' },
         },
         order_by: [{ next_review_date: 'asc' }],
         limit: opts.recallLimit,
-        returning: ['id', 'recall_type', 'context_prompt', 'correct_response', 'next_review_date', 'interval_days', 'ease_factor'],
+        returning: ['id', 'recall_type', 'context_prompt', 'correct_response', 'next_review_date', 'interval_days'],
       }),
     ]);
 
     const snapshots = this.normalizeRecords<SnapshotRecord>(snapshotRaw);
     const shuHaRiProgress = this.normalizeRecords<ShuHaRiProgressRecord>(shuHaRiProgressRaw);
-    const activeRecalls = this.normalizeRecords<ActiveRecallRecord>(activeRecallRaw);
+    const srsStates = this.normalizeRecords<{
+      id: string;
+      item_id: string;
+      due: string;
+      scheduled_days: number;
+      difficulty: number;
+      stability: number;
+    }>(srsRaw);
+    const legacyRecalls = this.normalizeRecords<ActiveRecallRecord>(legacyRecallRaw);
+
+    // Контент карточек для srs-состояний
+    const cardIds = srsStates.map((s) => s.item_id);
+    const cardsRaw = cardIds.length
+      ? await this.hasyx.select({
+          table: 'vocabulary_cards',
+          where: { id: { _in: cardIds } },
+          returning: ['id', 'word', 'translation'],
+        })
+      : [];
+    const cardsById = new Map(
+      this.normalizeRecords<{ id: string; word: string; translation: string }>(cardsRaw).map((c) => [c.id, c]),
+    );
+
+    const activeRecalls: ActiveRecallRecord[] = [
+      ...srsStates.map((s) => ({
+        id: s.id,
+        recall_type: 'vocabulary',
+        context_prompt: cardsById.get(s.item_id)?.word ?? '',
+        correct_response: cardsById.get(s.item_id)?.translation ?? '',
+        next_review_date: s.due,
+        interval_days: s.scheduled_days,
+        difficulty: s.difficulty,
+        stability: s.stability,
+      })),
+      ...legacyRecalls,
+    ];
 
     const problemAreas = this.buildProblemAreaSummary(snapshots, opts.problemAreaLimit);
     const kaizenMomentum = this.buildKaizenMomentumSummary(snapshots);
@@ -339,7 +392,8 @@ export class SnapshotInsightsService {
         correctResponse: record.correct_response,
         nextReviewDate: record.next_review_date,
         intervalDays: record.interval_days,
-        easeFactor: record.ease_factor ?? null,
+        difficulty: record.difficulty ?? null,
+        stability: record.stability ?? null,
         due: isDue,
       };
 
@@ -386,7 +440,7 @@ export class SnapshotInsightsService {
     }
 
     if (sm2Schedule.dueTodayCount > 0) {
-      highlights.push(`SM-2: ${sm2Schedule.dueTodayCount} повторений просрочено или на сегодня.`);
+      highlights.push(`Active Recall (FSRS): ${sm2Schedule.dueTodayCount} повторений просрочено или на сегодня.`);
     }
 
     return highlights;

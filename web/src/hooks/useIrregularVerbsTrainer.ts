@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSession } from '@/lib/compat/hasyx';
 import type { VerbWithProgress, PracticeResult } from '@/lib/verbs/verbs-service';
 import { invalidateVerbQueries } from '@/lib/query-keys';
+import { enqueueMutation } from '@/lib/offline/mutation-queue';
 
 interface UseIrregularVerbsTrainerOptions {
   mode?: 'form-to-meaning' | 'sentence-to-form';
@@ -54,14 +55,14 @@ export function useIrregularVerbsTrainer(
       setIsSubmitting(true);
       const responseTime = Math.round((Date.now() - startTime) / 1000);
 
-      try {
-        const result: PracticeResult = {
-          verbId: currentVerb.id,
-          wasCorrect,
-          responseTime,
-          practiceMode: mode,
-        };
+      const result: PracticeResult = {
+        verbId: currentVerb.id,
+        wasCorrect,
+        responseTime,
+        practiceMode: mode,
+      };
 
+      try {
         // Record in API
         await fetch('/api/verbs/practice', {
           method: 'POST',
@@ -73,7 +74,12 @@ export function useIrregularVerbsTrainer(
         setResults((prev) => [...prev, result]);
         setStartTime(Date.now());
       } catch (error) {
-        console.error('[useIrregularVerbsTrainer] Error submitting answer:', error);
+        // Офлайн: складываем в очередь (IndexedDB) и учитываем результат
+        // в сессии оптимистично — доотправим при появлении сети.
+        console.warn('[useIrregularVerbsTrainer] Сеть недоступна, practice в офлайн-очередь:', error);
+        await enqueueMutation('verb_practice', { ...result }).catch(() => {});
+        setResults((prev) => [...prev, result]);
+        setStartTime(Date.now());
       } finally {
         setIsSubmitting(false);
       }

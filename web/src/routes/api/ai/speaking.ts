@@ -3,6 +3,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { OpenRouterProvider } from '#/lib/ai/llm'
 import { getModelForTask, getOpenRouterToken } from '#/lib/ai/models'
 import { buildTutorPrompt } from '#/lib/ai/tutor-prompt'
+import { buildStudentContext } from '#/lib/ai/student-context'
+import { getAdminClient } from '#/lib/hasura'
 import { jsonError, requireUserId } from '#/lib/server/route-utils'
 
 export const Route = createFileRoute('/api/ai/speaking')({
@@ -24,21 +26,34 @@ export const Route = createFileRoute('/api/ai/speaking')({
             token: getOpenRouterToken(),
             model: getModelForTask('tutor'),
           })
+          // Профиль ученика (weak verbs, due-слова, топ-ошибки) — нефатально при ошибках
+          const studentContext = await buildStudentContext(
+            getAdminClient(),
+            who.userId,
+          ).catch(() => undefined)
           const system = {
             role: 'system',
-            content: buildTutorPrompt(level || 'A2', instructionLanguage || 'ru'),
-          }
+            content: buildTutorPrompt(
+              level || 'A2',
+              instructionLanguage || 'ru',
+              studentContext,
+            ),
+          } as const
           const withSystem =
             history[0]?.role === 'system'
               ? history
               : kickoff && history.length === 0
-                ? [system, { role: 'user', content: 'Please greet me and ask the first question about the topic.' }]
+                ? [system, { role: 'user' as const, content: 'Please greet me and ask the first question about the topic.' }]
                 : [system, ...history]
-          const response = await provider.query(withSystem)
 
-          return new Response(response.content, {
+          // Стриминг: клиент получает токены по мере генерации,
+          // а не ждёт полный ответ
+          const stream = await provider.streamQuery(withSystem)
+
+          return new Response(stream, {
             headers: {
-              'Content-Type': 'text/plain',
+              'Content-Type': 'text/plain; charset=utf-8',
+              'Cache-Control': 'no-cache',
             },
           })
         } catch (error: any) {

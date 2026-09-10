@@ -6,7 +6,7 @@ import {
   updateProgressMetrics,
   getActiveStageProgress,
 } from '@/lib/hasura-queries'
-import { calculateSM2, getQualityScore, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm'
+import { applyReview, getQualityScore } from '@/lib/srs'
 
 export const Route = createFileRoute('/api/vocabulary/review')({
   server: {
@@ -28,116 +28,39 @@ export const Route = createFileRoute('/api/vocabulary/review')({
 
           const hasyx = getAdminClient()
 
-          // 1. Обновляем карточку и создаем запись в review_history
-          await updateVocabularyCardReview(hasyx, cardId, userId, wasCorrect, responseTimeSeconds)
-
-          // 2. Получаем данные карточки для обновления active_recall_sessions
+          // 1. Получаем данные карточки (correct_count нужен ДО обновления —
+          // words_learned инкрементируем только за первый правильный ответ по карточке)
           const card = await hasyx.select({
             table: 'vocabulary_cards',
             pk_columns: { id: cardId },
-            returning: ['id', 'word', 'translation'],
+            returning: ['id', 'word', 'translation', 'correct_count'],
           })
 
           const cardData = Array.isArray(card) ? card[0] : card
           if (!cardData) {
             return Response.json({ error: 'Card not found' }, { status: 404 })
           }
+          const previousCorrectCount: number = cardData.correct_count ?? 0
 
-          // 3. Обновляем active_recall_sessions используя SM-2 алгоритм
-          const existingRecall = await hasyx.select({
-            table: 'active_recall_sessions',
-            where: {
-              user_id: { _eq: userId },
-              recall_item_id: { _eq: cardId },
-              recall_item_type: { _eq: 'vocabulary_card' },
-            },
-            order_by: [{ created_at: 'desc' }],
-            limit: 1,
-            returning: [
-              'id',
-              'quality',
-              'ease_factor',
-              'interval_days',
-              'repetitions',
-              'next_review_date',
-            ],
-          })
+          // 2. Обновляем счётчики карточки и создаем запись в review_history
+          await updateVocabularyCardReview(hasyx, cardId, userId, wasCorrect, responseTimeSeconds)
 
-          const existingRecallData = Array.isArray(existingRecall)
-            ? existingRecall[0]
-            : existingRecall
-
-          // Рассчитываем качество ответа (0-5)
+          // 3. FSRS: обновляем srs_state (единый источник истины для scheduling)
           const quality = getQualityScore(wasCorrect, responseTimeSeconds)
+          const updatedState = await applyReview(hasyx, userId, 'vocabulary_card', cardId, quality)
 
-          // Получаем текущие параметры SM-2
-          const currentParams = existingRecallData
-            ? {
-                quality,
-                easeFactor: existingRecallData.ease_factor ?? 2.5,
-                interval: existingRecallData.interval_days ?? 1,
-                repetitions: existingRecallData.repetitions ?? 0,
-              }
-            : {
-                ...initializeSM2(),
-                quality,
-              }
-
-          // Рассчитываем новые параметры SM-2
-          const sm2Result = calculateSM2(currentParams)
-
-          // Создаем или обновляем запись Active Recall
-          if (existingRecallData) {
-            await hasyx.update({
-              table: 'active_recall_sessions',
-              pk_columns: { id: existingRecallData.id },
-              _set: {
-                quality,
-                ease_factor: sm2Result.easeFactor,
-                interval_days: sm2Result.interval,
-                repetitions: sm2Result.repetitions,
-                next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
-                recall_success: wasCorrect,
-                recall_time_seconds: responseTimeSeconds,
-                context_prompt: `Вспомни перевод слова "${cardData.word}"`,
-                updated_at: new Date().toISOString(),
-              },
-            })
-          } else {
-            await hasyx.insert({
-              table: 'active_recall_sessions',
-              object: {
-                user_id: userId,
-                lesson_snapshot_id: null, // standalone vocabulary review
-                recall_type: 'vocabulary',
-                recall_item_id: cardId,
-                recall_item_type: 'vocabulary_card',
-                quality,
-                ease_factor: sm2Result.easeFactor,
-                interval_days: sm2Result.interval,
-                repetitions: sm2Result.repetitions,
-                next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
-                recall_attempts: 1,
-                recall_success: wasCorrect,
-                recall_time_seconds: responseTimeSeconds,
-                correct_response: cardData.translation,
-                context_prompt: `Вспомни перевод слова "${cardData.word}"`,
-              },
-            })
-          }
-
-          // 4. Обновляем next_review_date в vocabulary_cards на основе SM-2
+          // 4. Обновляем last_reviewed_at (next_review_date — legacy, не пишем)
           await hasyx.update({
             table: 'vocabulary_cards',
             pk_columns: { id: cardId },
             _set: {
-              next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
               last_reviewed_at: new Date().toISOString(),
             },
           })
 
-          // 5. При правильном ответе обновляем words_learned
-          if (wasCorrect) {
+          // 5. words_learned — только первый правильный ответ по карточке
+          // (п.5 Этапа 1 roadmap: иначе повторные свайпы раздувают метрику)
+          if (wasCorrect && previousCorrectCount === 0) {
             const today = new Date().toISOString().split('T')[0]
 
             // Обновляем progress_metrics
@@ -169,13 +92,16 @@ export const Route = createFileRoute('/api/vocabulary/review')({
               'correct_count',
               'incorrect_count',
               'difficulty',
-              'next_review_date',
             ],
           })
 
+          const updatedCardData = Array.isArray(updatedCard) ? updatedCard[0] : updatedCard
+
           return Response.json({
             success: true,
-            card: Array.isArray(updatedCard) ? updatedCard[0] : updatedCard,
+            card: updatedCardData
+              ? { ...updatedCardData, next_review_date: updatedState.due.toISOString().split('T')[0] }
+              : updatedCardData,
           })
         } catch (error: any) {
           console.error('[vocabulary/review] Error:', error)

@@ -76,10 +76,11 @@ export class StageProgressionService {
 
         case 'accuracy_threshold':
           if (!progress.accuracy_measured) {
+            // Нет измерений — требование НЕ считается выполненным (п.4 Этапа 1 roadmap)
             current_value = undefined;
             required_value = (req.requirement_threshold || 0) * 100;
-            met = true;
-            message = 'Точность пока не измерена';
+            met = false;
+            message = 'Нет данных о точности — выполните задания с измерением точности';
             break;
           }
           current_value = progress.average_accuracy * 100;
@@ -143,6 +144,7 @@ export class StageProgressionService {
     accuracy_vocabulary?: number | null;
     accuracy_listening?: number | null;
     accuracy_reading?: number | null;
+    accuracy_speaking?: number | null;
     accuracy_writing?: number | null;
   }): number {
     const accuracies = [
@@ -150,6 +152,7 @@ export class StageProgressionService {
       metrics.accuracy_vocabulary,
       metrics.accuracy_listening,
       metrics.accuracy_reading,
+      metrics.accuracy_speaking,
       metrics.accuracy_writing,
     ].filter((acc): acc is number => acc !== null && acc !== undefined);
 

@@ -16,6 +16,7 @@ select_permissions:
         - accuracy_grammar
         - accuracy_listening
         - accuracy_reading
+        - accuracy_speaking
         - accuracy_vocabulary
         - accuracy_writing
         - created_at

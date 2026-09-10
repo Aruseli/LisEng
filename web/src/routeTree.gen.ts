@@ -31,6 +31,7 @@ import { Route as ApiAiSpeakingRouteImport } from './routes/api/ai/speaking'
 import { Route as ApiAiTaskTextRouteImport } from './routes/api/ai/task-text'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAuthHasuraJwtRouteImport } from './routes/api/auth/hasura-jwt'
+import { Route as ApiCronWeeklyAnalystRouteImport } from './routes/api/cron/weekly-analyst'
 import { Route as ApiLessonCardsRouteImport } from './routes/api/lesson/cards'
 import { Route as ApiLessonCompleteRouteImport } from './routes/api/lesson/complete'
 import { Route as ApiLessonGenerateRouteImport } from './routes/api/lesson/generate'
@@ -176,6 +177,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 const ApiAuthHasuraJwtRoute = ApiAuthHasuraJwtRouteImport.update({
   id: '/api/auth/hasura-jwt',
   path: '/api/auth/hasura-jwt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronWeeklyAnalystRoute = ApiCronWeeklyAnalystRouteImport.update({
+  id: '/api/cron/weekly-analyst',
+  path: '/api/cron/weekly-analyst',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiLessonCardsRoute = ApiLessonCardsRouteImport.update({
@@ -389,6 +395,7 @@ export interface FileRoutesByFullPath {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/cron/weekly-analyst': typeof ApiCronWeeklyAnalystRoute
   '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
@@ -448,6 +455,7 @@ export interface FileRoutesByTo {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/cron/weekly-analyst': typeof ApiCronWeeklyAnalystRoute
   '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
@@ -510,6 +518,7 @@ export interface FileRoutesById {
   '/api/ai/task-text': typeof ApiAiTaskTextRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/auth/hasura-jwt': typeof ApiAuthHasuraJwtRoute
+  '/api/cron/weekly-analyst': typeof ApiCronWeeklyAnalystRoute
   '/api/lesson/cards': typeof ApiLessonCardsRoute
   '/api/lesson/complete': typeof ApiLessonCompleteRoute
   '/api/lesson/generate': typeof ApiLessonGenerateRoute
@@ -572,6 +581,7 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/cron/weekly-analyst'
     | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
@@ -631,6 +641,7 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/cron/weekly-analyst'
     | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
@@ -692,6 +703,7 @@ export interface FileRouteTypes {
     | '/api/ai/task-text'
     | '/api/auth/$'
     | '/api/auth/hasura-jwt'
+    | '/api/cron/weekly-analyst'
     | '/api/lesson/cards'
     | '/api/lesson/complete'
     | '/api/lesson/generate'
@@ -746,6 +758,7 @@ export interface RootRouteChildren {
   ApiAiTaskTextRoute: typeof ApiAiTaskTextRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiAuthHasuraJwtRoute: typeof ApiAuthHasuraJwtRoute
+  ApiCronWeeklyAnalystRoute: typeof ApiCronWeeklyAnalystRoute
   ApiLessonCardsRoute: typeof ApiLessonCardsRoute
   ApiLessonCompleteRoute: typeof ApiLessonCompleteRoute
   ApiLessonGenerateRoute: typeof ApiLessonGenerateRoute
@@ -937,6 +950,13 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/hasura-jwt'
       fullPath: '/api/auth/hasura-jwt'
       preLoaderRoute: typeof ApiAuthHasuraJwtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/weekly-analyst': {
+      id: '/api/cron/weekly-analyst'
+      path: '/api/cron/weekly-analyst'
+      fullPath: '/api/cron/weekly-analyst'
+      preLoaderRoute: typeof ApiCronWeeklyAnalystRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/lesson/cards': {
@@ -1253,6 +1273,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiTaskTextRoute: ApiAiTaskTextRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiAuthHasuraJwtRoute: ApiAuthHasuraJwtRoute,
+  ApiCronWeeklyAnalystRoute: ApiCronWeeklyAnalystRoute,
   ApiLessonCardsRoute: ApiLessonCardsRoute,
   ApiLessonCompleteRoute: ApiLessonCompleteRoute,
   ApiLessonGenerateRoute: ApiLessonGenerateRoute,

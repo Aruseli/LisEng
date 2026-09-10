@@ -1,4 +1,5 @@
 import type { Hasyx } from '@/lib/hasura/compat';
+import { getAllStates, MASTERY_STABILITY_DAYS } from '@/lib/srs';
 import { LessonSnapshotService } from './lesson-snapshot-service';
 import { ShuHaRiService } from './shu-ha-ri-service';
 import { ScheduleService } from '@/lib/schedule/schedule-service';
@@ -214,28 +215,25 @@ export class ProgressInsightsService {
   }
 
   /**
-   * Анализ прогресса Active Recall
+   * Анализ прогресса Active Recall (FSRS: srs_state — источник истины)
    */
   private async analyzeActiveRecallProgress(userId: string): Promise<ProgressInsights['activeRecall']> {
-    const [sessions, cards] = await Promise.all([
+    const today = new Date().toISOString().split('T')[0];
+    const [states, history] = await Promise.all([
+      getAllStates(this.hasyx, userId, 'vocabulary_card'),
       this.hasyx.select({
-        table: 'active_recall_sessions',
+        table: 'review_history',
         where: { user_id: { _eq: userId } },
-        returning: ['created_at', 'cards_studied', 'correct_answers']
-      }),
-      this.hasyx.select({
-        table: 'vocabulary_cards',
-        where: { user_id: { _eq: userId } },
-        returning: ['word', 'ease_factor', 'next_review_date']
+        returning: ['was_correct']
       })
     ]);
 
-    const totalSessions = sessions.length;
-    const totalCards = cards.length;
+    const totalSessions = Array.isArray(history) ? history.length : history ? 1 : 0;
+    const totalCards = states.length;
 
-    if (totalSessions === 0 || totalCards === 0) {
+    if (totalCards === 0) {
       return {
-        totalSessions: 0,
+        totalSessions,
         dueCards: 0,
         masteryRate: 0,
         difficultWords: [],
@@ -243,34 +241,40 @@ export class ProgressInsightsService {
       };
     }
 
-    // Подсчет карточек для повторения
-    const now = new Date();
-    const dueCards = cards.filter((card: any) =>
-      new Date(card.next_review_date) <= now
-    ).length;
+    // Карточки к повторению (due <= сегодня)
+    const dueCards = states.filter((s) => s.due <= today).length;
 
-    // Расчет уровня освоения
-    const averageEase = cards.reduce((sum: number, card: any) =>
-      sum + (card.ease_factor || 2.5), 0) / totalCards;
-    const masteryRate = Math.min(100, Math.max(0, (averageEase - 1.3) / 1.7 * 100));
+    // Уровень освоения: доля карточек с stability >= 30 дней
+    const masteredCount = states.filter((s) => s.stability >= MASTERY_STABILITY_DAYS).length;
+    const masteryRate = Math.round((masteredCount / totalCards) * 100);
 
-    // Сложные слова (низкий ease factor)
-    const difficultWords = cards
-      .filter((card: any) => (card.ease_factor || 2.5) < 2.0)
-      .map((card: any) => card.word)
+    // Сложные слова: топ-5 по FSRS difficulty
+    const hardest = states
+      .slice()
+      .sort((a, b) => b.difficulty - a.difficulty)
       .slice(0, 5);
+    let difficultWords: string[] = [];
+    if (hardest.length > 0) {
+      const words = await this.hasyx.select({
+        table: 'vocabulary_cards',
+        where: { id: { _in: hardest.map((s) => s.item_id) } },
+        returning: ['id', 'word']
+      });
+      const wordById = new Map(
+        (Array.isArray(words) ? words : words ? [words] : []).map((w: any) => [w.id, w.word])
+      );
+      difficultWords = hardest.map((s) => wordById.get(s.item_id)).filter(Boolean) as string[];
+    }
 
-    // Эффективность повторений
-    const totalCorrect = sessions.reduce((sum: number, session: any) =>
-      sum + (session.correct_answers || 0), 0);
-    const totalStudied = sessions.reduce((sum: number, session: any) =>
-      sum + (session.cards_studied || 0), 0);
-    const reviewEfficiency = totalStudied > 0 ? totalCorrect / totalStudied : 0;
+    // Эффективность повторений: доля правильных ответов в истории
+    const historyList = Array.isArray(history) ? history : history ? [history] : [];
+    const totalCorrect = historyList.filter((h: any) => h.was_correct).length;
+    const reviewEfficiency = historyList.length > 0 ? totalCorrect / historyList.length : 0;
 
     return {
       totalSessions,
       dueCards,
-      masteryRate: Math.round(masteryRate),
+      masteryRate,
       difficultWords,
       reviewEfficiency: Math.round(reviewEfficiency * 100)
     };
@@ -496,27 +500,22 @@ export class ProgressInsightsService {
   }
 
   private async getActiveRecallSchedule(userId: string): Promise<SnapshotInsights['sm2Schedule']> {
-    const cards = await this.hasyx.select({
-      table: 'vocabulary_cards',
-      where: { user_id: { _eq: userId } },
-      returning: ['next_review_date']
-    });
+    // FSRS: due из srs_state (источник истины)
+    const states = await getAllStates(this.hasyx, userId, 'vocabulary_card');
 
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const today = new Date().toISOString().split('T')[0];
+    const weekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     let dueToday = 0;
     let dueThisWeek = 0;
     let overdue = 0;
 
-    cards.forEach((card: any) => {
-      const reviewDate = new Date(card.next_review_date);
-      if (reviewDate < today) {
+    states.forEach((state) => {
+      if (state.due < today) {
         overdue++;
-      } else if (reviewDate <= today) {
+      } else if (state.due === today) {
         dueToday++;
-      } else if (reviewDate <= weekFromNow) {
+      } else if (state.due <= weekFromNow) {
         dueThisWeek++;
       }
     });

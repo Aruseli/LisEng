@@ -82,6 +82,7 @@ export const useDashboardData = (
             'accuracy_vocabulary',
             'accuracy_listening',
             'accuracy_reading',
+            'accuracy_speaking',
             'accuracy_writing',
           ],
         }),
@@ -100,24 +101,43 @@ export const useDashboardData = (
     queryKey: queryKeys.vocabulary(userId ?? ''),
     enabled,
     queryFn: async () => {
+      // FSRS: due из srs_state (источник истины), контент — из vocabulary_cards
+      const dueStates = await hasyx.select({
+        table: 'srs_state',
+        where: {
+          user_id: { _eq: userId! },
+          item_type: { _eq: 'vocabulary_card' },
+          due: { _lte: targetDate },
+        },
+        order_by: [{ due: 'asc' }],
+        limit: 20,
+        returning: ['item_id', 'due'],
+      });
+      const states = Array.isArray(dueStates) ? dueStates : dueStates ? [dueStates] : [];
+      if (states.length === 0) return [];
+
+      const ids = states.map((s: any) => s.item_id);
       const vocabularyCards = await hasyx.select({
         table: 'vocabulary_cards',
         where: {
-          user_id: { _eq: userId! },
-          next_review_date: { _lte: targetDate },
+          id: { _in: ids },
         },
-        order_by: [{ next_review_date: 'asc' }],
-        limit: 20,
         returning: [
           'id',
           'word',
           'translation',
           'example_sentence',
-          'next_review_date',
           'difficulty',
         ],
       });
-      return Array.isArray(vocabularyCards) ? vocabularyCards : [];
+      const list = Array.isArray(vocabularyCards) ? vocabularyCards : vocabularyCards ? [vocabularyCards] : [];
+      const byId = new Map(list.map((c: any) => [c.id, c]));
+      return states
+        .map((s: any) => {
+          const card: any = byId.get(s.item_id);
+          return card ? { ...card, next_review_date: s.due } : null;
+        })
+        .filter(Boolean);
     },
   });
 

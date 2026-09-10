@@ -1,6 +1,5 @@
 import getAI, { parseJSONResponse } from '@/lib/ai/llm';
 import type { Hasyx } from '@/lib/hasura/compat';
-import { calculateSM2, getQualityScore, initializeSM2 } from './sm2-algorithm';
 
 interface ErrorAnalysisResult {
   errors: Array<{
@@ -563,9 +562,10 @@ export class LessonSnapshotService {
     // Для незнакомых слов
     const unknownWords = problemAreas.filter((p) => p.type === 'unknown_word');
     for (const word of unknownWords) {
-      // Создать Active Recall сессию
-      const sm2Params = initializeSM2();
-      const sm2Result = calculateSM2({ ...sm2Params, quality: 0 }); // Начинаем с качества 0
+      // Legacy-запись для insights (без SM-2 симуляции: дефолтные значения,
+      // scheduling словаря живёт в srs_state)
+      const nextReviewDate = new Date();
+      nextReviewDate.setDate(nextReviewDate.getDate() + 1);
 
       await this.hasyx.insert({
         table: 'active_recall_sessions',
@@ -577,10 +577,10 @@ export class LessonSnapshotService {
           context_prompt: `Вспомни слово, которое означает "${word.content}"`,
           correct_response: word.content,
           quality: 0,
-          ease_factor: sm2Result.easeFactor,
-          interval_days: sm2Result.interval,
-          repetitions: sm2Result.repetitions,
-          next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
+          ease_factor: 2.5,
+          interval_days: 1,
+          repetitions: 0,
+          next_review_date: nextReviewDate.toISOString().split('T')[0],
           recall_attempts: 1,
           recall_success: false,
         },
@@ -590,8 +590,9 @@ export class LessonSnapshotService {
     // Для ошибок (создаем recall с правильными ответами)
     const errors = problemAreas.filter((p) => p.type === 'error');
     for (const error of errors) {
-      const sm2Params = initializeSM2();
-      const sm2Result = calculateSM2({ ...sm2Params, quality: 1 }); // Начинаем с качества 1 (ошибка)
+      // Legacy-запись для insights (без SM-2 симуляции)
+      const nextReviewDate = new Date();
+      nextReviewDate.setDate(nextReviewDate.getDate() + 1);
 
       await this.hasyx.insert({
         table: 'active_recall_sessions',
@@ -603,10 +604,10 @@ export class LessonSnapshotService {
           context_prompt: `Правильный вариант: "${error.context}"`,
           correct_response: error.context,
           quality: 1,
-          ease_factor: sm2Result.easeFactor,
-          interval_days: sm2Result.interval,
-          repetitions: sm2Result.repetitions,
-          next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
+          ease_factor: 2.5,
+          interval_days: 1,
+          repetitions: 0,
+          next_review_date: nextReviewDate.toISOString().split('T')[0],
           recall_attempts: 1,
           recall_success: false,
         },

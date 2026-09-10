@@ -125,6 +125,10 @@
         "schema": "shu_ha_ri",
         "table": "tests"
       },
+      "srs_state": {
+        "schema": "public",
+        "table": "srs_state"
+      },
       "stage_progress": {
         "schema": "stage",
         "table": "progress"
@@ -575,6 +579,7 @@
             "accuracy_grammar",
             "accuracy_listening",
             "accuracy_reading",
+            "accuracy_speaking",
             "accuracy_vocabulary",
             "accuracy_writing",
             "created_at",
@@ -9073,6 +9078,36 @@
               ],
               "returnType": {
                 "name": "shu_ha_ri_tests_mutation_response",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "update_srs_state_by_pk",
+              "args": [
+                {
+                  "name": "_set",
+                  "gqlType": "srs_state_set_input"
+                },
+                {
+                  "name": "pk_columns",
+                  "gqlType": "srs_state_pk_columns_input!"
+                }
+              ],
+              "returnType": {
+                "name": "srs_state",
+                "kind": "OBJECT"
+              }
+            },
+            {
+              "name": "delete_srs_state_by_pk",
+              "args": [
+                {
+                  "name": "id",
+                  "gqlType": "uuid!"
+                }
+              ],
+              "returnType": {
+                "name": "srs_state",
                 "kind": "OBJECT"
               }
             },
@@ -18623,6 +18658,15 @@
               }
             },
             {
+              "name": "accuracy_speaking",
+              "isList": false,
+              "args": [],
+              "returnType": {
+                "name": "numeric",
+                "kind": "SCALAR"
+              }
+            },
+            {
               "name": "accuracy_vocabulary",
               "isList": false,
               "args": [],
@@ -19262,6 +19306,28 @@
         "shu_ha_ri_tests_pk_columns_input": {
           "kind": "INPUT_OBJECT",
           "fields": []
+        },
+        "srs_state": {
+          "kind": "OBJECT",
+          "fields": [
+            { "name": "created_at", "isList": false, "args": [], "returnType": { "name": "timestamptz", "kind": "SCALAR" } },
+            { "name": "difficulty", "isList": false, "args": [], "returnType": { "name": "Float", "kind": "SCALAR" } },
+            { "name": "due", "isList": false, "args": [], "returnType": { "name": "date", "kind": "SCALAR" } },
+            { "name": "elapsed_days", "isList": false, "args": [], "returnType": { "name": "Int", "kind": "SCALAR" } },
+            { "name": "id", "isList": false, "args": [], "returnType": { "name": "uuid", "kind": "SCALAR" } },
+            { "name": "item_id", "isList": false, "args": [], "returnType": { "name": "uuid", "kind": "SCALAR" } },
+            { "name": "item_type", "isList": false, "args": [], "returnType": { "name": "String", "kind": "SCALAR" } },
+            { "name": "lapses", "isList": false, "args": [], "returnType": { "name": "Int", "kind": "SCALAR" } },
+            { "name": "last_review_at", "isList": false, "args": [], "returnType": { "name": "timestamptz", "kind": "SCALAR" } },
+            { "name": "learning_steps", "isList": false, "args": [], "returnType": { "name": "Int", "kind": "SCALAR" } },
+            { "name": "reps", "isList": false, "args": [], "returnType": { "name": "Int", "kind": "SCALAR" } },
+            { "name": "retrievability", "isList": false, "args": [], "returnType": { "name": "Float", "kind": "SCALAR" } },
+            { "name": "scheduled_days", "isList": false, "args": [], "returnType": { "name": "Int", "kind": "SCALAR" } },
+            { "name": "stability", "isList": false, "args": [], "returnType": { "name": "Float", "kind": "SCALAR" } },
+            { "name": "state", "isList": false, "args": [], "returnType": { "name": "String", "kind": "SCALAR" } },
+            { "name": "updated_at", "isList": false, "args": [], "returnType": { "name": "timestamptz", "kind": "SCALAR" } },
+            { "name": "user_id", "isList": false, "args": [], "returnType": { "name": "uuid", "kind": "SCALAR" } }
+          ]
         },
         "stage_progress": {
           "kind": "OBJECT",

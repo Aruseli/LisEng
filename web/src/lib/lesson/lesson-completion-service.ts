@@ -16,7 +16,7 @@ import {
   updateAISession,
   createAISession,
 } from '@/lib/hasura-queries';
-import { calculateSM2, getQualityScore, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
+import { applyReview, getQualityScore } from '@/lib/srs';
 import { StageProgressionService } from '@/lib/stage-progression';
 
 interface PronunciationResultPayload {
@@ -200,7 +200,7 @@ export class LessonCompletionService {
         : options.pronunciation.accuracy
       if (task.type === 'listening') accuracyByType.accuracyListening = value
       else if (task.type === 'reading') accuracyByType.accuracyReading = value
-      else if (task.type === 'speaking') accuracyByType.accuracyWriting = value
+      else if (task.type === 'speaking') accuracyByType.accuracySpeaking = value
     }
     if (options.flashcardResults && options.flashcardResults.length > 0) {
       const correct = options.flashcardResults.filter((item) => item.wasCorrect).length
@@ -439,98 +439,26 @@ export class LessonCompletionService {
         continue;
       }
 
-      const cardData = Array.isArray(card) ? card[0] : card;
+      // FSRS: обновляем srs_state (единый источник истины для scheduling)
+      const quality = getQualityScore(result.wasCorrect, result.responseTime);
+      await applyReview(this.hasyx, userId, 'vocabulary_card', result.cardId, quality);
 
-      // Ищем существующую запись Active Recall для этой карточки
-      const existingRecall = await this.hasyx.select({
-        table: 'active_recall_sessions',
-        where: {
-          user_id: { _eq: userId },
-          recall_item_id: { _eq: result.cardId },
-          recall_item_type: { _eq: 'vocabulary_card' },
+      // История ответов (для аналитики и будущего обучения весов FSRS)
+      await this.hasyx.insert({
+        table: 'review_history',
+        object: {
+          card_id: result.cardId,
+          user_id: userId,
+          was_correct: result.wasCorrect,
+          response_time_seconds: result.responseTime,
         },
-        order_by: [{ created_at: 'desc' }],
-        limit: 1,
-        returning: [
-          'id',
-          'quality',
-          'ease_factor',
-          'interval_days',
-          'repetitions',
-          'next_review_date',
-        ],
       });
 
-      const existingRecallData = Array.isArray(existingRecall) ? existingRecall[0] : existingRecall;
-
-      // Рассчитываем качество ответа
-      const quality = getQualityScore(result.wasCorrect, result.responseTime);
-
-      // Получаем текущие параметры SM-2
-      const currentParams = existingRecallData
-        ? {
-            quality,
-            easeFactor: existingRecallData.ease_factor ?? 2.5,
-            interval: existingRecallData.interval_days ?? 1,
-            repetitions: existingRecallData.repetitions ?? 0,
-          }
-        : {
-            ...initializeSM2(),
-            quality,
-          };
-
-      // Рассчитываем новые параметры SM-2
-      const sm2Result = calculateSM2(currentParams);
-
-      // Создаем или обновляем запись Active Recall
-      if (existingRecallData) {
-        await this.hasyx.update({
-          table: 'active_recall_sessions',
-          pk_columns: { id: existingRecallData.id },
-          _set: {
-            quality,
-            ease_factor: sm2Result.easeFactor,
-            interval_days: sm2Result.interval,
-            repetitions: sm2Result.repetitions,
-            next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
-            recall_success: result.wasCorrect,
-            recall_time_seconds: result.responseTime,
-            user_response: result.userSentence,
-            correct_response: cardData.translation,
-            context_prompt: `Вспомни перевод слова "${cardData.word}"`,
-            updated_at: new Date().toISOString(),
-          },
-        });
-      } else {
-        await this.hasyx.insert({
-          table: 'active_recall_sessions',
-          object: {
-            user_id: userId,
-            lesson_snapshot_id: snapshotId,
-            recall_type: 'vocabulary',
-            recall_item_id: result.cardId,
-            recall_item_type: 'vocabulary_card',
-            quality,
-            ease_factor: sm2Result.easeFactor,
-            interval_days: sm2Result.interval,
-            repetitions: sm2Result.repetitions,
-            next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
-            recall_attempts: 1,
-            recall_success: result.wasCorrect,
-            recall_time_seconds: result.responseTime,
-            user_response: result.userSentence,
-            correct_response: cardData.translation,
-            context_prompt: `Вспомни перевод слова "${cardData.word}"`,
-          },
-        });
-      }
-
-      // Обновляем next_review_date в vocabulary_cards
+      // Обновляем last_reviewed_at (next_review_date — legacy, не пишем)
       await this.hasyx.update({
         table: 'vocabulary_cards',
         pk_columns: { id: result.cardId },
         _set: {
-          next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
           last_reviewed_at: new Date().toISOString(),
         },
       });

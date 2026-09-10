@@ -4,6 +4,7 @@
  */
 
 import type { Hasyx } from '@/lib/hasura/compat';
+import { getDueStates } from '@/lib/srs';
 
 /**
  * Create AI session
@@ -207,11 +208,14 @@ export async function countPendingErrorCards(
   userId: string,
   date: string
 ) {
+  // FSRS: due из srs_state (источник истины), ошибки — по счётчику карточки
+  const dueStates = await getDueStates(hasyx, userId, 'vocabulary_card', date);
+  if (dueStates.length === 0) return 0;
+  const ids = dueStates.map((s) => s.item_id);
   const rows = await hasyx.select({
     table: 'vocabulary_cards',
     where: {
-      user_id: { _eq: userId },
-      next_review_date: { _lte: date },
+      id: { _in: ids },
       incorrect_count: { _gt: 0 },
     },
     returning: ['id'],
@@ -225,22 +229,33 @@ export async function getVocabularyCardsForReview(
   userId: string,
   date: string
 ) {
-  return await hasyx.select({
+  // FSRS: due из srs_state (источник истины), контент — из vocabulary_cards
+  const dueStates = await getDueStates(hasyx, userId, 'vocabulary_card', date);
+  if (dueStates.length === 0) return [];
+  const ids = dueStates.map((s) => s.item_id);
+  const cards = await hasyx.select({
     table: 'vocabulary_cards',
     where: {
+      id: { _in: ids },
       user_id: { _eq: userId },
-      next_review_date: { _lte: date },
     },
-    order_by: [{ next_review_date: 'asc' }],
     returning: [
       'id',
       'word',
       'translation',
       'example_sentence',
-      'next_review_date',
       'difficulty',
     ],
   });
+  const list = Array.isArray(cards) ? cards : cards ? [cards] : [];
+  const byId = new Map(list.map((c: any) => [c.id, c]));
+  // Сохраняем порядок по due и прокидываем next_review_date для обратной совместимости
+  return dueStates
+    .map((s) => {
+      const card: any = byId.get(s.item_id);
+      return card ? { ...card, next_review_date: s.due } : null;
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -257,7 +272,7 @@ export async function updateVocabularyCardReview(
   const card = await hasyx.select({
     table: 'vocabulary_cards',
     pk_columns: { id: cardId },
-    returning: ['correct_count', 'incorrect_count', 'difficulty'],
+    returning: ['correct_count', 'incorrect_count'],
   });
 
   const newCorrectCount = wasCorrect
@@ -267,33 +282,14 @@ export async function updateVocabularyCardReview(
     ? (card?.incorrect_count || 0) + 1
     : card?.incorrect_count || 0;
 
-  // Calculate next review date based on spaced repetition algorithm
-  const daysUntilNextReview = wasCorrect
-    ? Math.min(30, Math.pow(2, newCorrectCount))
-    : 1;
-
-  const nextReviewDate = new Date();
-  nextReviewDate.setDate(nextReviewDate.getDate() + daysUntilNextReview);
-
-  // Update difficulty based on performance
-  let newDifficulty = card?.difficulty || 'new';
-  if (wasCorrect && newCorrectCount >= 3) {
-    newDifficulty = 'mastered';
-  } else if (wasCorrect && newCorrectCount >= 1) {
-    newDifficulty = 'learning';
-  } else if (!wasCorrect) {
-    newDifficulty = 'review';
-  }
-
-  // Update card
+  // FSRS: scheduling (next_review_date/difficulty) больше здесь НЕ считается —
+  // источник истины srs_state (см. applyReview в @/lib/srs). Здесь только счётчики.
   await hasyx.update({
     table: 'vocabulary_cards',
     pk_columns: { id: cardId },
     _set: {
       correct_count: newCorrectCount,
       incorrect_count: newIncorrectCount,
-      next_review_date: nextReviewDate.toISOString().split('T')[0],
-      difficulty: newDifficulty,
       last_reviewed_at: new Date().toISOString(),
     },
   });
@@ -343,6 +339,7 @@ export async function getProgressMetrics(
       'accuracy_vocabulary',
       'accuracy_listening',
       'accuracy_reading',
+      'accuracy_speaking',
       'accuracy_writing',
     ],
   });
@@ -660,6 +657,7 @@ export async function updateProgressMetrics(
     accuracyVocabulary?: number;
     accuracyListening?: number;
     accuracyReading?: number;
+    accuracySpeaking?: number;
     accuracyWriting?: number;
   }
 ) {
@@ -680,6 +678,7 @@ export async function updateProgressMetrics(
       'accuracy_vocabulary',
       'accuracy_listening',
       'accuracy_reading',
+      'accuracy_speaking',
       'accuracy_writing',
     ],
   });
@@ -713,6 +712,9 @@ export async function updateProgressMetrics(
   }
   if (typeof data.accuracyReading === 'number') {
     updates.accuracy_reading = data.accuracyReading;
+  }
+  if (typeof data.accuracySpeaking === 'number') {
+    updates.accuracy_speaking = data.accuracySpeaking;
   }
   if (typeof data.accuracyWriting === 'number') {
     updates.accuracy_writing = data.accuracyWriting;
@@ -995,6 +997,7 @@ export async function getLatestProgressMetric(
       'accuracy_vocabulary',
       'accuracy_listening',
       'accuracy_reading',
+      'accuracy_speaking',
       'accuracy_writing',
     ],
   });

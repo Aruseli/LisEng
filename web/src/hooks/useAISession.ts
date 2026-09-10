@@ -35,6 +35,29 @@ function messagesEqual(a: Message[], b: Message[]) {
   return true;
 }
 
+/**
+ * Читает потоковый text/plain ответ (/api/ai/speaking стримит токены),
+ * вызывая onChunk с накопленным текстом по мере поступления.
+ * Fallback на нестриминговый ответ — тоже поддерживается.
+ */
+async function streamText(response: Response, onChunk: (accumulated: string) => void): Promise<string> {
+  const reader = response.body?.getReader();
+  if (!reader) {
+    const text = await response.text();
+    onChunk(text);
+    return text;
+  }
+  const decoder = new TextDecoder();
+  let acc = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    acc += decoder.decode(value, { stream: true });
+    onChunk(acc);
+  }
+  return acc;
+}
+
 export function useAISession({
   userId,
   type,
@@ -197,10 +220,19 @@ export function useAISession({
           aiText = responseJson?.correctedText || responseJson?.message;
         }
       } else {
-        // speaking / ai_practice - API возвращает plain text
+        // speaking / ai_practice - API стримит plain text; показываем токены по мере поступления
         const contentType = response.headers.get('content-type');
         if (contentType?.includes('text/plain')) {
-          aiText = await response.text();
+          aiText = await streamText(response, (acc) => {
+            setMessages([
+              ...nextMessages,
+              {
+                role: 'assistant',
+                content: acc,
+                timestamp: new Date().toISOString(),
+              },
+            ]);
+          });
         } else {
           // Если вернули JSON (на будущее)
           const responseJson = await response.json();
@@ -260,7 +292,16 @@ export function useAISession({
         const errorBody = await response.json().catch(() => ({}));
         throw new Error(errorBody.error || `Ошибка сервера: ${response.status}`);
       }
-      const aiText = await response.text();
+      // kickoff тоже стримится — показываем приветствие по мере генерации
+      const aiText = await streamText(response, (acc) => {
+        setMessages([
+          {
+            role: 'assistant',
+            content: acc,
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+      });
       const aiMessage: Message = {
         role: 'assistant',
         content: aiText || 'Hi! How are you today?',
