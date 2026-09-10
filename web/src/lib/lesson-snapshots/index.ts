@@ -15,7 +15,6 @@ export { ArchivingService } from './archiving-service';
 export { ProgressInsightsService } from './progress-insights-service';
 export type { ProgressInsights, SnapshotInsights } from './progress-insights-service';
 export { MethodologyAdvisor, type SnapshotTaskBlueprint } from './methodology-advisor';
-export { calculateSM2, getQualityScore, initializeSM2, type SM2Params, type SM2Result } from './sm2-algorithm';
 export type { ProblemArea, LessonSnapshotData, KaizenMetrics } from './lesson-snapshot-service';
 export type { ShuHaRiTestQuestion, ShuHaRiTestResult } from '@/types/shu-ha-ri';
 

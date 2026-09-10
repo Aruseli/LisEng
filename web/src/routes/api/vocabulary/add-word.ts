@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { getAdminClient } from '#/lib/hasura'
 import { jsonError, requireUserId } from '#/lib/server/route-utils'
 import { getUserProfile } from '@/lib/hasura-queries'
-import { calculateSM2, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm'
+import { createNewCard, saveState } from '@/lib/srs'
 import { VocabularyGenerationService } from '@/lib/vocabulary/vocabulary-generation-service'
 
 export const Route = createFileRoute('/api/vocabulary/add-word')({
@@ -40,7 +40,6 @@ export const Route = createFileRoute('/api/vocabulary/add-word')({
           const level = profile?.current_level || 'A2'
 
           if (translation) {
-            const sm2 = calculateSM2({ ...initializeSM2(), quality: 0 })
             const inserted = await db.insert({
               table: 'vocabulary_cards',
               object: {
@@ -48,7 +47,7 @@ export const Route = createFileRoute('/api/vocabulary/add-word')({
                 word,
                 translation,
                 example_sentence: example || null,
-                next_review_date: today,
+                next_review_date: today, // legacy NOT NULL колонка; scheduling — в srs_state
                 difficulty: 'new',
                 added_date: today,
               },
@@ -56,24 +55,8 @@ export const Route = createFileRoute('/api/vocabulary/add-word')({
             })
             const card = Array.isArray(inserted) ? inserted[0] : inserted
             if (card?.id) {
-              await db.insert({
-                table: 'active_recall_sessions',
-                object: {
-                  user_id: who.userId,
-                  recall_type: 'vocabulary',
-                  recall_item_id: card.id,
-                  recall_item_type: 'vocabulary_card',
-                  quality: 0,
-                  ease_factor: sm2.easeFactor,
-                  interval_days: sm2.interval,
-                  repetitions: sm2.repetitions,
-                  next_review_date: today,
-                  recall_attempts: 1,
-                  recall_success: false,
-                  context_prompt: example || word,
-                  correct_response: translation,
-                },
-              })
+              // FSRS: новое состояние без фиктивных повторений, due = сегодня
+              await saveState(db, who.userId, 'vocabulary_card', card.id, createNewCard(new Date()))
             }
             return Response.json({ card, created: true })
           }
@@ -91,29 +74,6 @@ export const Route = createFileRoute('/api/vocabulary/add-word')({
           }
           if (!created.translation || created.translation.toLowerCase() === created.word.toLowerCase()) {
             return jsonError('Не удалось сгенерировать перевод. Впишите перевод вручную или попробуйте ещё раз.', 502)
-          }
-
-          await db.update({
-            table: 'vocabulary_cards',
-            pk_columns: { id: created.id },
-            _set: { next_review_date: today },
-          })
-          const sessions = await db.select({
-            table: 'active_recall_sessions',
-            where: {
-              user_id: { _eq: who.userId },
-              recall_item_id: { _eq: created.id },
-            },
-            returning: ['id'],
-          })
-          const sessionList = Array.isArray(sessions) ? sessions : sessions ? [sessions] : []
-          for (const session of sessionList) {
-            if (!session?.id) continue
-            await db.update({
-              table: 'active_recall_sessions',
-              pk_columns: { id: session.id },
-              _set: { next_review_date: today },
-            })
           }
 
           const full = await db.select({

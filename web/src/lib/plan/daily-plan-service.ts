@@ -18,7 +18,8 @@ import {
   upsertDailyTaskFromStructure,
 } from '@/lib/hasura-queries';
 import { StageProgressionService, RequirementCheck } from '@/lib/stage-progression';
-import { generateJSON } from '@/lib/ai/llm';
+import { generateJSON, parseJSONResponse } from '@/lib/ai/llm';
+import { runAgentWithTools } from '@/lib/ai/agent-tools';
 import { DailyPlanAiSummary } from '@/types/daily-plan';
 import {
   ProgressInsightsService,
@@ -957,7 +958,28 @@ ${instructionLanguage === 'ru'
 
       const prompt = optimizedPrompt;
 
-      const response = await generateJSON<DailyPlanAiSummary>(prompt, { task: 'vocab', systemPrompt });
+      // Tool-use агент (Этап 5 roadmap): модель сама запрашивает живые данные
+      // SRS (due-слова, слабые глаголы, повторяющиеся ошибки) через инструменты.
+      // При любой ошибке агента — обычный generateJSON как раньше.
+      let response: DailyPlanAiSummary;
+      try {
+        const agentResult = await runAgentWithTools(this.hasyx, {
+          userId: params.user?.id ?? '',
+          systemPrompt:
+            systemPrompt +
+            '\n\nУ тебя есть инструменты get_due_words, get_weak_verbs, get_pending_errors — ' +
+            'обязательно запроси актуальные данные SRS перед тем, как составлять план.',
+          prompt,
+          // Агент идёт на premium-модель (tool-calling), бюджетная deepseek-r1
+          // инструменты не поддерживает — её оставляем для plain-fallback.
+          task: 'lesson',
+        });
+        response = parseJSONResponse<DailyPlanAiSummary>(agentResult.content);
+        console.log(`[DailyPlanService] Agent plan ready, tool calls: ${agentResult.toolCallCount}`);
+      } catch (agentError) {
+        console.warn('[DailyPlanService] Agent failed, fallback to plain generateJSON:', agentError);
+        response = await generateJSON<DailyPlanAiSummary>(prompt, { task: 'vocab', systemPrompt });
+      }
 
       // Добавляем вариативность к заданиям
       let aiTasks = response.aiTasks ?? [];

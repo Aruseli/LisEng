@@ -7,6 +7,8 @@ import { Navigation } from '@/components/app/Navigation'
 import { RitualScreen } from '@/components/app/RitualScreen'
 import { AppDataProvider, useAppData } from '@/lib/app-data'
 import { useSession } from '@/lib/compat/hasyx'
+import { useAppBootstrap } from '@/hooks/useAppBootstrap'
+import { useOfflineSync } from '@/hooks/useOfflineSync'
 import { useRitualStore } from '@/store/ritualStore'
 
 export const Route = createFileRoute('/_app')({
@@ -40,6 +42,11 @@ function AuthenticatedShell() {
   const { ritualCompleted, completeRitual } = useRitualStore()
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+
+  // Фоновый прогрев verbs-данных (каталог/прогресс/группы/статистика)
+  useAppBootstrap()
+  // Флаш офлайн-очереди мутаций + persistent storage
+  useOfflineSync()
 
   useEffect(() => {
     if (!ritualCompleted || isLoading) return

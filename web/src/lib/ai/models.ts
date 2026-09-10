@@ -20,6 +20,21 @@ export function getOpenRouterToken() {
   return token
 }
 
+export function getGroqToken() {
+  const token = process.env.GROQ_API_KEY
+  if (!token) throw new Error('GROQ_API_KEY is not set in environment variables')
+  return token
+}
+
+/** Chat-модель Groq для fallback-цепочки (OpenRouter → Groq) на роли vocab/budget. */
+// llama-3.3 снята с Groq (проверка каталога 2026-09); gpt-oss-120b — сильнейшая
+// из доступных open-weight на этом ключе, хорошо держит JSON-формат.
+export const GROQ_CHAT_MODEL = 'openai/gpt-oss-120b'
+
+export function getGroqChatModel() {
+  return process.env.GROQ_CHAT_MODEL || GROQ_CHAT_MODEL
+}
+
 export function getModelForTask(task: LlmTask = 'lesson') {
   if (task === 'speech') {
     throw new Error('speech идёт в Groq Whisper, не в OpenRouter')

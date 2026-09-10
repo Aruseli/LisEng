@@ -21,10 +21,10 @@ export async function invalidateLessonQueries(queryClient: QueryClient, userId?:
 }
 
 export async function invalidateVerbQueries(queryClient: QueryClient, userId?: string | null) {
-  await Promise.all([
-    queryClient.invalidateQueries({ queryKey: ['verbs'] }),
-    userId
-      ? queryClient.invalidateQueries({ queryKey: queryKeys.verbs(userId) })
-      : Promise.resolve(),
-  ])
+  // ВАЖНО: не инвалидируем голый ['verbs'] — по префиксу он сносит и вечный
+  // каталог ['verbs', 'catalog']. Инвалидируем только пользовательские данные:
+  // ['verbs', userId] покрывает progress, groups и stats.
+  if (userId) {
+    await queryClient.invalidateQueries({ queryKey: queryKeys.verbs(userId) })
+  }
 }

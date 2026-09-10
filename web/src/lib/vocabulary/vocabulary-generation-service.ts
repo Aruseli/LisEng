@@ -1,7 +1,7 @@
 import type { Hasyx } from '@/lib/hasura/compat';
 
 import { generateJSON } from '@/lib/ai/llm';
-import { calculateSM2, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
+import { createNewCard, saveState } from '@/lib/srs';
 import type { SnapshotInsights } from '@/lib/lesson-snapshots';
 import { getUserInstructionLanguage } from '@/lib/hasura-queries';
 
@@ -329,10 +329,6 @@ export class VocabularyGenerationService {
       }
 
       // Карточка не существует - создаём новую
-      const sm2Base = initializeSM2();
-      const schedule = calculateSM2({ ...sm2Base, quality: 0 });
-      const nextReviewDate = schedule.nextReviewDate.toISOString().split('T')[0];
-
       const inserted = await this.hasyx.insert({
         table: 'vocabulary_cards',
         object: {
@@ -341,7 +337,7 @@ export class VocabularyGenerationService {
           translation: card.translation.trim(),
           example_sentence: card.example.trim(),
           part_of_speech: card.partOfSpeech ?? null,
-          next_review_date: nextReviewDate,
+          next_review_date: new Date().toISOString().split('T')[0], // legacy NOT NULL колонка; scheduling — в srs_state
           difficulty: 'new',
           added_date: new Date().toISOString().split('T')[0],
         },
@@ -353,25 +349,8 @@ export class VocabularyGenerationService {
         continue;
       }
 
-      await this.hasyx.insert({
-        table: 'active_recall_sessions',
-        object: {
-          user_id: options.userId,
-          lesson_snapshot_id: options.sourceSnapshotId,
-          recall_type: 'vocabulary',
-          recall_item_id: cardId,
-          recall_item_type: 'vocabulary_card',
-          quality: 0,
-          ease_factor: schedule.easeFactor,
-          interval_days: schedule.interval,
-          repetitions: schedule.repetitions,
-          next_review_date: nextReviewDate,
-          recall_attempts: 1,
-          recall_success: false,
-          context_prompt: card.example,
-          correct_response: card.translation,
-        },
-      });
+      // FSRS: новое состояние без фиктивных повторений, due = сегодня
+      await saveState(this.hasyx, options.userId, 'vocabulary_card', cardId, createNewCard(new Date()));
 
       if (options.sourceSnapshotId) {
         await this.hasyx.insert({

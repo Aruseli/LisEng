@@ -1,5 +1,16 @@
 import type { Hasyx } from '@/lib/hasura/compat';
-import { calculateSM2, getQualityScore, initializeSM2 } from '@/lib/lesson-snapshots/sm2-algorithm';
+import {
+  applyReview,
+  createNewCard,
+  getDueStates,
+  getQualityScore,
+  getState,
+  getWeakStates,
+  isMastered,
+  recordToCard,
+  saveState,
+  type SrsStateRecord,
+} from '@/lib/srs';
 import verbsCatalog from '../../../data/irregular-verbs.json';
 
 export interface IrregularVerb {
@@ -291,71 +302,22 @@ export class VerbsService {
   }
 
   /**
-   * Get verbs due for review
+   * Get verbs due for review (FSRS: due из srs_state)
    */
   async getVerbsForReview(
     userId: string,
     date: string = new Date().toISOString().split('T')[0],
     limit: number = 20
   ): Promise<VerbWithProgress[]> {
-    const progressList = await this.hasyx.select({
-      table: 'verb_learning_progress',
-      where: {
-        user_id: { _eq: userId },
-        next_review_date: { _lte: date },
-        mastered: { _eq: false },
-      },
-      order_by: [
-        { repetitions: 'asc' },
-        { incorrect_count: 'desc' },
-        { next_review_date: 'asc' },
-      ],
-      limit,
-      returning: [
-        'id',
-        'user_id',
-        'verb_id',
-        'next_review_date',
-        'correct_count',
-        'incorrect_count',
-        'last_reviewed_at',
-        'mastered',
-        'ease_factor',
-        'interval_days',
-        'repetitions',
-        'created_at',
-      ],
-    });
+    const dueStates = await getDueStates(this.hasyx, userId, 'verb', date);
 
-    const normalized = Array.isArray(progressList) ? progressList : progressList ? [progressList] : [];
-    
-    if (normalized.length === 0) return [];
+    // mastered фильтруем по FSRS stability, сортировка как раньше: reps asc, due asc
+    const active = dueStates
+      .filter((s) => !isMastered(recordToCard(s)))
+      .sort((a, b) => a.reps - b.reps || a.due.localeCompare(b.due))
+      .slice(0, limit);
 
-    const verbIds = normalized.map(p => p.verb_id);
-    const verbs = await this.hasyx.select({
-      table: 'irregular_verbs',
-      where: { id: { _in: verbIds } },
-      returning: [
-        'id',
-        'infinitive',
-        'past_simple',
-        'past_participle',
-        'group_number',
-        'frequency',
-        'difficulty',
-        'mnemonic_tip',
-        'related_verbs',
-        'created_at',
-      ],
-    });
-
-    const verbsArray = Array.isArray(verbs) ? verbs : verbs ? [verbs] : [];
-    const progressMap = new Map(normalized.map(p => [p.verb_id, p]));
-
-    return verbsArray.map(verb => withMeaning({
-      ...verb,
-      progress: progressMap.get(verb.id),
-    }));
+    return this.joinVerbsWithProgress(active);
   }
 
   /**
@@ -409,30 +371,30 @@ export class VerbsService {
 
   /**
    * Record practice result and update progress
+   *
+   * FSRS: scheduling считается в srs_state (источник истины).
+   * verb_learning_progress — денормализованная read-model для UI
+   * (счётчики correct/incorrect + зеркала next_review_date/mastered/repetitions).
    */
   async recordPracticeResult(
     userId: string,
     verbId: string,
     result: PracticeResult
   ): Promise<void> {
-    // Get or create progress
-    let progress = await this.getProgressForVerb(verbId, userId);
-    
-    if (!progress) {
-      // Initialize progress with SM-2
-      const sm2Base = initializeSM2();
-      const nextReviewDate = new Date();
-      nextReviewDate.setDate(nextReviewDate.getDate() + 1);
+    const quality = getQualityScore(result.wasCorrect, result.responseTime);
+    const card = await applyReview(this.hasyx, userId, 'verb', verbId, quality);
+    const dueDate = card.due.toISOString().split('T')[0];
 
+    // Get or create progress (read-model)
+    let progress = await this.getProgressForVerb(verbId, userId);
+
+    if (!progress) {
       const inserted = await this.hasyx.insert({
         table: 'verb_learning_progress',
         object: {
           user_id: userId,
           verb_id: verbId,
-          next_review_date: nextReviewDate.toISOString().split('T')[0],
-          ease_factor: sm2Base.easeFactor,
-          interval_days: sm2Base.interval,
-          repetitions: sm2Base.repetitions,
+          next_review_date: dueDate,
         },
         returning: ['id'],
       });
@@ -448,18 +410,6 @@ export class VerbsService {
       }
     }
 
-    // Calculate quality score
-    const quality = getQualityScore(result.wasCorrect, result.responseTime);
-
-    // Calculate new SM-2 parameters
-    const sm2Result = calculateSM2({
-      quality,
-      easeFactor: progress.ease_factor,
-      interval: progress.interval_days,
-      repetitions: progress.repetitions,
-    });
-
-    // Update progress
     const newCorrectCount = result.wasCorrect
       ? progress.correct_count + 1
       : progress.correct_count;
@@ -467,20 +417,21 @@ export class VerbsService {
       ? progress.incorrect_count + 1
       : progress.incorrect_count;
 
-    const mastered = sm2Result.repetitions >= 5 && sm2Result.interval >= 30;
+    // mastered по FSRS: stability >= 30 дней (замена «5 reps + 30 дней»)
+    const mastered = isMastered(card);
 
     await this.hasyx.update({
       table: 'verb_learning_progress',
       pk_columns: { id: progress.id },
       _set: {
-        next_review_date: sm2Result.nextReviewDate.toISOString().split('T')[0],
+        next_review_date: dueDate,
         correct_count: newCorrectCount,
         incorrect_count: newIncorrectCount,
         last_reviewed_at: new Date().toISOString(),
         mastered,
-        ease_factor: sm2Result.easeFactor,
-        interval_days: sm2Result.interval,
-        repetitions: sm2Result.repetitions,
+        // Зеркала из FSRS для сортировок UI (ease_factor — legacy, не пишем)
+        interval_days: card.scheduled_days,
+        repetitions: card.reps,
       },
     });
 
@@ -501,92 +452,112 @@ export class VerbsService {
    * Add verb to user's review queue (from lesson)
    */
   async addToReviewQueue(userId: string, verbId: string): Promise<void> {
-    // Check if progress exists
-    const progress = await this.getProgressForVerb(verbId, userId);
-    
-    if (!progress) {
-      // Create initial progress
-      const sm2Base = initializeSM2();
-      const nextReviewDate = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0];
 
+    // Read-model для UI
+    const progress = await this.getProgressForVerb(verbId, userId);
+    if (!progress) {
       await this.hasyx.insert({
         table: 'verb_learning_progress',
         object: {
           user_id: userId,
           verb_id: verbId,
-          next_review_date: nextReviewDate,
-          ease_factor: sm2Base.easeFactor,
-          interval_days: sm2Base.interval,
-          repetitions: sm2Base.repetitions,
+          next_review_date: today,
         },
       });
+    }
+
+    // FSRS: новое состояние без фиктивных повторений, due = сегодня
+    const existing = await getState(this.hasyx, userId, 'verb', verbId);
+    if (!existing) {
+      const card = createNewCard(new Date());
+      await saveState(this.hasyx, userId, 'verb', verbId, card);
     }
   }
 
   /**
-   * Get weak verbs (high incorrect count)
+   * Get weak verbs (FSRS: высокая difficulty или низкая retrievability)
    */
   async getWeakVerbs(
     userId: string,
     limit: number = 10
   ): Promise<VerbWithProgress[]> {
-    const progressList = await this.hasyx.select({
-      table: 'verb_learning_progress',
-      where: {
-        user_id: { _eq: userId },
-        incorrect_count: { _gt: 0 },
-        mastered: { _eq: false },
-        repetitions: { _lt: 5 },
-      },
-      order_by: [
-        { incorrect_count: 'desc' },
-        { correct_count: 'asc' },
-      ],
-      limit,
-      returning: [
-        'id',
-        'user_id',
-        'verb_id',
-        'next_review_date',
-        'correct_count',
-        'incorrect_count',
-        'last_reviewed_at',
-        'mastered',
-        'ease_factor',
-        'interval_days',
-        'repetitions',
-        'created_at',
-      ],
-    });
+    const weakStates = await getWeakStates(this.hasyx, userId, 'verb');
+    return this.joinVerbsWithProgress(weakStates.slice(0, limit));
+  }
 
-    const normalized = Array.isArray(progressList) ? progressList : progressList ? [progressList] : [];
-    if (normalized.length === 0) return [];
+  /**
+   * Join srs_state с контентом глаголов и read-model verb_learning_progress.
+   * Scheduling-поля (next_review_date, mastered, repetitions, interval_days)
+   * берутся из srs_state — источника истины; счётчики — из verb_learning_progress.
+   */
+  private async joinVerbsWithProgress(states: SrsStateRecord[]): Promise<VerbWithProgress[]> {
+    if (states.length === 0) return [];
 
-    const verbIds = normalized.map(p => p.verb_id);
-    const verbs = await this.hasyx.select({
-      table: 'irregular_verbs',
-      where: { id: { _in: verbIds } },
-      returning: [
-        'id',
-        'infinitive',
-        'past_simple',
-        'past_participle',
-        'group_number',
-        'frequency',
-        'difficulty',
-        'mnemonic_tip',
-        'related_verbs',
-        'created_at',
-      ],
-    });
+    const verbIds = states.map((s) => s.item_id);
+    const [verbs, progressList] = await Promise.all([
+      this.hasyx.select({
+        table: 'irregular_verbs',
+        where: { id: { _in: verbIds } },
+        returning: [
+          'id',
+          'infinitive',
+          'past_simple',
+          'past_participle',
+          'group_number',
+          'frequency',
+          'difficulty',
+          'mnemonic_tip',
+          'related_verbs',
+          'created_at',
+        ],
+      }),
+      this.hasyx.select({
+        table: 'verb_learning_progress',
+        where: {
+          user_id: { _eq: states[0].user_id },
+          verb_id: { _in: verbIds },
+        },
+        returning: [
+          'id',
+          'user_id',
+          'verb_id',
+          'correct_count',
+          'incorrect_count',
+          'last_reviewed_at',
+          'created_at',
+        ],
+      }),
+    ]);
 
     const verbsArray = Array.isArray(verbs) ? verbs : verbs ? [verbs] : [];
-    const progressMap = new Map(normalized.map(p => [p.verb_id, p]));
+    const progressArray = Array.isArray(progressList) ? progressList : progressList ? [progressList] : [];
+    const progressMap = new Map(progressArray.map((p) => [p.verb_id, p]));
+    const stateMap = new Map(states.map((s) => [s.item_id, s]));
+    const order = new Map(verbIds.map((id, index) => [id, index]));
 
-    return verbsArray.map(verb => withMeaning({
-      ...verb,
-      progress: progressMap.get(verb.id),
-    }));
+    return verbsArray
+      .slice()
+      .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0))
+      .map((verb) => {
+        const state = stateMap.get(verb.id)!;
+        const progressRow = progressMap.get(verb.id);
+        const progress: VerbLearningProgress = {
+          id: progressRow?.id ?? state.id,
+          user_id: state.user_id,
+          verb_id: verb.id,
+          next_review_date: state.due,
+          correct_count: progressRow?.correct_count ?? 0,
+          incorrect_count: progressRow?.incorrect_count ?? 0,
+          last_reviewed_at: state.last_review_at,
+          mastered: isMastered(recordToCard(state)),
+          ease_factor: 0, // legacy, не используется
+          interval_days: state.scheduled_days,
+          repetitions: state.reps,
+          created_at: progressRow?.created_at ?? state.created_at,
+        };
+        return withMeaning({ ...verb, progress });
+      });
   }
 
   async pickDailyPack(userId: string, count: number = 4): Promise<VerbWithProgress[]> {

@@ -8,6 +8,7 @@ import { useSpeechSynthesis } from '@/components/speachComponents/hooks_useSpeec
 import { useModalStore } from '@/store/modalStore';
 import { useVocabularySessionStore } from '@/store/vocabularySessionStore';
 import { queryKeys } from '@/lib/query-keys';
+import { enqueueMutation } from '@/lib/offline/mutation-queue';
 
 export interface Flashcard {
   id: string;
@@ -205,7 +206,7 @@ export function SwipeCard({ cards, onResult, onProgress, onCardUpdated, title = 
       };
 
       // Single-pass: оба ответа просто убирают карточку из очереди.
-      // «Повторить» вернётся завтра по SM-2 (next_review_date уже ставит API).
+      // «Повторить» вернётся по FSRS (due в srs_state уже ставит API).
       answerCard(answeredCard.id, wasCorrect, result);
       setUserSentence('');
       setIsFlipped(false);
@@ -222,19 +223,23 @@ export function SwipeCard({ cards, onResult, onProgress, onCardUpdated, title = 
         void queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary(userId) });
       }
 
+      const reviewPayload = {
+        cardId: answeredCard.id,
+        userId,
+        wasCorrect,
+        responseTimeSeconds: responseTime,
+      };
       try {
         await fetch('/api/vocabulary/review', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            cardId: answeredCard.id,
-            userId,
-            wasCorrect,
-            responseTimeSeconds: responseTime,
-          }),
+          body: JSON.stringify(reviewPayload),
         });
       } catch (error) {
-        console.error('Failed to update vocabulary card:', error);
+        // Офлайн: складываем в очередь (IndexedDB), доотправим при появлении сети.
+        // UI уже обновлён оптимистично — карточка убрана из колоды.
+        console.warn('[SwipeCard] Сеть недоступна, review в офлайн-очередь:', error);
+        await enqueueMutation('vocabulary_review', reviewPayload).catch(() => {});
       } finally {
         setIsAnswering(false);
       }

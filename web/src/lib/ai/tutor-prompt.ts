@@ -1,4 +1,10 @@
-export function buildTutorPrompt(level: string, instructionLanguage: string = 'ru') {
+import { formatStudentContext, type StudentContext } from './student-context'
+
+export function buildTutorPrompt(
+  level: string,
+  instructionLanguage: string = 'ru',
+  studentContext?: StudentContext,
+) {
   const explainIn =
     instructionLanguage === 'en'
       ? 'Explain *why* the sentence was wrong in English, briefly.'
@@ -17,5 +23,9 @@ export function buildTutorPrompt(level: string, instructionLanguage: string = 'r
     'Target Language: English',
     `My current level: ${level || 'A2'}`,
     `Explanation language: ${instructionLanguage === 'en' ? 'English' : 'Russian'}`,
-  ].join('\n')
+    // Персонализация: weak verbs / due-слова / топ-ошибки (Этап 5 roadmap)
+    studentContext ? formatStudentContext(studentContext) : '',
+  ]
+    .filter(Boolean)
+    .join('\n')
 }
