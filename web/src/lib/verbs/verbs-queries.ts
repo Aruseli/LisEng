@@ -2,7 +2,7 @@ import type { VerbWithProgress, GroupProgress } from './verbs-service'
 
 /**
  * Общие queryFn для verbs-данных.
- * Вынесены из хуков, чтобы переиспользовать в useAppBootstrap (фоновый prefetch).
+ * Вынесены из хуков, чтобы переиспользовать в useDashboardData (загрузка при старте сессии).
  * Авторизация — по сессионной cookie, userId нужен только в queryKey.
  */
 

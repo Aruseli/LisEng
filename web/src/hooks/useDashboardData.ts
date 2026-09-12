@@ -4,6 +4,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useHasyx } from '@/lib/compat/hasyx';
 import { useHasuraReady } from '@/lib/hasura/useHasuraToken';
 import { queryKeys } from '@/lib/query-keys';
+import { useToday } from '@/hooks/useToday';
+import {
+  fetchVerbCatalog,
+  fetchVerbGroups,
+  fetchVerbProgress,
+  fetchVerbStats,
+} from '@/lib/verbs/verbs-queries';
 
 import type { DailyPlanResult } from '@/lib/plan/daily-plan-service';
 import type { RequirementCheck } from '@/lib/stage-progression';
@@ -21,14 +28,6 @@ interface UseDashboardDataOptions {
   autoRefresh?: boolean;
 }
 
-function todayIso() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
 export const useDashboardData = (
   userId?: string | null,
   options: UseDashboardDataOptions = {}
@@ -37,15 +36,21 @@ export const useDashboardData = (
   const hasuraReady = useHasuraReady();
   const queryClient = useQueryClient();
 
-  const targetDate = useMemo(() => options.date || todayIso(), [options.date]);
+  // Реактивная локальная дата: PWA, пережившее полночь, само переключается
+  // на новый день (query-ключи содержат targetDate → новые запросы)
+  const reactiveToday = useToday();
+  const targetDate = options.date ?? reactiveToday;
   const enabled = Boolean(hasyx && userId && hasuraReady);
 
   const planQuery = useQuery({
     queryKey: queryKeys.plan(userId ?? '', targetDate),
     enabled,
     queryFn: async () => {
+      // autogen=1 только для сегодняшней (локальной) даты: первый заход дня
+      // генерирует план автоматически, просмотр прошлых дат — нет
+      const autogen = targetDate === reactiveToday ? '1' : '0';
       const planResponse = await fetch(
-        `/api/plan/today?userId=${encodeURIComponent(userId!)}&date=${encodeURIComponent(targetDate)}`
+        `/api/plan/today?userId=${encodeURIComponent(userId!)}&date=${encodeURIComponent(targetDate)}&autogen=${autogen}`
       );
       if (!planResponse.ok) {
         const errorBody = await planResponse.json().catch(() => ({}));
@@ -139,6 +144,37 @@ export const useDashboardData = (
         })
         .filter(Boolean);
     },
+  });
+
+  // Глаголы грузятся так же, как словарь, — автоматически при старте сессии
+  // (единый поток данных AppDataProvider). Экраны /verbs и /progress читают
+  // эти же ключи из кэша через useIrregularVerbsData/useVerbProgress.
+  useQuery({
+    queryKey: queryKeys.verbCatalog(),
+    staleTime: Infinity,
+    enabled,
+    queryFn: fetchVerbCatalog,
+  });
+
+  useQuery({
+    queryKey: queryKeys.verbs(userId ?? ''),
+    staleTime: 300_000,
+    enabled,
+    queryFn: () => fetchVerbProgress({ includeExamples: true }),
+  });
+
+  useQuery({
+    queryKey: [...queryKeys.verbs(userId ?? ''), 'groups'],
+    staleTime: 300_000,
+    enabled,
+    queryFn: fetchVerbGroups,
+  });
+
+  useQuery({
+    queryKey: [...queryKeys.verbs(userId ?? ''), 'stats'],
+    staleTime: 300_000,
+    enabled,
+    queryFn: fetchVerbStats,
   });
 
   const stageId = planQuery.data?.plan?.stage?.id;

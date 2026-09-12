@@ -17,6 +17,9 @@ export const Route = createFileRoute('/api/plan/today')({
           const { searchParams } = new URL(request.url)
           const userId = searchParams.get('userId') ?? undefined
           const targetDate = searchParams.get('date') ?? undefined
+          // Клиент выставляет autogen=1, когда запрашивает свою сегодняшнюю
+          // (локальную) дату — тогда при пустом дне план генерируется сам
+          const autogen = searchParams.get('autogen') === '1'
 
           if (!userId) {
             return Response.json({ error: 'userId is required' }, { status: 400 })
@@ -36,7 +39,7 @@ export const Route = createFileRoute('/api/plan/today')({
           )
 
           const service = new DailyPlanService(hasyx, progressInsightsService)
-          const plan = await service.getDailyPlan(userId, targetDate ?? undefined)
+          const plan = await service.getDailyPlan(userId, targetDate ?? undefined, { autogen })
 
           return Response.json({ plan })
         } catch (error: any) {
