@@ -285,6 +285,19 @@ export class DailyPlanService {
       }
     }
 
+    // Перенос невыполненных задач прошлых дней в сегодня (только при мягкой
+    // генерации; regenerate=true пересобирает день осознанно)
+    if (!options.regenerate && targetDate >= this.formatDate(new Date())) {
+      const carried = await this.carryOverUnfinishedTasks(
+        userId,
+        targetDate,
+        Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [],
+      );
+      if (carried > 0) {
+        dailyTasksRaw = await getDailyTasks(this.hasyx, userId, targetDate);
+      }
+    }
+
     const dailyTasks = Array.isArray(dailyTasksRaw) ? dailyTasksRaw : [];
     const latestMetrics = await getLatestProgressMetric(this.hasyx, userId);
 
@@ -405,11 +418,15 @@ export class DailyPlanService {
   }
 
   /**
-   * Получить план без пересборки (используется в /api/plan/today)
+   * Получить план без пересборки (используется в /api/plan/today).
+   * Автогенерация: если на запрошенную дату задач нет и клиент запросил
+   * «свой сегодня» (autogen), генерируем план сразу — первый заход дня
+   * не требует нажатия кнопки.
    */
   async getDailyPlan(
     userId: string,
-    targetDate?: string
+    targetDate?: string,
+    opts?: { autogen?: boolean }
   ): Promise<DailyPlanResult> {
     const date = targetDate ?? this.formatDate(new Date());
     const snapshotInsightsPromise = this.progressInsightsService
@@ -453,6 +470,15 @@ export class DailyPlanService {
     );
 
     const dailyTasks = Array.isArray(tasksRaw) ? tasksRaw : [];
+
+    // Первый заход дня: задач нет — генерируем план автоматически
+    // (autogen выставляет клиент, когда запрашивает свою сегодняшнюю дату;
+    // просмотр прошлых дат генерацию не триггерит)
+    if (dailyTasks.length === 0 && opts?.autogen) {
+      console.log(`[DailyPlanService] No tasks for ${date}, autogen enabled — generating plan`);
+      return this.generateDailyPlan({ userId, targetDate: date, regenerate: false });
+    }
+
     const streak = Array.isArray(streakRaw) ? streakRaw[0] ?? null : streakRaw ?? null;
     const achievements = Array.isArray(achievementsRaw)
       ? achievementsRaw.slice(0, 5)
@@ -626,6 +652,64 @@ export class DailyPlanService {
         });
       })
     );
+  }
+
+  /**
+   * Перенос невыполненных задач прошлых дней в targetDate.
+   * Перенос = update task_date (не копия): без дублей при повторной генерации,
+   * история выполнения живёт в progress_metrics. Типы, уже присутствующие
+   * в targetDate, пропускаем (constraint daily_tasks_user_id_task_date_type_key).
+   * Возвращает число перенесённых задач.
+   */
+  private async carryOverUnfinishedTasks(
+    userId: string,
+    targetDate: string,
+    todayTasks: Array<{ type: string }>,
+  ): Promise<number> {
+    const todayTypes = new Set(todayTasks.map((t) => t.type));
+
+    const overdue = await this.hasyx.select({
+      table: 'daily_tasks',
+      where: {
+        user_id: { _eq: userId },
+        task_date: { _lt: targetDate },
+        status: { _eq: 'pending' },
+      },
+      order_by: [{ task_date: 'desc' }],
+      limit: 10,
+      returning: ['id', 'task_date', 'type', 'ai_context'],
+    });
+    const rows = Array.isArray(overdue) ? overdue : overdue ? [overdue] : [];
+
+    let carried = 0;
+    for (const row of rows) {
+      if (carried >= 5) break;
+      if (todayTypes.has(row.type)) continue;
+      const aiContext =
+        row.ai_context && typeof row.ai_context === 'object' && !Array.isArray(row.ai_context)
+          ? row.ai_context
+          : {};
+      try {
+        await this.hasyx.update({
+          table: 'daily_tasks',
+          pk_columns: { id: row.id },
+          _set: {
+            task_date: targetDate,
+            ai_context: { ...aiContext, carriedOverFrom: row.task_date },
+          },
+        });
+        todayTypes.add(row.type);
+        carried++;
+      } catch (error) {
+        // Конфликт уникальности или гонка — пропускаем задачу, не роняем генерацию
+        console.warn(`[carryOverUnfinishedTasks] skip task ${row.id}:`, error);
+      }
+    }
+
+    if (carried > 0) {
+      console.log(`[carryOverUnfinishedTasks] Перенесено ${carried} невыполненных задач на ${targetDate}`);
+    }
+    return carried;
   }
 
   /**

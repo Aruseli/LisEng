@@ -15,9 +15,16 @@ export const Route = createFileRoute('/api/notifications/daily')({
 })
 
 async function handle(request: Request) {
+  // Ручной запуск: ?secret= / x-cron-secret против HASURA_EVENT_SECRET.
+  // Vercel Cron: Authorization: Bearer $CRON_SECRET.
   const secret = readServerEnv().HASURA_EVENT_SECRET || readLiveEnv('NOTIFICATIONS_CRON_SECRET')
   const got = new URL(request.url).searchParams.get('secret') || request.headers.get('x-cron-secret')
-  if (!secret || got !== secret) return jsonError('Unauthorized', 401)
+  const cronSecret = process.env.CRON_SECRET
+  const bearer = request.headers.get('authorization')
+  const authorized =
+    (secret && got === secret) ||
+    (cronSecret && bearer === `Bearer ${cronSecret}`)
+  if (!authorized) return jsonError('Unauthorized', 401)
   try {
     const webpush = configureWebPush()
     const result = await runSql(`SELECT endpoint, p256dh, auth FROM public.push_subscriptions;`, true)

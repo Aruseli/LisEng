@@ -7,8 +7,9 @@ import { Navigation } from '@/components/app/Navigation'
 import { RitualScreen } from '@/components/app/RitualScreen'
 import { AppDataProvider, useAppData } from '@/lib/app-data'
 import { useSession } from '@/lib/compat/hasyx'
-import { useAppBootstrap } from '@/hooks/useAppBootstrap'
+import { useQueryCacheRestored } from '@/lib/offline/query-persister'
 import { useOfflineSync } from '@/hooks/useOfflineSync'
+import { useToday } from '@/hooks/useToday'
 import { useRitualStore } from '@/store/ritualStore'
 
 export const Route = createFileRoute('/_app')({
@@ -17,8 +18,11 @@ export const Route = createFileRoute('/_app')({
 
 function AppLayoutGate() {
   const { data: session, status } = useSession()
+  // Ждём восстановление кэша из IndexedDB (десятки мс), иначе запросы
+  // стартуют с пустым кэшем и показывают спиннеры вместо персистнутых данных
+  const cacheRestored = useQueryCacheRestored()
 
-  if (status === 'loading') {
+  if (!cacheRestored || status === 'loading') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <p className="text-gray-600">Загрузка...</p>
@@ -39,12 +43,14 @@ function AppLayoutGate() {
 
 function AuthenticatedShell() {
   const { userName, streak, isLoading, error, currentLevel, regeneratePlan } = useAppData()
-  const { ritualCompleted, completeRitual } = useRitualStore()
+  const { ritualCompletedDate, completeRitual } = useRitualStore()
+  const today = useToday()
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
-  // Фоновый прогрев verbs-данных (каталог/прогресс/группы/статистика)
-  useAppBootstrap()
+  // Ритуал показывается на каждые новые сутки (локальная дата устройства)
+  const ritualCompleted = ritualCompletedDate === today
+
   // Флаш офлайн-очереди мутаций + persistent storage
   useOfflineSync()
 
