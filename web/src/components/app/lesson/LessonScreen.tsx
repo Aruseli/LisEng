@@ -51,6 +51,9 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
   const [isGeneratingPack, setIsGeneratingPack] = useState(false);
   const [questionAnswers, setQuestionAnswers] = useState<Record<number, string>>({});
   const [questionResults, setQuestionResults] = useState<Record<number, boolean | null>>({});
+  const [checkingAnswers, setCheckingAnswers] = useState<Record<number, boolean>>({});
+  // Неудачные попытки по каждому вопросу — уходят в problem_areas снапшота при завершении урока
+  const [questionAttempts, setQuestionAttempts] = useState<Record<number, Array<{ answer: string; feedback: string | null }>>>({});
   const [shownSuccessModals, setShownSuccessModals] = useState<Set<number>>(new Set());
   const [errorMessages, setErrorMessages] = useState<Record<number, string>>({});
   const { currentLevel, completeTask } = useAppData();
@@ -226,6 +229,16 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
+      // Вопросы, где были ошибочные попытки — для problem_areas снапшота
+      const exerciseResults = (lesson.exercise.questions ?? [])
+        .map((question, index) => ({
+          prompt: question.prompt,
+          kind: question.kind ?? null,
+          finalAnswer: questionAnswers[index] ?? '',
+          attempts: questionAttempts[index] ?? [],
+        }))
+        .filter((item) => item.attempts.length > 0);
+
       const response = await fetch('/api/lesson/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -239,6 +252,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
             script: readingScript,
           },
           flashcardResults: flashcardResults.length > 0 ? flashcardResults : undefined,
+          exerciseResults: exerciseResults.length > 0 ? exerciseResults : undefined,
         }),
       });
 
@@ -255,7 +269,7 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
     } finally {
       setIsSubmitting(false);
     }
-      }, [lesson, pronunciationResult, readingScript, flashcardResults, router, taskId, userId, completeTask, queryClient]);
+      }, [lesson, pronunciationResult, readingScript, flashcardResults, questionAnswers, questionAttempts, router, taskId, userId, completeTask, queryClient]);
 
   // Показываем загрузку, пока сессия загружается
   if (status === 'loading') {
@@ -500,8 +514,10 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
               const isGrammarLesson = lesson.meta?.taskType === 'grammar';
               const hasMissingVerb = question.prompt?.includes('___') || question.prompt?.toLowerCase().includes('[глагол]') || question.prompt?.toLowerCase().includes('глагол');
               const ruleHint = question.hint || (Array.isArray(question.evaluationCriteria) ? question.evaluationCriteria[0] : null);
+              const isTranslationQuestion =
+                question.kind === 'translation' || question.prompt?.trimStart().startsWith('Перевед');
 
-              const handleAnswer = () => {
+              const handleAnswer = async () => {
                 const normalize = (text: string) => {
                   if (!text) return '';
                   return text
@@ -513,9 +529,51 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
                 const normalizedUserAnswer = normalize(userAnswer);
                 const normalizedExpected = normalize(question.expectedAnswer || '');
-                const correct = normalizedUserAnswer === normalizedExpected ||
+                let correct = normalizedUserAnswer === normalizedExpected ||
                   (normalizedExpected.length > 20 && normalizedExpected.includes(normalizedUserAnswer)) ||
                   (normalizedUserAnswer.length > 20 && normalizedUserAnswer.includes(normalizedExpected));
+
+                let aiFeedback: string | null = null;
+
+                // Строковое совпадение не сработало — для открытых заданий
+                // («составь предложение») эталон лишь пример, поэтому проверяем
+                // семантически: соответствие грамматическому требованию,
+                // порядок слов и орфографию.
+                if (!correct) {
+                  setCheckingAnswers((prev) => ({ ...prev, [index]: true }));
+                  try {
+                    const res = await fetch('/api/ai/check-answer', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        prompt: question.prompt,
+                        expectedAnswer: question.expectedAnswer,
+                        hint: question.hint,
+                        evaluationCriteria: question.evaluationCriteria,
+                        answer: userAnswer,
+                        topic: lesson?.overview,
+                        level: lesson?.meta?.level ?? userLevel,
+                      }),
+                    });
+                    if (res.ok) {
+                      const verdict = (await res.json()) as {
+                        correct?: boolean;
+                        feedback?: string;
+                        corrected?: string | null;
+                      };
+                      correct = Boolean(verdict.correct);
+                      if (!correct && verdict.feedback) {
+                        aiFeedback = verdict.corrected
+                          ? `${verdict.feedback} Исправленный вариант: «${verdict.corrected}».`
+                          : verdict.feedback;
+                      }
+                    }
+                  } catch (checkError) {
+                    console.warn('AI answer check failed, falling back to string match:', checkError);
+                  } finally {
+                    setCheckingAnswers((prev) => ({ ...prev, [index]: false }));
+                  }
+                }
 
                 setQuestionResults((prev) => ({ ...prev, [index]: correct }));
 
@@ -540,9 +598,13 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                 }
 
                 if (!correct) {
+                  setQuestionAttempts((prev) => ({
+                    ...prev,
+                    [index]: [...(prev[index] ?? []), { answer: userAnswer, feedback: aiFeedback }],
+                  }));
                   setErrorMessages((prev) => ({
                     ...prev,
-                    [index]: `Эталон: «${question.expectedAnswer}».${ruleHint ? ` ${ruleHint}` : ''}`,
+                    [index]: aiFeedback ?? `Эталон: «${question.expectedAnswer}».${ruleHint ? ` ${ruleHint}` : ''}`,
                   }));
                 } else {
                   setErrorMessages((prev) => {
@@ -564,7 +626,31 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
 
               return (
                 <div key={`${question.prompt}-${index}`} className="rounded-2xl bg-gray-50 p-4 space-y-2">
+                  {isTranslationQuestion && (
+                    <span className="inline-block rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
+                      Перевод
+                    </span>
+                  )}
                   <p className="font-medium text-gray-900">{question.prompt}</p>
+                  {isTranslationQuestion ? (
+                    <div className="flex flex-col gap-2">
+                      <textarea
+                        value={userAnswer}
+                        onChange={(e) => setQuestionAnswers((prev) => ({ ...prev, [index]: e.target.value }))}
+                        placeholder="Введите перевод..."
+                        rows={3}
+                        className="w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-deep focus:outline-none focus:ring-2 focus:ring-primary-deep"
+                        disabled={isCorrect === true}
+                      />
+                      <button
+                        onClick={() => void handleAnswer()}
+                        disabled={!userAnswer.trim() || isCorrect === true || checkingAnswers[index]}
+                        className="self-end rounded-lg bg-primary-deep px-4 py-2 text-sm font-medium text-white hover:bg-primary-deep/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {checkingAnswers[index] ? 'Проверяем…' : 'Ответить'}
+                      </button>
+                    </div>
+                  ) : (
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -575,13 +661,14 @@ export function LessonScreen({ taskId }: LessonScreenProps) {
                       disabled={isCorrect === true}
                     />
                     <button
-                      onClick={handleAnswer}
-                      disabled={!userAnswer.trim() || isCorrect === true}
+                      onClick={() => void handleAnswer()}
+                      disabled={!userAnswer.trim() || isCorrect === true || checkingAnswers[index]}
                       className="rounded-lg bg-primary-deep px-4 py-2 text-sm font-medium text-white hover:bg-primary-deep/90 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Ответить
+                      {checkingAnswers[index] ? 'Проверяем…' : 'Ответить'}
                     </button>
                   </div>
+                  )}
                   {isCorrect === true && (
                     <p className="text-sm text-green-600 font-medium">✓ Правильно!</p>
                   )}

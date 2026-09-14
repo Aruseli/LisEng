@@ -23,6 +23,7 @@ import { Route as ApiVersionRouteImport } from './routes/api/version'
 import { Route as AppAiIndexRouteImport } from './routes/_app/ai/index'
 import { Route as AppLessonTaskIdRouteImport } from './routes/_app/lesson.$taskId'
 import { Route as ApiAiAnalyzeVoiceRouteImport } from './routes/api/ai/analyze-voice'
+import { Route as ApiAiCheckAnswerRouteImport } from './routes/api/ai/check-answer'
 import { Route as ApiAiCheckWritingRouteImport } from './routes/api/ai/check-writing'
 import { Route as ApiAiGenerateReadingRouteImport } from './routes/api/ai/generate-reading'
 import { Route as ApiAiGrammarDrillRouteImport } from './routes/api/ai/grammar-drill'
@@ -137,6 +138,11 @@ const AppLessonTaskIdRoute = AppLessonTaskIdRouteImport.update({
 const ApiAiAnalyzeVoiceRoute = ApiAiAnalyzeVoiceRouteImport.update({
   id: '/api/ai/analyze-voice',
   path: '/api/ai/analyze-voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiCheckAnswerRoute = ApiAiCheckAnswerRouteImport.update({
+  id: '/api/ai/check-answer',
+  path: '/api/ai/check-answer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAiCheckWritingRoute = ApiAiCheckWritingRouteImport.update({
@@ -387,6 +393,7 @@ export interface FileRoutesByFullPath {
   '/api/version': typeof ApiVersionRoute
   '/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
+  '/api/ai/check-answer': typeof ApiAiCheckAnswerRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
   '/api/ai/grammar-drill': typeof ApiAiGrammarDrillRoute
@@ -447,6 +454,7 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
+  '/api/ai/check-answer': typeof ApiAiCheckAnswerRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
   '/api/ai/grammar-drill': typeof ApiAiGrammarDrillRoute
@@ -510,6 +518,7 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/lesson/$taskId': typeof AppLessonTaskIdRoute
   '/api/ai/analyze-voice': typeof ApiAiAnalyzeVoiceRoute
+  '/api/ai/check-answer': typeof ApiAiCheckAnswerRoute
   '/api/ai/check-writing': typeof ApiAiCheckWritingRoute
   '/api/ai/generate-reading': typeof ApiAiGenerateReadingRoute
   '/api/ai/grammar-drill': typeof ApiAiGrammarDrillRoute
@@ -573,6 +582,7 @@ export interface FileRouteTypes {
     | '/api/version'
     | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
+    | '/api/ai/check-answer'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
     | '/api/ai/grammar-drill'
@@ -633,6 +643,7 @@ export interface FileRouteTypes {
     | '/'
     | '/lesson/$taskId'
     | '/api/ai/analyze-voice'
+    | '/api/ai/check-answer'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
     | '/api/ai/grammar-drill'
@@ -695,6 +706,7 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/lesson/$taskId'
     | '/api/ai/analyze-voice'
+    | '/api/ai/check-answer'
     | '/api/ai/check-writing'
     | '/api/ai/generate-reading'
     | '/api/ai/grammar-drill'
@@ -750,6 +762,7 @@ export interface RootRouteChildren {
   ApiHealthRoute: typeof ApiHealthRoute
   ApiVersionRoute: typeof ApiVersionRoute
   ApiAiAnalyzeVoiceRoute: typeof ApiAiAnalyzeVoiceRoute
+  ApiAiCheckAnswerRoute: typeof ApiAiCheckAnswerRoute
   ApiAiCheckWritingRoute: typeof ApiAiCheckWritingRoute
   ApiAiGenerateReadingRoute: typeof ApiAiGenerateReadingRoute
   ApiAiGrammarDrillRoute: typeof ApiAiGrammarDrillRoute
@@ -894,6 +907,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ai/analyze-voice'
       fullPath: '/api/ai/analyze-voice'
       preLoaderRoute: typeof ApiAiAnalyzeVoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/check-answer': {
+      id: '/api/ai/check-answer'
+      path: '/api/ai/check-answer'
+      fullPath: '/api/ai/check-answer'
+      preLoaderRoute: typeof ApiAiCheckAnswerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ai/check-writing': {
@@ -1265,6 +1285,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHealthRoute: ApiHealthRoute,
   ApiVersionRoute: ApiVersionRoute,
   ApiAiAnalyzeVoiceRoute: ApiAiAnalyzeVoiceRoute,
+  ApiAiCheckAnswerRoute: ApiAiCheckAnswerRoute,
   ApiAiCheckWritingRoute: ApiAiCheckWritingRoute,
   ApiAiGenerateReadingRoute: ApiAiGenerateReadingRoute,
   ApiAiGrammarDrillRoute: ApiAiGrammarDrillRoute,

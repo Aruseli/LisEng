@@ -50,11 +50,20 @@ interface VoiceMessagesData {
   overallFeedback?: any;
 }
 
+/** Результат по вопросу упражнения, где были ошибочные попытки */
+interface ExerciseResult {
+  prompt: string;
+  kind?: string | null;
+  finalAnswer: string;
+  attempts: Array<{ answer: string; feedback: string | null }>;
+}
+
 interface CompleteLessonOptions {
   userId: string;
   taskId: string;
   pronunciation?: PronunciationResultPayload | null;
   flashcardResults?: FlashcardResult[];
+  exerciseResults?: ExerciseResult[];
   conversationData?: ConversationData;
   voiceMessagesData?: VoiceMessagesData;
 }
@@ -88,6 +97,7 @@ export class LessonCompletionService {
       task,
       lesson,
       pronunciation: options.pronunciation ?? null,
+      exerciseResults: options.exerciseResults,
       conversationData: options.conversationData,
       voiceMessagesData: options.voiceMessagesData,
     });
@@ -289,10 +299,11 @@ export class LessonCompletionService {
     task: any;
     lesson: LessonMaterials;
     pronunciation: PronunciationResultPayload | null;
+    exerciseResults?: ExerciseResult[];
     conversationData?: ConversationData;
     voiceMessagesData?: VoiceMessagesData;
   }): Promise<string | null> {
-    const { task, lesson, pronunciation, conversationData, voiceMessagesData } = params;
+    const { task, lesson, pronunciation, exerciseResults, conversationData, voiceMessagesData } = params;
 
     // Формируем content_snapshot с учетом типа урока
     const contentSnapshot: any = {
@@ -345,7 +356,7 @@ export class LessonCompletionService {
         lesson_type: task.type,
         duration_seconds: (task.duration_minutes ?? 0) * 60,
         content_snapshot: contentSnapshot,
-        problem_areas: this.buildProblemAreas(pronunciation, voiceMessagesData),
+        problem_areas: this.buildProblemAreas(pronunciation, voiceMessagesData, exerciseResults),
         performance_score: performanceScore,
         methodology_tags: methodologyTags.length > 0 ? methodologyTags : [],
       },
@@ -360,7 +371,8 @@ export class LessonCompletionService {
 
   private buildProblemAreas(
     pronunciation: PronunciationResultPayload | null,
-    voiceMessagesData?: VoiceMessagesData
+    voiceMessagesData?: VoiceMessagesData,
+    exerciseResults?: ExerciseResult[]
   ) {
     const problemAreas: Array<{
       type: string;
@@ -415,6 +427,28 @@ export class LessonCompletionService {
           });
         }
       });
+    }
+
+    // Ошибки в письменных упражнениях урока (открытые вопросы и переводы).
+    // content — feedback проверяющей LLM (в нём суть ошибки), иначе сам ответ.
+    if (exerciseResults) {
+      const seen = new Set<string>();
+      for (const result of exerciseResults) {
+        for (const attempt of result.attempts) {
+          const content = (attempt.feedback || attempt.answer || '').trim();
+          if (!content) continue;
+          const key = content.toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          problemAreas.push({
+            type: 'grammar_error',
+            content,
+            context: `Exercise: ${result.prompt.substring(0, 80)}`,
+            severity: 'medium',
+            timestamp,
+          });
+        }
+      }
     }
 
     return problemAreas;

@@ -13,6 +13,7 @@ export const Route = createFileRoute('/api/lesson/complete')({
           const taskId: string | undefined = body.taskId
           const pronunciation = body.pronunciation
           const flashcardResults = body.flashcardResults
+          const exerciseResults = body.exerciseResults
           const conversationData = body.conversationData
           const voiceMessagesData = body.voiceMessagesData
 
@@ -31,6 +32,7 @@ export const Route = createFileRoute('/api/lesson/complete')({
             taskId,
             pronunciation,
             flashcardResults,
+            exerciseResults,
             conversationData,
             voiceMessagesData,
           })
