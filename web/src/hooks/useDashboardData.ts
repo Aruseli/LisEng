@@ -263,7 +263,7 @@ export const useDashboardData = (
 
   const completeTask = useCallback(
     async (taskId: string) => {
-      if (!hasyx || !userId) return;
+      if (!userId) return;
 
       queryClient.setQueryData(
         queryKeys.plan(userId, targetDate),
@@ -282,15 +282,15 @@ export const useDashboardData = (
       );
 
       try {
-        await hasyx.update({
-          table: 'daily_tasks',
-          pk_columns: { id: taskId },
-          _set: {
-            status: 'completed',
-            completed_at: new Date().toISOString(),
-          },
-          returning: ['id'],
+        const response = await fetch('/api/plan/complete-task', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, taskId }),
         });
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          throw new Error(errorBody.error || 'Не удалось отметить задание');
+        }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: queryKeys.plan(userId, targetDate) }),
           queryClient.invalidateQueries({ queryKey: queryKeys.stageRequirements(userId) }),
@@ -300,7 +300,7 @@ export const useDashboardData = (
         await fetchDashboard();
       }
     },
-    [hasyx, queryClient, userId, targetDate, fetchDashboard]
+    [queryClient, userId, targetDate, fetchDashboard]
   );
 
   const isLoading =

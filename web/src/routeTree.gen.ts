@@ -48,6 +48,7 @@ import { Route as ApiNotificationsSubscribeRouteImport } from './routes/api/noti
 import { Route as ApiNotificationsTestRouteImport } from './routes/api/notifications/test'
 import { Route as ApiNotificationsUnsubscribeRouteImport } from './routes/api/notifications/unsubscribe'
 import { Route as ApiNotificationsVapidRouteImport } from './routes/api/notifications/vapid'
+import { Route as ApiPlanCompleteTaskRouteImport } from './routes/api/plan/complete-task'
 import { Route as ApiPlanGenerateRouteImport } from './routes/api/plan/generate'
 import { Route as ApiPlanRequirementChecksRouteImport } from './routes/api/plan/requirement-checks'
 import { Route as ApiPlanTodayRouteImport } from './routes/api/plan/today'
@@ -267,6 +268,11 @@ const ApiNotificationsVapidRoute = ApiNotificationsVapidRouteImport.update({
   path: '/api/notifications/vapid',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPlanCompleteTaskRoute = ApiPlanCompleteTaskRouteImport.update({
+  id: '/api/plan/complete-task',
+  path: '/api/plan/complete-task',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPlanGenerateRoute = ApiPlanGenerateRouteImport.update({
   id: '/api/plan/generate',
   path: '/api/plan/generate',
@@ -418,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/api/notifications/test': typeof ApiNotificationsTestRoute
   '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
   '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
+  '/api/plan/complete-task': typeof ApiPlanCompleteTaskRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -479,6 +486,7 @@ export interface FileRoutesByTo {
   '/api/notifications/test': typeof ApiNotificationsTestRoute
   '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
   '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
+  '/api/plan/complete-task': typeof ApiPlanCompleteTaskRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -543,6 +551,7 @@ export interface FileRoutesById {
   '/api/notifications/test': typeof ApiNotificationsTestRoute
   '/api/notifications/unsubscribe': typeof ApiNotificationsUnsubscribeRoute
   '/api/notifications/vapid': typeof ApiNotificationsVapidRoute
+  '/api/plan/complete-task': typeof ApiPlanCompleteTaskRoute
   '/api/plan/generate': typeof ApiPlanGenerateRoute
   '/api/plan/requirement-checks': typeof ApiPlanRequirementChecksRoute
   '/api/plan/today': typeof ApiPlanTodayRoute
@@ -607,6 +616,7 @@ export interface FileRouteTypes {
     | '/api/notifications/test'
     | '/api/notifications/unsubscribe'
     | '/api/notifications/vapid'
+    | '/api/plan/complete-task'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -668,6 +678,7 @@ export interface FileRouteTypes {
     | '/api/notifications/test'
     | '/api/notifications/unsubscribe'
     | '/api/notifications/vapid'
+    | '/api/plan/complete-task'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -731,6 +742,7 @@ export interface FileRouteTypes {
     | '/api/notifications/test'
     | '/api/notifications/unsubscribe'
     | '/api/notifications/vapid'
+    | '/api/plan/complete-task'
     | '/api/plan/generate'
     | '/api/plan/requirement-checks'
     | '/api/plan/today'
@@ -787,6 +799,7 @@ export interface RootRouteChildren {
   ApiNotificationsTestRoute: typeof ApiNotificationsTestRoute
   ApiNotificationsUnsubscribeRoute: typeof ApiNotificationsUnsubscribeRoute
   ApiNotificationsVapidRoute: typeof ApiNotificationsVapidRoute
+  ApiPlanCompleteTaskRoute: typeof ApiPlanCompleteTaskRoute
   ApiPlanGenerateRoute: typeof ApiPlanGenerateRoute
   ApiPlanRequirementChecksRoute: typeof ApiPlanRequirementChecksRoute
   ApiPlanTodayRoute: typeof ApiPlanTodayRoute
@@ -1084,6 +1097,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiNotificationsVapidRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/plan/complete-task': {
+      id: '/api/plan/complete-task'
+      path: '/api/plan/complete-task'
+      fullPath: '/api/plan/complete-task'
+      preLoaderRoute: typeof ApiPlanCompleteTaskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/plan/generate': {
       id: '/api/plan/generate'
       path: '/api/plan/generate'
@@ -1310,6 +1330,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiNotificationsTestRoute: ApiNotificationsTestRoute,
   ApiNotificationsUnsubscribeRoute: ApiNotificationsUnsubscribeRoute,
   ApiNotificationsVapidRoute: ApiNotificationsVapidRoute,
+  ApiPlanCompleteTaskRoute: ApiPlanCompleteTaskRoute,
   ApiPlanGenerateRoute: ApiPlanGenerateRoute,
   ApiPlanRequirementChecksRoute: ApiPlanRequirementChecksRoute,
   ApiPlanTodayRoute: ApiPlanTodayRoute,

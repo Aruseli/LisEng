@@ -28,6 +28,7 @@ import {
 } from '@/lib/lesson-snapshots';
 import type { SnapshotInsights as OldSnapshotInsights } from '@/lib/lesson-snapshots/methodology-advisor';
 import { VocabularyGenerationService } from '@/lib/vocabulary/vocabulary-generation-service';
+import { dailyTaskTitle } from '@/lib/plan/task-title';
 
 type DailyTaskRecord = Awaited<ReturnType<typeof getDailyTasks>> extends (infer T)[]
   ? T
@@ -589,27 +590,6 @@ export class DailyPlanService {
     skipVocabularyReview?: boolean;
   }) {
     console.log(`[ensureTasksFromStructure] Creating tasks from ${params.weeklyStructure.length} structure items`);
-    
-    const titleFallback = (activityType: string) => {
-      switch (activityType) {
-        case 'grammar':
-          return 'Грамматическое задание';
-        case 'vocabulary':
-          return 'Повтор словаря';
-        case 'reading':
-          return 'Чтение текста';
-        case 'listening':
-          return 'Аудирование';
-        case 'writing':
-          return 'Письменная практика';
-        case 'speaking':
-          return 'Говорение';
-        case 'ai_practice':
-          return 'Практика с AI';
-        default:
-          return 'Учебное задание';
-      }
-    };
 
     // Получаем существующие задачи для проверки дубликатов
     const existingTasks = await getDailyTasks(this.hasyx, params.userId, params.targetDate);
@@ -638,7 +618,7 @@ export class DailyPlanService {
           stageId: params.stageId,
           taskDate: params.targetDate,
           type: slot.activity_type,
-          title: slot.description || titleFallback(slot.activity_type),
+          title: dailyTaskTitle(slot.description, slot.activity_type),
           description: slot.description,
           duration: slot.duration_minutes ?? 10,
           aiEnabled: ['ai_practice', 'speaking', 'writing'].includes(slot.activity_type),

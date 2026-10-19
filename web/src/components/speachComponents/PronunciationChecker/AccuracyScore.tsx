@@ -19,8 +19,8 @@ export const AccuracyScore = ({ accuracy }: AccuracyScoreProps) => {
   };
 
   return (
-    <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-lg ${getColorClasses()}`}>
-      <span className="text-3xl font-bold">{accuracy}%</span>
+    <div className={`inline-flex items-center gap-3 px-6 py-2 rounded-lg ${getColorClasses()}`}>
+      <span className="text-2xl font-bold">{accuracy}%</span>
       <span className="text-lg font-medium">{getMessage()}</span>
     </div>
   );

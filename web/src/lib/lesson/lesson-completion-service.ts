@@ -266,6 +266,8 @@ export class LessonCompletionService {
       returning: [
         'id',
         'user_id',
+        'stage_id',
+        'task_date',
         'type',
         'title',
         'description',

@@ -507,11 +507,12 @@ export async function upsertDailyTaskFromStructure(
   input: UpsertDailyTaskInput
 ) {
   try {
+    const title = input.title.slice(0, 255);
     console.log('[upsertDailyTask] Создание задания:', {
       userId: input.userId,
       taskDate: input.taskDate,
       type: input.type,
-      title: input.title,
+      title,
     });
     
     const result = await hasyx.upsert({
@@ -521,7 +522,7 @@ export async function upsertDailyTaskFromStructure(
         stage_id: input.stageId ?? null,
         task_date: input.taskDate,
         type: input.type,
-        title: input.title,
+        title,
         description: input.description,
         duration_minutes: input.duration,
         ai_enabled: input.aiEnabled ?? false,
