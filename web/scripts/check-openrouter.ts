@@ -6,7 +6,6 @@
 import {
   BUDGET_MODEL,
   CATALOG_PREMIUM_MODEL,
-  PREFERRED_PREMIUM_MODEL,
   getModelForTask,
   getOpenRouterToken,
   openRouterHeaders,
@@ -70,7 +69,7 @@ async function main() {
 
   const routedPremium = getModelForTask('lesson')
   const routedBudget = getModelForTask('vocab')
-  const wanted = Array.from(new Set([PREFERRED_PREMIUM_MODEL, routedPremium, routedBudget, BUDGET_MODEL]))
+  const wanted = Array.from(new Set([CATALOG_PREMIUM_MODEL, routedPremium, routedBudget, BUDGET_MODEL]))
   const catalogHits = wanted.map((id) => ({
     id,
     inCatalog: ids.includes(id),
@@ -90,7 +89,6 @@ async function main() {
         ...mask(),
         keyEndpoint: { status: keyInfo.status, ok: keyInfo.ok, remaining: keyBody?.data?.limit_remaining ?? null },
         modelsEndpoint: { status: modelsRes.status, ok: modelsRes.ok, catalogSize: ids.length },
-        preferredPremium: PREFERRED_PREMIUM_MODEL,
         catalogPremium: CATALOG_PREMIUM_MODEL,
         routed: { premium: routedPremium, budget: routedBudget },
         catalogHits,
